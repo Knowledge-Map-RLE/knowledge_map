@@ -8,6 +8,7 @@ import EditorWorkspace from './Editor/EditorWorkspace';
 import AgentChat from './Editor/AgentChat';
 import PipelineVersions from './Editor/PipelineVersions';
 import ArticleMap from './Editor/ArticleMap';
+import ArticleComparisons from './Editor/ArticleComparisons';
 import EvidencePatterns from './Editor/EvidencePatterns';
 import { ChatPanel } from '../Social_network/components/ChatPanel';
 import type { ChatTarget } from '../Social_network/model';
@@ -264,6 +265,10 @@ label: selectedDocument?.title || selectedDocId,
                         >
                             {t('articleEditor.tabs.map')}
                         </button>
+                        <button className={`${styles.tabButton} ${activeTab === 'comparison' ? styles.active : ''}`}
+                            onClick={() => setActiveTab('comparison')}>
+                            {locale === 'ru' ? 'Сравнение статей' : 'Article comparison'}
+                        </button>
                         <button
                             className={`${styles.tabButton} ${activeTab === 'patterns' ? styles.active : ''}`}
                             onClick={() => setActiveTab('patterns')}
@@ -364,6 +369,9 @@ label: selectedDocument?.title || selectedDocId,
                                     </div>
                                 )}
                             </div>
+                        )}
+                        {activeTab === 'comparison' && (
+                            <ArticleComparisons docId={selectedDocId} enabled={isAuthenticated} />
                         )}
                         {activeTab === 'patterns' && (
                             <div style={{ flex: 1, minHeight: 0, overflow: 'hidden' }}>

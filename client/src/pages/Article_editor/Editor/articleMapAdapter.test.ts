@@ -61,4 +61,26 @@ describe('Knowledge-first map projection', () => {
         saved.graph.schema_version = 99;
         expect(() => adaptSavedArticleMap(saved, i18n.t.bind(i18n))).toThrow('99');
     });
+
+    test('schema six projects occurrences and never substitutes frames for readable labels', () => {
+        const saved = knowledgeMap();
+        saved.graph.schema_version = 6;
+        saved.graph.knowledge = saved.graph.nodes.map((node, index) => ({
+            knowledge_id: `K${index}`, kind: index === 1 ? 'action' : 'state', knowledge_kind: 'observation',
+            display_text: node.display_text, action_status: index === 1 ? 'performed' : null,
+            semantic_frame: { logic: 'single', statements: [{ predicate: 'Hidden predicate' }] },
+            provenance: { unit_ids: ['U1'] },
+        }));
+        saved.graph.nodes.forEach((node, index) => {
+            node.knowledge_id = `K${index}`;
+            node.kind = node.block_type = index === 1 ? 'action' : 'state';
+        });
+        const graph = adaptSavedArticleMap(saved, i18n.t.bind(i18n));
+        expect(graph.nodes).toHaveLength(4);
+        expect(graph.nodes[0].label).toBe('Method');
+        expect(graph.nodes.map(n => n.layer)).toEqual([0, 1, 2, 3]);
+        expect(JSON.stringify(graph)).not.toContain('Hidden predicate');
+        saved.graph.nodes[0].knowledge_id = 'unknown';
+        expect(() => adaptSavedArticleMap(saved, i18n.t.bind(i18n))).toThrow('6');
+    });
 });

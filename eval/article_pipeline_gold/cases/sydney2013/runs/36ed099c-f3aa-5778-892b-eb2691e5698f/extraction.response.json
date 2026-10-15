@@ -1,0 +1,3358 @@
+{
+  "schema_version": 6,
+  "concepts": [
+    {
+      "id": "C1",
+      "display_text": "Sydney Memory and Ageing Study analysis",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U16",
+          "U68"
+        ]
+      }
+    },
+    {
+      "id": "C2",
+      "display_text": "identify baseline factors longitudinally associated with late-life cognitive decline",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U16"
+        ]
+      }
+    },
+    {
+      "id": "C3",
+      "display_text": "age and sex",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U16",
+          "U42",
+          "U45"
+        ]
+      }
+    },
+    {
+      "id": "C4",
+      "display_text": "Sydney Memory and Ageing Study",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U19",
+          "U39",
+          "U38"
+        ]
+      }
+    },
+    {
+      "id": "C5",
+      "display_text": "community-dwelling adults aged 70 to 90",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U19"
+        ]
+      }
+    },
+    {
+      "id": "C6",
+      "display_text": "without dementia",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U19"
+        ]
+      }
+    },
+    {
+      "id": "C7",
+      "display_text": "baseline participants",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U19"
+        ]
+      }
+    },
+    {
+      "id": "C8",
+      "display_text": "trained psychology graduates",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U23"
+        ]
+      }
+    },
+    {
+      "id": "C9",
+      "display_text": "Sydney cohort members",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U23"
+        ]
+      }
+    },
+    {
+      "id": "C10",
+      "display_text": "attention and processing speed; memory; language; executive function",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U23"
+        ]
+      }
+    },
+    {
+      "id": "C11",
+      "display_text": "individual neuropsychological tests",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U24"
+        ]
+      }
+    },
+    {
+      "id": "C12",
+      "display_text": "504 baseline cognitively normal participants fluent in spoken English before age 10",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U24"
+        ]
+      }
+    },
+    {
+      "id": "C13",
+      "display_text": "averages of component-test z-scores",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U24"
+        ]
+      }
+    },
+    {
+      "id": "C14",
+      "display_text": "mild cognitive impairment",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U26"
+        ]
+      }
+    },
+    {
+      "id": "C15",
+      "display_text": "participant or informant report of cognitive decline",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U26"
+        ]
+      }
+    },
+    {
+      "id": "C16",
+      "display_text": "at least one test score at least 1.5 SD below norms",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U26"
+        ]
+      }
+    },
+    {
+      "id": "C17",
+      "display_text": "no or minimal cognitive-related IADL impairment",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U26"
+        ]
+      }
+    },
+    {
+      "id": "C18",
+      "display_text": "Sydney study team",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U28"
+        ]
+      }
+    },
+    {
+      "id": "C19",
+      "display_text": "questionnaire, examination, blood assays, and APOE genotyping",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U28"
+        ]
+      }
+    },
+    {
+      "id": "C20",
+      "display_text": "after overnight fasting",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U28"
+        ]
+      }
+    },
+    {
+      "id": "C21",
+      "display_text": "follow-up minus baseline z-score",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U32"
+        ]
+      }
+    },
+    {
+      "id": "C22",
+      "display_text": "general linear model adjusted for age and sex",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U32"
+        ]
+      }
+    },
+    {
+      "id": "C23",
+      "display_text": "logistic regression",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U32"
+        ]
+      }
+    },
+    {
+      "id": "C24",
+      "display_text": "age and sex interaction terms",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U32"
+        ]
+      }
+    },
+    {
+      "id": "C25",
+      "display_text": "follow-up z-score minus baseline z-score",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U39"
+        ]
+      }
+    },
+    {
+      "id": "C26",
+      "display_text": "attention and processing speed",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U39"
+        ]
+      }
+    },
+    {
+      "id": "C27",
+      "display_text": "n=838",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U39"
+        ]
+      }
+    },
+    {
+      "id": "C28",
+      "display_text": "executive function",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U39"
+        ]
+      }
+    },
+    {
+      "id": "C29",
+      "display_text": "n=769",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U39"
+        ]
+      }
+    },
+    {
+      "id": "C30",
+      "display_text": "memory",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U39"
+        ]
+      }
+    },
+    {
+      "id": "C31",
+      "display_text": "n=847",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U39"
+        ]
+      }
+    },
+    {
+      "id": "C32",
+      "display_text": "global cognition",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U39"
+        ]
+      }
+    },
+    {
+      "id": "C33",
+      "display_text": "n=865",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U39"
+        ]
+      }
+    },
+    {
+      "id": "C34",
+      "display_text": "Sydney cohort",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U38",
+          "U43",
+          "U45",
+          "U51",
+          "U42",
+          "U53"
+        ]
+      }
+    },
+    {
+      "id": "C35",
+      "display_text": "MCI and dementia",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U38"
+        ]
+      }
+    },
+    {
+      "id": "C36",
+      "display_text": "domain z-score change",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U38"
+        ]
+      }
+    },
+    {
+      "id": "C37",
+      "display_text": "incident MCI or dementia",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U38",
+          "U43",
+          "U45",
+          "U51",
+          "U42"
+        ]
+      }
+    },
+    {
+      "id": "C38",
+      "display_text": "continuous domain-score decline",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U38"
+        ]
+      }
+    },
+    {
+      "id": "C39",
+      "display_text": "men versus women",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U38"
+        ]
+      }
+    },
+    {
+      "id": "C40",
+      "display_text": "older age",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U43",
+          "U42"
+        ]
+      }
+    },
+    {
+      "id": "C41",
+      "display_text": "approximately two years",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U43"
+        ]
+      }
+    },
+    {
+      "id": "C42",
+      "display_text": "attention and processing speed change",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U43"
+        ]
+      }
+    },
+    {
+      "id": "C43",
+      "display_text": "memory change",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U43"
+        ]
+      }
+    },
+    {
+      "id": "C44",
+      "display_text": "global cognition change",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U43"
+        ]
+      }
+    },
+    {
+      "id": "C45",
+      "display_text": "Brief Smell Identification Test score",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U43"
+        ]
+      }
+    },
+    {
+      "id": "C46",
+      "display_text": "executive-function change",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U43"
+        ]
+      }
+    },
+    {
+      "id": "C47",
+      "display_text": "global-cognition change",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U43"
+        ]
+      }
+    },
+    {
+      "id": "C48",
+      "display_text": "being married",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U45",
+          "U51"
+        ]
+      }
+    },
+    {
+      "id": "C49",
+      "display_text": "executive-function decline",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U45"
+        ]
+      }
+    },
+    {
+      "id": "C50",
+      "display_text": "less decline when married",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U45"
+        ]
+      }
+    },
+    {
+      "id": "C51",
+      "display_text": "kidney disease and antidepressant use",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U45"
+        ]
+      }
+    },
+    {
+      "id": "C52",
+      "display_text": "kidney disease",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U45"
+        ]
+      }
+    },
+    {
+      "id": "C53",
+      "display_text": "memory decline",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U45",
+          "U42"
+        ]
+      }
+    },
+    {
+      "id": "C54",
+      "display_text": "less decline",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U45"
+        ]
+      }
+    },
+    {
+      "id": "C55",
+      "display_text": "antidepressant use",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U45"
+        ]
+      }
+    },
+    {
+      "id": "C56",
+      "display_text": "greater physical activity",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U42"
+        ]
+      }
+    },
+    {
+      "id": "C57",
+      "display_text": "men",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U42",
+          "U45"
+        ]
+      }
+    },
+    {
+      "id": "C58",
+      "display_text": "poorer smelling ability",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U42"
+        ]
+      }
+    },
+    {
+      "id": "C59",
+      "display_text": "women",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U42"
+        ]
+      }
+    },
+    {
+      "id": "C60",
+      "display_text": "history of stroke",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U42"
+        ]
+      }
+    },
+    {
+      "id": "C61",
+      "display_text": "global-cognition decline",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U42"
+        ]
+      }
+    },
+    {
+      "id": "C62",
+      "display_text": "migraine",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U42"
+        ]
+      }
+    },
+    {
+      "id": "C63",
+      "display_text": "attention/processing-speed decline",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U42"
+        ]
+      }
+    },
+    {
+      "id": "C64",
+      "display_text": "coronary artery disease",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U42"
+        ]
+      }
+    },
+    {
+      "id": "C65",
+      "display_text": "diabetes or low eGFR",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U45"
+        ]
+      }
+    },
+    {
+      "id": "C66",
+      "display_text": "lower odds",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U45"
+        ]
+      }
+    },
+    {
+      "id": "C67",
+      "display_text": "Sydney study participants with incident MCI or dementia",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U51"
+        ]
+      }
+    },
+    {
+      "id": "C68",
+      "display_text": "adjusted for sex, marital status, BSIT score, and age",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U51"
+        ]
+      }
+    },
+    {
+      "id": "C69",
+      "display_text": "male sex",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U51"
+        ]
+      }
+    },
+    {
+      "id": "C70",
+      "display_text": "BSIT score <9",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U51"
+        ]
+      }
+    },
+    {
+      "id": "C71",
+      "display_text": "married",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U51"
+        ]
+      }
+    },
+    {
+      "id": "C72",
+      "display_text": "APOE ε4",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U61"
+        ]
+      }
+    },
+    {
+      "id": "C73",
+      "display_text": "non-demented Sydney cohort",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U61"
+        ]
+      }
+    },
+    {
+      "id": "C74",
+      "display_text": "incident MCI/dementia and composite memory change",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U61"
+        ]
+      }
+    },
+    {
+      "id": "C75",
+      "display_text": "baseline cohort",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U19"
+        ]
+      }
+    },
+    {
+      "id": "C76",
+      "display_text": "not fully random",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U19",
+          "U53"
+        ]
+      }
+    },
+    {
+      "id": "C77",
+      "display_text": "men lost versus men retained",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U53"
+        ]
+      }
+    },
+    {
+      "id": "C78",
+      "display_text": "lost versus retained",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U53"
+        ]
+      }
+    },
+    {
+      "id": "C79",
+      "display_text": "factor-cognitive outcome association",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U64",
+          "U68"
+        ]
+      }
+    },
+    {
+      "id": "C80",
+      "display_text": "varies across studies and test batteries",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U64",
+          "U68"
+        ]
+      }
+    },
+    {
+      "id": "C81",
+      "display_text": "non-random attrition, self-report, single two-year follow-up, limited interaction tests, and uncertain generalizability",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U68"
+        ]
+      }
+    },
+    {
+      "id": "C82",
+      "display_text": "associations with late-life cognitive decline vary by age, sex, and outcome measure",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U70"
+        ]
+      }
+    },
+    {
+      "id": "C83",
+      "display_text": "tailor interventions to demographic groups",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U70"
+        ]
+      }
+    }
+  ],
+  "knowledge": [
+    {
+      "knowledge_id": "K1",
+      "kind": "state",
+      "knowledge_kind": "goal",
+      "display_text": "The study aimed to identify baseline factors longitudinally associated with late-life cognitive decline and examine variation by age and sex.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K1S1",
+            "predicate": "study aim",
+            "roles": [
+              {
+                "role": "study",
+                "concept_id": "C1",
+                "knowledge_id": null
+              },
+              {
+                "role": "objective",
+                "concept_id": "C2",
+                "knowledge_id": null
+              },
+              {
+                "role": "modifiers",
+                "concept_id": "C3",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": "study aim; not a completed result",
+            "negated": false,
+            "conditions": [
+              "This is the study objective, not a completed empirical result."
+            ],
+            "temporal_context": "Study planning before follow-up analyses",
+            "qualifiers": {
+              "attributes": []
+            },
+            "provenance": {
+              "unit_ids": [
+                "U16"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U16"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K2",
+      "kind": "state",
+      "knowledge_kind": "method",
+      "display_text": "The longitudinal community-based cohort included 1,037 adults aged 70–90 without dementia at baseline.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K2S1",
+            "predicate": "cohort recruitment",
+            "roles": [
+              {
+                "role": "cohort",
+                "concept_id": "C4",
+                "knowledge_id": null
+              },
+              {
+                "role": "participants",
+                "concept_id": "C5",
+                "knowledge_id": null
+              },
+              {
+                "role": "baseline cognitive status",
+                "concept_id": "C6",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [
+              "Community-dwelling adults aged 70–90 without dementia at baseline."
+            ],
+            "temporal_context": "Baseline recruitment",
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "baseline cohort size",
+                  "value": 1037,
+                  "unit": "participants"
+                },
+                {
+                  "name": "minimum age",
+                  "value": 70,
+                  "unit": "years"
+                },
+                {
+                  "name": "maximum age",
+                  "value": 90,
+                  "unit": "years"
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U19"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U19"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K3",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "Of 1,037 baseline participants, 889 completed reassessment at approximately two years; mean follow-up was 23 months and 12 days. Another 43 had died and 105 declined follow-up.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K3S1",
+            "predicate": "follow-up completion",
+            "roles": [
+              {
+                "role": "cohort",
+                "concept_id": "C4",
+                "knowledge_id": null
+              },
+              {
+                "role": "participants reassessed",
+                "concept_id": "C7",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [],
+            "temporal_context": "Baseline to the single follow-up; mean 23 months and 12 days",
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "reassessed",
+                  "value": 889,
+                  "unit": "participants"
+                },
+                {
+                  "name": "follow-up months",
+                  "value": 23,
+                  "unit": "months"
+                },
+                {
+                  "name": "follow-up additional days",
+                  "value": 12,
+                  "unit": "days"
+                },
+                {
+                  "name": "died before follow-up",
+                  "value": 43,
+                  "unit": "participants"
+                },
+                {
+                  "name": "declined follow-up",
+                  "value": 105,
+                  "unit": "participants"
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U19"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U19"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K4",
+      "kind": "action",
+      "knowledge_kind": "method",
+      "display_text": "Trained psychology graduates administered neuropsychological tests covering attention/processing speed, memory, language, and executive function.",
+      "aliases": [],
+      "action_status": "performed",
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K4S1",
+            "predicate": "cognitive assessment",
+            "roles": [
+              {
+                "role": "assessors",
+                "concept_id": "C8",
+                "knowledge_id": null
+              },
+              {
+                "role": "participants",
+                "concept_id": "C9",
+                "knowledge_id": null
+              },
+              {
+                "role": "domains",
+                "concept_id": "C10",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [
+              "Assessments were administered to recruited Sydney cohort participants."
+            ],
+            "temporal_context": "Baseline and follow-up assessment waves",
+            "qualifiers": {
+              "attributes": []
+            },
+            "provenance": {
+              "unit_ids": [
+                "U23"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U23"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K5",
+      "kind": "state",
+      "knowledge_kind": "method",
+      "display_text": "Raw scores were standardized against a baseline cognitively normal, early-English-speaking subgroup (n=504); domain scores averaged component-test z-scores, and global cognition averaged the domain scores.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K5S1",
+            "predicate": "cognitive score construction",
+            "roles": [
+              {
+                "role": "raw scores",
+                "concept_id": "C11",
+                "knowledge_id": null
+              },
+              {
+                "role": "reference subgroup",
+                "concept_id": "C12",
+                "knowledge_id": null
+              },
+              {
+                "role": "domain scores",
+                "concept_id": "C13",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [
+              "Scores were standardized against the specified baseline cognitively normal reference subgroup."
+            ],
+            "temporal_context": "Baseline and follow-up score construction",
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "reference subgroup size",
+                  "value": 504,
+                  "unit": "participants"
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U24"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U24"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K6",
+      "kind": "state",
+      "knowledge_kind": "definition",
+      "display_text": "MCI required a cognitive complaint, objective impairment on at least one test (≥1.5 SD below norms where adjusted norms were available), no DSM-IV dementia, and no or minimal cognitive-related daily-function impairment.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K6S1",
+            "predicate": "MCI diagnostic definition",
+            "roles": [
+              {
+                "role": "condition",
+                "concept_id": "C14",
+                "knowledge_id": null
+              },
+              {
+                "role": "required complaint",
+                "concept_id": "C15",
+                "knowledge_id": null
+              },
+              {
+                "role": "objective impairment",
+                "concept_id": "C16",
+                "knowledge_id": null
+              },
+              {
+                "role": "daily functioning",
+                "concept_id": "C17",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [
+              "Bayer ADL score was adjusted for physical impairment."
+            ],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "minimum impaired tests",
+                  "value": 1,
+                  "unit": "tests"
+                },
+                {
+                  "name": "impairment threshold",
+                  "value": 1.5,
+                  "unit": "SD below norms"
+                },
+                {
+                  "name": "Bayer ADL average threshold",
+                  "value": 3.0,
+                  "unit": "points; below threshold"
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U26"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U26"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K7",
+      "kind": "action",
+      "knowledge_kind": "method",
+      "display_text": "The study measured candidate sociodemographic, health, lifestyle, smell, and biochemical factors using interviews, questionnaires, examinations, fasting blood assays, and APOE genotyping.",
+      "aliases": [],
+      "action_status": "performed",
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K7S1",
+            "predicate": "baseline risk-factor measurement",
+            "roles": [
+              {
+                "role": "researchers",
+                "concept_id": "C18",
+                "knowledge_id": null
+              },
+              {
+                "role": "measurements",
+                "concept_id": "C19",
+                "knowledge_id": null
+              },
+              {
+                "role": "blood collection",
+                "concept_id": "C20",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [
+              "The described blood assays included cholesterol, homocysteine, and creatinine; this source did not report plasma IL-6 measurement."
+            ],
+            "temporal_context": "Baseline assessment",
+            "qualifiers": {
+              "attributes": []
+            },
+            "provenance": {
+              "unit_ids": [
+                "U28"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U28"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K8",
+      "kind": "state",
+      "knowledge_kind": "method",
+      "display_text": "Longitudinal cognitive change was analyzed with age- and sex-adjusted general linear models; incident MCI/dementia used logistic regression, and models tested age and sex interactions.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K8S1",
+            "predicate": "longitudinal association analysis",
+            "roles": [
+              {
+                "role": "continuous cognitive change",
+                "concept_id": "C21",
+                "knowledge_id": null
+              },
+              {
+                "role": "main model",
+                "concept_id": "C22",
+                "knowledge_id": null
+              },
+              {
+                "role": "incident MCI or dementia",
+                "concept_id": "C23",
+                "knowledge_id": null
+              },
+              {
+                "role": "effect modification",
+                "concept_id": "C24",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [
+              "The described models estimate observational associations, not causal effects."
+            ],
+            "temporal_context": "Baseline-to-follow-up analyses",
+            "qualifiers": {
+              "attributes": []
+            },
+            "provenance": {
+              "unit_ids": [
+                "U32"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U32"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K9",
+      "kind": "state",
+      "knowledge_kind": "result",
+      "display_text": "Across the assessed domains, mean cognitive z-scores declined during follow-up; the magnitude differed by domain.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "partition",
+        "statements": [
+          {
+            "statement_id": "K9S1",
+            "predicate": "mean cognitive-domain change",
+            "roles": [
+              {
+                "role": "study",
+                "concept_id": "C4",
+                "knowledge_id": null
+              },
+              {
+                "role": "change interval",
+                "concept_id": "C25",
+                "knowledge_id": null
+              },
+              {
+                "role": "domain",
+                "concept_id": "C26",
+                "knowledge_id": null
+              },
+              {
+                "role": "participants",
+                "concept_id": "C27",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [],
+            "temporal_context": "Approximately two years",
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "mean change",
+                  "value": -0.2,
+                  "unit": "z-score"
+                },
+                {
+                  "name": "correlation of change with age",
+                  "value": -0.1,
+                  "unit": "Pearson r"
+                },
+                {
+                  "name": "age correlation p",
+                  "value": 0.004,
+                  "unit": "p-value"
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U39"
+              ]
+            }
+          },
+          {
+            "statement_id": "K9S2",
+            "predicate": "mean cognitive-domain change",
+            "roles": [
+              {
+                "role": "study",
+                "concept_id": "C4",
+                "knowledge_id": null
+              },
+              {
+                "role": "change interval",
+                "concept_id": "C25",
+                "knowledge_id": null
+              },
+              {
+                "role": "domain",
+                "concept_id": "C28",
+                "knowledge_id": null
+              },
+              {
+                "role": "participants",
+                "concept_id": "C29",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [],
+            "temporal_context": "Approximately two years",
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "mean change",
+                  "value": -0.27,
+                  "unit": "z-score"
+                },
+                {
+                  "name": "correlation of change with age",
+                  "value": -0.142,
+                  "unit": "Pearson r"
+                },
+                {
+                  "name": "age correlation p",
+                  "value": "<0.001",
+                  "unit": "p-value"
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U39"
+              ]
+            }
+          },
+          {
+            "statement_id": "K9S3",
+            "predicate": "mean cognitive-domain change",
+            "roles": [
+              {
+                "role": "study",
+                "concept_id": "C4",
+                "knowledge_id": null
+              },
+              {
+                "role": "change interval",
+                "concept_id": "C25",
+                "knowledge_id": null
+              },
+              {
+                "role": "domain",
+                "concept_id": "C30",
+                "knowledge_id": null
+              },
+              {
+                "role": "participants",
+                "concept_id": "C31",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [],
+            "temporal_context": "Approximately two years",
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "mean change",
+                  "value": -0.16,
+                  "unit": "z-score"
+                },
+                {
+                  "name": "correlation of change with age",
+                  "value": -0.155,
+                  "unit": "Pearson r"
+                },
+                {
+                  "name": "age correlation p",
+                  "value": "<0.001",
+                  "unit": "p-value"
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U39"
+              ]
+            }
+          },
+          {
+            "statement_id": "K9S4",
+            "predicate": "mean cognitive-domain change",
+            "roles": [
+              {
+                "role": "study",
+                "concept_id": "C4",
+                "knowledge_id": null
+              },
+              {
+                "role": "change interval",
+                "concept_id": "C25",
+                "knowledge_id": null
+              },
+              {
+                "role": "domain",
+                "concept_id": "C32",
+                "knowledge_id": null
+              },
+              {
+                "role": "participants",
+                "concept_id": "C33",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [],
+            "temporal_context": "Approximately two years",
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "mean change",
+                  "value": -0.27,
+                  "unit": "z-score"
+                },
+                {
+                  "name": "correlation of change with age",
+                  "value": -0.149,
+                  "unit": "Pearson r"
+                },
+                {
+                  "name": "age correlation p",
+                  "value": "<0.001",
+                  "unit": "p-value"
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U39"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U38",
+          "U39"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K10",
+      "kind": "state",
+      "knowledge_kind": "result",
+      "display_text": "Among 665 participants classifiable at both waves, 77 developed MCI and 16 developed dementia by follow-up.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K10S1",
+            "predicate": "incident cognitive-status classification",
+            "roles": [
+              {
+                "role": "participants classified at both waves",
+                "concept_id": "C34",
+                "knowledge_id": null
+              },
+              {
+                "role": "incident diagnoses",
+                "concept_id": "C35",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [],
+            "temporal_context": "Follow-up after approximately two years",
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "participants classified at both waves",
+                  "value": 665,
+                  "unit": "participants"
+                },
+                {
+                  "name": "incident MCI",
+                  "value": 77,
+                  "unit": "participants"
+                },
+                {
+                  "name": "incident dementia",
+                  "value": 16,
+                  "unit": "participants"
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U38"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U38"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K11",
+      "kind": "state",
+      "knowledge_kind": "comparison",
+      "display_text": "Sex was not associated with the overall magnitude of continuous cognitive decline, but incident MCI/dementia was more frequent among men than women in the classifiable sample.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "contrast",
+        "statements": [
+          {
+            "statement_id": "K11S1",
+            "predicate": "sex_difference_in_continuous_decline",
+            "roles": [
+              {
+                "role": "study",
+                "concept_id": "C4",
+                "knowledge_id": null
+              },
+              {
+                "role": "continuous cognitive change",
+                "concept_id": "C36",
+                "knowledge_id": null
+              },
+              {
+                "role": "diagnostic outcome",
+                "concept_id": "C37",
+                "knowledge_id": null
+              },
+              {
+                "role": "outcome",
+                "concept_id": "C38",
+                "knowledge_id": null
+              },
+              {
+                "role": "comparison",
+                "concept_id": "C39",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": "reported non-significant difference",
+            "negated": true,
+            "conditions": [
+              "Continuous change and incident diagnosis are separate outcomes."
+            ],
+            "temporal_context": "The single follow-up at a mean of 23 months and 12 days",
+            "qualifiers": {
+              "attributes": []
+            },
+            "provenance": {
+              "unit_ids": [
+                "U38"
+              ]
+            }
+          },
+          {
+            "statement_id": "K11S2",
+            "predicate": "male_higher_incident_diagnosis_frequency",
+            "roles": [
+              {
+                "role": "study",
+                "concept_id": "C4",
+                "knowledge_id": null
+              },
+              {
+                "role": "continuous cognitive change",
+                "concept_id": "C36",
+                "knowledge_id": null
+              },
+              {
+                "role": "diagnostic outcome",
+                "concept_id": "C37",
+                "knowledge_id": null
+              },
+              {
+                "role": "outcome",
+                "concept_id": "C37",
+                "knowledge_id": null
+              },
+              {
+                "role": "comparison",
+                "concept_id": "C39",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [
+              "Continuous change and incident diagnosis are separate outcomes."
+            ],
+            "temporal_context": "The single follow-up at a mean of 23 months and 12 days",
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "male cases",
+                  "value": 54,
+                  "unit": "participants of 296"
+                },
+                {
+                  "name": "female cases",
+                  "value": 39,
+                  "unit": "participants of 369"
+                },
+                {
+                  "name": "male incidence percent",
+                  "value": 18.2,
+                  "unit": "percent"
+                },
+                {
+                  "name": "female incidence percent",
+                  "value": 10.6,
+                  "unit": "percent"
+                },
+                {
+                  "name": "p-value",
+                  "value": 0.005,
+                  "unit": "p-value"
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U38"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U38"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K12",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "Older age was associated with greater decline in memory, attention/processing speed, and global cognition; the article also reports an age association for executive change in the full-sample change table.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "partition",
+        "statements": [
+          {
+            "statement_id": "K12S1",
+            "predicate": "age-associated cognitive change",
+            "roles": [
+              {
+                "role": "exposure",
+                "concept_id": "C40",
+                "knowledge_id": null
+              },
+              {
+                "role": "population",
+                "concept_id": "C34",
+                "knowledge_id": null
+              },
+              {
+                "role": "follow-up",
+                "concept_id": "C41",
+                "knowledge_id": null
+              },
+              {
+                "role": "outcome",
+                "concept_id": "C42",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": "observational association; not a causal effect",
+            "negated": false,
+            "conditions": [
+              "Observational association in the Sydney cohort."
+            ],
+            "temporal_context": "The single follow-up at a mean of 23 months and 12 days",
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "model coefficient B",
+                  "value": -0.024,
+                  "unit": "z-score per year of age"
+                },
+                {
+                  "name": "standard error",
+                  "value": 0.007,
+                  "unit": "z-score per year of age"
+                },
+                {
+                  "name": "p-value",
+                  "value": 0.002,
+                  "unit": "p-value"
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U43"
+              ]
+            }
+          },
+          {
+            "statement_id": "K12S2",
+            "predicate": "age-associated cognitive change",
+            "roles": [
+              {
+                "role": "exposure",
+                "concept_id": "C40",
+                "knowledge_id": null
+              },
+              {
+                "role": "population",
+                "concept_id": "C34",
+                "knowledge_id": null
+              },
+              {
+                "role": "follow-up",
+                "concept_id": "C41",
+                "knowledge_id": null
+              },
+              {
+                "role": "outcome",
+                "concept_id": "C43",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": "observational association; not a causal effect",
+            "negated": false,
+            "conditions": [
+              "Observational association in the Sydney cohort."
+            ],
+            "temporal_context": "The single follow-up at a mean of 23 months and 12 days",
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "model coefficient B",
+                  "value": -0.024,
+                  "unit": "z-score per year of age"
+                },
+                {
+                  "name": "standard error",
+                  "value": 0.006,
+                  "unit": "z-score per year of age"
+                },
+                {
+                  "name": "p-value",
+                  "value": "<0.001",
+                  "unit": "p-value"
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U43"
+              ]
+            }
+          },
+          {
+            "statement_id": "K12S3",
+            "predicate": "age-associated cognitive change",
+            "roles": [
+              {
+                "role": "exposure",
+                "concept_id": "C40",
+                "knowledge_id": null
+              },
+              {
+                "role": "population",
+                "concept_id": "C34",
+                "knowledge_id": null
+              },
+              {
+                "role": "follow-up",
+                "concept_id": "C41",
+                "knowledge_id": null
+              },
+              {
+                "role": "outcome",
+                "concept_id": "C44",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": "observational association; not a causal effect",
+            "negated": false,
+            "conditions": [
+              "Observational association in the Sydney cohort."
+            ],
+            "temporal_context": "The single follow-up at a mean of 23 months and 12 days",
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "model coefficient B",
+                  "value": -0.019,
+                  "unit": "z-score per year of age"
+                },
+                {
+                  "name": "standard error",
+                  "value": 0.006,
+                  "unit": "z-score per year of age"
+                },
+                {
+                  "name": "p-value",
+                  "value": 0.001,
+                  "unit": "p-value"
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U43"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U42",
+          "U43"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K13",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "Poorer smelling ability was associated with incident MCI/dementia and greater decline in executive function, memory, and global cognition.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "partition",
+        "statements": [
+          {
+            "statement_id": "K13S1",
+            "predicate": "smell ability and cognitive outcome association",
+            "roles": [
+              {
+                "role": "exposure",
+                "concept_id": "C45",
+                "knowledge_id": null
+              },
+              {
+                "role": "population",
+                "concept_id": "C34",
+                "knowledge_id": null
+              },
+              {
+                "role": "outcome",
+                "concept_id": "C46",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": "observational association; higher BSIT score indicates better smell identification",
+            "negated": false,
+            "conditions": [
+              "Baseline smell-test score and incident diagnosis or score change are distinct measures."
+            ],
+            "temporal_context": "The single follow-up at a mean of 23 months and 12 days",
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "BSIT coefficient B",
+                  "value": 0.113,
+                  "unit": "z-score per BSIT point"
+                },
+                {
+                  "name": "p-value",
+                  "value": "<0.001",
+                  "unit": "p-value"
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U43"
+              ]
+            }
+          },
+          {
+            "statement_id": "K13S2",
+            "predicate": "smell ability and cognitive outcome association",
+            "roles": [
+              {
+                "role": "exposure",
+                "concept_id": "C45",
+                "knowledge_id": null
+              },
+              {
+                "role": "population",
+                "concept_id": "C34",
+                "knowledge_id": null
+              },
+              {
+                "role": "outcome",
+                "concept_id": "C43",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": "observational association; higher BSIT score indicates better smell identification",
+            "negated": false,
+            "conditions": [
+              "Baseline smell-test score and incident diagnosis or score change are distinct measures."
+            ],
+            "temporal_context": "The single follow-up at a mean of 23 months and 12 days",
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "BSIT coefficient B",
+                  "value": 0.027,
+                  "unit": "z-score per BSIT point"
+                },
+                {
+                  "name": "p-value",
+                  "value": 0.04,
+                  "unit": "p-value"
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U43"
+              ]
+            }
+          },
+          {
+            "statement_id": "K13S3",
+            "predicate": "smell ability and cognitive outcome association",
+            "roles": [
+              {
+                "role": "exposure",
+                "concept_id": "C45",
+                "knowledge_id": null
+              },
+              {
+                "role": "population",
+                "concept_id": "C34",
+                "knowledge_id": null
+              },
+              {
+                "role": "outcome",
+                "concept_id": "C47",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": "observational association; higher BSIT score indicates better smell identification",
+            "negated": false,
+            "conditions": [
+              "Baseline smell-test score and incident diagnosis or score change are distinct measures."
+            ],
+            "temporal_context": "The single follow-up at a mean of 23 months and 12 days",
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "BSIT coefficient B",
+                  "value": 0.057,
+                  "unit": "z-score per BSIT point"
+                },
+                {
+                  "name": "p-value",
+                  "value": "<0.001",
+                  "unit": "p-value"
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U43"
+              ]
+            }
+          },
+          {
+            "statement_id": "K13S4",
+            "predicate": "smell ability and cognitive outcome association",
+            "roles": [
+              {
+                "role": "exposure",
+                "concept_id": "C45",
+                "knowledge_id": null
+              },
+              {
+                "role": "population",
+                "concept_id": "C34",
+                "knowledge_id": null
+              },
+              {
+                "role": "outcome",
+                "concept_id": "C37",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": "observational association; higher BSIT score indicates better smell identification",
+            "negated": false,
+            "conditions": [
+              "Baseline smell-test score and incident diagnosis or score change are distinct measures."
+            ],
+            "temporal_context": "The single follow-up at a mean of 23 months and 12 days",
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "BSIT coefficient B",
+                  "value": -0.14,
+                  "unit": "log-odds per BSIT point"
+                },
+                {
+                  "name": "p-value",
+                  "value": 0.005,
+                  "unit": "p-value"
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U43"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U42",
+          "U43",
+          "U57"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K14",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "Being married was associated with less executive-function decline and lower incidence of MCI/dementia.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "partition",
+        "statements": [
+          {
+            "statement_id": "K14S1",
+            "predicate": "marital status and cognitive outcome association",
+            "roles": [
+              {
+                "role": "exposure",
+                "concept_id": "C48",
+                "knowledge_id": null
+              },
+              {
+                "role": "population",
+                "concept_id": "C34",
+                "knowledge_id": null
+              },
+              {
+                "role": "outcome",
+                "concept_id": "C49",
+                "knowledge_id": null
+              },
+              {
+                "role": "direction",
+                "concept_id": "C50",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": "observational association; described as protective by the authors",
+            "negated": false,
+            "conditions": [
+              "Observational associations; not causal effects."
+            ],
+            "temporal_context": "Baseline marital status and outcomes at the single follow-up",
+            "qualifiers": {
+              "attributes": []
+            },
+            "provenance": {
+              "unit_ids": [
+                "U45"
+              ]
+            }
+          },
+          {
+            "statement_id": "K14S2",
+            "predicate": "marital status and cognitive outcome association",
+            "roles": [
+              {
+                "role": "exposure",
+                "concept_id": "C48",
+                "knowledge_id": null
+              },
+              {
+                "role": "population",
+                "concept_id": "C34",
+                "knowledge_id": null
+              },
+              {
+                "role": "outcome",
+                "concept_id": "C37",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": "observational association; described as protective by the authors",
+            "negated": false,
+            "conditions": [
+              "Observational associations; not causal effects."
+            ],
+            "temporal_context": "Baseline marital status and outcomes at the single follow-up",
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "odds ratio",
+                  "value": 0.59,
+                  "unit": "odds ratio"
+                },
+                {
+                  "name": "confidence interval",
+                  "value": "0.35–0.97",
+                  "unit": "95% confidence interval for odds ratio"
+                },
+                {
+                  "name": "PAR percent",
+                  "value": -24.6,
+                  "unit": "percent"
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U45",
+                "U51"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U45",
+          "U51"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K15",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "Kidney disease and antidepressant use were associated with less memory decline; several other apparent protective associations were specific to sex or age subgroups.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "partition",
+        "statements": [
+          {
+            "statement_id": "K15S1",
+            "predicate": "protective-factor association by endpoint",
+            "roles": [
+              {
+                "role": "population",
+                "concept_id": "C34",
+                "knowledge_id": null
+              },
+              {
+                "role": "exposures",
+                "concept_id": "C51",
+                "knowledge_id": null
+              },
+              {
+                "role": "exposure",
+                "concept_id": "C52",
+                "knowledge_id": null
+              },
+              {
+                "role": "outcome",
+                "concept_id": "C53",
+                "knowledge_id": null
+              },
+              {
+                "role": "direction",
+                "concept_id": "C54",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": "observational associations; not causal effects",
+            "negated": false,
+            "conditions": [
+              "Observational associations; subgroup-specific findings retain their stated subgroup."
+            ],
+            "temporal_context": "Baseline factors and outcomes at the single follow-up",
+            "qualifiers": {
+              "attributes": []
+            },
+            "provenance": {
+              "unit_ids": [
+                "U45"
+              ]
+            }
+          },
+          {
+            "statement_id": "K15S2",
+            "predicate": "protective-factor association by endpoint",
+            "roles": [
+              {
+                "role": "population",
+                "concept_id": "C34",
+                "knowledge_id": null
+              },
+              {
+                "role": "exposures",
+                "concept_id": "C51",
+                "knowledge_id": null
+              },
+              {
+                "role": "exposure",
+                "concept_id": "C55",
+                "knowledge_id": null
+              },
+              {
+                "role": "outcome",
+                "concept_id": "C53",
+                "knowledge_id": null
+              },
+              {
+                "role": "direction",
+                "concept_id": "C54",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": "observational associations; not causal effects",
+            "negated": false,
+            "conditions": [
+              "Observational associations; subgroup-specific findings retain their stated subgroup."
+            ],
+            "temporal_context": "Baseline factors and outcomes at the single follow-up",
+            "qualifiers": {
+              "attributes": []
+            },
+            "provenance": {
+              "unit_ids": [
+                "U45"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U45"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K16",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "Associations varied across subgroups: examples included greater incident MCI/dementia among more active men, poorer-smell risk mainly among women, and age-related associations that differed by clinical history.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "partition",
+        "statements": [
+          {
+            "statement_id": "K16S1",
+            "predicate": "age- and sex-modified association",
+            "roles": [
+              {
+                "role": "population",
+                "concept_id": "C34",
+                "knowledge_id": null
+              },
+              {
+                "role": "modifiers",
+                "concept_id": "C3",
+                "knowledge_id": null
+              },
+              {
+                "role": "exposure",
+                "concept_id": "C56",
+                "knowledge_id": null
+              },
+              {
+                "role": "modifier",
+                "concept_id": "C57",
+                "knowledge_id": null
+              },
+              {
+                "role": "outcome",
+                "concept_id": "C37",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": "observational subgroup findings",
+            "negated": false,
+            "conditions": [
+              "Findings are specific to the stated outcome and subgroup; interaction testing was limited."
+            ],
+            "temporal_context": "The single follow-up at a mean of 23 months and 12 days",
+            "qualifiers": {
+              "attributes": []
+            },
+            "provenance": {
+              "unit_ids": [
+                "U42"
+              ]
+            }
+          },
+          {
+            "statement_id": "K16S2",
+            "predicate": "age- and sex-modified association",
+            "roles": [
+              {
+                "role": "population",
+                "concept_id": "C34",
+                "knowledge_id": null
+              },
+              {
+                "role": "modifiers",
+                "concept_id": "C3",
+                "knowledge_id": null
+              },
+              {
+                "role": "exposure",
+                "concept_id": "C58",
+                "knowledge_id": null
+              },
+              {
+                "role": "modifier",
+                "concept_id": "C59",
+                "knowledge_id": null
+              },
+              {
+                "role": "outcome",
+                "concept_id": "C37",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": "observational subgroup findings",
+            "negated": false,
+            "conditions": [
+              "Findings are specific to the stated outcome and subgroup; interaction testing was limited."
+            ],
+            "temporal_context": "The single follow-up at a mean of 23 months and 12 days",
+            "qualifiers": {
+              "attributes": []
+            },
+            "provenance": {
+              "unit_ids": [
+                "U42"
+              ]
+            }
+          },
+          {
+            "statement_id": "K16S3",
+            "predicate": "age- and sex-modified association",
+            "roles": [
+              {
+                "role": "population",
+                "concept_id": "C34",
+                "knowledge_id": null
+              },
+              {
+                "role": "modifiers",
+                "concept_id": "C3",
+                "knowledge_id": null
+              },
+              {
+                "role": "exposure",
+                "concept_id": "C40",
+                "knowledge_id": null
+              },
+              {
+                "role": "modifier",
+                "concept_id": "C60",
+                "knowledge_id": null
+              },
+              {
+                "role": "outcome",
+                "concept_id": "C61",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": "observational subgroup findings",
+            "negated": false,
+            "conditions": [
+              "Findings are specific to the stated outcome and subgroup; interaction testing was limited."
+            ],
+            "temporal_context": "The single follow-up at a mean of 23 months and 12 days",
+            "qualifiers": {
+              "attributes": []
+            },
+            "provenance": {
+              "unit_ids": [
+                "U42"
+              ]
+            }
+          },
+          {
+            "statement_id": "K16S4",
+            "predicate": "age- and sex-modified association",
+            "roles": [
+              {
+                "role": "population",
+                "concept_id": "C34",
+                "knowledge_id": null
+              },
+              {
+                "role": "modifiers",
+                "concept_id": "C3",
+                "knowledge_id": null
+              },
+              {
+                "role": "exposure",
+                "concept_id": "C40",
+                "knowledge_id": null
+              },
+              {
+                "role": "modifier",
+                "concept_id": "C62",
+                "knowledge_id": null
+              },
+              {
+                "role": "outcome",
+                "concept_id": "C63",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": "observational subgroup findings",
+            "negated": false,
+            "conditions": [
+              "Findings are specific to the stated outcome and subgroup; interaction testing was limited."
+            ],
+            "temporal_context": "The single follow-up at a mean of 23 months and 12 days",
+            "qualifiers": {
+              "attributes": []
+            },
+            "provenance": {
+              "unit_ids": [
+                "U42"
+              ]
+            }
+          },
+          {
+            "statement_id": "K16S5",
+            "predicate": "age- and sex-modified association",
+            "roles": [
+              {
+                "role": "population",
+                "concept_id": "C34",
+                "knowledge_id": null
+              },
+              {
+                "role": "modifiers",
+                "concept_id": "C3",
+                "knowledge_id": null
+              },
+              {
+                "role": "exposure",
+                "concept_id": "C40",
+                "knowledge_id": null
+              },
+              {
+                "role": "modifier",
+                "concept_id": "C64",
+                "knowledge_id": null
+              },
+              {
+                "role": "outcome",
+                "concept_id": "C53",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": "observational subgroup findings",
+            "negated": false,
+            "conditions": [
+              "Findings are specific to the stated outcome and subgroup; interaction testing was limited."
+            ],
+            "temporal_context": "The single follow-up at a mean of 23 months and 12 days",
+            "qualifiers": {
+              "attributes": []
+            },
+            "provenance": {
+              "unit_ids": [
+                "U42"
+              ]
+            }
+          },
+          {
+            "statement_id": "K16S6",
+            "predicate": "age- and sex-modified association",
+            "roles": [
+              {
+                "role": "population",
+                "concept_id": "C34",
+                "knowledge_id": null
+              },
+              {
+                "role": "modifiers",
+                "concept_id": "C3",
+                "knowledge_id": null
+              },
+              {
+                "role": "exposure",
+                "concept_id": "C65",
+                "knowledge_id": null
+              },
+              {
+                "role": "modifier",
+                "concept_id": "C57",
+                "knowledge_id": null
+              },
+              {
+                "role": "outcome",
+                "concept_id": "C37",
+                "knowledge_id": null
+              },
+              {
+                "role": "direction",
+                "concept_id": "C66",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": "observational subgroup findings",
+            "negated": false,
+            "conditions": [
+              "Findings are specific to the stated outcome and subgroup; interaction testing was limited."
+            ],
+            "temporal_context": "The single follow-up at a mean of 23 months and 12 days",
+            "qualifiers": {
+              "attributes": []
+            },
+            "provenance": {
+              "unit_ids": [
+                "U45"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U42",
+          "U45",
+          "U47"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K17",
+      "kind": "state",
+      "knowledge_kind": "result",
+      "display_text": "The authors reported population-attributable-risk estimates for incident MCI/dementia of 31.3% for male sex, 18.3% for poorer smell identification, and −24.6% for being married.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "partition",
+        "statements": [
+          {
+            "statement_id": "K17S1",
+            "predicate": "population attributable risk estimate",
+            "roles": [
+              {
+                "role": "population",
+                "concept_id": "C67",
+                "knowledge_id": null
+              },
+              {
+                "role": "model",
+                "concept_id": "C68",
+                "knowledge_id": null
+              },
+              {
+                "role": "exposure",
+                "concept_id": "C69",
+                "knowledge_id": null
+              },
+              {
+                "role": "outcome",
+                "concept_id": "C37",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": "model-derived PAR; not an intervention effect",
+            "negated": false,
+            "conditions": [
+              "These are model-derived population-attributable-risk estimates, not intervention effects."
+            ],
+            "temporal_context": "Incident MCI or dementia by the single follow-up",
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "PAR",
+                  "value": 31.3,
+                  "unit": "percent"
+                },
+                {
+                  "name": "odds ratio",
+                  "value": 2.17,
+                  "unit": "odds ratio"
+                },
+                {
+                  "name": "confidence interval",
+                  "value": "1.32–3.56",
+                  "unit": "95% confidence interval for odds ratio"
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U51"
+              ]
+            }
+          },
+          {
+            "statement_id": "K17S2",
+            "predicate": "population attributable risk estimate",
+            "roles": [
+              {
+                "role": "population",
+                "concept_id": "C67",
+                "knowledge_id": null
+              },
+              {
+                "role": "model",
+                "concept_id": "C68",
+                "knowledge_id": null
+              },
+              {
+                "role": "exposure",
+                "concept_id": "C70",
+                "knowledge_id": null
+              },
+              {
+                "role": "outcome",
+                "concept_id": "C37",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": "model-derived PAR; not an intervention effect",
+            "negated": false,
+            "conditions": [
+              "These are model-derived population-attributable-risk estimates, not intervention effects."
+            ],
+            "temporal_context": "Incident MCI or dementia by the single follow-up",
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "PAR",
+                  "value": 18.3,
+                  "unit": "percent"
+                },
+                {
+                  "name": "odds ratio",
+                  "value": 1.86,
+                  "unit": "odds ratio"
+                },
+                {
+                  "name": "confidence interval",
+                  "value": "1.15–3.01",
+                  "unit": "95% confidence interval for odds ratio"
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U51"
+              ]
+            }
+          },
+          {
+            "statement_id": "K17S3",
+            "predicate": "population attributable risk estimate",
+            "roles": [
+              {
+                "role": "population",
+                "concept_id": "C67",
+                "knowledge_id": null
+              },
+              {
+                "role": "model",
+                "concept_id": "C68",
+                "knowledge_id": null
+              },
+              {
+                "role": "exposure",
+                "concept_id": "C71",
+                "knowledge_id": null
+              },
+              {
+                "role": "outcome",
+                "concept_id": "C37",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": "model-derived PAR; not an intervention effect",
+            "negated": false,
+            "conditions": [
+              "These are model-derived population-attributable-risk estimates, not intervention effects."
+            ],
+            "temporal_context": "Incident MCI or dementia by the single follow-up",
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "PAR",
+                  "value": -24.6,
+                  "unit": "percent"
+                },
+                {
+                  "name": "odds ratio",
+                  "value": 0.59,
+                  "unit": "odds ratio"
+                },
+                {
+                  "name": "confidence interval",
+                  "value": "0.35–0.97",
+                  "unit": "95% confidence interval for odds ratio"
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U51"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U49",
+          "U51"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K18",
+      "kind": "state",
+      "knowledge_kind": "result",
+      "display_text": "The study detected no association of APOE ε4 with incident MCI/dementia or composite memory decline in this sample; more than 80% of incident diagnostic cases were MCI.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K18S1",
+            "predicate": "APOE epsilon-4 association not detected",
+            "roles": [
+              {
+                "role": "exposure",
+                "concept_id": "C72",
+                "knowledge_id": null
+              },
+              {
+                "role": "population",
+                "concept_id": "C73",
+                "knowledge_id": null
+              },
+              {
+                "role": "outcomes",
+                "concept_id": "C74",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": "no association detected in this analysis; not proof of a universal null effect",
+            "negated": true,
+            "conditions": [
+              "The authors note that the outcome composition and shorter follow-up may help explain the null result."
+            ],
+            "temporal_context": "The single follow-up after approximately two years",
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "MCI share among incident diagnostic cases",
+                  "value": ">80",
+                  "unit": "percent"
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U61"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U61"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K19",
+      "kind": "state",
+      "knowledge_kind": "limitation",
+      "display_text": "Loss to follow-up could bias associations: men lost to follow-up reported less physical activity and poorer health than men retained, and low eGFR was numerically more common among those lost.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "conjunction",
+        "statements": [
+          {
+            "statement_id": "K19S1",
+            "predicate": "follow-up attrition pattern",
+            "roles": [
+              {
+                "role": "population",
+                "concept_id": "C75",
+                "knowledge_id": null
+              },
+              {
+                "role": "missingness",
+                "concept_id": "C76",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": "authors' attrition analysis; the eGFR comparison was a non-significant tendency",
+            "negated": false,
+            "conditions": [
+              "The eGFR comparison was a non-significant tendency in the reported analysis."
+            ],
+            "temporal_context": "From baseline recruitment to the single follow-up",
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "died before follow-up",
+                  "value": 43,
+                  "unit": "participants"
+                },
+                {
+                  "name": "declined follow-up",
+                  "value": 105,
+                  "unit": "participants"
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U19"
+              ]
+            }
+          },
+          {
+            "statement_id": "K19S2",
+            "predicate": "follow-up attrition pattern",
+            "roles": [
+              {
+                "role": "population",
+                "concept_id": "C34",
+                "knowledge_id": null
+              },
+              {
+                "role": "missingness",
+                "concept_id": "C76",
+                "knowledge_id": null
+              },
+              {
+                "role": "comparison",
+                "concept_id": "C77",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": "authors' attrition analysis; the eGFR comparison was a non-significant tendency",
+            "negated": false,
+            "conditions": [
+              "The eGFR comparison was a non-significant tendency in the reported analysis."
+            ],
+            "temporal_context": "From baseline recruitment to the single follow-up",
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "physical activity mean lost",
+                  "value": 1.37,
+                  "unit": "physical activity score"
+                },
+                {
+                  "name": "physical activity mean retained",
+                  "value": 1.77,
+                  "unit": "physical activity score"
+                },
+                {
+                  "name": "p-value",
+                  "value": 0.016,
+                  "unit": "p-value"
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U53"
+              ]
+            }
+          },
+          {
+            "statement_id": "K19S3",
+            "predicate": "follow-up attrition pattern",
+            "roles": [
+              {
+                "role": "population",
+                "concept_id": "C34",
+                "knowledge_id": null
+              },
+              {
+                "role": "missingness",
+                "concept_id": "C76",
+                "knowledge_id": null
+              },
+              {
+                "role": "comparison",
+                "concept_id": "C77",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": "authors' attrition analysis; the eGFR comparison was a non-significant tendency",
+            "negated": false,
+            "conditions": [
+              "The eGFR comparison was a non-significant tendency in the reported analysis."
+            ],
+            "temporal_context": "From baseline recruitment to the single follow-up",
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "low-health proportion lost",
+                  "value": 28.1,
+                  "unit": "percent"
+                },
+                {
+                  "name": "low-health proportion retained",
+                  "value": 16.7,
+                  "unit": "percent"
+                },
+                {
+                  "name": "p-value",
+                  "value": 0.038,
+                  "unit": "p-value"
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U53"
+              ]
+            }
+          },
+          {
+            "statement_id": "K19S4",
+            "predicate": "follow-up attrition pattern",
+            "roles": [
+              {
+                "role": "population",
+                "concept_id": "C34",
+                "knowledge_id": null
+              },
+              {
+                "role": "missingness",
+                "concept_id": "C76",
+                "knowledge_id": null
+              },
+              {
+                "role": "comparison",
+                "concept_id": "C78",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": "authors' attrition analysis; the eGFR comparison was a non-significant tendency",
+            "negated": false,
+            "conditions": [
+              "The eGFR comparison was a non-significant tendency in the reported analysis."
+            ],
+            "temporal_context": "From baseline recruitment to the single follow-up",
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "low eGFR proportion lost",
+                  "value": 45.1,
+                  "unit": "percent"
+                },
+                {
+                  "name": "low eGFR proportion retained",
+                  "value": 35.6,
+                  "unit": "percent"
+                },
+                {
+                  "name": "p-value",
+                  "value": 0.065,
+                  "unit": "p-value"
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U53"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U19",
+          "U53"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K20",
+      "kind": "state",
+      "knowledge_kind": "limitation",
+      "display_text": "The authors caution that risk-factor associations differ across cognitive domains and that inconsistent assignment of tests to domains limits cross-study comparability.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K20S1",
+            "predicate": "domain-specificity and cross-study comparability limitation",
+            "roles": [
+              {
+                "role": "reported association",
+                "concept_id": "C79",
+                "knowledge_id": null
+              },
+              {
+                "role": "domain assignment",
+                "concept_id": "C80",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": "authors' interpretation",
+            "negated": false,
+            "conditions": [
+              "This limitation concerns comparisons of cognitive-domain results across studies with different test batteries."
+            ],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": []
+            },
+            "provenance": {
+              "unit_ids": [
+                "U64",
+                "U68"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U64",
+          "U68"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K21",
+      "kind": "state",
+      "knowledge_kind": "limitation",
+      "display_text": "Interpretation is limited by non-random attrition, self-reported measures, one follow-up at two years, possible diagnostic instability and regression to the mean, untested interactions beyond age and sex, and uncertain generalizability.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K21S1",
+            "predicate": "study limitations",
+            "roles": [
+              {
+                "role": "study",
+                "concept_id": "C1",
+                "knowledge_id": null
+              },
+              {
+                "role": "limitations",
+                "concept_id": "C81",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [
+              "The authors caution that null and unexpected findings should be interpreted carefully."
+            ],
+            "temporal_context": "One follow-up at a mean of 23 months and 12 days",
+            "qualifiers": {
+              "attributes": []
+            },
+            "provenance": {
+              "unit_ids": [
+                "U68"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U68"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K22",
+      "kind": "state",
+      "knowledge_kind": "conclusion",
+      "display_text": "The authors conclude that associations with late-life cognitive decline vary by age, sex, and outcome; they propose tailored interventions as a possibility requiring future testing.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_argument",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K22S1",
+            "predicate": "author conclusion",
+            "roles": [
+              {
+                "role": "study conclusion",
+                "concept_id": "C82",
+                "knowledge_id": null
+              },
+              {
+                "role": "possible implication",
+                "concept_id": "C83",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": "author conclusion; intervention benefit remains to be tested",
+            "negated": false,
+            "conditions": [
+              "The proposed intervention tailoring remains a possibility requiring future testing."
+            ],
+            "temporal_context": "Authors’ interpretation after the baseline-to-follow-up analysis",
+            "qualifiers": {
+              "attributes": []
+            },
+            "provenance": {
+              "unit_ids": [
+                "U70"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U70"
+        ]
+      }
+    }
+  ],
+  "nodes": [],
+  "edges": [],
+  "transitions": []
+}

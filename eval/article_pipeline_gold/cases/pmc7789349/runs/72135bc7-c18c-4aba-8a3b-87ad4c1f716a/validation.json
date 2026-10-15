@@ -1,0 +1,31 @@
+{
+  "contract": "passed",
+  "dag": "passed",
+  "provenance": "passed",
+  "coverage_units": 100,
+  "analysis": {
+    "depth": 9,
+    "layer_counts": {
+      "0": 11,
+      "1": 3,
+      "2": 1,
+      "3": 3,
+      "4": 43,
+      "5": 26,
+      "6": 5,
+      "7": 3,
+      "8": 1
+    },
+    "concept_count": 164,
+    "canonical_knowledge_count": 96,
+    "occurrence_count": 96,
+    "repeated_occurrence_count": 0,
+    "transition_count": 85,
+    "knowledge_input_count": 112,
+    "statement_count": 149,
+    "operation_count": 7,
+    "isolated_count": 5
+  },
+  "model_calls": 0,
+  "scientific_accuracy": "not_assessed"
+}

@@ -1,0 +1,283 @@
+{
+  "occurrences": [],
+  "transitions": [
+    {
+      "id": "T1",
+      "sources": [
+        "B14"
+      ],
+      "target": "B15",
+      "usage": "development",
+      "reason": "The author explicitly links the previously described cortisol–memory process to executive-function mediation; the earlier process is used in this synthesis.",
+      "unit_ids": [
+        "U10"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T2",
+      "sources": [
+        "B4"
+      ],
+      "target": "B20",
+      "usage": "premise",
+      "reason": "The conclusion uses progression from MCI to dementia and the need for timely intervention to motivate investigation of modifiable predictors.",
+      "unit_ids": [
+        "U66"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T3",
+      "sources": [
+        "B19"
+      ],
+      "target": "B22",
+      "usage": "development",
+      "reason": "The established CAC cohort is developed into its actual recruitment and eligibility procedure, rather than merely sharing a topic.",
+      "unit_ids": [
+        "U16"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T4",
+      "sources": [
+        "B22"
+      ],
+      "target": "B23",
+      "usage": "data",
+      "reason": "The recruited Phase I participants are the examined group for demographic collection, census comparison and MMSE administration.",
+      "unit_ids": [
+        "U16"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T5",
+      "sources": [
+        "B23"
+      ],
+      "target": "B24",
+      "usage": "data",
+      "reason": "Phase II invitations and stratified controls explicitly use Phase I MMSE results and demographic information.",
+      "unit_ids": [
+        "U16"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T6",
+      "sources": [
+        "B24"
+      ],
+      "target": "B25",
+      "usage": "prerequisite",
+      "reason": "Consenting selected participants form the input population for the Phase II examination.",
+      "unit_ids": [
+        "U16"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T7",
+      "sources": [
+        "B25"
+      ],
+      "target": "B26",
+      "usage": "data",
+      "reason": "Consensus Phase II diagnoses are based on the comprehensive Phase II evaluations.",
+      "unit_ids": [
+        "U16"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T8",
+      "sources": [
+        "B26"
+      ],
+      "target": "B27",
+      "usage": "result",
+      "reason": "Phase III eligibility is explicitly restricted to the CNI and MCI classifications established in Phase II.",
+      "unit_ids": [
+        "U18"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T9",
+      "sources": [
+        "B27"
+      ],
+      "target": "B28",
+      "usage": "data",
+      "reason": "The deaths, unlocated participants and refusals are counted relative to the explicitly defined Phase III eligible pool.",
+      "unit_ids": [
+        "U18"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T10",
+      "sources": [
+        "B27"
+      ],
+      "target": "B30",
+      "usage": "prerequisite",
+      "reason": "The eligible CNI/MCI pool supplies the persons contacted for Phase III home evaluation.",
+      "unit_ids": [
+        "U18"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T11",
+      "sources": [
+        "B28",
+        "B30"
+      ],
+      "target": "B29",
+      "usage": "result",
+      "reason": "The final analyzed sample jointly uses survival/participation accounting and completed home evaluations, including four exclusions.",
+      "unit_ids": [
+        "U18",
+        "U50"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T12",
+      "sources": [
+        "B30"
+      ],
+      "target": "B31",
+      "usage": "development",
+      "reason": "The stated home assessment is directly refined into this performed measurement procedure; the arrow does not denote a relation between bare instruments.",
+      "unit_ids": [
+        "U24",
+        "U5"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T13",
+      "sources": [
+        "B30"
+      ],
+      "target": "B33",
+      "usage": "development",
+      "reason": "The stated home assessment is directly refined into this performed measurement procedure; the arrow does not denote a relation between bare instruments.",
+      "unit_ids": [
+        "U26",
+        "U5"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T14",
+      "sources": [
+        "B30"
+      ],
+      "target": "B35",
+      "usage": "development",
+      "reason": "The stated home assessment is directly refined into this performed measurement procedure; the arrow does not denote a relation between bare instruments.",
+      "unit_ids": [
+        "U28",
+        "U5"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T15",
+      "sources": [
+        "B30"
+      ],
+      "target": "B37",
+      "usage": "development",
+      "reason": "The stated home assessment is directly refined into this performed measurement procedure; the arrow does not denote a relation between bare instruments.",
+      "unit_ids": [
+        "U31"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T25",
+      "sources": [
+        "B30"
+      ],
+      "target": "B39",
+      "usage": "development",
+      "reason": "The stated home assessment is directly refined into this performed measurement procedure; the arrow does not denote a relation between bare instruments.",
+      "unit_ids": [
+        "U33"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T26",
+      "sources": [
+        "B31"
+      ],
+      "target": "B32",
+      "usage": "data",
+      "reason": "Manual scoring immediately uses the recorded overnight PSG channels.",
+      "unit_ids": [
+        "U24"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T27",
+      "sources": [
+        "B33"
+      ],
+      "target": "B34",
+      "usage": "data",
+      "reason": "Derived sleep variables and averaging windows use the recorded actigraphy epochs and diaries.",
+      "unit_ids": [
+        "U26"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T28",
+      "sources": [
+        "B35"
+      ],
+      "target": "B36",
+      "usage": "data",
+      "reason": "The ELISA procedure immediately uses the isolated and preserved plasma samples.",
+      "unit_ids": [
+        "U28"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T29",
+      "sources": [
+        "B37"
+      ],
+      "target": "B38",
+      "usage": "data",
+      "reason": "Normative transformations and domain means use the administered tests raw scores.",
+      "unit_ids": [
+        "U31"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T30",
+      "sources": [
+        "B40"
+      ],
+      "target": "B3",
+      "usage": "definition",
+      "reason": "The article explicitly uses preserved IADL functioning as a diagnostic requirement for MCI.",
+      "unit_ids": [
+        "U33"
+      ],
+      "conditions": []
+    }
+  ]
+}

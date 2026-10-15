@@ -1,0 +1,5575 @@
+{
+  "knowledge": [
+    {
+      "key": "definition",
+      "units": [
+        5,
+        14
+      ],
+      "en": "MCI is an intermediate state between normal cognitive aging and overt dementia, described as slight but noticeable memory and/or other thinking deficits in older adults with minimal impact on daily living.",
+      "ru": "MCI — промежуточное состояние между нормальным когнитивным старением и деменцией: лёгкие, но заметные нарушения памяти и/или мышления у пожилых с минимальным влиянием на повседневное функционирование.",
+      "predicate": "characterized_by",
+      "roles": {
+        "subject": "Mild cognitive impairment"
+      },
+      "type": "definition",
+      "logic": "conjunction",
+      "claims": [
+        {
+          "roles": {
+            "subject": "Mild cognitive impairment",
+            "feature": "Slight but noticeable memory and/or other thinking deficits"
+          }
+        },
+        {
+          "predicate": "has_functional_impact",
+          "roles": {
+            "subject": "Mild cognitive impairment",
+            "function": "Daily living functioning"
+          },
+          "attrs": {
+            "degree": "minimal"
+          }
+        },
+        {
+          "predicate": "intermediate_between",
+          "roles": {
+            "subject": "Mild cognitive impairment",
+            "earlier_state": "Normal cognitive aging",
+            "later_state": "Overt dementia"
+          }
+        }
+      ]
+    },
+    {
+      "key": "progression",
+      "units": [
+        14
+      ],
+      "en": "Some researchers regard MCI as an early dementia stage; cited progression estimates are around 30% annually and 60–90% over a lifetime.",
+      "ru": "Некоторые исследователи считают MCI ранней стадией деменции; цитируемые оценки прогрессирования — около 30% за год и 60–90% за жизнь.",
+      "predicate": "reported_progression_risk",
+      "roles": {
+        "condition": "Mild cognitive impairment",
+        "outcome": "Clinically diagnosed dementia"
+      },
+      "modality": "some researchers argue; cited estimates",
+      "attrs": {
+        "annual_rate": {
+          "value": 30,
+          "unit": "percent/year"
+        },
+        "lifetime_rate": {
+          "value": "60–90",
+          "unit": "percent/lifetime"
+        }
+      },
+      "conditions": [
+        "Cited background claims, not pooled conversion estimates of this prevalence review"
+      ]
+    },
+    {
+      "key": "subtypes",
+      "units": [
+        15
+      ],
+      "en": "Amnestic MCI predominantly affects memory and tends toward AD; nonamnestic MCI affects other thinking skills and may precede frontotemporal/Lewy-body dementia; both may lead to vascular dementia.",
+      "ru": "Амнестический MCI преимущественно нарушает память и тяготеет к болезни Альцгеймера; неамнестический затрагивает другие функции и может предшествовать лобно-височной деменции/деменции с тельцами Леви; оба могут перейти в сосудистую деменцию.",
+      "predicate": "subtype_partition",
+      "roles": {
+        "subject": "Mild cognitive impairment"
+      },
+      "type": "definition",
+      "logic": "contrast",
+      "claims": [
+        {
+          "predicate": "characterized_by",
+          "roles": {
+            "subject": "Amnestic mild cognitive impairment",
+            "feature": "Predominant memory loss"
+          },
+          "attrs": {
+            "tendency": "progression to Alzheimer disease"
+          }
+        },
+        {
+          "predicate": "characterized_by",
+          "roles": {
+            "subject": "Nonamnestic mild cognitive impairment",
+            "feature": "Nonmemory thinking impairment"
+          },
+          "modality": "seems prodromal for frontotemporal dementia and dementia with Lewy bodies"
+        },
+        {
+          "predicate": "can_lead_to",
+          "roles": {
+            "subject": "Amnestic and nonamnestic mild cognitive impairment",
+            "outcome": "Vascular dementia"
+          },
+          "modality": "can"
+        }
+      ]
+    },
+    {
+      "key": "burden",
+      "units": [
+        13
+      ],
+      "en": "The source cites a 2016 global annual dementia cost ofUS$315 billion, roughly one quarter of diagnoses in China and a projectedUS$250 billion Chinese burden in 2020 (nearly one fifth of global costs).",
+      "ru": "Источник приводит для 2016 года глобальные ежегодные издержки деменции 315 млрд долларов, примерно четверть диагнозов в Китае и прогноз китайского бремени 250 млрд в 2020 (почти пятая часть глобальных затрат).",
+      "predicate": "estimated_dementia_burden",
+      "roles": {
+        "condition": "Dementia",
+        "population": "Global and Chinese populations"
+      },
+      "modality": "cited estimates and projection",
+      "time": "2016 report and2020 projection",
+      "attrs": {
+        "global_annual_cost": {
+          "value": 315,
+          "unit": "billion USD/year"
+        },
+        "China_2020_cost": {
+          "value": 250,
+          "unit": "billion USD"
+        },
+        "diagnoses_in_China": "about one quarter",
+        "global_cost_share": "nearly one fifth",
+        "author_burden_description": "third most serious health problem after cancer and cardio-cerebrovascular disease; burden mostly in low/middle-income countries"
+      }
+    },
+    {
+      "key": "heterogeneity",
+      "units": [
+        16,
+        17
+      ],
+      "en": "Reported MCI prevalence varies by population and method: international ranges 0.5–42% and 6.5–38.6%, China 0.8% versus 20.8%, retired senior cadres 74.23% versus 2.4% in a younger sample; institutional samples should not be pooled indiscriminately with community samples.",
+      "ru": "Распространённость MCI различается по популяциям и методам: мировые диапазоны 0, 5–42% и 6, 5–38, 6%, Китай 0, 8% против 20, 8%, пожилые кадры 74, 23% против 2, 4% в молодой выборке; институциональные и общинные выборки нельзя смешивать без учёта контекста.",
+      "predicate": "heterogeneity_background",
+      "roles": {
+        "measure": "MCI prevalence"
+      },
+      "attrs": {
+        "international_2012": {
+          "value": "0.5–42",
+          "unit": "percent"
+        },
+        "recent_international": {
+          "value": "6.5–38.6",
+          "unit": "percent"
+        },
+        "China_dementia_group": {
+          "value": 0.8,
+          "unit": "percent"
+        },
+        "China_national_center": {
+          "value": 20.8,
+          "unit": "percent"
+        },
+        "retired_cadres": {
+          "value": 74.23,
+          "unit": "percent"
+        },
+        "younger_sample": {
+          "value": 2.4,
+          "unit": "percent"
+        },
+        "sources_of_variation": "age; sampling representativeness; diagnostic criteria; community versus institutional setting"
+      },
+      "conditions": [
+        "Illustrative cited studies, not this review's pooled estimates"
+      ]
+    },
+    {
+      "key": "review",
+      "units": [
+        5,
+        17
+      ],
+      "en": "Synthesize MCI and aMCI prevalence for representative community-dwelling older adults in China, with subgroup analyses to inform preventive service planning.",
+      "ru": "Синтезировать распространённость MCI и aMCI для представительных общинных популяций Китая с анализом подгрупп для планирования профилактики.",
+      "predicate": "conduct_review",
+      "roles": {
+        "subject": "MCI and amnestic MCI prevalence",
+        "population": "Community-dwelling older adults in China"
+      },
+      "kind": "action",
+      "status": "performed"
+    },
+    {
+      "key": "protocol",
+      "units": [
+        6,
+        19,
+        9
+      ],
+      "en": "The review followed PRISMA (four-phase flow and 27-item checklist) and registered protocolCRD42019134686 onPROSPERO.",
+      "ru": "Обзор следовал PRISMA (четыре этапа, 27 пунктов) и зарегистрирован в PROSPERO как CRD42019134686.",
+      "predicate": "review_protocol",
+      "roles": {
+        "subject": "Chinese MCI prevalence review"
+      },
+      "type": "method",
+      "attrs": {
+        "PRISMA_phases": {
+          "value": 4,
+          "unit": "phases"
+        },
+        "checklist_items": {
+          "value": 27,
+          "unit": "items"
+        },
+        "registration": "PROSPERO CRD42019134686"
+      }
+    },
+    {
+      "key": "search",
+      "units": [
+        6,
+        21
+      ],
+      "en": "Search ten English/Chinese databases from inception through 1 March 2020, hand-search reference lists and consult a librarian; export to Endnote X9.",
+      "ru": "Провести поиск в десяти англо-/китайскоязычных базах до 1 марта 2020, проверить списки литературы и консультироваться с библиотекарем; экспортировать в Endnote X9.",
+      "predicate": "search_literature",
+      "roles": {
+        "subject": "MCI prevalence studies"
+      },
+      "kind": "action",
+      "status": "performed",
+      "time": "Database inception through1March2020",
+      "attrs": {
+        "databases": "Google Scholar; PubMed; Web of Science; Embase; CINAHL; PsycINFO; CQVIP; Wangfang; CNKI; Sinomed",
+        "database_count": {
+          "value": 10,
+          "unit": "databases"
+        },
+        "terms": "mild cognitive impairment; cognitive dysfunction; early dementia; epidemiology; prevalence; rate; occurrence",
+        "software": "Endnote X9"
+      }
+    },
+    {
+      "key": "eligibility",
+      "units": [
+        23
+      ],
+      "en": "Include original population-based cross-sectional/longitudinal community studies with screening plus diagnostic confirmation and representative participants≥55; exclude long-term-care and special disease, occupation, migration, insurance or literacy samples.",
+      "ru": "Включать оригинальные общепопуляционные поперечные/продольные общинные исследования скрининга с подтверждением диагноза у участников≥55; исключать учреждения ухода и специальные выборки по болезни, профессии, миграции, страховке или грамотности.",
+      "predicate": "study_eligibility",
+      "roles": {
+        "subject": "Chinese MCI prevalence studies"
+      },
+      "type": "method",
+      "attrs": {
+        "minimum_age": {
+          "value": 55,
+          "unit": "year"
+        },
+        "age_rationale": "no eligible studies under55; no consensus optimal screening start; biological changes can precede dementia by decades; retirement/preventive-care context",
+        "excluded_samples": "Parkinson disease; depression; stroke; special occupation; internal migration; insurance; literacy; long-term care"
+      },
+      "conditions": [
+        "Representative community-based samples; confirmed rather than suspected MCI"
+      ]
+    },
+    {
+      "key": "screen",
+      "units": [
+        23,
+        24,
+        25,
+        26
+      ],
+      "en": "Two reviewers screened 2136 deduplicated records;172 full texts yielded 45 eligible studies after 127 exclusions; independent bias assessment with third-person discussion excluded four high-risk studies, leaving 41.",
+      "ru": "Два рецензента проверили 2136 записей; из 172 полных текстов после 127 исключений осталось 45 исследований; независимая оценка риска с привлечением третьего исследователя исключила ещё 4, оставив 41.",
+      "predicate": "screen_and_assess",
+      "roles": {
+        "subject": "Retrieved Chinese prevalence studies"
+      },
+      "kind": "action",
+      "status": "performed",
+      "attrs": {
+        "records": {
+          "value": 2136,
+          "unit": "records"
+        },
+        "full_texts": {
+          "value": 172,
+          "unit": "articles"
+        },
+        "excluded_full_texts": {
+          "value": 127,
+          "unit": "articles"
+        },
+        "eligible": {
+          "value": 45,
+          "unit": "studies"
+        },
+        "high_risk_excluded": {
+          "value": 4,
+          "unit": "studies"
+        },
+        "final": {
+          "value": 41,
+          "unit": "studies"
+        },
+        "reviewers": {
+          "value": 2,
+          "unit": "reviewers"
+        }
+      }
+    },
+    {
+      "key": "bias_definition",
+      "units": [
+        24
+      ],
+      "en": "The Risk of Bias Tool graded four external-validity and five internal-validity domains plus overall risk as low, medium or high using a GRADE scheme.",
+      "ru": "Risk of Bias Tool оценивал четыре внешних и пять внутренних доменов валидности, общий риск — низкий, средний или высокий по GRADE.",
+      "predicate": "characterized_by",
+      "roles": {
+        "subject": "Risk of Bias Tool"
+      },
+      "type": "definition",
+      "attrs": {
+        "external_domains": "target/population representation; sample representation; random sampling; nonresponse bias",
+        "internal_domains": "data proxy; case definition; instrument validity/reliability; data collection mode; appropriate parameter",
+        "external_count": {
+          "value": 4,
+          "unit": "domains"
+        },
+        "internal_count": {
+          "value": 5,
+          "unit": "domains"
+        },
+        "ratings": "low; medium/moderate; high",
+        "grading": "Cochrane GRADE"
+      }
+    },
+    {
+      "key": "extract",
+      "units": [
+        27
+      ],
+      "en": "Extract MCI/subtype prevalence, urban/rural setting, age, sex, education, living status, period, screening tools and diagnostic methods.",
+      "ru": "Извлечь распространённость MCI/подтипов, городской/сельский контекст, возраст, пол, образование, проживание, период, скрининг и диагностические методы.",
+      "predicate": "extract_study_data",
+      "roles": {
+        "subject": "Included Chinese prevalence studies"
+      },
+      "kind": "action",
+      "status": "performed",
+      "attrs": {
+        "fields": "prevalence; urban/rural; age; sex; education; living status; period; screening and confirmation tools"
+      }
+    },
+    {
+      "key": "bias_method",
+      "units": [
+        30
+      ],
+      "en": "For publication-bias assessment, the methods state that funnel symmetry and Egger tests are used and that p<0.05 indicates absence of publication bias.",
+      "ru": "В методах для оценки публикационного смещения заявлены воронка и Egger; источник утверждает, что p<0, 05 означает отсутствие смещения.",
+      "predicate": "publication_bias_method",
+      "roles": {
+        "subject": "Chinese prevalence-review publication bias assessment"
+      },
+      "type": "method",
+      "attrs": {
+        "test": "visual funnel symmetry and Egger test",
+        "source_asserted_rule": "p below0.05 indicates absence of publication bias"
+      },
+      "conditions": [
+        "Source wording retained exactly; not silently corrected"
+      ]
+    },
+    {
+      "key": "synthesize",
+      "units": [
+        6,
+        29,
+        31,
+        32
+      ],
+      "en": "Run random-effects prevalence synthesis in Stata 12, CochranQ/I², leave-one-out sensitivity, subgroup analysis and meta-regression; use two-sidedp<0.05 and 95% confidence intervals.",
+      "ru": "Выполнить случайно-эффектный синтез в Stata 12, Q/I², исключение по одному, анализ подгрупп и метарегрессию; использовать двусторонний p<0, 05 и 95% ДИ.",
+      "predicate": "synthesize_prevalence",
+      "roles": {
+        "subject": "MCI and amnestic MCI prevalence"
+      },
+      "kind": "action",
+      "status": "performed",
+      "attrs": {
+        "software": "Stata12.0",
+        "significance_threshold": {
+          "value": 0.05,
+          "unit": "p-value"
+        },
+        "CI_level": {
+          "value": 95,
+          "unit": "percent"
+        },
+        "sensitivity": "sequentially remove each study; exclude significantly deviating studies",
+        "heterogeneity_rule": "I²0=no observed; >25/50/75% low/moderate/high"
+      },
+      "conditions": [
+        "Random-effects model; pooled MCI and aMCI separately"
+      ]
+    },
+    {
+      "key": "corpus",
+      "units": [
+        7,
+        35
+      ],
+      "en": "The 41 eligible studies comprised 112632 participants, study periods 1998–2020 and prevalence 1.21–33.03%; seven were longitudinal,58% used age>60,75% hadN>1000, and women ranged 25.74–66.89%.",
+      "ru": "В 41 исследовании 112632 участника, периоды 1998–2020 и распространённость 1, 21–33, 03%; семь продольных, 58% с возрастом>60, 75% с N>1000, женщин 25, 74–66, 89%.",
+      "predicate": "included_corpus",
+      "roles": {
+        "subject": "Chinese community prevalence review"
+      },
+      "type": "result",
+      "time": "Study periods1998–2020",
+      "attrs": {
+        "studies": {
+          "value": 41,
+          "unit": "studies"
+        },
+        "participants": {
+          "value": 112632,
+          "unit": "participants"
+        },
+        "prevalence_range": {
+          "value": "1.21–33.03",
+          "unit": "percent"
+        },
+        "longitudinal": {
+          "value": 7,
+          "unit": "studies"
+        },
+        "age_over60_studies": {
+          "value": 58,
+          "unit": "percent"
+        },
+        "N_over1000_studies": {
+          "value": 75,
+          "unit": "percent"
+        },
+        "women_range": {
+          "value": "25.74–66.89",
+          "unit": "percent"
+        }
+      }
+    },
+    {
+      "key": "tools",
+      "units": [
+        35,
+        83
+      ],
+      "en": "About 30 neuropsychological instruments were used. MMSE/MoCA predominated in screening, ADL assessed daily functioning and CDR helped exclude dementia;25 studies used Petersen confirmation.",
+      "ru": "Использовалось около 30 нейропсихологических инструментов; MMSE/MoCA преобладали в скрининге, ADL оценивал повседневные функции, CDR исключал деменцию;25 исследований применяли Petersen.",
+      "predicate": "diagnostic_tools",
+      "roles": {
+        "subject": "Included Chinese prevalence studies"
+      },
+      "attrs": {
+        "instrument_count": {
+          "value": 30,
+          "unit": "approximately instruments"
+        },
+        "Petersen_studies": {
+          "value": 25,
+          "unit": "studies"
+        },
+        "comprehensive": "CAMCOG; CCAS; CSI-D; MMSE; MoCA; NPI-Q; QCST-E/OCST-E; SCID; WAIS; WHO-BCAI; WHODAS-12",
+        "domains": "memory ALT/IMCT/WMS-R; attention SDMT/STMT; vision CDT/ROCFR; language AVLT/VFT; executive ability ADL/FAQ (source assignments retained)",
+        "exclusion_tools": "CDR; CESD; DS; HAMD; GDS; GMS; SAS; HIS"
+      },
+      "conditions": [
+        "Tools as categorized by the source; no external correction of domain assignments"
+      ]
+    },
+    {
+      "key": "study_0",
+      "units": [
+        35,
+        36,
+        37,
+        38
+      ],
+      "en": "Chen ND cohort (Jiangsu, 2012): MCI prevalence 10.75%(8.25–13.9%), N=465, age ≥60 years, women 30.75%, Petersen diagnostic criteria; tests ADL , CDT , SAS.",
+      "ru": "Когорта Chen ND (Jiangsu, 2012): распространённость MCI 10.75%(8.25–13.9%), N=465, возраст ≥60 лет, женщин 30.75%, диагностика Petersen; тесты ADL , CDT , SAS.",
+      "predicate": "reported_cohort_prevalence",
+      "roles": {
+        "population": "Study cohort: Chen ND Jiangsu 2012",
+        "condition": "Mild cognitive impairment"
+      },
+      "type": "result",
+      "time": "2012 study period",
+      "conditions": [
+        "Chinese community sample; starred table entries denote aMCI; unspecified cells not inferred"
+      ],
+      "attrs": {
+        "sample_size": {
+          "value": "465",
+          "unit": "participants"
+        },
+        "age_range": {
+          "value": "≥60",
+          "unit": "year"
+        },
+        "women": {
+          "value": "30.75%",
+          "unit": "percent"
+        },
+        "diagnostic_criteria": "Petersen",
+        "tests": "ADL [93], CDT [89], SAS [101]",
+        "prevalence_95CI": {
+          "value": "10.75%(8.25–13.9%)",
+          "unit": "percent"
+        },
+        "site": "Jiangsu"
+      }
+    },
+    {
+      "key": "study_1",
+      "units": [
+        35,
+        36,
+        37,
+        38
+      ],
+      "en": "Ding D cohort (Shanghai, 2011): MCI prevalence 20.10%(18.73–21.61%), N=2985, age ≥60 years, women 54.22%, Petersen diagnostic criteria; tests ADL , SAS , CDR , HAMD , MMSE.",
+      "ru": "Когорта Ding D (Shanghai, 2011): распространённость MCI 20.10%(18.73–21.61%), N=2985, возраст ≥60 лет, женщин 54.22%, диагностика Petersen; тесты ADL , SAS , CDR , HAMD , MMSE.",
+      "predicate": "reported_cohort_prevalence",
+      "roles": {
+        "population": "Study cohort: Ding D Shanghai 2011",
+        "condition": "Mild cognitive impairment"
+      },
+      "type": "result",
+      "time": "2011 study period",
+      "conditions": [
+        "Chinese community sample; starred table entries denote aMCI; unspecified cells not inferred"
+      ],
+      "attrs": {
+        "sample_size": {
+          "value": "2985",
+          "unit": "participants"
+        },
+        "age_range": {
+          "value": "≥60",
+          "unit": "year"
+        },
+        "women": {
+          "value": "54.22%",
+          "unit": "percent"
+        },
+        "diagnostic_criteria": "Petersen",
+        "tests": "ADL [93], SAS [101], CDR [95], HAMD [98], MMSE [76]",
+        "prevalence_95CI": {
+          "value": "20.10%(18.73–21.61%)",
+          "unit": "percent"
+        },
+        "site": "Shanghai"
+      }
+    },
+    {
+      "key": "study_2",
+      "units": [
+        35,
+        36,
+        37,
+        38
+      ],
+      "en": "Guo GY cohort (Hebei, 2013): MCI prevalence 14.47%(12.36–16.86%), N=940, age ≥60 years, women 56.81%, Petersen diagnostic criteria; tests MoCA.",
+      "ru": "Когорта Guo GY (Hebei, 2013): распространённость MCI 14.47%(12.36–16.86%), N=940, возраст ≥60 лет, женщин 56.81%, диагностика Petersen; тесты MoCA.",
+      "predicate": "reported_cohort_prevalence",
+      "roles": {
+        "population": "Study cohort: Guo GY Hebei 2013",
+        "condition": "Mild cognitive impairment"
+      },
+      "type": "result",
+      "time": "2013 study period",
+      "conditions": [
+        "Chinese community sample; starred table entries denote aMCI; unspecified cells not inferred"
+      ],
+      "attrs": {
+        "sample_size": {
+          "value": "940",
+          "unit": "participants"
+        },
+        "age_range": {
+          "value": "≥60",
+          "unit": "year"
+        },
+        "women": {
+          "value": "56.81%",
+          "unit": "percent"
+        },
+        "diagnostic_criteria": "Petersen",
+        "tests": "MoCA [77]",
+        "prevalence_95CI": {
+          "value": "14.47%(12.36–16.86%)",
+          "unit": "percent"
+        },
+        "site": "Hebei"
+      }
+    },
+    {
+      "key": "study_3",
+      "units": [
+        35,
+        36,
+        37,
+        38
+      ],
+      "en": "Guo X cohort (Hunan, 2011): MCI prevalence 10.17%(8.68–11.88%), N=1367, age ≥60 years, women 50.40%, DSM-IV diagnostic criteria; tests CDR , GDS ,HIS , IMCT , MMSE.",
+      "ru": "Когорта Guo X (Hunan, 2011): распространённость MCI 10.17%(8.68–11.88%), N=1367, возраст ≥60 лет, женщин 50.40%, диагностика DSM-IV; тесты CDR , GDS , HIS , IMCT , MMSE.",
+      "predicate": "reported_cohort_prevalence",
+      "roles": {
+        "population": "Study cohort: Guo X Hunan 2011",
+        "condition": "Mild cognitive impairment"
+      },
+      "type": "result",
+      "time": "2011 study period",
+      "conditions": [
+        "Chinese community sample; starred table entries denote aMCI; unspecified cells not inferred"
+      ],
+      "attrs": {
+        "sample_size": {
+          "value": "1367",
+          "unit": "participants"
+        },
+        "age_range": {
+          "value": "≥60",
+          "unit": "year"
+        },
+        "women": {
+          "value": "50.40%",
+          "unit": "percent"
+        },
+        "diagnostic_criteria": "DSM-IV",
+        "tests": "CDR [95], GDS [99],HIS [102], IMCT [85], MMSE [76]",
+        "prevalence_95CI": {
+          "value": "10.17%(8.68–11.88%)",
+          "unit": "percent"
+        },
+        "site": "Hunan"
+      }
+    },
+    {
+      "key": "study_4",
+      "units": [
+        35,
+        36,
+        37,
+        38
+      ],
+      "en": "Hai S cohort (Sichuan, 2007): MCI prevalence 30.2%(24.28–36.85%), N=202, age ≥80 years, women 25.74%, Petersen diagnostic criteria; tests ADL , CAMCOG ,GDS , MMSE.",
+      "ru": "Когорта Hai S (Sichuan, 2007): распространённость MCI 30.2%(24.28–36.85%), N=202, возраст ≥80 лет, женщин 25.74%, диагностика Petersen; тесты ADL , CAMCOG , GDS , MMSE.",
+      "predicate": "reported_cohort_prevalence",
+      "roles": {
+        "population": "Study cohort: Hai S Sichuan 2007",
+        "condition": "Mild cognitive impairment"
+      },
+      "type": "result",
+      "time": "2007 study period",
+      "conditions": [
+        "Chinese community sample; starred table entries denote aMCI; unspecified cells not inferred"
+      ],
+      "attrs": {
+        "sample_size": {
+          "value": "202",
+          "unit": "participants"
+        },
+        "age_range": {
+          "value": "≥80",
+          "unit": "year"
+        },
+        "women": {
+          "value": "25.74%",
+          "unit": "percent"
+        },
+        "diagnostic_criteria": "Petersen",
+        "tests": "ADL [93], CAMCOG [73],GDS [99], MMSE [76]",
+        "prevalence_95CI": {
+          "value": "30.2%(24.28–36.85%)",
+          "unit": "percent"
+        },
+        "site": "Sichuan"
+      }
+    },
+    {
+      "key": "study_5",
+      "units": [
+        35,
+        36,
+        37,
+        38
+      ],
+      "en": "He L cohort (Jiangxi, 2014): MCI prevalence 13.42%(11.28–15.89%), N=842, age ≥60 years, women 48.81%, DSM-IV diagnostic criteria; tests ADL , CDR , GDS , HIS , MoCA.",
+      "ru": "Когорта He L (Jiangxi, 2014): распространённость MCI 13.42%(11.28–15.89%), N=842, возраст ≥60 лет, женщин 48.81%, диагностика DSM-IV; тесты ADL , CDR , GDS , HIS , MoCA.",
+      "predicate": "reported_cohort_prevalence",
+      "roles": {
+        "population": "Study cohort: He L Jiangxi 2014",
+        "condition": "Mild cognitive impairment"
+      },
+      "type": "result",
+      "time": "2014 study period",
+      "conditions": [
+        "Chinese community sample; starred table entries denote aMCI; unspecified cells not inferred"
+      ],
+      "attrs": {
+        "sample_size": {
+          "value": "842",
+          "unit": "participants"
+        },
+        "age_range": {
+          "value": "≥60",
+          "unit": "year"
+        },
+        "women": {
+          "value": "48.81%",
+          "unit": "percent"
+        },
+        "diagnostic_criteria": "DSM-IV",
+        "tests": "ADL [93], CDR [95], GDS [99], HIS [102], MoCA [77]",
+        "prevalence_95CI": {
+          "value": "13.42%(11.28–15.89%)",
+          "unit": "percent"
+        },
+        "site": "Jiangxi"
+      }
+    },
+    {
+      "key": "study_6",
+      "units": [
+        35,
+        36,
+        37,
+        38
+      ],
+      "en": "Hu R cohort (Mongolia, 2009): MCI prevalence 20.60%(19.59–21.66%), N=5887, age ≥55 years, women 56.38%, DSM-IV diagnostic criteria; tests ADL , CDR , HIS , HAMD , MMSE , MoCA.",
+      "ru": "Когорта Hu R (Mongolia, 2009): распространённость MCI 20.60%(19.59–21.66%), N=5887, возраст ≥55 лет, женщин 56.38%, диагностика DSM-IV; тесты ADL , CDR , HIS , HAMD , MMSE , MoCA.",
+      "predicate": "reported_cohort_prevalence",
+      "roles": {
+        "population": "Study cohort: Hu R Mongolia 2009",
+        "condition": "Mild cognitive impairment"
+      },
+      "type": "result",
+      "time": "2009 study period",
+      "conditions": [
+        "Chinese community sample; starred table entries denote aMCI; unspecified cells not inferred"
+      ],
+      "attrs": {
+        "sample_size": {
+          "value": "5887",
+          "unit": "participants"
+        },
+        "age_range": {
+          "value": "≥55",
+          "unit": "year"
+        },
+        "women": {
+          "value": "56.38%",
+          "unit": "percent"
+        },
+        "diagnostic_criteria": "DSM-IV",
+        "tests": "ADL [93], CDR [95], HIS [102], HAMD [98], MMSE [76], MoCA [77]",
+        "prevalence_95CI": {
+          "value": "20.60%(19.59–21.66%)",
+          "unit": "percent"
+        },
+        "site": "Mongolia"
+      }
+    },
+    {
+      "key": "study_7",
+      "units": [
+        35,
+        36,
+        37,
+        38
+      ],
+      "en": "Huang R cohort (Guangzhou, 2002): MCI prevalence 5.47%(4.86–6.16%), N=4697, age ≥60 years, women 58.85%, Petersen diagnostic criteria; tests ADL , CDR , CESD , HAMD , MMSE.",
+      "ru": "Когорта Huang R (Guangzhou, 2002): распространённость MCI 5.47%(4.86–6.16%), N=4697, возраст ≥60 лет, женщин 58.85%, диагностика Petersen; тесты ADL , CDR , CESD , HAMD , MMSE.",
+      "predicate": "reported_cohort_prevalence",
+      "roles": {
+        "population": "Study cohort: Huang R Guangzhou 2002",
+        "condition": "Mild cognitive impairment"
+      },
+      "type": "result",
+      "time": "2002 study period",
+      "conditions": [
+        "Chinese community sample; starred table entries denote aMCI; unspecified cells not inferred"
+      ],
+      "attrs": {
+        "sample_size": {
+          "value": "4697",
+          "unit": "participants"
+        },
+        "age_range": {
+          "value": "≥60",
+          "unit": "year"
+        },
+        "women": {
+          "value": "58.85%",
+          "unit": "percent"
+        },
+        "diagnostic_criteria": "Petersen",
+        "tests": "ADL [93], CDR [95], CESD [96], HAMD [98], MMSE [76]",
+        "prevalence_95CI": {
+          "value": "5.47%(4.86–6.16%)",
+          "unit": "percent"
+        },
+        "site": "Guangzhou"
+      }
+    },
+    {
+      "key": "study_8",
+      "units": [
+        35,
+        36,
+        37,
+        38
+      ],
+      "en": "Jia J cohort (National, 2009): MCI prevalence 20.8%(20.02–21.59%), N=10,276, age ≥65 years, women N/A, Petersen diagnostic criteria; tests AVLT, CDR , CDT , CESD , FAQ , HIS, MoCA , MMSE , STMT , VFT , AVLT.",
+      "ru": "Когорта Jia J (National, 2009): распространённость MCI 20.8%(20.02–21.59%), N=10, 276, возраст ≥65 лет, женщин N/A, диагностика Petersen; тесты AVLT, CDR , CDT , CESD , FAQ , HIS, MoCA , MMSE , STMT , VFT , AVLT.",
+      "predicate": "reported_cohort_prevalence",
+      "roles": {
+        "population": "Study cohort: Jia J National 2009",
+        "condition": "Mild cognitive impairment"
+      },
+      "type": "result",
+      "time": "2009 study period",
+      "conditions": [
+        "Chinese community sample; starred table entries denote aMCI; unspecified cells not inferred"
+      ],
+      "attrs": {
+        "sample_size": {
+          "value": "10,276",
+          "unit": "participants"
+        },
+        "age_range": {
+          "value": "≥65",
+          "unit": "year"
+        },
+        "women": {
+          "value": "N/A",
+          "unit": null
+        },
+        "diagnostic_criteria": "Petersen",
+        "tests": "AVLT, CDR [95], CDT [89], CESD [96], FAQ [94], HIS, MoCA [77], MMSE [76], STMT [88], VFT [92], AVLT [91]",
+        "prevalence_95CI": {
+          "value": "20.8%(20.02–21.59%)",
+          "unit": "percent"
+        },
+        "site": "National"
+      }
+    },
+    {
+      "key": "study_9",
+      "units": [
+        35,
+        36,
+        37,
+        38
+      ],
+      "en": "Jiang LJ cohort (Jilin, 2016): MCI prevalence 5.36%(4.07–7.04%), N=895, age ≥60 years, women 51.06%, NIA-AA diagnostic criteria; tests ADL , CDR , GDS , HIS , MMSE , MoCA.",
+      "ru": "Когорта Jiang LJ (Jilin, 2016): распространённость MCI 5.36%(4.07–7.04%), N=895, возраст ≥60 лет, женщин 51.06%, диагностика NIA-AA; тесты ADL , CDR , GDS , HIS , MMSE , MoCA.",
+      "predicate": "reported_cohort_prevalence",
+      "roles": {
+        "population": "Study cohort: Jiang LJ Jilin 2016",
+        "condition": "Mild cognitive impairment"
+      },
+      "type": "result",
+      "time": "2016 study period",
+      "conditions": [
+        "Chinese community sample; starred table entries denote aMCI; unspecified cells not inferred"
+      ],
+      "attrs": {
+        "sample_size": {
+          "value": "895",
+          "unit": "participants"
+        },
+        "age_range": {
+          "value": "≥60",
+          "unit": "year"
+        },
+        "women": {
+          "value": "51.06%",
+          "unit": "percent"
+        },
+        "diagnostic_criteria": "NIA-AA",
+        "tests": "ADL [93], CDR [95], GDS [99], HIS [102], MMSE [76], MoCA [77]",
+        "prevalence_95CI": {
+          "value": "5.36%(4.07–7.04%)",
+          "unit": "percent"
+        },
+        "site": "Jilin"
+      }
+    },
+    {
+      "key": "study_10",
+      "units": [
+        35,
+        36,
+        37,
+        38
+      ],
+      "en": "Lao ML cohort (Hainan, 2010): MCI prevalence 4.25%(3.82–4.73%), N=7665, age ≥55 years, women 54.22%, Petersen diagnostic criteria; tests ADL , GDS , MMSE.",
+      "ru": "Когорта Lao ML (Hainan, 2010): распространённость MCI 4.25%(3.82–4.73%), N=7665, возраст ≥55 лет, женщин 54.22%, диагностика Petersen; тесты ADL , GDS , MMSE.",
+      "predicate": "reported_cohort_prevalence",
+      "roles": {
+        "population": "Study cohort: Lao ML Hainan 2010",
+        "condition": "Mild cognitive impairment"
+      },
+      "type": "result",
+      "time": "2010 study period",
+      "conditions": [
+        "Chinese community sample; starred table entries denote aMCI; unspecified cells not inferred"
+      ],
+      "attrs": {
+        "sample_size": {
+          "value": "7665",
+          "unit": "participants"
+        },
+        "age_range": {
+          "value": "≥55",
+          "unit": "year"
+        },
+        "women": {
+          "value": "54.22%",
+          "unit": "percent"
+        },
+        "diagnostic_criteria": "Petersen",
+        "tests": "ADL [93], GDS [99], MMSE [76]",
+        "prevalence_95CI": {
+          "value": "4.25%(3.82–4.73%)",
+          "unit": "percent"
+        },
+        "site": "Hainan"
+      }
+    },
+    {
+      "key": "study_11",
+      "units": [
+        35,
+        36,
+        37,
+        38
+      ],
+      "en": "Li CP cohort (Shandong, 2014): MCI prevalence 33.03%(30.99–35.14%), N=1971, age ≥60 years, women 62.61%, DSM-IV diagnostic criteria; tests ADL , CDR , GDS , HIS , MMSE.",
+      "ru": "Когорта Li CP (Shandong, 2014): распространённость MCI 33.03%(30.99–35.14%), N=1971, возраст ≥60 лет, женщин 62.61%, диагностика DSM-IV; тесты ADL , CDR , GDS , HIS , MMSE.",
+      "predicate": "reported_cohort_prevalence",
+      "roles": {
+        "population": "Study cohort: Li CP Shandong 2014",
+        "condition": "Mild cognitive impairment"
+      },
+      "type": "result",
+      "time": "2014 study period",
+      "conditions": [
+        "Chinese community sample; starred table entries denote aMCI; unspecified cells not inferred"
+      ],
+      "attrs": {
+        "sample_size": {
+          "value": "1971",
+          "unit": "participants"
+        },
+        "age_range": {
+          "value": "≥60",
+          "unit": "year"
+        },
+        "women": {
+          "value": "62.61%",
+          "unit": "percent"
+        },
+        "diagnostic_criteria": "DSM-IV",
+        "tests": "ADL [93], CDR [95], GDS [99], HIS [102], MMSE [76]",
+        "prevalence_95CI": {
+          "value": "33.03%(30.99–35.14%)",
+          "unit": "percent"
+        },
+        "site": "Shandong"
+      }
+    },
+    {
+      "key": "study_12",
+      "units": [
+        35,
+        36,
+        37,
+        38
+      ],
+      "en": "Li W cohort (Shanghai, 2019): aMCI prevalence 17.07%*(15.79–18.42%), N=3246, age ≥60 years, women N/A, Petersen diagnostic criteria; tests ALT , AVLT , DS , MMSE , MoCA , NPI-Q , VFT , WAIS.",
+      "ru": "Когорта Li W (Shanghai, 2019): распространённость aMCI 17.07%*(15.79–18.42%), N=3246, возраст ≥60 лет, женщин N/A, диагностика Petersen; тесты ALT , AVLT , DS , MMSE , MoCA , NPI-Q , VFT , WAIS.",
+      "predicate": "reported_cohort_prevalence",
+      "roles": {
+        "population": "Study cohort: Li W Shanghai 2019",
+        "condition": "Amnestic mild cognitive impairment"
+      },
+      "type": "result",
+      "time": "2019 study period",
+      "conditions": [
+        "Chinese community sample; starred table entries denote aMCI; unspecified cells not inferred"
+      ],
+      "attrs": {
+        "sample_size": {
+          "value": "3246",
+          "unit": "participants"
+        },
+        "age_range": {
+          "value": "≥60",
+          "unit": "year"
+        },
+        "women": {
+          "value": "N/A",
+          "unit": null
+        },
+        "diagnostic_criteria": "Petersen",
+        "tests": "ALT [84], AVLT [91], DS [97], MMSE [76], MoCA [77], NPI-Q [78], VFT [92], WAIS [81]",
+        "prevalence_95CI": {
+          "value": "17.07%*(15.79–18.42%)",
+          "unit": "percent"
+        },
+        "site": "Shanghai"
+      }
+    },
+    {
+      "key": "study_13",
+      "units": [
+        35,
+        36,
+        37,
+        38
+      ],
+      "en": "Li X cohort (Beijing, 2013): MCI prevalence 15.69%(13.58–18.05%), N=1020, age ≥55 years, women 63.33%, Petersen diagnostic criteria; tests AVLT , CDT , MMSE , ROCFR , SDMT , STMT.",
+      "ru": "Когорта Li X (Beijing, 2013): распространённость MCI 15.69%(13.58–18.05%), N=1020, возраст ≥55 лет, женщин 63.33%, диагностика Petersen; тесты AVLT , CDT , MMSE , ROCFR , SDMT , STMT.",
+      "predicate": "reported_cohort_prevalence",
+      "roles": {
+        "population": "Study cohort: Li X Beijing 2013",
+        "condition": "Mild cognitive impairment"
+      },
+      "type": "result",
+      "time": "2013 study period",
+      "conditions": [
+        "Chinese community sample; starred table entries denote aMCI; unspecified cells not inferred"
+      ],
+      "attrs": {
+        "sample_size": {
+          "value": "1020",
+          "unit": "participants"
+        },
+        "age_range": {
+          "value": "≥55",
+          "unit": "year"
+        },
+        "women": {
+          "value": "63.33%",
+          "unit": "percent"
+        },
+        "diagnostic_criteria": "Petersen",
+        "tests": "AVLT [91], CDT [89], MMSE [76], ROCFR [90], SDMT [87], STMT [88]",
+        "prevalence_95CI": {
+          "value": "15.69%(13.58–18.05%)",
+          "unit": "percent"
+        },
+        "site": "Beijing"
+      }
+    },
+    {
+      "key": "study_14",
+      "units": [
+        35,
+        36,
+        37,
+        38
+      ],
+      "en": "Liao B cohort (Jiangxi, 2012): MCI prevalence 10.28%(7.67–13.64%), N=399, age ≥60 years, women 53.63%, Petersen diagnostic criteria; tests ADL , HIS , MoCA.",
+      "ru": "Когорта Liao B (Jiangxi, 2012): распространённость MCI 10.28%(7.67–13.64%), N=399, возраст ≥60 лет, женщин 53.63%, диагностика Petersen; тесты ADL , HIS , MoCA.",
+      "predicate": "reported_cohort_prevalence",
+      "roles": {
+        "population": "Study cohort: Liao B Jiangxi 2012",
+        "condition": "Mild cognitive impairment"
+      },
+      "type": "result",
+      "time": "2012 study period",
+      "conditions": [
+        "Chinese community sample; starred table entries denote aMCI; unspecified cells not inferred"
+      ],
+      "attrs": {
+        "sample_size": {
+          "value": "399",
+          "unit": "participants"
+        },
+        "age_range": {
+          "value": "≥60",
+          "unit": "year"
+        },
+        "women": {
+          "value": "53.63%",
+          "unit": "percent"
+        },
+        "diagnostic_criteria": "Petersen",
+        "tests": "ADL [93], HIS [102], MoCA [77]",
+        "prevalence_95CI": {
+          "value": "10.28%(7.67–13.64%)",
+          "unit": "percent"
+        },
+        "site": "Jiangxi"
+      }
+    },
+    {
+      "key": "study_15",
+      "units": [
+        35,
+        36,
+        37,
+        38
+      ],
+      "en": "Liu H cohort (Shanghai, 2018): MCI prevalence 17.65%(15.96–19.48%), N=1796, age ≥60 years, women 53.95%, DSM-IV diagnostic criteria; tests ADL , GDS , HIS , MoCA.",
+      "ru": "Когорта Liu H (Shanghai, 2018): распространённость MCI 17.65%(15.96–19.48%), N=1796, возраст ≥60 лет, женщин 53.95%, диагностика DSM-IV; тесты ADL , GDS , HIS , MoCA.",
+      "predicate": "reported_cohort_prevalence",
+      "roles": {
+        "population": "Study cohort: Liu H Shanghai 2018",
+        "condition": "Mild cognitive impairment"
+      },
+      "type": "result",
+      "time": "2018 study period",
+      "conditions": [
+        "Chinese community sample; starred table entries denote aMCI; unspecified cells not inferred"
+      ],
+      "attrs": {
+        "sample_size": {
+          "value": "1796",
+          "unit": "participants"
+        },
+        "age_range": {
+          "value": "≥60",
+          "unit": "year"
+        },
+        "women": {
+          "value": "53.95%",
+          "unit": "percent"
+        },
+        "diagnostic_criteria": "DSM-IV",
+        "tests": "ADL [93], GDS [99], HIS [102], MoCA [77]",
+        "prevalence_95CI": {
+          "value": "17.65%(15.96–19.48%)",
+          "unit": "percent"
+        },
+        "site": "Shanghai"
+      }
+    },
+    {
+      "key": "study_16",
+      "units": [
+        35,
+        36,
+        37,
+        38
+      ],
+      "en": "Ma F cohort (Tianjin, 2016): MCI prevalence 11.33%(10.48–12.23%), N=5067, age ≥65 years, women 57.80%, Petersen diagnostic criteria; tests ADL , MMSE , WAIS.",
+      "ru": "Когорта Ma F (Tianjin, 2016): распространённость MCI 11.33%(10.48–12.23%), N=5067, возраст ≥65 лет, женщин 57.80%, диагностика Petersen; тесты ADL , MMSE , WAIS.",
+      "predicate": "reported_cohort_prevalence",
+      "roles": {
+        "population": "Study cohort: Ma F Tianjin 2016",
+        "condition": "Mild cognitive impairment"
+      },
+      "type": "result",
+      "time": "2016 study period",
+      "conditions": [
+        "Chinese community sample; starred table entries denote aMCI; unspecified cells not inferred"
+      ],
+      "attrs": {
+        "sample_size": {
+          "value": "5067",
+          "unit": "participants"
+        },
+        "age_range": {
+          "value": "≥65",
+          "unit": "year"
+        },
+        "women": {
+          "value": "57.80%",
+          "unit": "percent"
+        },
+        "diagnostic_criteria": "Petersen",
+        "tests": "ADL [93], MMSE [76], WAIS [81]",
+        "prevalence_95CI": {
+          "value": "11.33%(10.48–12.23%)",
+          "unit": "percent"
+        },
+        "site": "Tianjin"
+      }
+    },
+    {
+      "key": "study_17",
+      "units": [
+        35,
+        36,
+        37,
+        38
+      ],
+      "en": "Meng WQ cohort (Inner Mongolia, 2009): MCI prevalence 22.50%(21.16–23.37%), N=5452, age ≥55 years, women 53.62%, Petersen diagnostic criteria; tests ADL , MMSE.",
+      "ru": "Когорта Meng WQ (Inner Mongolia, 2009): распространённость MCI 22.50%(21.16–23.37%), N=5452, возраст ≥55 лет, женщин 53.62%, диагностика Petersen; тесты ADL , MMSE.",
+      "predicate": "reported_cohort_prevalence",
+      "roles": {
+        "population": "Study cohort: Meng WQ Inner Mongolia 2009",
+        "condition": "Mild cognitive impairment"
+      },
+      "type": "result",
+      "time": "2009 study period",
+      "conditions": [
+        "Chinese community sample; starred table entries denote aMCI; unspecified cells not inferred"
+      ],
+      "attrs": {
+        "sample_size": {
+          "value": "5452",
+          "unit": "participants"
+        },
+        "age_range": {
+          "value": "≥55",
+          "unit": "year"
+        },
+        "women": {
+          "value": "53.62%",
+          "unit": "percent"
+        },
+        "diagnostic_criteria": "Petersen",
+        "tests": "ADL [93], MMSE [76]",
+        "prevalence_95CI": {
+          "value": "22.50%(21.16–23.37%)",
+          "unit": "percent"
+        },
+        "site": "Inner Mongolia"
+      }
+    },
+    {
+      "key": "study_18",
+      "units": [
+        35,
+        36,
+        37,
+        38
+      ],
+      "en": "Pan ZD cohort (Shanghai, 2012): MCI prevalence 22.33%(17.99–27.38%), N=300, age ≥60 years, women 57.14%, Petersen diagnostic criteria; tests ADL , CDR , GDS , HIS , MMSE , MoCA.",
+      "ru": "Когорта Pan ZD (Shanghai, 2012): распространённость MCI 22.33%(17.99–27.38%), N=300, возраст ≥60 лет, женщин 57.14%, диагностика Petersen; тесты ADL , CDR , GDS , HIS , MMSE , MoCA.",
+      "predicate": "reported_cohort_prevalence",
+      "roles": {
+        "population": "Study cohort: Pan ZD Shanghai 2012",
+        "condition": "Mild cognitive impairment"
+      },
+      "type": "result",
+      "time": "2012 study period",
+      "conditions": [
+        "Chinese community sample; starred table entries denote aMCI; unspecified cells not inferred"
+      ],
+      "attrs": {
+        "sample_size": {
+          "value": "300",
+          "unit": "participants"
+        },
+        "age_range": {
+          "value": "≥60",
+          "unit": "year"
+        },
+        "women": {
+          "value": "57.14%",
+          "unit": "percent"
+        },
+        "diagnostic_criteria": "Petersen",
+        "tests": "ADL [93], CDR [95], GDS [99], HIS [102], MMSE [76], MoCA [77]",
+        "prevalence_95CI": {
+          "value": "22.33%(17.99–27.38%)",
+          "unit": "percent"
+        },
+        "site": "Shanghai"
+      }
+    },
+    {
+      "key": "study_19",
+      "units": [
+        35,
+        36,
+        37,
+        38
+      ],
+      "en": "Qin HY cohort (Shanghai, 2012): MCI prevalence 14.98%(13.92–16.11%), N=4086, age ≥55 years, women 65.00%, Petersen diagnostic criteria; tests ADL , CDR , MMSE.",
+      "ru": "Когорта Qin HY (Shanghai, 2012): распространённость MCI 14.98%(13.92–16.11%), N=4086, возраст ≥55 лет, женщин 65.00%, диагностика Petersen; тесты ADL , CDR , MMSE.",
+      "predicate": "reported_cohort_prevalence",
+      "roles": {
+        "population": "Study cohort: Qin HY Shanghai 2012",
+        "condition": "Mild cognitive impairment"
+      },
+      "type": "result",
+      "time": "2012 study period",
+      "conditions": [
+        "Chinese community sample; starred table entries denote aMCI; unspecified cells not inferred"
+      ],
+      "attrs": {
+        "sample_size": {
+          "value": "4086",
+          "unit": "participants"
+        },
+        "age_range": {
+          "value": "≥55",
+          "unit": "year"
+        },
+        "women": {
+          "value": "65.00%",
+          "unit": "percent"
+        },
+        "diagnostic_criteria": "Petersen",
+        "tests": "ADL [93], CDR [95], MMSE [76]",
+        "prevalence_95CI": {
+          "value": "14.98%(13.92–16.11%)",
+          "unit": "percent"
+        },
+        "site": "Shanghai"
+      }
+    },
+    {
+      "key": "study_20",
+      "units": [
+        35,
+        36,
+        37,
+        38
+      ],
+      "en": "Qiu CJ cohort (Chengdu, 2001): MCI prevalence 2.35%(1.92–2.88%), N=3910, age ≥55 years, women 50.82%, Petersen diagnostic criteria; tests CDR , CESD , MMSE.",
+      "ru": "Когорта Qiu CJ (Chengdu, 2001): распространённость MCI 2.35%(1.92–2.88%), N=3910, возраст ≥55 лет, женщин 50.82%, диагностика Petersen; тесты CDR , CESD , MMSE.",
+      "predicate": "reported_cohort_prevalence",
+      "roles": {
+        "population": "Study cohort: Qiu CJ Chengdu 2001",
+        "condition": "Mild cognitive impairment"
+      },
+      "type": "result",
+      "time": "2001 study period",
+      "conditions": [
+        "Chinese community sample; starred table entries denote aMCI; unspecified cells not inferred"
+      ],
+      "attrs": {
+        "sample_size": {
+          "value": "3910",
+          "unit": "participants"
+        },
+        "age_range": {
+          "value": "≥55",
+          "unit": "year"
+        },
+        "women": {
+          "value": "50.82%",
+          "unit": "percent"
+        },
+        "diagnostic_criteria": "Petersen",
+        "tests": "CDR [95], CESD [96], MMSE [76]",
+        "prevalence_95CI": {
+          "value": "2.35%(1.92–2.88%)",
+          "unit": "percent"
+        },
+        "site": "Chengdu"
+      }
+    },
+    {
+      "key": "study_21",
+      "units": [
+        35,
+        36,
+        37,
+        38
+      ],
+      "en": "Rao DP cohort (Guangzhou, 2009): MCI prevalence 14.16%(12.74–15.72%), N=2111, age ≥65 years, women 59.50%, Petersen diagnostic criteria; tests ADL , CDR , GDS , MMSE , MoCA.",
+      "ru": "Когорта Rao DP (Guangzhou, 2009): распространённость MCI 14.16%(12.74–15.72%), N=2111, возраст ≥65 лет, женщин 59.50%, диагностика Petersen; тесты ADL , CDR , GDS , MMSE , MoCA.",
+      "predicate": "reported_cohort_prevalence",
+      "roles": {
+        "population": "Study cohort: Rao DP Guangzhou 2009",
+        "condition": "Mild cognitive impairment"
+      },
+      "type": "result",
+      "time": "2009 study period",
+      "conditions": [
+        "Chinese community sample; starred table entries denote aMCI; unspecified cells not inferred"
+      ],
+      "attrs": {
+        "sample_size": {
+          "value": "2111",
+          "unit": "participants"
+        },
+        "age_range": {
+          "value": "≥65",
+          "unit": "year"
+        },
+        "women": {
+          "value": "59.50%",
+          "unit": "percent"
+        },
+        "diagnostic_criteria": "Petersen",
+        "tests": "ADL [93], CDR [95], GDS [99], MMSE [76], MoCA [77]",
+        "prevalence_95CI": {
+          "value": "14.16%(12.74–15.72%)",
+          "unit": "percent"
+        },
+        "site": "Guangzhou"
+      }
+    },
+    {
+      "key": "study_22",
+      "units": [
+        35,
+        36,
+        37,
+        38
+      ],
+      "en": "Ren CF cohort (Jiangxi, 2011): MCI prevalence 10.47%(8.67–12.58%), N=946, age ≥60 years, women 49.26%, DSM-IV diagnostic criteria; tests ADL , CDR , GDS , HIS , MoCA.",
+      "ru": "Когорта Ren CF (Jiangxi, 2011): распространённость MCI 10.47%(8.67–12.58%), N=946, возраст ≥60 лет, женщин 49.26%, диагностика DSM-IV; тесты ADL , CDR , GDS , HIS , MoCA.",
+      "predicate": "reported_cohort_prevalence",
+      "roles": {
+        "population": "Study cohort: Ren CF Jiangxi 2011",
+        "condition": "Mild cognitive impairment"
+      },
+      "type": "result",
+      "time": "2011 study period",
+      "conditions": [
+        "Chinese community sample; starred table entries denote aMCI; unspecified cells not inferred"
+      ],
+      "attrs": {
+        "sample_size": {
+          "value": "946",
+          "unit": "participants"
+        },
+        "age_range": {
+          "value": "≥60",
+          "unit": "year"
+        },
+        "women": {
+          "value": "49.26%",
+          "unit": "percent"
+        },
+        "diagnostic_criteria": "DSM-IV",
+        "tests": "ADL [93], CDR [95], GDS [99], HIS [102], MoCA [77]",
+        "prevalence_95CI": {
+          "value": "10.47%(8.67–12.58%)",
+          "unit": "percent"
+        },
+        "site": "Jiangxi"
+      }
+    },
+    {
+      "key": "study_23",
+      "units": [
+        35,
+        36,
+        37,
+        38
+      ],
+      "en": "Song XZ cohort (Guangzhou, 2011): MCI prevalence 7.33%(6.33–8.47%), N=2279, age ≥60 years, women 51.21%, Petersen diagnostic criteria; tests ADL , CDR , GDS , HIS , HAMD , MMSE.",
+      "ru": "Когорта Song XZ (Guangzhou, 2011): распространённость MCI 7.33%(6.33–8.47%), N=2279, возраст ≥60 лет, женщин 51.21%, диагностика Petersen; тесты ADL , CDR , GDS , HIS , HAMD , MMSE.",
+      "predicate": "reported_cohort_prevalence",
+      "roles": {
+        "population": "Study cohort: Song XZ Guangzhou 2011",
+        "condition": "Mild cognitive impairment"
+      },
+      "type": "result",
+      "time": "2011 study period",
+      "conditions": [
+        "Chinese community sample; starred table entries denote aMCI; unspecified cells not inferred"
+      ],
+      "attrs": {
+        "sample_size": {
+          "value": "2279",
+          "unit": "participants"
+        },
+        "age_range": {
+          "value": "≥60",
+          "unit": "year"
+        },
+        "women": {
+          "value": "51.21%",
+          "unit": "percent"
+        },
+        "diagnostic_criteria": "Petersen",
+        "tests": "ADL [93], CDR [95], GDS [99], HIS [102], HAMD [98], MMSE [76]",
+        "prevalence_95CI": {
+          "value": "7.33%(6.33–8.47%)",
+          "unit": "percent"
+        },
+        "site": "Guangzhou"
+      }
+    },
+    {
+      "key": "study_24",
+      "units": [
+        35,
+        36,
+        37,
+        38
+      ],
+      "en": "Sosa AL cohort (National, 2007): aMCI prevalence 7.99%*(6.89–9.26%), N=2014, age ≥65 years, women 63.33%, DSM-IV diagnostic criteria; tests CSI-D , GMS , NPI-Q , WHODAS-12.",
+      "ru": "Когорта Sosa AL (National, 2007): распространённость aMCI 7.99%*(6.89–9.26%), N=2014, возраст ≥65 лет, женщин 63.33%, диагностика DSM-IV; тесты CSI-D , GMS , NPI-Q , WHODAS-12.",
+      "predicate": "reported_cohort_prevalence",
+      "roles": {
+        "population": "Study cohort: Sosa AL National 2007",
+        "condition": "Amnestic mild cognitive impairment"
+      },
+      "type": "result",
+      "time": "2007 study period",
+      "conditions": [
+        "Chinese community sample; starred table entries denote aMCI; unspecified cells not inferred"
+      ],
+      "attrs": {
+        "sample_size": {
+          "value": "2014",
+          "unit": "participants"
+        },
+        "age_range": {
+          "value": "≥65",
+          "unit": "year"
+        },
+        "women": {
+          "value": "63.33%",
+          "unit": "percent"
+        },
+        "diagnostic_criteria": "DSM-IV",
+        "tests": "CSI-D [75], GMS [100], NPI-Q [78], WHODAS-12[83]",
+        "prevalence_95CI": {
+          "value": "7.99%*(6.89–9.26%)",
+          "unit": "percent"
+        },
+        "site": "National"
+      }
+    },
+    {
+      "key": "study_25",
+      "units": [
+        35,
+        36,
+        37,
+        38
+      ],
+      "en": "Su C cohort (Guangzhou, 2011): MCI prevalence 12.32%(9.24–16.23%), N=341, age ≥60 years, women 52.49%, Petersen diagnostic criteria; tests ADL , CDR , GDS , WHO-BCAI , MMSE , MoCA.",
+      "ru": "Когорта Su C (Guangzhou, 2011): распространённость MCI 12.32%(9.24–16.23%), N=341, возраст ≥60 лет, женщин 52.49%, диагностика Petersen; тесты ADL , CDR , GDS , WHO-BCAI , MMSE , MoCA.",
+      "predicate": "reported_cohort_prevalence",
+      "roles": {
+        "population": "Study cohort: Su C Guangzhou 2011",
+        "condition": "Mild cognitive impairment"
+      },
+      "type": "result",
+      "time": "2011 study period",
+      "conditions": [
+        "Chinese community sample; starred table entries denote aMCI; unspecified cells not inferred"
+      ],
+      "attrs": {
+        "sample_size": {
+          "value": "341",
+          "unit": "participants"
+        },
+        "age_range": {
+          "value": "≥60",
+          "unit": "year"
+        },
+        "women": {
+          "value": "52.49%",
+          "unit": "percent"
+        },
+        "diagnostic_criteria": "Petersen",
+        "tests": "ADL [93], CDR [95], GDS [99], WHO-BCAI [82], MMSE [76], MoCA [77]",
+        "prevalence_95CI": {
+          "value": "12.32%(9.24–16.23%)",
+          "unit": "percent"
+        },
+        "site": "Guangzhou"
+      }
+    },
+    {
+      "key": "study_26",
+      "units": [
+        35,
+        36,
+        37,
+        38
+      ],
+      "en": "Sun Y cohort (Taiwan, 2013): MCI prevalence 19.64%(18.89–20.41%), N=10,432, age ≥65 years, women 52.32%, NIA-AA diagnostic criteria; tests ADL , CDR , MMSE.",
+      "ru": "Когорта Sun Y (Taiwan, 2013): распространённость MCI 19.64%(18.89–20.41%), N=10, 432, возраст ≥65 лет, женщин 52.32%, диагностика NIA-AA; тесты ADL , CDR , MMSE.",
+      "predicate": "reported_cohort_prevalence",
+      "roles": {
+        "population": "Study cohort: Sun Y Taiwan 2013",
+        "condition": "Mild cognitive impairment"
+      },
+      "type": "result",
+      "time": "2013 study period",
+      "conditions": [
+        "Chinese community sample; starred table entries denote aMCI; unspecified cells not inferred"
+      ],
+      "attrs": {
+        "sample_size": {
+          "value": "10,432",
+          "unit": "participants"
+        },
+        "age_range": {
+          "value": "≥65",
+          "unit": "year"
+        },
+        "women": {
+          "value": "52.32%",
+          "unit": "percent"
+        },
+        "diagnostic_criteria": "NIA-AA",
+        "tests": "ADL [93], CDR [95], MMSE [76]",
+        "prevalence_95CI": {
+          "value": "19.64%(18.89–20.41%)",
+          "unit": "percent"
+        },
+        "site": "Taiwan"
+      }
+    },
+    {
+      "key": "study_27",
+      "units": [
+        35,
+        36,
+        37,
+        38
+      ],
+      "en": "Tang MN cohort (Chengdu, 1998): MCI prevalence 1.21%(0.95–1.54%), N=5385, age ≥55 years, women N/A, DSM-III diagnostic criteria; tests ADL , CDR , CESD , HIS , HAMD , MMSE.",
+      "ru": "Когорта Tang MN (Chengdu, 1998): распространённость MCI 1.21%(0.95–1.54%), N=5385, возраст ≥55 лет, женщин N/A, диагностика DSM-III; тесты ADL , CDR , CESD , HIS , HAMD , MMSE.",
+      "predicate": "reported_cohort_prevalence",
+      "roles": {
+        "population": "Study cohort: Tang MN Chengdu 1998",
+        "condition": "Mild cognitive impairment"
+      },
+      "type": "result",
+      "time": "1998 study period",
+      "conditions": [
+        "Chinese community sample; starred table entries denote aMCI; unspecified cells not inferred"
+      ],
+      "attrs": {
+        "sample_size": {
+          "value": "5385",
+          "unit": "participants"
+        },
+        "age_range": {
+          "value": "≥55",
+          "unit": "year"
+        },
+        "women": {
+          "value": "N/A",
+          "unit": null
+        },
+        "diagnostic_criteria": "DSM-III",
+        "tests": "ADL [93], CDR [95], CESD [96], HIS [102], HAMD [98], MMSE [76]",
+        "prevalence_95CI": {
+          "value": "1.21%(0.95–1.54%)",
+          "unit": "percent"
+        },
+        "site": "Chengdu"
+      }
+    },
+    {
+      "key": "study_28",
+      "units": [
+        35,
+        36,
+        37,
+        38
+      ],
+      "en": "Tang Z cohort (Beijing, 2004): MCI prevalence 11.64%(10.26–13.17%), N=1865, age ≥60 years, women 51.90%, Petersen diagnostic criteria; tests ADL, CDR , CESD , MMSE.",
+      "ru": "Когорта Tang Z (Beijing, 2004): распространённость MCI 11.64%(10.26–13.17%), N=1865, возраст ≥60 лет, женщин 51.90%, диагностика Petersen; тесты ADL, CDR , CESD , MMSE.",
+      "predicate": "reported_cohort_prevalence",
+      "roles": {
+        "population": "Study cohort: Tang Z Beijing 2004",
+        "condition": "Mild cognitive impairment"
+      },
+      "type": "result",
+      "time": "2004 study period",
+      "conditions": [
+        "Chinese community sample; starred table entries denote aMCI; unspecified cells not inferred"
+      ],
+      "attrs": {
+        "sample_size": {
+          "value": "1865",
+          "unit": "participants"
+        },
+        "age_range": {
+          "value": "≥60",
+          "unit": "year"
+        },
+        "women": {
+          "value": "51.90%",
+          "unit": "percent"
+        },
+        "diagnostic_criteria": "Petersen",
+        "tests": "ADL, CDR [95], CESD [96], MMSE [76]",
+        "prevalence_95CI": {
+          "value": "11.64%(10.26–13.17%)",
+          "unit": "percent"
+        },
+        "site": "Beijing"
+      }
+    },
+    {
+      "key": "study_29",
+      "units": [
+        35,
+        36,
+        37,
+        38
+      ],
+      "en": "Wang T cohort (Shanghai, 2012): aMCI prevalence 22.29%*(19.82–24.96%), N=1005, age ≥60 years, women N/A, DSM-IV diagnostic criteria; tests ADL , AVLT , CDR , DS , GDS , HIS , MMSE , MoCA , WMS-R.",
+      "ru": "Когорта Wang T (Shanghai, 2012): распространённость aMCI 22.29%*(19.82–24.96%), N=1005, возраст ≥60 лет, женщин N/A, диагностика DSM-IV; тесты ADL , AVLT , CDR , DS , GDS , HIS , MMSE , MoCA , WMS-R.",
+      "predicate": "reported_cohort_prevalence",
+      "roles": {
+        "population": "Study cohort: Wang T Shanghai 2012",
+        "condition": "Amnestic mild cognitive impairment"
+      },
+      "type": "result",
+      "time": "2012 study period",
+      "conditions": [
+        "Chinese community sample; starred table entries denote aMCI; unspecified cells not inferred"
+      ],
+      "attrs": {
+        "sample_size": {
+          "value": "1005",
+          "unit": "participants"
+        },
+        "age_range": {
+          "value": "≥60",
+          "unit": "year"
+        },
+        "women": {
+          "value": "N/A",
+          "unit": null
+        },
+        "diagnostic_criteria": "DSM-IV",
+        "tests": "ADL [93], AVLT [91], CDR [95], DS [97], GDS [99], HIS [102], MMSE [76], MoCA [77], WMS-R [86]",
+        "prevalence_95CI": {
+          "value": "22.29%*(19.82–24.96%)",
+          "unit": "percent"
+        },
+        "site": "Shanghai"
+      }
+    },
+    {
+      "key": "study_30",
+      "units": [
+        35,
+        36,
+        37,
+        38
+      ],
+      "en": "Wang TT cohort (Chongqing, 2017): MCI prevalence 11.73%(10.32–13.31%), N=1781, age ≥60 years, women 60.47%, Petersen diagnostic criteria; tests ADL , GDS, MMSE.",
+      "ru": "Когорта Wang TT (Chongqing, 2017): распространённость MCI 11.73%(10.32–13.31%), N=1781, возраст ≥60 лет, женщин 60.47%, диагностика Petersen; тесты ADL , GDS, MMSE.",
+      "predicate": "reported_cohort_prevalence",
+      "roles": {
+        "population": "Study cohort: Wang TT Chongqing 2017",
+        "condition": "Mild cognitive impairment"
+      },
+      "type": "result",
+      "time": "2017 study period",
+      "conditions": [
+        "Chinese community sample; starred table entries denote aMCI; unspecified cells not inferred"
+      ],
+      "attrs": {
+        "sample_size": {
+          "value": "1781",
+          "unit": "participants"
+        },
+        "age_range": {
+          "value": "≥60",
+          "unit": "year"
+        },
+        "women": {
+          "value": "60.47%",
+          "unit": "percent"
+        },
+        "diagnostic_criteria": "Petersen",
+        "tests": "ADL [93], GDS, MMSE [76]",
+        "prevalence_95CI": {
+          "value": "11.73%(10.32–13.31%)",
+          "unit": "percent"
+        },
+        "site": "Chongqing"
+      }
+    },
+    {
+      "key": "study_31",
+      "units": [
+        35,
+        36,
+        37,
+        38
+      ],
+      "en": "Wang YP cohort (Shanxi, 2009): MCI prevalence 9.75%(9.04–10.52%), N=6152, age ≥65 years, women N/A, DSM-IV diagnostic criteria; tests CDR , MMSE , WHO-BCAI.",
+      "ru": "Когорта Wang YP (Shanxi, 2009): распространённость MCI 9.75%(9.04–10.52%), N=6152, возраст ≥65 лет, женщин N/A, диагностика DSM-IV; тесты CDR , MMSE , WHO-BCAI.",
+      "predicate": "reported_cohort_prevalence",
+      "roles": {
+        "population": "Study cohort: Wang YP Shanxi 2009",
+        "condition": "Mild cognitive impairment"
+      },
+      "type": "result",
+      "time": "2009 study period",
+      "conditions": [
+        "Chinese community sample; starred table entries denote aMCI; unspecified cells not inferred"
+      ],
+      "attrs": {
+        "sample_size": {
+          "value": "6152",
+          "unit": "participants"
+        },
+        "age_range": {
+          "value": "≥65",
+          "unit": "year"
+        },
+        "women": {
+          "value": "N/A",
+          "unit": null
+        },
+        "diagnostic_criteria": "DSM-IV",
+        "tests": "CDR [95], MMSE [76], WHO-BCAI [82]",
+        "prevalence_95CI": {
+          "value": "9.75%(9.04–10.52%)",
+          "unit": "percent"
+        },
+        "site": "Shanxi"
+      }
+    },
+    {
+      "key": "study_32",
+      "units": [
+        35,
+        36,
+        37,
+        38
+      ],
+      "en": "Wang ZZ cohort (Ningxia, 2013): MCI prevalence 18.29%(15.58–21.35%), N=689, age ≥55 years, women 62.70%, Chinese Dementia guideline diagnostic criteria; tests ADL , GDS , MMSE.",
+      "ru": "Когорта Wang ZZ (Ningxia, 2013): распространённость MCI 18.29%(15.58–21.35%), N=689, возраст ≥55 лет, женщин 62.70%, диагностика Chinese Dementia guideline; тесты ADL , GDS , MMSE.",
+      "predicate": "reported_cohort_prevalence",
+      "roles": {
+        "population": "Study cohort: Wang ZZ Ningxia 2013",
+        "condition": "Mild cognitive impairment"
+      },
+      "type": "result",
+      "time": "2013 study period",
+      "conditions": [
+        "Chinese community sample; starred table entries denote aMCI; unspecified cells not inferred"
+      ],
+      "attrs": {
+        "sample_size": {
+          "value": "689",
+          "unit": "participants"
+        },
+        "age_range": {
+          "value": "≥55",
+          "unit": "year"
+        },
+        "women": {
+          "value": "62.70%",
+          "unit": "percent"
+        },
+        "diagnostic_criteria": "Chinese Dementia guideline",
+        "tests": "ADL [93], GDS [99], MMSE [76]",
+        "prevalence_95CI": {
+          "value": "18.29%(15.58–21.35%)",
+          "unit": "percent"
+        },
+        "site": "Ningxia"
+      }
+    },
+    {
+      "key": "study_33",
+      "units": [
+        35,
+        36,
+        37,
+        38
+      ],
+      "en": "Wu Y cohort (Jiangsu, 2014): MCI prevalence 17.17%(15.52–18.96%), N=1846, age ≥60 years, women 53.36%, Petersen diagnostic criteria; tests CCAS , CDR , HAMD ,MMSE , QCST-E.",
+      "ru": "Когорта Wu Y (Jiangsu, 2014): распространённость MCI 17.17%(15.52–18.96%), N=1846, возраст ≥60 лет, женщин 53.36%, диагностика Petersen; тесты CCAS , CDR , HAMD , MMSE , QCST-E.",
+      "predicate": "reported_cohort_prevalence",
+      "roles": {
+        "population": "Study cohort: Wu Y Jiangsu 2014",
+        "condition": "Mild cognitive impairment"
+      },
+      "type": "result",
+      "time": "2014 study period",
+      "conditions": [
+        "Chinese community sample; starred table entries denote aMCI; unspecified cells not inferred"
+      ],
+      "attrs": {
+        "sample_size": {
+          "value": "1846",
+          "unit": "participants"
+        },
+        "age_range": {
+          "value": "≥60",
+          "unit": "year"
+        },
+        "women": {
+          "value": "53.36%",
+          "unit": "percent"
+        },
+        "diagnostic_criteria": "Petersen",
+        "tests": "CCAS [74], CDR [95], HAMD [98],MMSE [76], QCST-E [79]",
+        "prevalence_95CI": {
+          "value": "17.17%(15.52–18.96%)",
+          "unit": "percent"
+        },
+        "site": "Jiangsu"
+      }
+    },
+    {
+      "key": "study_34",
+      "units": [
+        35,
+        36,
+        37,
+        38
+      ],
+      "en": "Xiao SF cohort (Shanghai, 2016): MCI prevalence 25.00%(22.50–27.68%), N=1068, age ≥60 years, women N/A, Petersen diagnostic criteria; tests AVLT , MMSE , MoCA , WMS-R ,WHO-BCAI.",
+      "ru": "Когорта Xiao SF (Shanghai, 2016): распространённость MCI 25.00%(22.50–27.68%), N=1068, возраст ≥60 лет, женщин N/A, диагностика Petersen; тесты AVLT , MMSE , MoCA , WMS-R , WHO-BCAI.",
+      "predicate": "reported_cohort_prevalence",
+      "roles": {
+        "population": "Study cohort: Xiao SF Shanghai 2016",
+        "condition": "Mild cognitive impairment"
+      },
+      "type": "result",
+      "time": "2016 study period",
+      "conditions": [
+        "Chinese community sample; starred table entries denote aMCI; unspecified cells not inferred"
+      ],
+      "attrs": {
+        "sample_size": {
+          "value": "1068",
+          "unit": "participants"
+        },
+        "age_range": {
+          "value": "≥60",
+          "unit": "year"
+        },
+        "women": {
+          "value": "N/A",
+          "unit": null
+        },
+        "diagnostic_criteria": "Petersen",
+        "tests": "AVLT [91], MMSE [76], MoCA [77], WMS-R [86],WHO-BCAI [82]",
+        "prevalence_95CI": {
+          "value": "25.00%(22.50–27.68%)",
+          "unit": "percent"
+        },
+        "site": "Shanghai"
+      }
+    },
+    {
+      "key": "study_35",
+      "units": [
+        35,
+        36,
+        37,
+        38
+      ],
+      "en": "Xu SJ cohort (Hebei, 2011): MCI prevalence 21.68%(20.09–23.37%), N=2426, age ≥60 years, women 60.68%, Petersen diagnostic criteria; tests ADL , GDS , MMSE ,MoCA , SAS.",
+      "ru": "Когорта Xu SJ (Hebei, 2011): распространённость MCI 21.68%(20.09–23.37%), N=2426, возраст ≥60 лет, женщин 60.68%, диагностика Petersen; тесты ADL , GDS , MMSE , MoCA , SAS.",
+      "predicate": "reported_cohort_prevalence",
+      "roles": {
+        "population": "Study cohort: Xu SJ Hebei 2011",
+        "condition": "Mild cognitive impairment"
+      },
+      "type": "result",
+      "time": "2011 study period",
+      "conditions": [
+        "Chinese community sample; starred table entries denote aMCI; unspecified cells not inferred"
+      ],
+      "attrs": {
+        "sample_size": {
+          "value": "2426",
+          "unit": "participants"
+        },
+        "age_range": {
+          "value": "≥60",
+          "unit": "year"
+        },
+        "women": {
+          "value": "60.68%",
+          "unit": "percent"
+        },
+        "diagnostic_criteria": "Petersen",
+        "tests": "ADL [93], GDS [99], MMSE [76],MoCA [77], SAS [101]",
+        "prevalence_95CI": {
+          "value": "21.68%(20.09–23.37%)",
+          "unit": "percent"
+        },
+        "site": "Hebei"
+      }
+    },
+    {
+      "key": "study_36",
+      "units": [
+        35,
+        36,
+        37,
+        38
+      ],
+      "en": "Yin LY cohort (Hebei, 2009): MCI prevalence 6.63%(5.25–8.33%), N=1011, age ≥65 years, women 59.45%, Petersen diagnostic criteria; tests CDR , CESD , FAQ, GDS , MMSE , MoCA.",
+      "ru": "Когорта Yin LY (Hebei, 2009): распространённость MCI 6.63%(5.25–8.33%), N=1011, возраст ≥65 лет, женщин 59.45%, диагностика Petersen; тесты CDR , CESD , FAQ, GDS , MMSE , MoCA.",
+      "predicate": "reported_cohort_prevalence",
+      "roles": {
+        "population": "Study cohort: Yin LY Hebei 2009",
+        "condition": "Mild cognitive impairment"
+      },
+      "type": "result",
+      "time": "2009 study period",
+      "conditions": [
+        "Chinese community sample; starred table entries denote aMCI; unspecified cells not inferred"
+      ],
+      "attrs": {
+        "sample_size": {
+          "value": "1011",
+          "unit": "participants"
+        },
+        "age_range": {
+          "value": "≥65",
+          "unit": "year"
+        },
+        "women": {
+          "value": "59.45%",
+          "unit": "percent"
+        },
+        "diagnostic_criteria": "Petersen",
+        "tests": "CDR [95], CESD [96], FAQ, GDS [99], MMSE [76], MoCA [77]",
+        "prevalence_95CI": {
+          "value": "6.63%(5.25–8.33%)",
+          "unit": "percent"
+        },
+        "site": "Hebei"
+      }
+    },
+    {
+      "key": "study_37",
+      "units": [
+        35,
+        36,
+        37,
+        38
+      ],
+      "en": "Yuan J cohort (Shanghai, 2010): MCI prevalence 19.06%(17.76–20.43%), N=3311, age ≥60 years, women 66.89%, Petersen diagnostic criteria; tests HIS , SCID-I/P.",
+      "ru": "Когорта Yuan J (Shanghai, 2010): распространённость MCI 19.06%(17.76–20.43%), N=3311, возраст ≥60 лет, женщин 66.89%, диагностика Petersen; тесты HIS , SCID-I/P.",
+      "predicate": "reported_cohort_prevalence",
+      "roles": {
+        "population": "Study cohort: Yuan J Shanghai 2010",
+        "condition": "Mild cognitive impairment"
+      },
+      "type": "result",
+      "time": "2010 study period",
+      "conditions": [
+        "Chinese community sample; starred table entries denote aMCI; unspecified cells not inferred"
+      ],
+      "attrs": {
+        "sample_size": {
+          "value": "3311",
+          "unit": "participants"
+        },
+        "age_range": {
+          "value": "≥60",
+          "unit": "year"
+        },
+        "women": {
+          "value": "66.89%",
+          "unit": "percent"
+        },
+        "diagnostic_criteria": "Petersen",
+        "tests": "HIS [102], SCID-I/P [80]",
+        "prevalence_95CI": {
+          "value": "19.06%(17.76–20.43%)",
+          "unit": "percent"
+        },
+        "site": "Shanghai"
+      }
+    },
+    {
+      "key": "study_38",
+      "units": [
+        35,
+        36,
+        37,
+        38
+      ],
+      "en": "Zhang XQ cohort (Changsha, 2012): MCI prevalence 16.27%(14.62–18.07%), N=1764, age ≥60 years, women 55.95%, Petersen diagnostic criteria; tests ADL , CDR , GDS, MMSE , MoCA.",
+      "ru": "Когорта Zhang XQ (Changsha, 2012): распространённость MCI 16.27%(14.62–18.07%), N=1764, возраст ≥60 лет, женщин 55.95%, диагностика Petersen; тесты ADL , CDR , GDS, MMSE , MoCA.",
+      "predicate": "reported_cohort_prevalence",
+      "roles": {
+        "population": "Study cohort: Zhang XQ Changsha 2012",
+        "condition": "Mild cognitive impairment"
+      },
+      "type": "result",
+      "time": "2012 study period",
+      "conditions": [
+        "Chinese community sample; starred table entries denote aMCI; unspecified cells not inferred"
+      ],
+      "attrs": {
+        "sample_size": {
+          "value": "1764",
+          "unit": "participants"
+        },
+        "age_range": {
+          "value": "≥60",
+          "unit": "year"
+        },
+        "women": {
+          "value": "55.95%",
+          "unit": "percent"
+        },
+        "diagnostic_criteria": "Petersen",
+        "tests": "ADL [93], CDR [95], GDS, MMSE [76], MoCA [77]",
+        "prevalence_95CI": {
+          "value": "16.27%(14.62–18.07%)",
+          "unit": "percent"
+        },
+        "site": "Changsha"
+      }
+    },
+    {
+      "key": "study_39",
+      "units": [
+        35,
+        36,
+        37,
+        38
+      ],
+      "en": "Zhou DS cohort (Zhejiang, 2010): MCI prevalence 8.72%(7.27–10.43%), N=1227, age ≥60 years, women 56.32%, DSM-IV diagnostic criteria; tests CDR , CESD , GDS , HIS ,IMCT , MMSE.",
+      "ru": "Когорта Zhou DS (Zhejiang, 2010): распространённость MCI 8.72%(7.27–10.43%), N=1227, возраст ≥60 лет, женщин 56.32%, диагностика DSM-IV; тесты CDR , CESD , GDS , HIS , IMCT , MMSE.",
+      "predicate": "reported_cohort_prevalence",
+      "roles": {
+        "population": "Study cohort: Zhou DS Zhejiang 2010",
+        "condition": "Mild cognitive impairment"
+      },
+      "type": "result",
+      "time": "2010 study period",
+      "conditions": [
+        "Chinese community sample; starred table entries denote aMCI; unspecified cells not inferred"
+      ],
+      "attrs": {
+        "sample_size": {
+          "value": "1227",
+          "unit": "participants"
+        },
+        "age_range": {
+          "value": "≥60",
+          "unit": "year"
+        },
+        "women": {
+          "value": "56.32%",
+          "unit": "percent"
+        },
+        "diagnostic_criteria": "DSM-IV",
+        "tests": "CDR [95], CESD [96], GDS [99], HIS [102],IMCT [85], MMSE [76]",
+        "prevalence_95CI": {
+          "value": "8.72%(7.27–10.43%)",
+          "unit": "percent"
+        },
+        "site": "Zhejiang"
+      }
+    },
+    {
+      "key": "study_40",
+      "units": [
+        35,
+        36,
+        37,
+        38
+      ],
+      "en": "Zhu XQ cohort (Xinjiang, 2008): MCI prevalence 9.79%(8.40–11.40%), N=1511, age ≥60 years, women 54.60%, DSM-IV diagnostic criteria; tests CDR , GD S , HIS , HAMD , MMSE.",
+      "ru": "Когорта Zhu XQ (Xinjiang, 2008): распространённость MCI 9.79%(8.40–11.40%), N=1511, возраст ≥60 лет, женщин 54.60%, диагностика DSM-IV; тесты CDR , GD S , HIS , HAMD , MMSE.",
+      "predicate": "reported_cohort_prevalence",
+      "roles": {
+        "population": "Study cohort: Zhu XQ Xinjiang 2008",
+        "condition": "Mild cognitive impairment"
+      },
+      "type": "result",
+      "time": "2008 study period",
+      "conditions": [
+        "Chinese community sample; starred table entries denote aMCI; unspecified cells not inferred"
+      ],
+      "attrs": {
+        "sample_size": {
+          "value": "1511",
+          "unit": "participants"
+        },
+        "age_range": {
+          "value": "≥60",
+          "unit": "year"
+        },
+        "women": {
+          "value": "54.60%",
+          "unit": "percent"
+        },
+        "diagnostic_criteria": "DSM-IV",
+        "tests": "CDR [95], GD S [99], HIS [102], HAMD [98], MMSE [76]",
+        "prevalence_95CI": {
+          "value": "9.79%(8.40–11.40%)",
+          "unit": "percent"
+        },
+        "site": "Xinjiang"
+      }
+    },
+    {
+      "key": "bias_partition",
+      "units": [
+        24,
+        40,
+        41,
+        42
+      ],
+      "en": "Most of 45 assessed publications had moderate risk of bias; four high-risk studies (PanHY 2012, PengZ 2019, WuL 2016 and ZhongSY 2018) were excluded. Each publication's external, internal and overall rating is retained.",
+      "ru": "Большинство из 45 публикаций имело средний риск смещения; четыре с высоким риском (PanHY 2012, PengZ 2019, WuL 2016, ZhongSY 2018) исключены. Сохранены внешняя, внутренняя и общая оценки каждой публикации.",
+      "predicate": "risk_assessment_partition",
+      "roles": {
+        "subject": "Assessed Chinese prevalence publications"
+      },
+      "type": "result",
+      "logic": "partition",
+      "claims": [
+        {
+          "predicate": "assessed_risk_of_bias",
+          "roles": {
+            "publication": "Chen ND, 2012"
+          },
+          "attrs": {
+            "external_validity": "Moderate Risk",
+            "internal_validity": "Moderate Risk",
+            "overall": "Moderate Risk",
+            "included_in_final_meta": true
+          },
+          "units": [
+            41,
+            42
+          ]
+        },
+        {
+          "predicate": "assessed_risk_of_bias",
+          "roles": {
+            "publication": "Ding D, 2015"
+          },
+          "attrs": {
+            "external_validity": "Low Risk",
+            "internal_validity": "Low Risk",
+            "overall": "Low Risk",
+            "included_in_final_meta": true
+          },
+          "units": [
+            41,
+            42
+          ]
+        },
+        {
+          "predicate": "assessed_risk_of_bias",
+          "roles": {
+            "publication": "Guo GY, 2013"
+          },
+          "attrs": {
+            "external_validity": "Moderate Risk",
+            "internal_validity": "Moderate Risk",
+            "overall": "Moderate Risk",
+            "included_in_final_meta": true
+          },
+          "units": [
+            41,
+            42
+          ]
+        },
+        {
+          "predicate": "assessed_risk_of_bias",
+          "roles": {
+            "publication": "Guo XY, 2013"
+          },
+          "attrs": {
+            "external_validity": "Moderate Risk",
+            "internal_validity": "Moderate Risk",
+            "overall": "Moderate Risk",
+            "included_in_final_meta": true
+          },
+          "units": [
+            41,
+            42
+          ]
+        },
+        {
+          "predicate": "assessed_risk_of_bias",
+          "roles": {
+            "publication": "Hai S, 2011"
+          },
+          "attrs": {
+            "external_validity": "Moderate Risk",
+            "internal_validity": "Moderate Risk",
+            "overall": "Moderate Risk",
+            "included_in_final_meta": true
+          },
+          "units": [
+            41,
+            42
+          ]
+        },
+        {
+          "predicate": "assessed_risk_of_bias",
+          "roles": {
+            "publication": "He L, 2015"
+          },
+          "attrs": {
+            "external_validity": "Low Risk",
+            "internal_validity": "Moderate Risk",
+            "overall": "Moderate Risk",
+            "included_in_final_meta": true
+          },
+          "units": [
+            41,
+            42
+          ]
+        },
+        {
+          "predicate": "assessed_risk_of_bias",
+          "roles": {
+            "publication": "Hu R, 2012"
+          },
+          "attrs": {
+            "external_validity": "Moderate Risk",
+            "internal_validity": "Moderate Risk",
+            "overall": "Moderate Risk",
+            "included_in_final_meta": true
+          },
+          "units": [
+            41,
+            42
+          ]
+        },
+        {
+          "predicate": "assessed_risk_of_bias",
+          "roles": {
+            "publication": "Huang R, 2008"
+          },
+          "attrs": {
+            "external_validity": "Low Risk",
+            "internal_validity": "Low Risk",
+            "overall": "Low Risk",
+            "included_in_final_meta": true
+          },
+          "units": [
+            41,
+            42
+          ]
+        },
+        {
+          "predicate": "assessed_risk_of_bias",
+          "roles": {
+            "publication": "JIA J, 2013"
+          },
+          "attrs": {
+            "external_validity": "Low Risk",
+            "internal_validity": "Low Risk",
+            "overall": "Low Risk",
+            "included_in_final_meta": true
+          },
+          "units": [
+            41,
+            42
+          ]
+        },
+        {
+          "predicate": "assessed_risk_of_bias",
+          "roles": {
+            "publication": "Jiang LJ, 2017"
+          },
+          "attrs": {
+            "external_validity": "Moderate Risk",
+            "internal_validity": "Moderate Risk",
+            "overall": "Moderate Risk",
+            "included_in_final_meta": true
+          },
+          "units": [
+            41,
+            42
+          ]
+        },
+        {
+          "predicate": "assessed_risk_of_bias",
+          "roles": {
+            "publication": "Lao ML, 2011"
+          },
+          "attrs": {
+            "external_validity": "Moderate Risk",
+            "internal_validity": "Moderate Risk",
+            "overall": "Moderate Risk",
+            "included_in_final_meta": true
+          },
+          "units": [
+            41,
+            42
+          ]
+        },
+        {
+          "predicate": "assessed_risk_of_bias",
+          "roles": {
+            "publication": "Li CP, 2014"
+          },
+          "attrs": {
+            "external_validity": "low Risk",
+            "internal_validity": "Moderate Risk",
+            "overall": "Moderate Risk",
+            "included_in_final_meta": true
+          },
+          "units": [
+            41,
+            42
+          ]
+        },
+        {
+          "predicate": "assessed_risk_of_bias",
+          "roles": {
+            "publication": "Li X, 2013"
+          },
+          "attrs": {
+            "external_validity": "Moderate Risk",
+            "internal_validity": "Moderate Risk",
+            "overall": "Moderate Risk",
+            "included_in_final_meta": true
+          },
+          "units": [
+            41,
+            42
+          ]
+        },
+        {
+          "predicate": "assessed_risk_of_bias",
+          "roles": {
+            "publication": "Li W, 2020"
+          },
+          "attrs": {
+            "external_validity": "low Risk",
+            "internal_validity": "Low Risk",
+            "overall": "Low Risk",
+            "included_in_final_meta": true
+          },
+          "units": [
+            41,
+            42
+          ]
+        },
+        {
+          "predicate": "assessed_risk_of_bias",
+          "roles": {
+            "publication": "Liao B, 2012"
+          },
+          "attrs": {
+            "external_validity": "Moderate Risk",
+            "internal_validity": "Moderate Risk",
+            "overall": "Moderate Risk",
+            "included_in_final_meta": true
+          },
+          "units": [
+            41,
+            42
+          ]
+        },
+        {
+          "predicate": "assessed_risk_of_bias",
+          "roles": {
+            "publication": "Liu H, 2018"
+          },
+          "attrs": {
+            "external_validity": "low Risk",
+            "internal_validity": "Moderate Risk",
+            "overall": "Moderate Risk",
+            "included_in_final_meta": true
+          },
+          "units": [
+            41,
+            42
+          ]
+        },
+        {
+          "predicate": "assessed_risk_of_bias",
+          "roles": {
+            "publication": "Ma F, 2016"
+          },
+          "attrs": {
+            "external_validity": "Low Risk",
+            "internal_validity": "Low Risk",
+            "overall": "Low Risk",
+            "included_in_final_meta": true
+          },
+          "units": [
+            41,
+            42
+          ]
+        },
+        {
+          "predicate": "assessed_risk_of_bias",
+          "roles": {
+            "publication": "Meng WQ, 2010"
+          },
+          "attrs": {
+            "external_validity": "Moderate Risk",
+            "internal_validity": "Moderate Risk",
+            "overall": "Moderate Risk",
+            "included_in_final_meta": true
+          },
+          "units": [
+            41,
+            42
+          ]
+        },
+        {
+          "predicate": "assessed_risk_of_bias",
+          "roles": {
+            "publication": "Pan HY, 2012"
+          },
+          "attrs": {
+            "external_validity": "Moderate Risk",
+            "internal_validity": "High Risk",
+            "overall": "High Risk",
+            "included_in_final_meta": false
+          },
+          "units": [
+            41,
+            42
+          ]
+        },
+        {
+          "predicate": "assessed_risk_of_bias",
+          "roles": {
+            "publication": "Pan ZD, 2012"
+          },
+          "attrs": {
+            "external_validity": "Low Risk",
+            "internal_validity": "Moderate Risk",
+            "overall": "Moderate Risk",
+            "included_in_final_meta": true
+          },
+          "units": [
+            41,
+            42
+          ]
+        },
+        {
+          "predicate": "assessed_risk_of_bias",
+          "roles": {
+            "publication": "Peng Z, 2019"
+          },
+          "attrs": {
+            "external_validity": "Moderate Risk",
+            "internal_validity": "High Risk",
+            "overall": "High Risk",
+            "included_in_final_meta": false
+          },
+          "units": [
+            41,
+            42
+          ]
+        },
+        {
+          "predicate": "assessed_risk_of_bias",
+          "roles": {
+            "publication": "Qin HY, 2014"
+          },
+          "attrs": {
+            "external_validity": "Low Risk",
+            "internal_validity": "Low Risk",
+            "overall": "Low Risk",
+            "included_in_final_meta": true
+          },
+          "units": [
+            41,
+            42
+          ]
+        },
+        {
+          "predicate": "assessed_risk_of_bias",
+          "roles": {
+            "publication": "Qiu CJ, 2003"
+          },
+          "attrs": {
+            "external_validity": "Moderate Risk",
+            "internal_validity": "Low Risk",
+            "overall": "Moderate Risk",
+            "included_in_final_meta": true
+          },
+          "units": [
+            41,
+            42
+          ]
+        },
+        {
+          "predicate": "assessed_risk_of_bias",
+          "roles": {
+            "publication": "Rao D, 2018"
+          },
+          "attrs": {
+            "external_validity": "Low Risk",
+            "internal_validity": "Low Risk",
+            "overall": "Low Risk",
+            "included_in_final_meta": true
+          },
+          "units": [
+            41,
+            42
+          ]
+        },
+        {
+          "predicate": "assessed_risk_of_bias",
+          "roles": {
+            "publication": "Ren CF, 2013"
+          },
+          "attrs": {
+            "external_validity": "Moderate Risk",
+            "internal_validity": "Low Risk",
+            "overall": "Moderate Risk",
+            "included_in_final_meta": true
+          },
+          "units": [
+            41,
+            42
+          ]
+        },
+        {
+          "predicate": "assessed_risk_of_bias",
+          "roles": {
+            "publication": "Song XZ, 2012"
+          },
+          "attrs": {
+            "external_validity": "Low Risk",
+            "internal_validity": "Moderate Risk",
+            "overall": "Moderate Risk",
+            "included_in_final_meta": true
+          },
+          "units": [
+            41,
+            42
+          ]
+        },
+        {
+          "predicate": "assessed_risk_of_bias",
+          "roles": {
+            "publication": "Sosa AL, 2012"
+          },
+          "attrs": {
+            "external_validity": "Moderate Risk",
+            "internal_validity": "Moderate Risk",
+            "overall": "Moderate Risk",
+            "included_in_final_meta": true
+          },
+          "units": [
+            41,
+            42
+          ]
+        },
+        {
+          "predicate": "assessed_risk_of_bias",
+          "roles": {
+            "publication": "Su C, 2013"
+          },
+          "attrs": {
+            "external_validity": "Moderate Risk",
+            "internal_validity": "Moderate Risk",
+            "overall": "Moderate Risk",
+            "included_in_final_meta": true
+          },
+          "units": [
+            41,
+            42
+          ]
+        },
+        {
+          "predicate": "assessed_risk_of_bias",
+          "roles": {
+            "publication": "Sun Y, 2014"
+          },
+          "attrs": {
+            "external_validity": "Low Risk",
+            "internal_validity": "Moderate Risk",
+            "overall": "Moderate Risk",
+            "included_in_final_meta": true
+          },
+          "units": [
+            41,
+            42
+          ]
+        },
+        {
+          "predicate": "assessed_risk_of_bias",
+          "roles": {
+            "publication": "Tang Z, 2007"
+          },
+          "attrs": {
+            "external_validity": "Low Risk",
+            "internal_validity": "Moderate Risk",
+            "overall": "Moderate Risk",
+            "included_in_final_meta": true
+          },
+          "units": [
+            41,
+            42
+          ]
+        },
+        {
+          "predicate": "assessed_risk_of_bias",
+          "roles": {
+            "publication": "Tang MN, 2000"
+          },
+          "attrs": {
+            "external_validity": "Low Risk",
+            "internal_validity": "Moderate Risk",
+            "overall": "Moderate Risk",
+            "included_in_final_meta": true
+          },
+          "units": [
+            41,
+            42
+          ]
+        },
+        {
+          "predicate": "assessed_risk_of_bias",
+          "roles": {
+            "publication": "Wang T, 2017"
+          },
+          "attrs": {
+            "external_validity": "Low Risk",
+            "internal_validity": "Moderate Risk",
+            "overall": "Moderate Risk",
+            "included_in_final_meta": true
+          },
+          "units": [
+            41,
+            42
+          ]
+        },
+        {
+          "predicate": "assessed_risk_of_bias",
+          "roles": {
+            "publication": "Wang TT, 2017"
+          },
+          "attrs": {
+            "external_validity": "Low Risk",
+            "internal_validity": "Low Risk",
+            "overall": "Low Risk",
+            "included_in_final_meta": true
+          },
+          "units": [
+            41,
+            42
+          ]
+        },
+        {
+          "predicate": "assessed_risk_of_bias",
+          "roles": {
+            "publication": "Wang YP, 2011"
+          },
+          "attrs": {
+            "external_validity": "Moderate Risk",
+            "internal_validity": "Moderate Risk",
+            "overall": "Moderate Risk",
+            "included_in_final_meta": true
+          },
+          "units": [
+            41,
+            42
+          ]
+        },
+        {
+          "predicate": "assessed_risk_of_bias",
+          "roles": {
+            "publication": "Wang ZZ, 2013"
+          },
+          "attrs": {
+            "external_validity": "Moderate Risk",
+            "internal_validity": "Moderate Risk",
+            "overall": "Moderate Risk",
+            "included_in_final_meta": true
+          },
+          "units": [
+            41,
+            42
+          ]
+        },
+        {
+          "predicate": "assessed_risk_of_bias",
+          "roles": {
+            "publication": "Wu L, 2016"
+          },
+          "attrs": {
+            "external_validity": "Moderate Risk",
+            "internal_validity": "High Risk",
+            "overall": "High Risk",
+            "included_in_final_meta": false
+          },
+          "units": [
+            41,
+            42
+          ]
+        },
+        {
+          "predicate": "assessed_risk_of_bias",
+          "roles": {
+            "publication": "Wu Y, 2017"
+          },
+          "attrs": {
+            "external_validity": "Low Risk",
+            "internal_validity": "Moderate Risk",
+            "overall": "Moderate Risk",
+            "included_in_final_meta": true
+          },
+          "units": [
+            41,
+            42
+          ]
+        },
+        {
+          "predicate": "assessed_risk_of_bias",
+          "roles": {
+            "publication": "Xiao SF, 2016"
+          },
+          "attrs": {
+            "external_validity": "Low Risk",
+            "internal_validity": "Low Risk",
+            "overall": "Low Risk",
+            "included_in_final_meta": true
+          },
+          "units": [
+            41,
+            42
+          ]
+        },
+        {
+          "predicate": "assessed_risk_of_bias",
+          "roles": {
+            "publication": "Xu SJ, 2014"
+          },
+          "attrs": {
+            "external_validity": "Low Risk",
+            "internal_validity": "Moderate Risk",
+            "overall": "Moderate Risk",
+            "included_in_final_meta": true
+          },
+          "units": [
+            41,
+            42
+          ]
+        },
+        {
+          "predicate": "assessed_risk_of_bias",
+          "roles": {
+            "publication": "Yin LY, 2010"
+          },
+          "attrs": {
+            "external_validity": "Low Risk",
+            "internal_validity": "Moderate Risk",
+            "overall": "Moderate Risk",
+            "included_in_final_meta": true
+          },
+          "units": [
+            41,
+            42
+          ]
+        },
+        {
+          "predicate": "assessed_risk_of_bias",
+          "roles": {
+            "publication": "Yuan J, 2013"
+          },
+          "attrs": {
+            "external_validity": "Moderate Risk",
+            "internal_validity": "Moderate Risk",
+            "overall": "Moderate Risk",
+            "included_in_final_meta": true
+          },
+          "units": [
+            41,
+            42
+          ]
+        },
+        {
+          "predicate": "assessed_risk_of_bias",
+          "roles": {
+            "publication": "Zhang XQ, 2014"
+          },
+          "attrs": {
+            "external_validity": "Low Risk",
+            "internal_validity": "Low Risk",
+            "overall": "Low Risk",
+            "included_in_final_meta": true
+          },
+          "units": [
+            41,
+            42
+          ]
+        },
+        {
+          "predicate": "assessed_risk_of_bias",
+          "roles": {
+            "publication": "Zhong SY, 2018"
+          },
+          "attrs": {
+            "external_validity": "Moderate Risk",
+            "internal_validity": "High Risk",
+            "overall": "High Risk",
+            "included_in_final_meta": false
+          },
+          "units": [
+            41,
+            42
+          ]
+        },
+        {
+          "predicate": "assessed_risk_of_bias",
+          "roles": {
+            "publication": "Zhou DS, 2011"
+          },
+          "attrs": {
+            "external_validity": "Moderate Risk",
+            "internal_validity": "Low Risk",
+            "overall": "Moderate Risk",
+            "included_in_final_meta": true
+          },
+          "units": [
+            41,
+            42
+          ]
+        },
+        {
+          "predicate": "assessed_risk_of_bias",
+          "roles": {
+            "publication": "Zhu XQ, 2009"
+          },
+          "attrs": {
+            "external_validity": "Moderate Risk",
+            "internal_validity": "Low Risk",
+            "overall": "Moderate Risk",
+            "included_in_final_meta": true
+          },
+          "units": [
+            41,
+            42
+          ]
+        }
+      ],
+      "conditions": [
+        "Source Risk of Bias Tool ratings; publication years differ from cohort observation years"
+      ]
+    },
+    {
+      "key": "regression_0",
+      "units": [
+        44,
+        45,
+        46
+      ],
+      "en": "Age: meta-regression coefficient .2187126, SE.1562825, t=1.40, p=0.171, 95% CI−.0988917 to .5363169 for source outcome label lnhr.",
+      "ru": "Метарегрессия, Age: коэффициент .2187126, SE .1562825, t=1.40, p=0.171, 95% ДИ −.0988917 — .5363169, исход помечен lnhr.",
+      "predicate": "meta_regression_coefficient",
+      "roles": {
+        "predictor": "Age",
+        "outcome": "lnhr (source table label)"
+      },
+      "type": "result",
+      "attrs": {
+        "coefficient": ".2187126",
+        "standard_error": ".1562825",
+        "t": "1.40",
+        "p": {
+          "value": "0.171",
+          "unit": "p-value"
+        },
+        "lower_CI": "−.0988917",
+        "upper_CI": ".5363169"
+      },
+      "conditions": [
+        "Chinese MCI prevalence review meta-regression; source coefficient precision preserved"
+      ]
+    },
+    {
+      "key": "regression_1",
+      "units": [
+        44,
+        45,
+        46
+      ],
+      "en": "Study period: meta-regression coefficient .3282157, SE.1214176, t=2.70, p=0.011, 95% CI.0814654 to .574966 for source outcome label lnhr.",
+      "ru": "Метарегрессия, Study period: коэффициент .3282157, SE .1214176, t=2.70, p=0.011, 95% ДИ .0814654 — .574966, исход помечен lnhr.",
+      "predicate": "meta_regression_coefficient",
+      "roles": {
+        "predictor": "Study period",
+        "outcome": "lnhr (source table label)"
+      },
+      "type": "result",
+      "attrs": {
+        "coefficient": ".3282157",
+        "standard_error": ".1214176",
+        "t": "2.70",
+        "p": {
+          "value": "0.011",
+          "unit": "p-value"
+        },
+        "lower_CI": ".0814654",
+        "upper_CI": ".574966"
+      },
+      "conditions": [
+        "Chinese MCI prevalence review meta-regression; source coefficient precision preserved"
+      ]
+    },
+    {
+      "key": "regression_2",
+      "units": [
+        44,
+        45,
+        46
+      ],
+      "en": "Diagnostic criteria: meta-regression coefficient −.1795994, SE.1203679, t=−1.49, p=0.145, 95% CI−.4242164 to .0650176 for source outcome label lnhr.",
+      "ru": "Метарегрессия, Diagnostic criteria: коэффициент −.1795994, SE .1203679, t=−1.49, p=0.145, 95% ДИ −.4242164 — .0650176, исход помечен lnhr.",
+      "predicate": "meta_regression_coefficient",
+      "roles": {
+        "predictor": "Diagnostic criteria",
+        "outcome": "lnhr (source table label)"
+      },
+      "type": "result",
+      "attrs": {
+        "coefficient": "−.1795994",
+        "standard_error": ".1203679",
+        "t": "−1.49",
+        "p": {
+          "value": "0.145",
+          "unit": "p-value"
+        },
+        "lower_CI": "−.4242164",
+        "upper_CI": ".0650176"
+      },
+      "conditions": [
+        "Chinese MCI prevalence review meta-regression; source coefficient precision preserved"
+      ]
+    },
+    {
+      "key": "regression_3",
+      "units": [
+        44,
+        45,
+        46
+      ],
+      "en": "Constant: meta-regression coefficient −3.146882, SE.5048756, t=−6.23, p=0.000, 95% CI−4.172913 to −2.120851 for source outcome label lnhr.",
+      "ru": "Метарегрессия, Constant: коэффициент −3.146882, SE .5048756, t=−6.23, p=0.000, 95% ДИ −4.172913 — −2.120851, исход помечен lnhr.",
+      "predicate": "meta_regression_coefficient",
+      "roles": {
+        "predictor": "Constant",
+        "outcome": "lnhr (source table label)"
+      },
+      "type": "result",
+      "attrs": {
+        "coefficient": "−3.146882",
+        "standard_error": ".5048756",
+        "t": "−6.23",
+        "p": {
+          "value": "0.000",
+          "unit": "p-value"
+        },
+        "lower_CI": "−4.172913",
+        "upper_CI": "−2.120851"
+      },
+      "conditions": [
+        "Chinese MCI prevalence review meta-regression; source coefficient precision preserved"
+      ]
+    },
+    {
+      "key": "subgroup_0",
+      "units": [
+        56,
+        57,
+        58
+      ],
+      "en": "Age (Years) 55–59: MCI prevalence 0.076(0.025–0.226) (proportion), 3 studies/5951 participants, model p< 0.001, I² 99.2%, Ph=0.922.",
+      "ru": "Подгруппа Возраст (лет) 55–59: распространённость MCI 0.076(0.025–0.226) (доля), 3 исследований/5951 участников, p модели < 0.001, I² 99.2%, Ph=0.922.",
+      "predicate": "subgroup_mci_prevalence",
+      "roles": {
+        "condition": "Mild cognitive impairment",
+        "population": "Chinese community prevalence review subgroup 55–59",
+        "grouping_factor": "Age (Years)"
+      },
+      "type": "result",
+      "attrs": {
+        "prevalence_95CI": {
+          "value": "0.076(0.025–0.226)",
+          "unit": "proportion"
+        },
+        "studies": {
+          "value": "3",
+          "unit": "studies"
+        },
+        "participants": {
+          "value": "5951",
+          "unit": "participants"
+        },
+        "p": {
+          "value": "< 0.001",
+          "unit": "p-value"
+        },
+        "I_squared": {
+          "value": "99.2%",
+          "unit": "percent"
+        },
+        "Ph": {
+          "value": "0.922",
+          "unit": "p-value"
+        }
+      },
+      "conditions": [
+        "Random-effects subgroup prevalence; dimensions differ from incidence and conversion"
+      ],
+      "time": "Review search through1March2020"
+    },
+    {
+      "key": "subgroup_1",
+      "units": [
+        56,
+        57,
+        58
+      ],
+      "en": "Age (Years) 60–69: MCI prevalence 0.095(0.074–0.121) (proportion), 24 studies/23,095 participants, model p< 0.001, I² 97.8%, Ph=0.356.",
+      "ru": "Подгруппа Возраст (лет) 60–69: распространённость MCI 0.095(0.074–0.121) (доля), 24 исследований/23, 095 участников, p модели < 0.001, I² 97.8%, Ph=0.356.",
+      "predicate": "subgroup_mci_prevalence",
+      "roles": {
+        "condition": "Mild cognitive impairment",
+        "population": "Chinese community prevalence review subgroup 60–69",
+        "grouping_factor": "Age (Years)"
+      },
+      "type": "result",
+      "attrs": {
+        "prevalence_95CI": {
+          "value": "0.095(0.074–0.121)",
+          "unit": "proportion"
+        },
+        "studies": {
+          "value": "24",
+          "unit": "studies"
+        },
+        "participants": {
+          "value": "23,095",
+          "unit": "participants"
+        },
+        "p": {
+          "value": "< 0.001",
+          "unit": "p-value"
+        },
+        "I_squared": {
+          "value": "97.8%",
+          "unit": "percent"
+        },
+        "Ph": {
+          "value": "0.356",
+          "unit": "p-value"
+        }
+      },
+      "conditions": [
+        "Random-effects subgroup prevalence; dimensions differ from incidence and conversion"
+      ],
+      "time": "Review search through1March2020"
+    },
+    {
+      "key": "subgroup_2",
+      "units": [
+        56,
+        57,
+        58
+      ],
+      "en": "Age (Years) 70–79: MCI prevalence 0.146 (0.124–0.171) (proportion), 25 studies/22,902 participants, model p< 0.001, I² 96.6%, Ph=0.153.",
+      "ru": "Подгруппа Возраст (лет) 70–79: распространённость MCI 0.146 (0.124–0.171) (доля), 25 исследований/22, 902 участников, p модели < 0.001, I² 96.6%, Ph=0.153.",
+      "predicate": "subgroup_mci_prevalence",
+      "roles": {
+        "condition": "Mild cognitive impairment",
+        "population": "Chinese community prevalence review subgroup 70–79",
+        "grouping_factor": "Age (Years)"
+      },
+      "type": "result",
+      "attrs": {
+        "prevalence_95CI": {
+          "value": "0.146 (0.124–0.171)",
+          "unit": "proportion"
+        },
+        "studies": {
+          "value": "25",
+          "unit": "studies"
+        },
+        "participants": {
+          "value": "22,902",
+          "unit": "participants"
+        },
+        "p": {
+          "value": "< 0.001",
+          "unit": "p-value"
+        },
+        "I_squared": {
+          "value": "96.6%",
+          "unit": "percent"
+        },
+        "Ph": {
+          "value": "0.153",
+          "unit": "p-value"
+        }
+      },
+      "conditions": [
+        "Random-effects subgroup prevalence; dimensions differ from incidence and conversion"
+      ],
+      "time": "Review search through1March2020"
+    },
+    {
+      "key": "subgroup_3",
+      "units": [
+        56,
+        57,
+        58
+      ],
+      "en": "Age (Years) ≥ 80: MCI prevalence 0.236 (0.204–0.274) (proportion), 25 studies/9397 participants, model p< 0.001, I² 93.5%, Ph=0.122.",
+      "ru": "Подгруппа Возраст (лет) ≥ 80: распространённость MCI 0.236 (0.204–0.274) (доля), 25 исследований/9397 участников, p модели < 0.001, I² 93.5%, Ph=0.122.",
+      "predicate": "subgroup_mci_prevalence",
+      "roles": {
+        "condition": "Mild cognitive impairment",
+        "population": "Chinese community prevalence review subgroup ≥ 80",
+        "grouping_factor": "Age (Years)"
+      },
+      "type": "result",
+      "attrs": {
+        "prevalence_95CI": {
+          "value": "0.236 (0.204–0.274)",
+          "unit": "proportion"
+        },
+        "studies": {
+          "value": "25",
+          "unit": "studies"
+        },
+        "participants": {
+          "value": "9397",
+          "unit": "participants"
+        },
+        "p": {
+          "value": "< 0.001",
+          "unit": "p-value"
+        },
+        "I_squared": {
+          "value": "93.5%",
+          "unit": "percent"
+        },
+        "Ph": {
+          "value": "0.122",
+          "unit": "p-value"
+        }
+      },
+      "conditions": [
+        "Random-effects subgroup prevalence; dimensions differ from incidence and conversion"
+      ],
+      "time": "Review search through1March2020"
+    },
+    {
+      "key": "subgroup_4",
+      "units": [
+        56,
+        57,
+        58
+      ],
+      "en": "Sex Men: MCI prevalence 0.115 (0.097–0.136) (proportion), 34 studies/45,609 participants, model p< 0.001, I² 97.4%, Ph=0.233.",
+      "ru": "Подгруппа Пол Мужчины: распространённость MCI 0.115 (0.097–0.136) (доля), 34 исследований/45, 609 участников, p модели < 0.001, I² 97.4%, Ph=0.233.",
+      "predicate": "subgroup_mci_prevalence",
+      "roles": {
+        "condition": "Mild cognitive impairment",
+        "population": "Chinese community prevalence review subgroup Men",
+        "grouping_factor": "Sex"
+      },
+      "type": "result",
+      "attrs": {
+        "prevalence_95CI": {
+          "value": "0.115 (0.097–0.136)",
+          "unit": "proportion"
+        },
+        "studies": {
+          "value": "34",
+          "unit": "studies"
+        },
+        "participants": {
+          "value": "45,609",
+          "unit": "participants"
+        },
+        "p": {
+          "value": "< 0.001",
+          "unit": "p-value"
+        },
+        "I_squared": {
+          "value": "97.4%",
+          "unit": "percent"
+        },
+        "Ph": {
+          "value": "0.233",
+          "unit": "p-value"
+        }
+      },
+      "conditions": [
+        "Random-effects subgroup prevalence; dimensions differ from incidence and conversion"
+      ],
+      "time": "Review search through1March2020"
+    },
+    {
+      "key": "subgroup_5",
+      "units": [
+        56,
+        57,
+        58
+      ],
+      "en": "Sex Women: MCI prevalence 0.138 (0.117–0.163) (proportion), 34 studies/36,027 participants, model p< 0.001, I² 98.3%, Ph=0.224.",
+      "ru": "Подгруппа Пол Женщины: распространённость MCI 0.138 (0.117–0.163) (доля), 34 исследований/36, 027 участников, p модели < 0.001, I² 98.3%, Ph=0.224.",
+      "predicate": "subgroup_mci_prevalence",
+      "roles": {
+        "condition": "Mild cognitive impairment",
+        "population": "Chinese community prevalence review subgroup Women",
+        "grouping_factor": "Sex"
+      },
+      "type": "result",
+      "attrs": {
+        "prevalence_95CI": {
+          "value": "0.138 (0.117–0.163)",
+          "unit": "proportion"
+        },
+        "studies": {
+          "value": "34",
+          "unit": "studies"
+        },
+        "participants": {
+          "value": "36,027",
+          "unit": "participants"
+        },
+        "p": {
+          "value": "< 0.001",
+          "unit": "p-value"
+        },
+        "I_squared": {
+          "value": "98.3%",
+          "unit": "percent"
+        },
+        "Ph": {
+          "value": "0.224",
+          "unit": "p-value"
+        }
+      },
+      "conditions": [
+        "Random-effects subgroup prevalence; dimensions differ from incidence and conversion"
+      ],
+      "time": "Review search through1March2020"
+    },
+    {
+      "key": "subgroup_6",
+      "units": [
+        56,
+        57,
+        58
+      ],
+      "en": "Residency Urban: MCI prevalence 0.114 (0.098–0.132) (proportion), 32 studies/71,801 participants, model p< 0.001, I² 98.4%, Ph=0.174.",
+      "ru": "Подгруппа Место проживания Город: распространённость MCI 0.114 (0.098–0.132) (доля), 32 исследований/71, 801 участников, p модели < 0.001, I² 98.4%, Ph=0.174.",
+      "predicate": "subgroup_mci_prevalence",
+      "roles": {
+        "condition": "Mild cognitive impairment",
+        "population": "Chinese community prevalence review subgroup Urban",
+        "grouping_factor": "Residency"
+      },
+      "type": "result",
+      "attrs": {
+        "prevalence_95CI": {
+          "value": "0.114 (0.098–0.132)",
+          "unit": "proportion"
+        },
+        "studies": {
+          "value": "32",
+          "unit": "studies"
+        },
+        "participants": {
+          "value": "71,801",
+          "unit": "participants"
+        },
+        "p": {
+          "value": "< 0.001",
+          "unit": "p-value"
+        },
+        "I_squared": {
+          "value": "98.4%",
+          "unit": "percent"
+        },
+        "Ph": {
+          "value": "0.174",
+          "unit": "p-value"
+        }
+      },
+      "conditions": [
+        "Random-effects subgroup prevalence; dimensions differ from incidence and conversion"
+      ],
+      "time": "Review search through1March2020"
+    },
+    {
+      "key": "subgroup_7",
+      "units": [
+        56,
+        57,
+        58
+      ],
+      "en": "Residency Rural: MCI prevalence 0.136 (0.106–0.176) (proportion), 12 studies/25,137 participants, model p< 0.001, I² 98.8%, Ph=0.193.",
+      "ru": "Подгруппа Место проживания Село: распространённость MCI 0.136 (0.106–0.176) (доля), 12 исследований/25, 137 участников, p модели < 0.001, I² 98.8%, Ph=0.193.",
+      "predicate": "subgroup_mci_prevalence",
+      "roles": {
+        "condition": "Mild cognitive impairment",
+        "population": "Chinese community prevalence review subgroup Rural",
+        "grouping_factor": "Residency"
+      },
+      "type": "result",
+      "attrs": {
+        "prevalence_95CI": {
+          "value": "0.136 (0.106–0.176)",
+          "unit": "proportion"
+        },
+        "studies": {
+          "value": "12",
+          "unit": "studies"
+        },
+        "participants": {
+          "value": "25,137",
+          "unit": "participants"
+        },
+        "p": {
+          "value": "< 0.001",
+          "unit": "p-value"
+        },
+        "I_squared": {
+          "value": "98.8%",
+          "unit": "percent"
+        },
+        "Ph": {
+          "value": "0.193",
+          "unit": "p-value"
+        }
+      },
+      "conditions": [
+        "Random-effects subgroup prevalence; dimensions differ from incidence and conversion"
+      ],
+      "time": "Review search through1March2020"
+    },
+    {
+      "key": "subgroup_8",
+      "units": [
+        56,
+        57,
+        58
+      ],
+      "en": "Living status With family: MCI prevalence 0.141 (0.110–0.182) (proportion), 10 studies/13,941 participants, model p< 0.001, I² 97.6%, Ph=0.157.",
+      "ru": "Подгруппа Проживание С семьёй: распространённость MCI 0.141 (0.110–0.182) (доля), 10 исследований/13, 941 участников, p модели < 0.001, I² 97.6%, Ph=0.157.",
+      "predicate": "subgroup_mci_prevalence",
+      "roles": {
+        "condition": "Mild cognitive impairment",
+        "population": "Chinese community prevalence review subgroup With family",
+        "grouping_factor": "Living status"
+      },
+      "type": "result",
+      "attrs": {
+        "prevalence_95CI": {
+          "value": "0.141 (0.110–0.182)",
+          "unit": "proportion"
+        },
+        "studies": {
+          "value": "10",
+          "unit": "studies"
+        },
+        "participants": {
+          "value": "13,941",
+          "unit": "participants"
+        },
+        "p": {
+          "value": "< 0.001",
+          "unit": "p-value"
+        },
+        "I_squared": {
+          "value": "97.6%",
+          "unit": "percent"
+        },
+        "Ph": {
+          "value": "0.157",
+          "unit": "p-value"
+        }
+      },
+      "conditions": [
+        "Random-effects subgroup prevalence; dimensions differ from incidence and conversion"
+      ],
+      "time": "Review search through1March2020"
+    },
+    {
+      "key": "subgroup_9",
+      "units": [
+        56,
+        57,
+        58
+      ],
+      "en": "Living status alone: MCI prevalence 0.182 (0.136–0.244) (proportion), 10 studies/3518 participants, model p< 0.001, I² 95.0%, Ph=0.206.",
+      "ru": "Подгруппа Проживание Один/одна: распространённость MCI 0.182 (0.136–0.244) (доля), 10 исследований/3518 участников, p модели < 0.001, I² 95.0%, Ph=0.206.",
+      "predicate": "subgroup_mci_prevalence",
+      "roles": {
+        "condition": "Mild cognitive impairment",
+        "population": "Chinese community prevalence review subgroup alone",
+        "grouping_factor": "Living status"
+      },
+      "type": "result",
+      "attrs": {
+        "prevalence_95CI": {
+          "value": "0.182 (0.136–0.244)",
+          "unit": "proportion"
+        },
+        "studies": {
+          "value": "10",
+          "unit": "studies"
+        },
+        "participants": {
+          "value": "3518",
+          "unit": "participants"
+        },
+        "p": {
+          "value": "< 0.001",
+          "unit": "p-value"
+        },
+        "I_squared": {
+          "value": "95.0%",
+          "unit": "percent"
+        },
+        "Ph": {
+          "value": "0.206",
+          "unit": "p-value"
+        }
+      },
+      "conditions": [
+        "Random-effects subgroup prevalence; dimensions differ from incidence and conversion"
+      ],
+      "time": "Review search through1March2020"
+    },
+    {
+      "key": "subgroup_10",
+      "units": [
+        56,
+        57,
+        58
+      ],
+      "en": "Education attainment < Primary school: MCI prevalence 0.172 (0.122–0.243) (proportion), 18 studies/10,974 participants, model p< 0.001, I² 98.3%, Ph=0.540.",
+      "ru": "Подгруппа Образование Ниже начального: распространённость MCI 0.172 (0.122–0.243) (доля), 18 исследований/10, 974 участников, p модели < 0.001, I² 98.3%, Ph=0.540.",
+      "predicate": "subgroup_mci_prevalence",
+      "roles": {
+        "condition": "Mild cognitive impairment",
+        "population": "Chinese community prevalence review subgroup < Primary school",
+        "grouping_factor": "Education attainment"
+      },
+      "type": "result",
+      "attrs": {
+        "prevalence_95CI": {
+          "value": "0.172 (0.122–0.243)",
+          "unit": "proportion"
+        },
+        "studies": {
+          "value": "18",
+          "unit": "studies"
+        },
+        "participants": {
+          "value": "10,974",
+          "unit": "participants"
+        },
+        "p": {
+          "value": "< 0.001",
+          "unit": "p-value"
+        },
+        "I_squared": {
+          "value": "98.3%",
+          "unit": "percent"
+        },
+        "Ph": {
+          "value": "0.540",
+          "unit": "p-value"
+        }
+      },
+      "conditions": [
+        "Random-effects subgroup prevalence; dimensions differ from incidence and conversion"
+      ],
+      "time": "Review search through1March2020"
+    },
+    {
+      "key": "subgroup_11",
+      "units": [
+        56,
+        57,
+        58
+      ],
+      "en": "Education attainment Primary school: MCI prevalence 0.120 (0.083–0.174) (proportion), 18 studies/14,502 participants, model p< 0.001, I² 98.5%, Ph=0.623.",
+      "ru": "Подгруппа Образование Начальное: распространённость MCI 0.120 (0.083–0.174) (доля), 18 исследований/14, 502 участников, p модели < 0.001, I² 98.5%, Ph=0.623.",
+      "predicate": "subgroup_mci_prevalence",
+      "roles": {
+        "condition": "Mild cognitive impairment",
+        "population": "Chinese community prevalence review subgroup Primary school",
+        "grouping_factor": "Education attainment"
+      },
+      "type": "result",
+      "attrs": {
+        "prevalence_95CI": {
+          "value": "0.120 (0.083–0.174)",
+          "unit": "proportion"
+        },
+        "studies": {
+          "value": "18",
+          "unit": "studies"
+        },
+        "participants": {
+          "value": "14,502",
+          "unit": "participants"
+        },
+        "p": {
+          "value": "< 0.001",
+          "unit": "p-value"
+        },
+        "I_squared": {
+          "value": "98.5%",
+          "unit": "percent"
+        },
+        "Ph": {
+          "value": "0.623",
+          "unit": "p-value"
+        }
+      },
+      "conditions": [
+        "Random-effects subgroup prevalence; dimensions differ from incidence and conversion"
+      ],
+      "time": "Review search through1March2020"
+    },
+    {
+      "key": "subgroup_12",
+      "units": [
+        56,
+        57,
+        58
+      ],
+      "en": "Education attainment Middle school: MCI prevalence 0.091 (0.072–0.115) (proportion), 21 studies/11,367 participants, model p< 0.001, I² 94.3%, Ph=0.418.",
+      "ru": "Подгруппа Образование Средняя ступень: распространённость MCI 0.091 (0.072–0.115) (доля), 21 исследований/11, 367 участников, p модели < 0.001, I² 94.3%, Ph=0.418.",
+      "predicate": "subgroup_mci_prevalence",
+      "roles": {
+        "condition": "Mild cognitive impairment",
+        "population": "Chinese community prevalence review subgroup Middle school",
+        "grouping_factor": "Education attainment"
+      },
+      "type": "result",
+      "attrs": {
+        "prevalence_95CI": {
+          "value": "0.091 (0.072–0.115)",
+          "unit": "proportion"
+        },
+        "studies": {
+          "value": "21",
+          "unit": "studies"
+        },
+        "participants": {
+          "value": "11,367",
+          "unit": "participants"
+        },
+        "p": {
+          "value": "< 0.001",
+          "unit": "p-value"
+        },
+        "I_squared": {
+          "value": "94.3%",
+          "unit": "percent"
+        },
+        "Ph": {
+          "value": "0.418",
+          "unit": "p-value"
+        }
+      },
+      "conditions": [
+        "Random-effects subgroup prevalence; dimensions differ from incidence and conversion"
+      ],
+      "time": "Review search through1March2020"
+    },
+    {
+      "key": "subgroup_13",
+      "units": [
+        56,
+        57,
+        58
+      ],
+      "en": "Education attainment ≥ High school: MCI prevalence 0.063 (0.046–0.085) (proportion), 21 studies/9568 participants, model p< 0.001, I² 94.2%, Ph=0.515.",
+      "ru": "Подгруппа Образование Старшая школа и выше: распространённость MCI 0.063 (0.046–0.085) (доля), 21 исследований/9568 участников, p модели < 0.001, I² 94.2%, Ph=0.515.",
+      "predicate": "subgroup_mci_prevalence",
+      "roles": {
+        "condition": "Mild cognitive impairment",
+        "population": "Chinese community prevalence review subgroup ≥ High school",
+        "grouping_factor": "Education attainment"
+      },
+      "type": "result",
+      "attrs": {
+        "prevalence_95CI": {
+          "value": "0.063 (0.046–0.085)",
+          "unit": "proportion"
+        },
+        "studies": {
+          "value": "21",
+          "unit": "studies"
+        },
+        "participants": {
+          "value": "9568",
+          "unit": "participants"
+        },
+        "p": {
+          "value": "< 0.001",
+          "unit": "p-value"
+        },
+        "I_squared": {
+          "value": "94.2%",
+          "unit": "percent"
+        },
+        "Ph": {
+          "value": "0.515",
+          "unit": "p-value"
+        }
+      },
+      "conditions": [
+        "Random-effects subgroup prevalence; dimensions differ from incidence and conversion"
+      ],
+      "time": "Review search through1March2020"
+    },
+    {
+      "key": "subgroup_14",
+      "units": [
+        56,
+        57,
+        58
+      ],
+      "en": "Diagnostic criteria Peterson: MCI prevalence 0.129 (0.107–0.154) (proportion), 25 studies/67,267 participants, model p< 0.001, I² 98.9%, Ph=0.209.",
+      "ru": "Подгруппа Диагностические критерии Peterson: распространённость MCI 0.129 (0.107–0.154) (доля), 25 исследований/67, 267 участников, p модели < 0.001, I² 98.9%, Ph=0.209.",
+      "predicate": "subgroup_mci_prevalence",
+      "roles": {
+        "condition": "Mild cognitive impairment",
+        "population": "Chinese community prevalence review subgroup Peterson",
+        "grouping_factor": "Diagnostic criteria"
+      },
+      "type": "result",
+      "attrs": {
+        "prevalence_95CI": {
+          "value": "0.129 (0.107–0.154)",
+          "unit": "proportion"
+        },
+        "studies": {
+          "value": "25",
+          "unit": "studies"
+        },
+        "participants": {
+          "value": "67,267",
+          "unit": "participants"
+        },
+        "p": {
+          "value": "< 0.001",
+          "unit": "p-value"
+        },
+        "I_squared": {
+          "value": "98.9%",
+          "unit": "percent"
+        },
+        "Ph": {
+          "value": "0.209",
+          "unit": "p-value"
+        }
+      },
+      "conditions": [
+        "Random-effects subgroup prevalence; dimensions differ from incidence and conversion"
+      ],
+      "time": "Review search through1March2020"
+    },
+    {
+      "key": "subgroup_15",
+      "units": [
+        56,
+        57,
+        58
+      ],
+      "en": "Diagnostic criteria DSM-IV: MCI prevalence 0.135 (0.097–0.188) (proportion), 9 studies/21,699 participants, model p< 0.001, I² 99.0%, Ph=0.257.",
+      "ru": "Подгруппа Диагностические критерии DSM-IV: распространённость MCI 0.135 (0.097–0.188) (доля), 9 исследований/21, 699 участников, p модели < 0.001, I² 99.0%, Ph=0.257.",
+      "predicate": "subgroup_mci_prevalence",
+      "roles": {
+        "condition": "Mild cognitive impairment",
+        "population": "Chinese community prevalence review subgroup DSM-IV",
+        "grouping_factor": "Diagnostic criteria"
+      },
+      "type": "result",
+      "attrs": {
+        "prevalence_95CI": {
+          "value": "0.135 (0.097–0.188)",
+          "unit": "proportion"
+        },
+        "studies": {
+          "value": "9",
+          "unit": "studies"
+        },
+        "participants": {
+          "value": "21,699",
+          "unit": "participants"
+        },
+        "p": {
+          "value": "< 0.001",
+          "unit": "p-value"
+        },
+        "I_squared": {
+          "value": "99.0%",
+          "unit": "percent"
+        },
+        "Ph": {
+          "value": "0.257",
+          "unit": "p-value"
+        }
+      },
+      "conditions": [
+        "Random-effects subgroup prevalence; dimensions differ from incidence and conversion"
+      ],
+      "time": "Review search through1March2020"
+    },
+    {
+      "key": "subgroup_16",
+      "units": [
+        56,
+        57,
+        58
+      ],
+      "en": "Diagnostic criteria NIA-AA: MCI prevalence 0.103 (0.029–0.369) (proportion), 2 studies/11,327 participants, model p< 0.001, I² 98.8%, Ph=0.833.",
+      "ru": "Подгруппа Диагностические критерии NIA-AA: распространённость MCI 0.103 (0.029–0.369) (доля), 2 исследований/11, 327 участников, p модели < 0.001, I² 98.8%, Ph=0.833.",
+      "predicate": "subgroup_mci_prevalence",
+      "roles": {
+        "condition": "Mild cognitive impairment",
+        "population": "Chinese community prevalence review subgroup NIA-AA",
+        "grouping_factor": "Diagnostic criteria"
+      },
+      "type": "result",
+      "attrs": {
+        "prevalence_95CI": {
+          "value": "0.103 (0.029–0.369)",
+          "unit": "proportion"
+        },
+        "studies": {
+          "value": "2",
+          "unit": "studies"
+        },
+        "participants": {
+          "value": "11,327",
+          "unit": "participants"
+        },
+        "p": {
+          "value": "< 0.001",
+          "unit": "p-value"
+        },
+        "I_squared": {
+          "value": "98.8%",
+          "unit": "percent"
+        },
+        "Ph": {
+          "value": "0.833",
+          "unit": "p-value"
+        }
+      },
+      "conditions": [
+        "Random-effects subgroup prevalence; dimensions differ from incidence and conversion"
+      ],
+      "time": "Review search through1March2020"
+    },
+    {
+      "key": "subgroup_17",
+      "units": [
+        56,
+        57,
+        58
+      ],
+      "en": "Study period < 2005: MCI prevalence 0.037 (0.016–0.087) (proportion), 4 studies/15,857 participants, model p< 0.001, I² 99.2%, Ph=0.769.",
+      "ru": "Подгруппа Период исследования < 2005: распространённость MCI 0.037 (0.016–0.087) (доля), 4 исследований/15, 857 участников, p модели < 0.001, I² 99.2%, Ph=0.769.",
+      "predicate": "subgroup_mci_prevalence",
+      "roles": {
+        "condition": "Mild cognitive impairment",
+        "population": "Chinese community prevalence review subgroup < 2005",
+        "grouping_factor": "Study period"
+      },
+      "type": "result",
+      "attrs": {
+        "prevalence_95CI": {
+          "value": "0.037 (0.016–0.087)",
+          "unit": "proportion"
+        },
+        "studies": {
+          "value": "4",
+          "unit": "studies"
+        },
+        "participants": {
+          "value": "15,857",
+          "unit": "participants"
+        },
+        "p": {
+          "value": "< 0.001",
+          "unit": "p-value"
+        },
+        "I_squared": {
+          "value": "99.2%",
+          "unit": "percent"
+        },
+        "Ph": {
+          "value": "0.769",
+          "unit": "p-value"
+        }
+      },
+      "conditions": [
+        "Random-effects subgroup prevalence; dimensions differ from incidence and conversion"
+      ],
+      "time": "< 2005 study period"
+    },
+    {
+      "key": "subgroup_18",
+      "units": [
+        56,
+        57,
+        58
+      ],
+      "en": "Study period ≥ 2005: MCI prevalence 0.141 (0.124–0.160) (proportion), 30 studies/90,510 participants, model p< 0.001, I² 98.6%, Ph=0.142.",
+      "ru": "Подгруппа Период исследования ≥ 2005: распространённость MCI 0.141 (0.124–0.160) (доля), 30 исследований/90, 510 участников, p модели < 0.001, I² 98.6%, Ph=0.142.",
+      "predicate": "subgroup_mci_prevalence",
+      "roles": {
+        "condition": "Mild cognitive impairment",
+        "population": "Chinese community prevalence review subgroup ≥ 2005",
+        "grouping_factor": "Study period"
+      },
+      "type": "result",
+      "attrs": {
+        "prevalence_95CI": {
+          "value": "0.141 (0.124–0.160)",
+          "unit": "proportion"
+        },
+        "studies": {
+          "value": "30",
+          "unit": "studies"
+        },
+        "participants": {
+          "value": "90,510",
+          "unit": "participants"
+        },
+        "p": {
+          "value": "< 0.001",
+          "unit": "p-value"
+        },
+        "I_squared": {
+          "value": "98.6%",
+          "unit": "percent"
+        },
+        "Ph": {
+          "value": "0.142",
+          "unit": "p-value"
+        }
+      },
+      "conditions": [
+        "Random-effects subgroup prevalence; dimensions differ from incidence and conversion"
+      ],
+      "time": "≥ 2005 study period"
+    },
+    {
+      "key": "robustness",
+      "units": [
+        44,
+        47
+      ],
+      "en": "Across 41 included studies I² exceeded 75%; three of 38 MCI-reporting studies deviated in sensitivity/funnel checks, with significant publication-bias tests β=0.002,p<0.01. Eight aMCI studies showed no deviation or significant bias (β=1.0,p=0.902).",
+      "ru": "Для 41 исследования I² превышал 75%; три из 38 исследований MCI отклонялись при анализе чувствительности/воронки, тесты смещения значимы (β=0, 002, p<0, 01). В восьми исследованиях aMCI отклонений и значимого смещения не было (β=1, 0, p=0, 902).",
+      "predicate": "robustness_results",
+      "roles": {
+        "subject": "Chinese MCI/aMCI prevalence review"
+      },
+      "type": "result",
+      "logic": "contrast",
+      "claims": [
+        {
+          "roles": {
+            "condition": "Mild cognitive impairment"
+          },
+          "attrs": {
+            "I_squared": {
+              "value": ">75",
+              "unit": "percent"
+            },
+            "outlier_studies": {
+              "value": 3,
+              "unit": "studies"
+            },
+            "MCI_reporting_studies": {
+              "value": 38,
+              "unit": "studies"
+            },
+            "beta": 0.002,
+            "p": {
+              "value": "<0.01",
+              "unit": "p-value"
+            }
+          },
+          "negated": false
+        },
+        {
+          "predicate": "significant_publication_bias",
+          "roles": {
+            "condition": "Amnestic mild cognitive impairment"
+          },
+          "negated": true,
+          "attrs": {
+            "studies": {
+              "value": 8,
+              "unit": "studies"
+            },
+            "beta": 1,
+            "p": {
+              "value": 0.902,
+              "unit": "p-value"
+            },
+            "sensitivity_deviation": "none significant"
+          }
+        }
+      ],
+      "conditions": [
+        "Source-reported Egger/Begg tests; methods statement about p and absence is retained separately"
+      ]
+    },
+    {
+      "key": "cohort_effect",
+      "units": [
+        44,
+        46,
+        71
+      ],
+      "en": "Meta-regression attributed 20.75% (about 21%) of heterogeneity to cohort/study-period effects; age(p=0.171) and diagnostic criteria(p=0.145) were not significant, so causal decomposition remained unresolved.",
+      "ru": "Метарегрессия связывала 20, 75% (около 21%) неоднородности с когортным/периодным эффектом; возраст(p=0, 171) и критерии(p=0, 145) незначимы; причинное разделение эффектов не установлено.",
+      "predicate": "heterogeneity_explained",
+      "roles": {
+        "subject": "Chinese MCI prevalence estimates",
+        "factor": "Cohort/study-period effects"
+      },
+      "modality": "statistical explanation; not isolated causal effect",
+      "attrs": {
+        "explained": {
+          "value": 20.75,
+          "unit": "percent"
+        },
+        "age_p": {
+          "value": 0.171,
+          "unit": "p-value"
+        },
+        "criteria_p": {
+          "value": 0.145,
+          "unit": "p-value"
+        },
+        "period_p": {
+          "value": 0.011,
+          "unit": "p-value"
+        }
+      },
+      "conditions": [
+        "Available meta-regression variables; confounding remains"
+      ]
+    },
+    {
+      "key": "pooled_mci",
+      "units": [
+        7,
+        49,
+        50,
+        51,
+        61,
+        76
+      ],
+      "en": "Random-effects synthesis of 38 studies/106367 participants estimated Chinese community MCI prevalence at 12.2% (95% CI 10.6–14.2%).",
+      "ru": "Случайно-эффектный синтез 38 исследований/106367 участников оценил распространённость MCI в общинных популяциях Китая в 12, 2% (95% ДИ 10, 6–14, 2%).",
+      "predicate": "pooled_prevalence",
+      "roles": {
+        "condition": "Mild cognitive impairment",
+        "population": "Chinese community-dwelling adults aged over55"
+      },
+      "type": "result",
+      "attrs": {
+        "prevalence": {
+          "value": 12.2,
+          "unit": "percent"
+        },
+        "CI_lower": {
+          "value": 10.6,
+          "unit": "percent"
+        },
+        "CI_upper": {
+          "value": 14.2,
+          "unit": "percent"
+        },
+        "studies": {
+          "value": 38,
+          "unit": "studies"
+        },
+        "participants": {
+          "value": 106367,
+          "unit": "participants"
+        }
+      },
+      "conditions": [
+        "Random-effects pooled prevalence, not incidence; review search to1March2020"
+      ]
+    },
+    {
+      "key": "pooled_amci",
+      "units": [
+        7,
+        52,
+        53,
+        54,
+        63,
+        76
+      ],
+      "en": "Eight studies/27613 participants yielded aMCI prevalence 10.9% (95% CI 7.7–15.4%) in Chinese community residents over 55.",
+      "ru": "Восемь исследований/27613 участников дали распространённость aMCI 10, 9% (95% ДИ 7, 7–15, 4%) у общинных жителей Китая старше 55.",
+      "predicate": "pooled_prevalence",
+      "roles": {
+        "condition": "Amnestic mild cognitive impairment",
+        "population": "Chinese community-dwelling adults aged over55"
+      },
+      "type": "result",
+      "attrs": {
+        "prevalence": {
+          "value": 10.9,
+          "unit": "percent"
+        },
+        "CI_lower": {
+          "value": 7.7,
+          "unit": "percent"
+        },
+        "CI_upper": {
+          "value": 15.4,
+          "unit": "percent"
+        },
+        "studies": {
+          "value": 8,
+          "unit": "studies"
+        },
+        "participants": {
+          "value": 27613,
+          "unit": "participants"
+        }
+      },
+      "conditions": [
+        "Separate aMCI study subset; not the same denominator as overall MCI synthesis"
+      ]
+    },
+    {
+      "key": "amnestic_fraction",
+      "units": [
+        8,
+        63
+      ],
+      "en": "The review reports aMCI comprises 66.5% of all MCI cases, versus international fractions 30–77%; cited aMCI prevalence ranges from 2.4% in Mexico to about 11% in US adults 70–89.",
+      "ru": "Обзор сообщает, что aMCI составляет 66, 5% всех случаев MCI; международные доли 30–77%; цитируемая распространённость aMCI — от 2, 4% вМексике до около 11% вСША для 70–89 лет.",
+      "predicate": "amnestic_fraction",
+      "roles": {
+        "condition": "Amnestic mild cognitive impairment",
+        "reference": "All mild cognitive impairment cases"
+      },
+      "attrs": {
+        "fraction": {
+          "value": 66.5,
+          "unit": "percent"
+        },
+        "international_fraction": {
+          "value": "30–77",
+          "unit": "percent"
+        },
+        "Mexico_prevalence": {
+          "value": 2.4,
+          "unit": "percent"
+        },
+        "US_prevalence": {
+          "value": 11,
+          "unit": "approximately percent"
+        },
+        "US_ages": {
+          "value": "70–89",
+          "unit": "year"
+        }
+      },
+      "conditions": [
+        "Source-reported fraction; not calculated by dividing pooled10.9% by12.2%"
+      ]
+    },
+    {
+      "key": "subgroup_pattern",
+      "units": [
+        7,
+        8,
+        56,
+        67,
+        68,
+        69,
+        70,
+        76
+      ],
+      "en": "Subgroup synthesis found higher MCI prevalence with age, in women, rural residents, people living alone and lower education; DSM-IV 13.5%, Petersen 12.9%, NIA-AA 10.3%, and pre 2005 studies lower than later studies.",
+      "ru": "Анализ подгрупп показал более высокую распространённость MCI с возрастом, у женщин, сельских жителей, проживающих одних ипри низком образовании; DSM-IV 13, 5%, Petersen 12, 9%, NIA-AA 10, 3%; исследования до 2005 давали меньшие оценки.",
+      "predicate": "subgroup_pattern",
+      "roles": {
+        "condition": "Mild cognitive impairment",
+        "population": "Chinese community-dwelling older adults"
+      },
+      "type": "conclusion",
+      "grounding": "source_argument",
+      "attrs": {
+        "age55_59": {
+          "value": 7.6,
+          "unit": "percent"
+        },
+        "age60_69": {
+          "value": 9.5,
+          "unit": "percent"
+        },
+        "age70_79": {
+          "value": 14.6,
+          "unit": "percent"
+        },
+        "age80plus": {
+          "value": 23.6,
+          "unit": "percent"
+        },
+        "DSM_IV": {
+          "value": 13.5,
+          "unit": "percent"
+        },
+        "Petersen": {
+          "value": 12.9,
+          "unit": "percent"
+        },
+        "NIA_AA": {
+          "value": 10.3,
+          "unit": "percent"
+        },
+        "associations": "age; women; rural; living alone; lower education",
+        "study_period": "before2005 lower prevalence"
+      },
+      "conditions": [
+        "Prevalence associations and diagnostic differences; not causal effects"
+      ]
+    },
+    {
+      "key": "international",
+      "units": [
+        61
+      ],
+      "en": "Chinese pooled MCI prevalence was high relative to some cited countries: Finland 5.3%(ages 60–76), Italy 4.9%(>65), Mexico 6.45% and Brazil 6.10%(>60); differences in norms and institutionalization may not fully explain it.",
+      "ru": "Китайская объединённая оценка выше некоторых цитируемых: Финляндия 5, 3%(60–76), Италия 4, 9%(>65), Мексика 6, 45% иБразилия 6, 10%(>60); нормы иинституционализация могут объяснять лишь часть различий.",
+      "predicate": "international_comparison",
+      "roles": {
+        "condition": "Mild cognitive impairment"
+      },
+      "type": "comparison",
+      "attrs": {
+        "Finland": {
+          "value": 5.3,
+          "unit": "percent"
+        },
+        "Italy": {
+          "value": 4.9,
+          "unit": "percent"
+        },
+        "Mexico": {
+          "value": 6.45,
+          "unit": "percent"
+        },
+        "Brazil": {
+          "value": 6.1,
+          "unit": "percent"
+        },
+        "ages": "Finland60–76; Italy>65; Mexico/Brazil>60",
+        "prior_reviews": "12.7–14.7% when excluding younger-than60; comparable Greece/Georgia65+",
+        "strict_threshold": "neuropsychological scores at least1.5SD below adjusted norm"
+      },
+      "conditions": [
+        "Different cited populations and diagnostic criteria; not matched causal comparison"
+      ],
+      "modality": "possible explanation; incomplete"
+    },
+    {
+      "key": "screening_task",
+      "units": [
+        62
+      ],
+      "en": "The 7.6% MCI prevalence at 55–59 suggests possible screening benefit, but few under 60 studies (eight) and uncertain cost-benefit require robust evaluation before adopting policy.",
+      "ru": "Распространённость 7, 6% в 55–59 лет предполагает возможную пользу скрининга, но исследований до 60 лет мало (восемь), а оценку затрат/пользы нужно надёжно проверить до принятия политики.",
+      "predicate": "evaluate_screening",
+      "roles": {
+        "population": "Chinese adults aged55–59",
+        "intervention": "Community MCI screening from age55"
+      },
+      "kind": "action",
+      "status": "unresolved",
+      "type": "goal",
+      "attrs": {
+        "under60_studies": {
+          "value": 8,
+          "unit": "studies"
+        }
+      },
+      "conditions": [
+        "Potential benefit, not established cost-effectiveness or an implemented policy"
+      ]
+    },
+    {
+      "key": "diagnostic_contrast",
+      "units": [
+        65
+      ],
+      "en": "Petersen diagnosis uses subjective memory complaint, objective memory impairment, normal functional activity and no dementia; NIA-AA permits optional MRI/CSF evidence, but the review's NIA-AA prevalence was lower, potentially reflecting resource limits.",
+      "ru": "Petersen включает жалобу на память, объективное нарушение, нормальные повседневные функции и отсутствие деменции; NIA-AA допускает дополнительные МРТ/ликворные данные, но его оценка была ниже, возможно из-за ограничений ресурсов.",
+      "predicate": "diagnostic_criteria_contrast",
+      "roles": {
+        "subject": "Petersen and NIA-AA MCI diagnostic criteria"
+      },
+      "type": "definition",
+      "logic": "contrast",
+      "claims": [
+        {
+          "predicate": "requires",
+          "roles": {
+            "criteria": "Petersen",
+            "requirements": "Subjective memory complaint, objective memory disorder, normal functional activities and absence of dementia"
+          }
+        },
+        {
+          "predicate": "permits",
+          "roles": {
+            "criteria": "NIA-AA",
+            "optional_evidence": "MRI imaging and cerebrospinal fluid tests"
+          }
+        },
+        {
+          "predicate": "may_explain",
+          "roles": {
+            "factor": "Optional biomarkers and resource constraints",
+            "outcome": "Lower observed NIA-AA prevalence"
+          },
+          "modality": "hypothesized"
+        }
+      ]
+    },
+    {
+      "key": "screening_tools",
+      "units": [
+        65
+      ],
+      "en": "MMSE assesses seven cognitive domains but lacks MCI sensitivity; cited MoCA performance is 81–97% sensitivity and 60–86% specificity, supporting a preferred primary-care screening role.",
+      "ru": "MMSE оценивает семь доменов, но недостаточно чувствителен к MCI; для MoCA приведены чувствительность 81–97% и специфичность 60–86%, что обосновывает предпочтительный первичный скрининг.",
+      "predicate": "screening_tools_contrast",
+      "roles": {
+        "condition": "Mild cognitive impairment"
+      },
+      "type": "comparison",
+      "logic": "contrast",
+      "claims": [
+        {
+          "predicate": "limited_sensitivity",
+          "roles": {
+            "instrument": "Mini Mental State Examination"
+          },
+          "attrs": {
+            "domains": {
+              "value": 7,
+              "unit": "cognitive domains"
+            }
+          }
+        },
+        {
+          "predicate": "screening_performance",
+          "roles": {
+            "instrument": "Montreal Cognitive Assessment"
+          },
+          "attrs": {
+            "sensitivity": {
+              "value": "81–97",
+              "unit": "percent"
+            },
+            "specificity": {
+              "value": "60–86",
+              "unit": "percent"
+            }
+          }
+        }
+      ],
+      "conditions": [
+        "Cited diagnostic performance; primary-care screening"
+      ]
+    },
+    {
+      "key": "subtype_limit",
+      "units": [
+        66
+      ],
+      "en": "Few studies distinguished MCI subtypes; DSM-IV in nine studies detects amnesic disorders and could underestimate overall MCI, though that expected pattern was not observed, possibly because screening tools confounded it.",
+      "ru": "Подтипы различали немногие исследования; DSM-IV в девяти исследованиях выявляет амнестические нарушения и мог бы занижать общий MCI, но ожидаемой картины не обнаружено, возможно из-за различий скрининга.",
+      "predicate": "diagnostic_subtype_limit",
+      "roles": {
+        "condition": "Mild cognitive impairment",
+        "criteria": "DSM-IV"
+      },
+      "type": "limitation",
+      "modality": "could; possible confounding",
+      "attrs": {
+        "DSM_IV_studies": {
+          "value": 9,
+          "unit": "studies"
+        },
+        "potential_issue": "detects amnesic cognitive disorders; expected underestimation not observed"
+      },
+      "conditions": [
+        "Authors' diagnostic interpretation, not proved bias mechanism"
+      ]
+    },
+    {
+      "key": "mechanisms",
+      "units": [
+        68,
+        69,
+        70
+      ],
+      "en": "Possible mechanisms for prevalence associations include oxidative stress/amyloid accumulation with age; weak indirect hormonal explanations for sex; cognitive reserve from education; isolation/anxiety/depression; rural chronic disease and socioeconomic disadvantage.",
+      "ru": "Возможные механизмы включают окислительный стресс/амилоид с возрастом; слабые косвенные гормональные объяснения пола; когнитивный резерв образования; изоляцию/тревогу/депрессию; хронические болезни и социальные сельские различия.",
+      "predicate": "possible_association_mechanisms",
+      "roles": {
+        "outcome": "MCI prevalence disparities"
+      },
+      "modality": "may; researchers hypothesize; hormone evidence weak and indirect",
+      "attrs": {
+        "age": "oxidative stress and amyloid accumulation",
+        "sex": "hormone change; conflicting studies also report no difference or higher prevalence in men",
+        "education": "efficient use of cognitive networks; source says all tests education-corrected",
+        "isolation": "lack of communication; anxiety; depression",
+        "rural": "diabetes/hypertension; lower income/housing/education/entitlements; migration of young family members"
+      },
+      "conditions": [
+        "Proposed explanations, not demonstrated causal chains"
+      ]
+    },
+    {
+      "key": "period_interpretation",
+      "units": [
+        71
+      ],
+      "en": "China's MCI estimates reportedly rose from 5% in 2000 to about 20% in 2014, but age, cohort, period, chronic illness and social/medical changes are entangled; local estimates require community context and cautious interpretation.",
+      "ru": "Цитируемые оценки MCI в Китае росли с 5% в 2000 до около 20% в 2014, но возраст, когорта, период, болезни и социально-медицинские изменения переплетены; локальные оценки требуют контекста и осторожности.",
+      "predicate": "period_interpretation",
+      "roles": {
+        "measure": "Chinese MCI prevalence"
+      },
+      "modality": "may reflect several factors; further increase anticipated",
+      "attrs": {
+        "year2000": {
+          "value": 5,
+          "unit": "percent"
+        },
+        "year2014": {
+          "value": 20,
+          "unit": "approximately percent"
+        },
+        "potential_factors": "longer life expectancy; population aging; diabetes/hypertension; medical technology/care; socioeconomic transformation"
+      },
+      "conditions": [
+        "Cited time trend is not a decomposed causal cohort effect"
+      ]
+    },
+    {
+      "key": "future_studies",
+      "units": [
+        71,
+        74,
+        76
+      ],
+      "en": "Use future studies to separate age/cohort/period effects and regional confounding; prioritize unified national protocols and minority-ethnicity populations, and evaluate subtype-specific prevalence.",
+      "ru": "В будущих исследованиях разделить эффекты возраста/когорты/периода и региональные смешения; предпочесть единый национальный протокол, изучить этнические меньшинства и распространённость подтипов.",
+      "predicate": "resolve_generalizability",
+      "roles": {
+        "subject": "Chinese MCI prevalence research"
+      },
+      "kind": "action",
+      "status": "unresolved",
+      "type": "goal",
+      "attrs": {
+        "national_samples": {
+          "value": 2,
+          "unit": "studies"
+        },
+        "Chinese_ethnic_groups": {
+          "value": 56,
+          "unit": "groups"
+        },
+        "minority_studies": "none found",
+        "subtype_limit": "insufficient data for further aMCI subgroup analyses"
+      },
+      "conditions": [
+        "Preferred future research; no invented answers"
+      ]
+    },
+    {
+      "key": "limits",
+      "units": [
+        73,
+        74
+      ],
+      "en": "Strengths include representative noninstitutional communities, bilingual searches, stricter confirmed-case eligibility and separate aMCI synthesis; limits include sparse subtype/national/minority data and only one significant meta-regression predictor.",
+      "ru": "Достоинства: общинные внеинституциональные выборки, двуязычный поиск, строгое подтверждение случаев и отдельный aMCI; ограничения: мало данных по подтипам, национальным и этническим группам, лишь один значимый предиктор метарегрессии.",
+      "predicate": "strengths_and_limits",
+      "roles": {
+        "subject": "Chinese MCI prevalence review"
+      },
+      "type": "limitation",
+      "logic": "contrast",
+      "claims": [
+        {
+          "predicate": "strengthened_by",
+          "roles": {
+            "subject": "Chinese MCI prevalence review",
+            "method": "Community sampling, bilingual searches, confirmed-case eligibility and separate aMCI synthesis"
+          }
+        },
+        {
+          "predicate": "limited_by",
+          "roles": {
+            "subject": "Chinese MCI prevalence review",
+            "limitation": "Sparse subtype/national/minority data and meta-regression power"
+          }
+        }
+      ],
+      "conditions": [
+        "Authors' appraisal; not expert scientific validation"
+      ]
+    }
+  ],
+  "transitions": [
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "study_0",
+      "units": [
+        37
+      ],
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "study_1",
+      "units": [
+        37
+      ],
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "study_2",
+      "units": [
+        37
+      ],
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "study_3",
+      "units": [
+        37
+      ],
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "study_4",
+      "units": [
+        37
+      ],
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "study_5",
+      "units": [
+        37
+      ],
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "study_6",
+      "units": [
+        37
+      ],
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "study_7",
+      "units": [
+        37
+      ],
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "study_8",
+      "units": [
+        37
+      ],
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "study_9",
+      "units": [
+        37
+      ],
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "study_10",
+      "units": [
+        37
+      ],
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "study_11",
+      "units": [
+        37
+      ],
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "study_12",
+      "units": [
+        37
+      ],
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "study_13",
+      "units": [
+        37
+      ],
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "study_14",
+      "units": [
+        37
+      ],
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "study_15",
+      "units": [
+        37
+      ],
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "study_16",
+      "units": [
+        37
+      ],
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "study_17",
+      "units": [
+        37
+      ],
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "study_18",
+      "units": [
+        37
+      ],
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "study_19",
+      "units": [
+        37
+      ],
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "study_20",
+      "units": [
+        37
+      ],
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "study_21",
+      "units": [
+        37
+      ],
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "study_22",
+      "units": [
+        37
+      ],
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "study_23",
+      "units": [
+        37
+      ],
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "study_24",
+      "units": [
+        37
+      ],
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "study_25",
+      "units": [
+        37
+      ],
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "study_26",
+      "units": [
+        37
+      ],
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "study_27",
+      "units": [
+        37
+      ],
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "study_28",
+      "units": [
+        37
+      ],
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "study_29",
+      "units": [
+        37
+      ],
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "study_30",
+      "units": [
+        37
+      ],
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "study_31",
+      "units": [
+        37
+      ],
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "study_32",
+      "units": [
+        37
+      ],
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "study_33",
+      "units": [
+        37
+      ],
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "study_34",
+      "units": [
+        37
+      ],
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "study_35",
+      "units": [
+        37
+      ],
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "study_36",
+      "units": [
+        37
+      ],
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "study_37",
+      "units": [
+        37
+      ],
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "study_38",
+      "units": [
+        37
+      ],
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "study_39",
+      "units": [
+        37
+      ],
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "study_40",
+      "units": [
+        37
+      ],
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "screen"
+      ],
+      "target": "bias_partition",
+      "units": [
+        42
+      ],
+      "reason": "The independent quality review yields the per-publication ratings and the explicit high-risk exclusions.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "synthesize"
+      ],
+      "target": "regression_0",
+      "units": [
+        46
+      ],
+      "reason": "The meta-regression produces the reported coefficient and uncertainty for this predictor.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "synthesize"
+      ],
+      "target": "regression_1",
+      "units": [
+        46
+      ],
+      "reason": "The meta-regression produces the reported coefficient and uncertainty for this predictor.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "synthesize"
+      ],
+      "target": "regression_2",
+      "units": [
+        46
+      ],
+      "reason": "The meta-regression produces the reported coefficient and uncertainty for this predictor.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "synthesize"
+      ],
+      "target": "regression_3",
+      "units": [
+        46
+      ],
+      "reason": "The meta-regression produces the reported coefficient and uncertainty for this predictor.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "synthesize"
+      ],
+      "target": "subgroup_0",
+      "units": [
+        58
+      ],
+      "reason": "Subgroup synthesis yields the reported prevalence, confidence interval and heterogeneity metrics.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "synthesize"
+      ],
+      "target": "subgroup_1",
+      "units": [
+        58
+      ],
+      "reason": "Subgroup synthesis yields the reported prevalence, confidence interval and heterogeneity metrics.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "synthesize"
+      ],
+      "target": "subgroup_2",
+      "units": [
+        58
+      ],
+      "reason": "Subgroup synthesis yields the reported prevalence, confidence interval and heterogeneity metrics.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "synthesize"
+      ],
+      "target": "subgroup_3",
+      "units": [
+        58
+      ],
+      "reason": "Subgroup synthesis yields the reported prevalence, confidence interval and heterogeneity metrics.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "synthesize"
+      ],
+      "target": "subgroup_4",
+      "units": [
+        58
+      ],
+      "reason": "Subgroup synthesis yields the reported prevalence, confidence interval and heterogeneity metrics.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "synthesize"
+      ],
+      "target": "subgroup_5",
+      "units": [
+        58
+      ],
+      "reason": "Subgroup synthesis yields the reported prevalence, confidence interval and heterogeneity metrics.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "synthesize"
+      ],
+      "target": "subgroup_6",
+      "units": [
+        58
+      ],
+      "reason": "Subgroup synthesis yields the reported prevalence, confidence interval and heterogeneity metrics.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "synthesize"
+      ],
+      "target": "subgroup_7",
+      "units": [
+        58
+      ],
+      "reason": "Subgroup synthesis yields the reported prevalence, confidence interval and heterogeneity metrics.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "synthesize"
+      ],
+      "target": "subgroup_8",
+      "units": [
+        58
+      ],
+      "reason": "Subgroup synthesis yields the reported prevalence, confidence interval and heterogeneity metrics.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "synthesize"
+      ],
+      "target": "subgroup_9",
+      "units": [
+        58
+      ],
+      "reason": "Subgroup synthesis yields the reported prevalence, confidence interval and heterogeneity metrics.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "synthesize"
+      ],
+      "target": "subgroup_10",
+      "units": [
+        58
+      ],
+      "reason": "Subgroup synthesis yields the reported prevalence, confidence interval and heterogeneity metrics.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "synthesize"
+      ],
+      "target": "subgroup_11",
+      "units": [
+        58
+      ],
+      "reason": "Subgroup synthesis yields the reported prevalence, confidence interval and heterogeneity metrics.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "synthesize"
+      ],
+      "target": "subgroup_12",
+      "units": [
+        58
+      ],
+      "reason": "Subgroup synthesis yields the reported prevalence, confidence interval and heterogeneity metrics.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "synthesize"
+      ],
+      "target": "subgroup_13",
+      "units": [
+        58
+      ],
+      "reason": "Subgroup synthesis yields the reported prevalence, confidence interval and heterogeneity metrics.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "synthesize"
+      ],
+      "target": "subgroup_14",
+      "units": [
+        58
+      ],
+      "reason": "Subgroup synthesis yields the reported prevalence, confidence interval and heterogeneity metrics.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "synthesize"
+      ],
+      "target": "subgroup_15",
+      "units": [
+        58
+      ],
+      "reason": "Subgroup synthesis yields the reported prevalence, confidence interval and heterogeneity metrics.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "synthesize"
+      ],
+      "target": "subgroup_16",
+      "units": [
+        58
+      ],
+      "reason": "Subgroup synthesis yields the reported prevalence, confidence interval and heterogeneity metrics.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "synthesize"
+      ],
+      "target": "subgroup_17",
+      "units": [
+        58
+      ],
+      "reason": "Subgroup synthesis yields the reported prevalence, confidence interval and heterogeneity metrics.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "synthesize"
+      ],
+      "target": "subgroup_18",
+      "units": [
+        58
+      ],
+      "reason": "Subgroup synthesis yields the reported prevalence, confidence interval and heterogeneity metrics.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "heterogeneity"
+      ],
+      "target": "review",
+      "units": [
+        17
+      ],
+      "reason": "The source's sampling and diagnostic limitations motivate the completed community prevalence synthesis.",
+      "usage": "prerequisite"
+    },
+    {
+      "sources": [
+        "protocol"
+      ],
+      "target": "search",
+      "units": [
+        21
+      ],
+      "reason": "The registered review protocol organizes the reported comprehensive search.",
+      "usage": "method"
+    },
+    {
+      "sources": [
+        "search",
+        "eligibility",
+        "bias_definition"
+      ],
+      "target": "screen",
+      "units": [
+        24
+      ],
+      "reason": "Retrieved publications, population criteria and the bias tool are jointly used in screening and quality selection.",
+      "usage": "method"
+    },
+    {
+      "sources": [
+        "screen"
+      ],
+      "target": "corpus",
+      "units": [
+        35
+      ],
+      "reason": "The completed selection yields the41-study corpus and its reported characteristics.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "screen"
+      ],
+      "target": "extract",
+      "units": [
+        27
+      ],
+      "reason": "The selected study corpus is the input to parameter extraction.",
+      "usage": "prerequisite"
+    },
+    {
+      "sources": [
+        "extract",
+        "bias_method"
+      ],
+      "target": "synthesize",
+      "units": [
+        31
+      ],
+      "reason": "Extracted prevalence/stratification data and the stated robustness procedures are used for synthesis.",
+      "usage": "method"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "tools",
+      "units": [
+        35
+      ],
+      "reason": "The extracted diagnostic information yields the description of instruments and confirmation criteria.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "synthesize"
+      ],
+      "target": "robustness",
+      "units": [
+        44,
+        47
+      ],
+      "reason": "Sensitivity, heterogeneity and publication-bias analyses yield the contrasting MCI/aMCI robustness findings.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "regression_0",
+        "regression_1",
+        "regression_2"
+      ],
+      "target": "cohort_effect",
+      "units": [
+        44
+      ],
+      "reason": "The reported regression coefficients jointly ground the qualified finding about period/cohort and nonsignificant other predictors.",
+      "usage": "data"
+    },
+    {
+      "sources": [
+        "synthesize"
+      ],
+      "target": "pooled_mci",
+      "units": [
+        49
+      ],
+      "reason": "The random-effects MCI synthesis yields the pooled prevalence and confidence interval.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "synthesize"
+      ],
+      "target": "pooled_amci",
+      "units": [
+        52
+      ],
+      "reason": "The separate aMCI synthesis yields its pooled estimate and distinct denominator.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "subgroup_0",
+        "subgroup_1",
+        "subgroup_2",
+        "subgroup_3",
+        "subgroup_4",
+        "subgroup_5",
+        "subgroup_6",
+        "subgroup_7",
+        "subgroup_8",
+        "subgroup_9",
+        "subgroup_10",
+        "subgroup_11",
+        "subgroup_12",
+        "subgroup_13",
+        "subgroup_14",
+        "subgroup_15",
+        "subgroup_16",
+        "subgroup_17",
+        "subgroup_18"
+      ],
+      "target": "subgroup_pattern",
+      "units": [
+        56
+      ],
+      "reason": "The source compares all subgroup summaries to describe the age, sex, socioeconomic and diagnostic patterns.",
+      "usage": "data"
+    },
+    {
+      "sources": [
+        "pooled_mci"
+      ],
+      "target": "international",
+      "units": [
+        61
+      ],
+      "reason": "The Chinese pooled estimate is compared with explicitly contextualized cited country estimates.",
+      "usage": "premise"
+    },
+    {
+      "sources": [
+        "subgroup_0"
+      ],
+      "target": "screening_task",
+      "units": [
+        62
+      ],
+      "reason": "The observed55–59 prevalence motivates the explicitly unresolved cost-benefit evaluation before screening policy.",
+      "usage": "premise"
+    },
+    {
+      "sources": [
+        "subtypes"
+      ],
+      "target": "subtype_limit",
+      "units": [
+        66
+      ],
+      "reason": "The subtype distinction is directly developed by the source's appraisal of limited subtype detection and reporting.",
+      "usage": "development"
+    },
+    {
+      "sources": [
+        "subgroup_pattern",
+        "tools"
+      ],
+      "target": "diagnostic_contrast",
+      "units": [
+        65
+      ],
+      "reason": "The diagnostic prevalence contrast and reviewed tools motivate the authors' explanation in terms of criteria and optional biomarkers.",
+      "usage": "premise"
+    },
+    {
+      "sources": [
+        "subgroup_pattern"
+      ],
+      "target": "mechanisms",
+      "units": [
+        68,
+        69,
+        70
+      ],
+      "reason": "The source's association findings are developed by explicitly tentative mechanistic explanations; this is not a causal inference claim.",
+      "usage": "development"
+    },
+    {
+      "sources": [
+        "cohort_effect",
+        "robustness"
+      ],
+      "target": "period_interpretation",
+      "units": [
+        71
+      ],
+      "reason": "The limited period/cohort association and persistent heterogeneity jointly limit interpretation of the temporal trend.",
+      "usage": "premise"
+    },
+    {
+      "sources": [
+        "period_interpretation",
+        "limits"
+      ],
+      "target": "future_studies",
+      "units": [
+        74
+      ],
+      "reason": "Confounded temporal effects and missing national/subtype/minority data motivate the explicit future research tasks.",
+      "usage": "prerequisite"
+    },
+    {
+      "sources": [
+        "corpus",
+        "robustness"
+      ],
+      "target": "limits",
+      "units": [
+        73,
+        74
+      ],
+      "reason": "The source appraises community coverage and analytic robustness as strengths and limitations.",
+      "usage": "evidence"
+    }
+  ],
+  "excluded_units": {
+    "U1": "Document heading retained outside the scientific graph.",
+    "U2": "Publication identity metadata retained.",
+    "U3": "Publication identity metadata retained.",
+    "U4": "Document heading retained outside the scientific graph.",
+    "U10": "Supplementary-material pointer retained; unavailable contents are not invented.",
+    "U11": "Index terms retained; substantive assertions are extracted.",
+    "U12": "Document heading retained outside the scientific graph.",
+    "U18": "Document heading retained outside the scientific graph.",
+    "U20": "Document heading retained outside the scientific graph.",
+    "U22": "Document heading retained outside the scientific graph.",
+    "U28": "Document heading retained outside the scientific graph.",
+    "U33": "Document heading retained outside the scientific graph.",
+    "U34": "Document heading retained outside the scientific graph.",
+    "U39": "Document heading retained outside the scientific graph.",
+    "U43": "Document heading retained outside the scientific graph.",
+    "U48": "Document heading retained outside the scientific graph.",
+    "U55": "Document heading retained outside the scientific graph.",
+    "U59": "Document heading retained outside the scientific graph.",
+    "U60": "Document heading retained outside the scientific graph.",
+    "U64": "Document heading retained outside the scientific graph.",
+    "U72": "Document heading retained outside the scientific graph.",
+    "U75": "Document heading retained outside the scientific graph.",
+    "U77": "Document heading retained outside the scientific graph.",
+    "U78": "Supplementary-material pointer retained; unavailable contents are not invented.",
+    "U79": "Supplementary-material pointer retained; unavailable contents are not invented.",
+    "U80": "Document heading retained outside the scientific graph.",
+    "U81": "Acknowledgment, administrative availability, funding, ethical declaration, contributor/contact information or publisher notice retained outside scientific claims.",
+    "U82": "Document heading retained outside the scientific graph.",
+    "U84": "Document heading retained outside the scientific graph.",
+    "U85": "Acknowledgment, administrative availability, funding, ethical declaration, contributor/contact information or publisher notice retained outside scientific claims.",
+    "U86": "Document heading retained outside the scientific graph.",
+    "U87": "Acknowledgment, administrative availability, funding, ethical declaration, contributor/contact information or publisher notice retained outside scientific claims.",
+    "U88": "Document heading retained outside the scientific graph.",
+    "U89": "Acknowledgment, administrative availability, funding, ethical declaration, contributor/contact information or publisher notice retained outside scientific claims.",
+    "U90": "Document heading retained outside the scientific graph.",
+    "U91": "Acknowledgment, administrative availability, funding, ethical declaration, contributor/contact information or publisher notice retained outside scientific claims.",
+    "U92": "Document heading retained outside the scientific graph.",
+    "U93": "Acknowledgment, administrative availability, funding, ethical declaration, contributor/contact information or publisher notice retained outside scientific claims.",
+    "U94": "Document heading retained outside the scientific graph.",
+    "U95": "Acknowledgment, administrative availability, funding, ethical declaration, contributor/contact information or publisher notice retained outside scientific claims.",
+    "U96": "Document heading retained outside the scientific graph.",
+    "U97": "Acknowledgment, administrative availability, funding, ethical declaration, contributor/contact information or publisher notice retained outside scientific claims.",
+    "U98": "Document heading retained outside the scientific graph.",
+    "U99": "Acknowledgment, administrative availability, funding, ethical declaration, contributor/contact information or publisher notice retained outside scientific claims.",
+    "U100": "Acknowledgment, administrative availability, funding, ethical declaration, contributor/contact information or publisher notice retained outside scientific claims."
+  },
+  "concept_aliases": {
+    "Mild cognitive impairment": [
+      "MCI"
+    ],
+    "Amnestic mild cognitive impairment": [
+      "aMCI",
+      "Amnesic MCI"
+    ],
+    "Nonamnestic mild cognitive impairment": [
+      "naMCI"
+    ]
+  },
+  "report_ru": "# PMC7789349: ручная карта схемы 6\n\nПрочитан весь текст до References, все четыре таблицы и подписи. Все 41 строки характеристик сохранены отдельными знаниями. Все 45 оценок риска смещения включены в единое составное знание с индивидуальными утверждениями; годы публикаций не подменяют годы наблюдения когорт. Сохранены четыре строки метарегрессии и все 19 подгрупповых профилей. Пропуски N/A не заполняются, звёздочка таблицы означает aMCI.\n\nОтделены распространённость, заболеваемость и конверсия. Общая MCI-оценка 12,2% и aMCI 10,9% получены на разных наборах/знаменателях; авторские 66,5% aMCI среди MCI не заменены их отношением. Сохранены проценты и табличные доли, доверительные интервалы, метарегрессия, I², диагностические/возрастные и календарные ограничения.\n\nПроблемы источника: методы утверждают p<0,05 как признак отсутствия публикационного смещения, тогда как результаты связывают p<0,01 со значимым смещением. Текст говорит о значительном снижении неоднородности подгрупп, но табличные I² остаются высокими. Пooled MCI содержит заявленные 38 исследований, несмотря на обсуждение исключения трёх отклоняющихся; не придумываем другой состав. Ряд названий когнитивных доменов/инструментов в источнике необычен; сохраняем их как авторские классификации. Потенциальные механизмы ассоциаций и скрининг с 55 лет не представлены как доказанная причинность или утверждённая политика."
+}

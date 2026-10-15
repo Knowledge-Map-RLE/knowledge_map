@@ -1,0 +1,444 @@
+{
+  "occurrences": [],
+  "transitions": [
+    {
+      "id": "T1",
+      "sources": [
+        "B1",
+        "B7"
+      ],
+      "target": "B8",
+      "usage": "premise",
+      "reason": "The review rationale explicitly links the MCI prevention target with the LMIC dementia burden.",
+      "unit_ids": [
+        "U5",
+        "U15"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T2",
+      "sources": [
+        "B9"
+      ],
+      "target": "B10",
+      "usage": "method",
+      "reason": "The registered PRISMA review implements the database search.",
+      "unit_ids": [
+        "U18",
+        "U21"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T3",
+      "sources": [
+        "B10",
+        "B11"
+      ],
+      "target": "B12",
+      "usage": "method",
+      "reason": "Screening applies these eligibility requirements to the retrieved records.",
+      "unit_ids": [
+        "U22",
+        "U29"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T4",
+      "sources": [
+        "B12"
+      ],
+      "target": "B17",
+      "usage": "result",
+      "reason": "The screening procedure yields the documented included-study flow.",
+      "unit_ids": [
+        "U30",
+        "U31",
+        "U46"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T5",
+      "sources": [
+        "B17"
+      ],
+      "target": "B13",
+      "usage": "data",
+      "reason": "Extraction is performed on the retained studies.",
+      "unit_ids": [
+        "U34",
+        "U46"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T6",
+      "sources": [
+        "B13"
+      ],
+      "target": "B18",
+      "usage": "result",
+      "reason": "Extracted country metadata determines the corpus geography.",
+      "unit_ids": [
+        "U49"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T7",
+      "sources": [
+        "B13"
+      ],
+      "target": "B19",
+      "usage": "result",
+      "reason": "Extracted sample and follow-up metadata supplies the corpus profile.",
+      "unit_ids": [
+        "U49"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T8",
+      "sources": [
+        "B13"
+      ],
+      "target": "B20",
+      "usage": "result",
+      "reason": "The extracted MCI criteria are summarized by study.",
+      "unit_ids": [
+        "U52",
+        "U53"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T9",
+      "sources": [
+        "B13"
+      ],
+      "target": "B21",
+      "usage": "result",
+      "reason": "Extracted endpoint definitions are summarized without merging their scopes.",
+      "unit_ids": [
+        "U59"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T10",
+      "sources": [
+        "B17"
+      ],
+      "target": "B14",
+      "usage": "data",
+      "reason": "The independent risk-of-bias assessment is applied to the selected studies.",
+      "unit_ids": [
+        "U37"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T15",
+      "sources": [
+        "B13"
+      ],
+      "target": "B22",
+      "usage": "result",
+      "reason": "Table 1 records the extracted characteristics of this explicit cohort.",
+      "unit_ids": [
+        "U54",
+        "U55",
+        "U56"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T16",
+      "sources": [
+        "B13"
+      ],
+      "target": "B23",
+      "usage": "result",
+      "reason": "Table 1 records the extracted characteristics of this explicit cohort.",
+      "unit_ids": [
+        "U54",
+        "U55",
+        "U56"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T17",
+      "sources": [
+        "B13"
+      ],
+      "target": "B24",
+      "usage": "result",
+      "reason": "Table 1 records the extracted characteristics of this explicit cohort.",
+      "unit_ids": [
+        "U54",
+        "U55",
+        "U56"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T18",
+      "sources": [
+        "B13"
+      ],
+      "target": "B25",
+      "usage": "result",
+      "reason": "Table 1 records the extracted characteristics of this explicit cohort.",
+      "unit_ids": [
+        "U54",
+        "U55",
+        "U56"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T19",
+      "sources": [
+        "B13"
+      ],
+      "target": "B26",
+      "usage": "result",
+      "reason": "Table 1 records the extracted characteristics of this explicit cohort.",
+      "unit_ids": [
+        "U54",
+        "U55",
+        "U56"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T20",
+      "sources": [
+        "B13"
+      ],
+      "target": "B27",
+      "usage": "result",
+      "reason": "Table 1 records the extracted characteristics of this explicit cohort.",
+      "unit_ids": [
+        "U54",
+        "U55",
+        "U56"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T21",
+      "sources": [
+        "B13"
+      ],
+      "target": "B28",
+      "usage": "result",
+      "reason": "Table 1 records the extracted characteristics of this explicit cohort.",
+      "unit_ids": [
+        "U54",
+        "U55",
+        "U56"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T22",
+      "sources": [
+        "B13"
+      ],
+      "target": "B29",
+      "usage": "result",
+      "reason": "Table 1 records the extracted characteristics of this explicit cohort.",
+      "unit_ids": [
+        "U54",
+        "U55",
+        "U56"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T23",
+      "sources": [
+        "B13"
+      ],
+      "target": "B30",
+      "usage": "result",
+      "reason": "Table 1 records the extracted characteristics of this explicit cohort.",
+      "unit_ids": [
+        "U54",
+        "U55",
+        "U56"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T24",
+      "sources": [
+        "B13"
+      ],
+      "target": "B31",
+      "usage": "result",
+      "reason": "Table 1 records the extracted characteristics of this explicit cohort.",
+      "unit_ids": [
+        "U54",
+        "U55",
+        "U56"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T25",
+      "sources": [
+        "B13"
+      ],
+      "target": "B32",
+      "usage": "result",
+      "reason": "Table 1 records the extracted characteristics of this explicit cohort.",
+      "unit_ids": [
+        "U54",
+        "U55",
+        "U56"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T26",
+      "sources": [
+        "B22"
+      ],
+      "target": "B33",
+      "usage": "data",
+      "reason": "The conversion value is reported for this specific cohort, diagnostic endpoint and follow-up.",
+      "unit_ids": [
+        "U54",
+        "U55",
+        "U56"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T27",
+      "sources": [
+        "B23"
+      ],
+      "target": "B34",
+      "usage": "data",
+      "reason": "The conversion value is reported for this specific cohort, diagnostic endpoint and follow-up.",
+      "unit_ids": [
+        "U54",
+        "U55",
+        "U56"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T28",
+      "sources": [
+        "B24"
+      ],
+      "target": "B35",
+      "usage": "data",
+      "reason": "The conversion value is reported for this specific cohort, diagnostic endpoint and follow-up.",
+      "unit_ids": [
+        "U54",
+        "U55",
+        "U56"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T29",
+      "sources": [
+        "B25"
+      ],
+      "target": "B36",
+      "usage": "data",
+      "reason": "The conversion value is reported for this specific cohort, diagnostic endpoint and follow-up.",
+      "unit_ids": [
+        "U54",
+        "U55",
+        "U56"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T30",
+      "sources": [
+        "B26"
+      ],
+      "target": "B37",
+      "usage": "data",
+      "reason": "The conversion value is reported for this specific cohort, diagnostic endpoint and follow-up.",
+      "unit_ids": [
+        "U54",
+        "U55",
+        "U56"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T31",
+      "sources": [
+        "B27"
+      ],
+      "target": "B38",
+      "usage": "data",
+      "reason": "The conversion value is reported for this specific cohort, diagnostic endpoint and follow-up.",
+      "unit_ids": [
+        "U54",
+        "U55",
+        "U56"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T32",
+      "sources": [
+        "B28"
+      ],
+      "target": "B39",
+      "usage": "data",
+      "reason": "The conversion value is reported for this specific cohort, diagnostic endpoint and follow-up.",
+      "unit_ids": [
+        "U54",
+        "U55",
+        "U56"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T33",
+      "sources": [
+        "B29"
+      ],
+      "target": "B40",
+      "usage": "data",
+      "reason": "The conversion value is reported for this specific cohort, diagnostic endpoint and follow-up.",
+      "unit_ids": [
+        "U54",
+        "U55",
+        "U56"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T52",
+      "sources": [
+        "B4",
+        "B20",
+        "B21"
+      ],
+      "target": "B16",
+      "usage": "condition",
+      "reason": "Shared Petersen-type definitions and AD endpoints restrict eligible pooling.",
+      "unit_ids": [
+        "U41"
+      ],
+      "conditions": []
+    }
+  ]
+}

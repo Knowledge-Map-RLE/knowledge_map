@@ -15,7 +15,7 @@ from application.text_to_map import TextToMap, TranslateArticleMap
 from domain.article_maps import (
     ArticleMapError, ArticleMapAccessDenied, ArticleMapNotFound, ArticleMapBusy, ArticleMapConflict, digest,
 )
-from domain.knowledge_map_schema import extraction_map_json_schema
+from domain.knowledge_development_schema import development_map_json_schema
 from infrastructure.article_map_model import ArticleMapDependencyModelGateway, ArticleMapModelGateway
 from infrastructure.article_map_source import StoredArticleMapSource
 from infrastructure.config import settings
@@ -79,9 +79,10 @@ async def list_maps(doc_id: str, user=Depends(get_current_user), repo=Depends(re
 
 @router.get("/{pipeline_id}")
 async def get_map(doc_id: str, pipeline_id: PipelineId, locale: Literal["en", "ru"] = "en",
-                  user=Depends(get_current_user), repo=Depends(repository)):
+                  run_id: str | None = None, user=Depends(get_current_user), repo=Depends(repository)):
     try:
-        result = await asyncio.to_thread(repo.get, doc_id, pipeline_id, user["uid"])
+        result = await asyncio.to_thread(repo.get, doc_id, pipeline_id, user["uid"],
+                                        *([run_id] if run_id is not None else []))
         if result is None:
             raise ArticleMapNotFound("Map has not been built")
         result["locale"] = locale
@@ -101,18 +102,44 @@ async def get_map(doc_id: str, pipeline_id: PipelineId, locale: Literal["en", "r
 
 @router.get("/{pipeline_id}/provenance/{node_id}")
 async def provenance(doc_id: str, pipeline_id: PipelineId, node_id: str,
-                     user=Depends(get_current_user), repo=Depends(repository)):
+                     run_id: str | None = None, user=Depends(get_current_user), repo=Depends(repository)):
     try:
-        result = await asyncio.to_thread(repo.get, doc_id, pipeline_id, user["uid"])
+        result = await asyncio.to_thread(repo.get, doc_id, pipeline_id, user["uid"],
+                                        *([run_id] if run_id is not None else []))
         if not result or "source" not in result:
             raise ArticleMapNotFound("Source provenance is unavailable for this map")
         node = next((n for n in result["graph"]["nodes"] if n["id"] == node_id), None)
         if node is None:
             raise ArticleMapNotFound("Map node not found")
         source = result["source"]
-        return {"node": node, "source_sha256": source["sha256"], "offset_encoding": source["offset_encoding"],
+        knowledge = next((k for k in result["graph"].get("knowledge", [])
+                          if k["knowledge_id"] == node.get("knowledge_id")), None)
+        return {"node": node, "knowledge": knowledge, "run_id": result["run_id"],
+                "transitions": [t for t in result["graph"].get("transitions", [])
+                                if t["target"] == node_id or node_id in t["sources"]],
+                "source_sha256": source["sha256"], "offset_encoding": source["offset_encoding"],
+                "source_attachments": [a for a in result.get("source_attachments", []) if a["unit_id"] in node["provenance"]["unit_ids"]],
                 "fragments": [{**span, "text": source["text"][span["start"]:span["end"]]}
                               for span in node["provenance"]["source_spans"]]}
+    except ArticleMapError as exc:
+        raise http_error(exc) from exc
+
+
+@router.get("/{pipeline_id}/transitions/{transition_id}")
+async def transition_details(doc_id: str, pipeline_id: PipelineId, transition_id: str,
+                             run_id: str | None = None, user=Depends(get_current_user), repo=Depends(repository)):
+    try:
+        result = await asyncio.to_thread(repo.get, doc_id, pipeline_id, user["uid"],
+                                        *([run_id] if run_id is not None else []))
+        if not result or result["graph"]["schema_version"] != 6:
+            raise ArticleMapNotFound("Development transition is unavailable")
+        transition = next((t for t in result["graph"]["transitions"] if t["id"] == transition_id), None)
+        if transition is None:
+            raise ArticleMapNotFound("Development transition not found")
+        units = {u["id"]: u for u in result["source"]["units"]}
+        return {"transition": transition, "run_id": result["run_id"],
+                "source_sha256": result["source"]["sha256"], "offset_encoding": "unicode_codepoints",
+                "fragments": [units[u] for u in transition["unit_ids"]]}
     except ArticleMapError as exc:
         raise http_error(exc) from exc
 
@@ -143,12 +170,12 @@ async def authorize_stream(repo, doc_id, user_uid):
 
 
 @router.post("/{pipeline_id}/translate")
-async def translate(doc_id: str, pipeline_id: PipelineId, user=Depends(get_current_user)):
+async def translate(doc_id: str, pipeline_id: PipelineId, run_id: str | None = None, user=Depends(get_current_user)):
     repo = make_repository()
     await authorize_stream(repo, doc_id, user["uid"])
     async def action(emit):
         await emit({"type": "progress", "stage": "translation"})
-        return await TranslateArticleMap(repo, ArticleMapModelGateway()).execute(doc_id, pipeline_id, user["uid"])
+        return await TranslateArticleMap(repo, ArticleMapModelGateway()).execute(doc_id, pipeline_id, user["uid"], run_id)
     return stream_operation(repo, doc_id, action)
 
 
@@ -157,7 +184,7 @@ async def build_from_text(doc_id: str, user=Depends(get_current_user)):
     repo = make_repository()
     await authorize_stream(repo, doc_id, user["uid"])
     async def action(emit):
-        model = ArticleMapModelGateway(output_schema=extraction_map_json_schema(), strict_schema=True)
+        model = ArticleMapModelGateway(output_schema=development_map_json_schema(extraction=True), strict_schema=True)
         dependencies = ArticleMapDependencyModelGateway()
         return await TextToMap(repo, source_reader(repo), model, dependencies).execute(doc_id, user["uid"], emit)
     return stream_operation(repo, doc_id, action)

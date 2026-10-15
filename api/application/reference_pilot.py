@@ -150,6 +150,8 @@ class ReferencePilot:
         self.map_concurrency = map_concurrency
 
     async def run(self, size: int = 5) -> dict:
+        require(getattr(self.builder, "contract_version", 5) == 5,
+                "The symbolic pilot supports schema 5 only; review schema 6 before rebuilding the corpus")
         require(size >= 1, "Checkpoint size must be positive")
         previous = self.store.read("state.json") or {"completed_size": 0}
         require(size <= previous["completed_size"] + 5, "Cannot skip a five-source checkpoint")

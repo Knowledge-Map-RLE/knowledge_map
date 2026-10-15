@@ -46,6 +46,7 @@ interface ArticleBlockProps {
     highlighted: boolean;
     dimmed: boolean;
     onHover: (id: string | null) => void;
+    onSelect?: (id: string) => void;
 }
 
 export const ArticleBlock = memo(function ArticleBlock({
@@ -54,6 +55,7 @@ export const ArticleBlock = memo(function ArticleBlock({
     highlighted,
     dimmed,
     onHover,
+    onSelect,
 }: ArticleBlockProps) {
     const { t } = useTranslation();
     const { id, x, y, blockType, label, outcome, outcomeLabel, isGoal } = blockData;
@@ -95,6 +97,7 @@ export const ArticleBlock = memo(function ArticleBlock({
             cursor="pointer"
             onPointerEnter={() => onHover(id)}
             onPointerLeave={() => onHover(null)}
+            onPointerTap={() => onSelect?.(id)}
         >
             <pixiGraphics draw={drawBg} />
             <PixiText

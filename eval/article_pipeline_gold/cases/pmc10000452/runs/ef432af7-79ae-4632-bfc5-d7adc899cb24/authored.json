@@ -1,0 +1,3918 @@
+{
+  "knowledge": [
+    {
+      "key": "dementia_burden",
+      "units": [
+        8
+      ],
+      "en": "Over 55 million people worldwide live with dementia; the cited estimate projects 139 million by 2050, and many cases remain undiagnosed.",
+      "ru": "Более 55 млн человек в мире живут с деменцией; цитируемый прогноз — 139 млн к 2050 году; многие случаи не диагностированы.",
+      "predicate": "estimated_dementia_burden",
+      "roles": {
+        "population": "Worldwide population",
+        "condition": "Dementia"
+      },
+      "time": "Current estimate and projection to 2050",
+      "attrs": {
+        "current_millions": 55,
+        "projection_millions": 139,
+        "projection_year": 2050
+      },
+      "modality": "estimate; projection",
+      "quantifier": "over 55 million; a substantial percentage"
+    },
+    {
+      "key": "normal_aging",
+      "units": [
+        8
+      ],
+      "en": "Normal cognitive aging involves predictable age-related changes with age- and education-adjusted domain scores within 1.5 SD of the population mean.",
+      "ru": "Нормальное когнитивное старение: ожидаемые возрастные изменения, скорректированные по возрасту и образованию доменные оценки в пределах 1,5 SD от среднего.",
+      "predicate": "characterized_by",
+      "roles": {
+        "subject": "Normal cognitive aging",
+        "measure": "Cognitive domain scores"
+      },
+      "type": "definition",
+      "attrs": {
+        "normative_sd_bound": 1.5
+      },
+      "conditions": [
+        "Age- and education-adjusted domain-specific scores"
+      ]
+    },
+    {
+      "key": "mci_definition",
+      "units": [
+        8,
+        31,
+        33
+      ],
+      "en": "MCI combines domain-specific cognitive impairment with preserved daily functioning. This protocol requires impaired performance in at least two tests within a domain and IADL >0.78; a domain mean at least 1.5 SD below norms indicates impairment.",
+      "ru": "MCI сочетает доменное когнитивное нарушение с сохранной повседневной деятельностью. Протокол требует нарушений минимум в двух тестах домена и IADL >0,78; среднее домена минимум на 1,5 SD ниже нормы указывает на нарушение.",
+      "predicate": "mci_diagnostic_requirement",
+      "roles": {
+        "condition": "Mild cognitive impairment",
+        "measurement": "IADL",
+        "cognition": "Cognitive domain scores"
+      },
+      "type": "definition",
+      "attrs": {
+        "minimum_impaired_tests": 2,
+        "domain_sd_below_norm": 1.5,
+        "iadl_lower_bound": 0.78
+      },
+      "conditions": [
+        "Domain-specific rather than global impairment",
+        "Preserved basic and relatively preserved instrumental daily activities"
+      ],
+      "quantifier": "at least two tests within a given domain"
+    },
+    {
+      "key": "mci_progression",
+      "units": [
+        8,
+        9,
+        66
+      ],
+      "en": "MCI is a high-risk prodromal window for dementia: the cited meta-analysis reports conversion rates of 6–44.8%, motivating timely intervention and study of modifiable factors.",
+      "ru": "MCI — продромальное окно высокого риска деменции: цитируемый метаанализ сообщает переход в 6–44,8% случаев, что обосновывает своевременное вмешательство и поиск изменяемых факторов.",
+      "predicate": "mci_progression_risk",
+      "roles": {
+        "condition": "Mild cognitive impairment",
+        "outcome": "Dementia"
+      },
+      "attrs": {
+        "conversion_percent_min": 6,
+        "conversion_percent_max": 44.8
+      },
+      "modality": "risk; cited meta-analysis",
+      "type": "assertion"
+    },
+    {
+      "key": "mci_frequency",
+      "units": [
+        8
+      ],
+      "en": "Reported MCI incidence increases from 22.5% at ages 75–79 to 60.1% above age 85; Greek prevalence estimates range from 13.11% to 32.4% in CAC.",
+      "ru": "Сообщаемая частота новых случаев MCI: 22,5% в 75–79 лет и 60,1% старше 85; оценки распространённости в Греции — 13,11–32,4% (CAC).",
+      "predicate": "reported_mci_frequency",
+      "roles": {
+        "condition": "Mild cognitive impairment",
+        "population": "Older adults in Greece"
+      },
+      "attrs": {
+        "incidence_75_79_percent": 22.5,
+        "incidence_over85_percent": 60.1,
+        "greek_prevalence_min_percent": 13.11,
+        "cac_prevalence_percent": 32.4
+      },
+      "conditions": [
+        "Incidence and prevalence are distinct measures",
+        "Estimates from cited studies"
+      ]
+    },
+    {
+      "key": "sleep_modifiable",
+      "units": [
+        9
+      ],
+      "en": "Sleep disturbances are common, potentially modifiable conditions in older adults and appear to contribute to cognitive impairment and prognosis.",
+      "ru": "Нарушения сна распространены у пожилых, потенциально изменяемы и, по литературе, могут влиять на когнитивное нарушение и прогноз.",
+      "predicate": "may_contribute",
+      "roles": {
+        "factor": "Sleep disturbances",
+        "outcome": "Cognitive decline",
+        "population": "Older adults"
+      },
+      "modality": "potentially modifiable; appears to contribute"
+    },
+    {
+      "key": "sleep_architecture",
+      "units": [
+        9
+      ],
+      "en": "The cited meta-analysis distinguishes MCI from cognitively intact adults by longer sleep latency and less Cyclic Alternating Pattern expression.",
+      "ru": "Цитируемый метаанализ различает MCI и когнитивно сохранных лиц по большей латентности сна и меньшей выраженности Cyclic Alternating Pattern.",
+      "predicate": "group_sleep_architecture_difference",
+      "roles": {
+        "group": "Mild cognitive impairment",
+        "comparator": "Cognitively non-impaired participants",
+        "measurement": "Objective sleep"
+      },
+      "conditions": [
+        "Cited meta-analysis"
+      ],
+      "type": "comparison"
+    },
+    {
+      "key": "duration_dispute",
+      "units": [
+        9
+      ],
+      "en": "Evidence on sleep duration and cognitive impairment is conflicting: some studies report risk with <6 h or >8 h sleep, whereas others report no association.",
+      "ru": "Данные о длительности сна противоречивы: часть исследований сообщает риск при сне <6 или >8 часов, другие не находят связи.",
+      "predicate": "sleep_duration_evidence",
+      "roles": {
+        "factor": "Sleep duration",
+        "outcome": "Cognitive decline"
+      },
+      "logic": "contrast",
+      "claims": [
+        {
+          "predicate": "reported_risk",
+          "modality": "some studies",
+          "attrs": {
+            "short_sleep_hours_upper_bound": 6,
+            "long_sleep_hours_lower_bound": 8
+          }
+        },
+        {
+          "predicate": "reported_association",
+          "negated": true,
+          "modality": "other studies"
+        }
+      ],
+      "type": "comparison"
+    },
+    {
+      "key": "cac_sleep",
+      "units": [
+        9
+      ],
+      "en": "Prior cross-sectional CAC analyses associated objective long sleep with executive deficits in MCI and CNI; long sleep in MCI and AD may be driven by APOE ε4.",
+      "ru": "Прежние поперечные анализы CAC связывали объективно длительный сон с исполнительными нарушениями при MCI и CNI; длительный сон при MCI и AD может быть обусловлен APOE ε4.",
+      "predicate": "prior_cac_sleep_association",
+      "roles": {
+        "cohort": "Cretan Aging Cohort",
+        "factor": "Sleep duration",
+        "outcome": "Executive function",
+        "genetic_factor": "APOE ε4"
+      },
+      "logic": "conjunction",
+      "claims": [
+        {
+          "predicate": "cross_sectional_association",
+          "conditions": [
+            "MCI and CNI",
+            "Association does not establish causation"
+          ]
+        },
+        {
+          "predicate": "may_drive_long_sleep",
+          "modality": "may",
+          "conditions": [
+            "MCI and Alzheimer disease"
+          ]
+        }
+      ],
+      "time": "Prior cross-sectional CAC analyses"
+    },
+    {
+      "key": "apoe_risk",
+      "units": [
+        10,
+        5
+      ],
+      "en": "APOE ε4 is a cited established risk factor for dementia, incident MCI and conversion from MCI to dementia.",
+      "ru": "APOE ε4 описан в литературе как установленный фактор риска деменции, новых случаев MCI и перехода MCI в деменцию.",
+      "predicate": "risk_factor_for",
+      "roles": {
+        "factor": "APOE ε4",
+        "outcome": "Dementia",
+        "intermediate": "Mild cognitive impairment"
+      },
+      "conditions": [
+        "Background literature; not a causal estimate from this follow-up"
+      ]
+    },
+    {
+      "key": "inflammation_unclear",
+      "units": [
+        10
+      ],
+      "en": "Inflammatory dysregulation (inflamm-aging) seems important in neurodegeneration, but its underlying mechanisms are not clearly understood.",
+      "ru": "Дисрегуляция воспаления (inflamm-aging), предположительно, важна для нейродегенерации; механизмы остаются неясными.",
+      "predicate": "inflammation_pathogenesis",
+      "roles": {
+        "factor": "Inflammatory dysregulation",
+        "outcome": "Neurodegeneration"
+      },
+      "logic": "contrast",
+      "claims": [
+        {
+          "predicate": "may_contribute_to_pathogenesis",
+          "modality": "seems"
+        },
+        {
+          "predicate": "mechanisms_clearly_understood",
+          "negated": true
+        }
+      ],
+      "type": "limitation"
+    },
+    {
+      "key": "cytokine_cognition",
+      "units": [
+        10
+      ],
+      "en": "Elevated cerebrospinal-fluid and plasma TNFα/IL-6 in AD predict further decline and are associated with poorer cognition in MCI and AD in cited studies.",
+      "ru": "Повышенные TNFα/IL-6 в ликворе и плазме при AD предсказывают дальнейшее снижение и связаны с худшей когницией при MCI и AD в цитируемых исследованиях.",
+      "predicate": "cytokine_cognitive_association",
+      "roles": {
+        "factor": "Inflammatory cytokines",
+        "outcome": "Cognitive decline",
+        "population": "MCI and Alzheimer disease patients"
+      },
+      "conditions": [
+        "Cited studies; compartments are cerebrospinal fluid and plasma"
+      ]
+    },
+    {
+      "key": "cytokine_sleep",
+      "units": [
+        10
+      ],
+      "en": "Sleep-related disorders and acute sleep deprivation show impaired cytokine regulation; higher plasma IL-6 predicts poor sleep quality and relates to daytime sleepiness in cognitively intact older adults.",
+      "ru": "При нарушениях сна и острой депривации нарушена регуляция цитокинов; повышенный IL-6 плазмы предсказывает плохой сон и связан с дневной сонливостью у когнитивно сохранных пожилых.",
+      "predicate": "cytokine_sleep_association",
+      "roles": {
+        "factor": "Inflammatory cytokines",
+        "outcome": "Objective sleep",
+        "population": "Cognitively non-impaired participants"
+      },
+      "conditions": [
+        "Cited literature; IL-6 findings in cognitively intact elderly"
+      ]
+    },
+    {
+      "key": "cortisol_memory",
+      "units": [
+        10
+      ],
+      "en": "Cortisol is elevated in MCI/dementia in cited studies; increased cortisol may impair recall through biphasic hippocampal receptor activation and downregulation of long-term potentiation.",
+      "ru": "В цитируемых работах кортизол повышен при MCI/деменции; он может ухудшать воспроизведение через двухфазную активацию гиппокампальных рецепторов и снижение долговременной потенциации.",
+      "predicate": "cortisol_memory_pathway",
+      "roles": {
+        "factor": "Cortisol",
+        "outcome": "Memory recall",
+        "mechanism": "Hippocampal receptor activation"
+      },
+      "modality": "may",
+      "conditions": [
+        "Cerebrospinal-fluid and plasma cortisol; proposed mechanism"
+      ]
+    },
+    {
+      "key": "cortisol_executive",
+      "units": [
+        10
+      ],
+      "en": "Prefrontal cortisol-receptor overexpression may accompany executive deficits; impaired executive function mediates the cited basal-cortisol–memory-recall relationship, potentially linking the two processes.",
+      "ru": "Гиперэкспрессия префронтальных рецепторов кортизола может сопровождать исполнительные нарушения; исполнительная дисфункция опосредует описанную связь базального кортизола с памятью и может объединять оба процесса.",
+      "predicate": "cortisol_executive_mediation",
+      "roles": {
+        "factor": "Cortisol",
+        "mediator": "Executive function",
+        "outcome": "Memory recall",
+        "related_pathway": "@cortisol_memory"
+      },
+      "modality": "may be associated; may be interrelated",
+      "conditions": [
+        "Cited mediation finding"
+      ]
+    },
+    {
+      "key": "depression_background",
+      "units": [
+        11
+      ],
+      "en": "Depression prevalence in MCI may reach 32%; it is associated with dementia progression and faster decline (possibly moderated by APOE ε4), hippocampal atrophy when persistent, and amyloid abnormalities.",
+      "ru": "Депрессия при MCI может достигать 32%; связана с прогрессированием деменции и ускорением снижения (возможно, с модерацией APOE ε4), атрофией гиппокампа при стойких симптомах и амилоидными изменениями.",
+      "predicate": "depression_cognitive_associations",
+      "roles": {
+        "condition": "Depression",
+        "population": "Mild cognitive impairment",
+        "outcome": "Cognitive decline",
+        "moderator": "APOE ε4"
+      },
+      "attrs": {
+        "prevalence_upper_percent": 32
+      },
+      "modality": "may; possibly moderated",
+      "conditions": [
+        "Background studies; persistent symptoms for hippocampal association"
+      ]
+    },
+    {
+      "key": "anxiety_background",
+      "units": [
+        11
+      ],
+      "en": "Anxiety prevalence in MCI may reach 21%; symptoms can impair daily functioning and increase dementia risk. Cognitive performance tends to be lower with concurrent anxiety/depression, but anxiety-specific contributions remain unclear.",
+      "ru": "Тревога при MCI может достигать 21%; симптомы могут ухудшать повседневную деятельность и повышать риск деменции. При сочетании с депрессией когниция имеет тенденцию к снижению, но вклад собственно тревоги неясен.",
+      "predicate": "anxiety_cognitive_associations",
+      "roles": {
+        "condition": "Anxiety",
+        "population": "Mild cognitive impairment",
+        "outcome": "Cognitive decline"
+      },
+      "logic": "contrast",
+      "claims": [
+        {
+          "predicate": "associated_risk_and_functional_impairment",
+          "modality": "can; tendency",
+          "attrs": {
+            "prevalence_upper_percent": 21
+          }
+        },
+        {
+          "predicate": "specific_contribution_understood",
+          "negated": true,
+          "conditions": [
+            "Concurrent anxiety and depression"
+          ]
+        }
+      ],
+      "type": "assertion",
+      "conditions": [
+        "Anxiety is less extensively studied than depression in this literature"
+      ]
+    },
+    {
+      "key": "mental_inflammation_sleep",
+      "units": [
+        11,
+        62
+      ],
+      "en": "Anxiety is linked to inflammatory cytokines and hypercortisolemia; prolonged glucocorticoid exposure is linked to dementia-associated atrophy. Sleep dysregulation is a core depression symptom, with insomnia and poor sleep overexpressed in MCI.",
+      "ru": "Тревога связана с воспалительными цитокинами и гиперкортизолемией; длительное воздействие глюкокортикоидов — с атрофией при деменции. Дисрегуляция сна — основной симптом депрессии; бессонница и плохой сон выражены при MCI.",
+      "predicate": "mental_inflammatory_sleep_links",
+      "roles": {
+        "condition": "Anxiety",
+        "other_condition": "Depression",
+        "inflammatory_factor": "Inflammatory cytokines",
+        "hormone": "Cortisol",
+        "sleep": "Sleep disturbances"
+      },
+      "conditions": [
+        "Background literature; not estimated causal effects of CAC Phase III"
+      ]
+    },
+    {
+      "key": "cac_established",
+      "units": [
+        12
+      ],
+      "en": "CAC was established in 2013 to study sociodemographic, medical, lifestyle, inflammatory, neuroendocrine, sleep, genetic, cognitive and neuropsychiatric characteristics of older adults mainly in rural Heraklion, Crete.",
+      "ru": "CAC создана в 2013 году для изучения социальных, медицинских, поведенческих, воспалительных, нейроэндокринных, сонных, генетических, когнитивных и нейропсихиатрических характеристик пожилых преимущественно сельского Ираклиона, Крит.",
+      "predicate": "established_cohort",
+      "roles": {
+        "cohort": "Cretan Aging Cohort",
+        "population": "Community-dwelling older adults in Heraklion"
+      },
+      "kind": "action",
+      "status": "performed",
+      "time": "2013",
+      "attrs": {
+        "established_year": 2013
+      }
+    },
+    {
+      "key": "research_task",
+      "units": [
+        5,
+        12,
+        60,
+        66
+      ],
+      "en": "Identify potentially modifiable predictors or moderators of cognitive decline over seven years in initially CNI/MCI community-dwelling older adults; this report describes methods and sample characteristics, not completed predictive findings.",
+      "ru": "Выявить потенциально изменяемые предикторы или модераторы семилетнего когнитивного снижения у исходно CNI/MCI пожилых жителей. Эта статья описывает методы и выборку, а не завершённые прогностические результаты.",
+      "predicate": "investigate_modifiable_predictors",
+      "roles": {
+        "cohort": "Cretan Aging Cohort",
+        "population": "Community-dwelling older adults in Heraklion",
+        "outcome": "Cognitive decline"
+      },
+      "kind": "action",
+      "status": "unresolved",
+      "type": "goal",
+      "modality": "aim; potentially modifiable",
+      "attrs": {
+        "followup_years_nominal": 7
+      },
+      "conditions": [
+        "CNI or MCI at Phase II",
+        "Prediction analyses are not reported here"
+      ]
+    },
+    {
+      "key": "study_comparison",
+      "units": [
+        12,
+        61
+      ],
+      "en": "The authors describe CAC as, to their knowledge, the first Greek longitudinal cohort with this relatively large, well-defined MCI-inclusive sample and objective sleep focus; SHARE and HELIAD address related but different domains.",
+      "ru": "По оценке авторов, CAC — первое греческое продольное исследование с такой относительно большой определённой выборкой с MCI и акцентом на объективный сон; SHARE и HELIAD изучают близкие, но другие области.",
+      "predicate": "author_claim_of_study_distinctiveness",
+      "roles": {
+        "cohort": "Cretan Aging Cohort",
+        "comparator": "SHARE and HELIAD"
+      },
+      "modality": "to the authors knowledge",
+      "type": "comparison",
+      "conditions": [
+        "SHARE: sociodemographic, medical, mental, lifestyle and biomarkers",
+        "HELIAD: nutrition and neuropsychological markers"
+      ]
+    },
+    {
+      "key": "eligibility",
+      "units": [
+        16
+      ],
+      "en": "Recruit consenting primary-care visitors aged ≥60 in rural/urban Heraklion; exclude acute terminal illness or severe movement impairment. Phase I examined 3,140 community-dwelling adults, age 73.7±7.8 years.",
+      "ru": "Набрать согласившихся посетителей первичной помощи ≥60 лет в сельском/городском Ираклионе; исключить острые терминальные состояния и тяжёлые двигательные нарушения. В фазе I обследованы 3140 человек, возраст 73,7±7,8 года.",
+      "predicate": "recruited_and_screened",
+      "roles": {
+        "cohort": "Cretan Aging Cohort",
+        "population": "Community-dwelling older adults in Heraklion"
+      },
+      "kind": "action",
+      "status": "performed",
+      "time": "Phase I, 2013–2014",
+      "attrs": {
+        "minimum_age_years": 60,
+        "sample_size": 3140,
+        "mean_age_years": 73.7,
+        "age_sd_years": 7.8
+      },
+      "conditions": [
+        "Primary Health Care research-network visitors",
+        "Consent",
+        "Exclude terminal illness/severe movement impairment"
+      ]
+    },
+    {
+      "key": "phase1_comparison",
+      "units": [
+        16
+      ],
+      "en": "Use the 2011 national census to compare CAC with Greek and Cretan populations of similar age; collect demographics/medical information and administer MMSE to all Phase I participants.",
+      "ru": "Использовать перепись 2011 года для сравнения CAC с населением Греции и Крита того же возраста; собрать демографические/медицинские данные и провести MMSE всем участникам фазы I.",
+      "predicate": "collected_baseline_and_census_comparison",
+      "roles": {
+        "cohort": "Cretan Aging Cohort",
+        "instrument": "Mini Mental State Examination",
+        "comparator": "2011 national census"
+      },
+      "kind": "action",
+      "status": "performed",
+      "time": "Phase I",
+      "quantifier": "all participants",
+      "attrs": {
+        "census_year": 2011
+      }
+    },
+    {
+      "key": "phase2_sampling",
+      "units": [
+        16
+      ],
+      "en": "Invite 636 adults with MMSE <24 to Phase II; 344 consented/completed it. Stratify 181 controls with MMSE ≥24 by gender/residence to match the low-MMSE group; 161 controls participated.",
+      "ru": "Пригласить 636 человек с MMSE <24 в фазу II; 344 согласились/завершили. Подобрать 181 контроль с MMSE ≥24 по полу/месту проживания; участвовал 161.",
+      "predicate": "selected_phase2_sample",
+      "roles": {
+        "cohort": "Cretan Aging Cohort",
+        "instrument": "Mini Mental State Examination"
+      },
+      "kind": "action",
+      "status": "performed",
+      "time": "Phase I to Phase II",
+      "attrs": {
+        "mmse_threshold": 24,
+        "low_mmse_invited": 636,
+        "low_mmse_completed": 344,
+        "controls_selected": 181,
+        "controls_completed": 161
+      },
+      "conditions": [
+        "Proportional stratification by gender and residence",
+        "344 comparable with 636 in demographic/anthropometric measures"
+      ]
+    },
+    {
+      "key": "phase2_protocol",
+      "units": [
+        16,
+        19,
+        20
+      ],
+      "en": "In Phase II (2013–2014, approximately six months after Phase I), participants received neuropsychological/neuropsychiatric/neurological assessment, 3-day 24-h actigraphy and blood sampling for morning cortisol, cytokines and genetics; history, sleep complaints and functioning were recorded.",
+      "ru": "В фазе II (2013–2014, примерно через шесть месяцев после I) проведены нейропсихологическая/психиатрическая/неврологическая оценка, трёхсуточная актография и кровь на утренний кортизол, цитокины и генетику; записаны анамнез, жалобы на сон и функционирование.",
+      "predicate": "performed_phase2_protocol",
+      "roles": {
+        "cohort": "Cretan Aging Cohort",
+        "instrument": "Actigraphy",
+        "biomarkers": "Inflammatory cytokines",
+        "hormone": "Cortisol"
+      },
+      "kind": "action",
+      "status": "performed",
+      "time": "Phase II, 2013–2014",
+      "attrs": {
+        "phase_gap_months_approximate": 6,
+        "actigraphy_days": 3,
+        "actigraphy_hours_per_day": 24
+      },
+      "conditions": [
+        "Caption dates Phase I/II to 2013; body reports 2013–2014"
+      ]
+    },
+    {
+      "key": "phase2_diagnosis",
+      "units": [
+        16,
+        46
+      ],
+      "en": "Phase II used consensus DSM-IV dementia and IWG MCI diagnoses; 146 participants were cognitively intact and 231 had MCI of any type.",
+      "ru": "В фазе II использованы консенсусные диагнозы деменции DSM-IV и MCI по IWG; 146 участников когнитивно сохранны, 231 имеют MCI любого типа.",
+      "predicate": "phase2_diagnostic_classification",
+      "roles": {
+        "cohort": "Cretan Aging Cohort",
+        "cni": "Cognitively non-impaired participants",
+        "mci": "Mild cognitive impairment",
+        "criteria": "Diagnostic criteria"
+      },
+      "kind": "action",
+      "status": "performed",
+      "time": "Phase II",
+      "attrs": {
+        "cni_count": 146,
+        "mci_count": 231
+      },
+      "conditions": [
+        "DSM fourth edition for dementia",
+        "IWG for MCI"
+      ]
+    },
+    {
+      "key": "phase3_pool",
+      "units": [
+        18
+      ],
+      "en": "The Phase III eligible pool was all 377 Phase II CNI/MCI participants (146 CNI, 231 MCI); Phase II dementia cases were excluded from October 2020–August 2022 testing.",
+      "ru": "Пул фазы III: все 377 исходных CNI/MCI (146 CNI, 231 MCI); диагностированная в фазе II деменция исключена из обследования октября 2020 — августа 2022.",
+      "predicate": "phase3_eligible_pool",
+      "roles": {
+        "cohort": "Cretan Aging Cohort",
+        "cni": "Cognitively non-impaired participants",
+        "mci": "Mild cognitive impairment"
+      },
+      "time": "October 2020–August 2022",
+      "attrs": {
+        "eligible_total": 377,
+        "cni_count": 146,
+        "mci_count": 231
+      },
+      "conditions": [
+        "Phase II diagnostic labels",
+        "Dementia excluded"
+      ],
+      "quantifier": "all eligible CNI/MCI"
+    },
+    {
+      "key": "attrition",
+      "units": [
+        18
+      ],
+      "en": "Of the 377 eligible adults, 103 died (27.3%), 56 were unlocated (14.9%) and 63 refused (16.7%): reported attrition 58.9%; 149 MCI and 73 CNI could not be retested.",
+      "ru": "Из 377 подходящих участников 103 умерли (27,3%), 56 не найдены (14,9%), 63 отказались (16,7%): отсев 58,9%; повторно не обследованы 149 MCI и 73 CNI.",
+      "predicate": "followup_attrition",
+      "roles": {
+        "population": "Phase III eligible pool",
+        "cohort": "Cretan Aging Cohort"
+      },
+      "time": "Phase II to Phase III",
+      "attrs": {
+        "deaths": 103,
+        "deaths_percent": 27.3,
+        "unlocated": 56,
+        "unlocated_percent": 14.9,
+        "refused": 63,
+        "refused_percent": 16.7,
+        "reported_attrition_percent": 58.9,
+        "mci_not_retested": 149,
+        "cni_not_retested": 73
+      }
+    },
+    {
+      "key": "final_sample",
+      "units": [
+        5,
+        18,
+        50,
+        60
+      ],
+      "en": "Among 274 survivors, 155 completed evaluation; four were excluded for severe comorbidity or sensory loss, leaving 151 analyzed (71 Phase II CNI, 80 MCI). Reported response rate is 55.1%; mean follow-up 7.12±0.92 years.",
+      "ru": "Из 274 выживших 155 завершили обследование; четыре исключены из-за тяжёлой коморбидности/сенсорной потери; анализируются 151 (71 исходный CNI, 80 MCI). Доля ответивших 55,1%; интервал 7,12±0,92 года.",
+      "predicate": "final_analyzed_sample",
+      "roles": {
+        "cohort": "Cretan Aging Cohort",
+        "population": "Phase III analyzed sample",
+        "cni": "Cognitively non-impaired participants",
+        "mci": "Mild cognitive impairment"
+      },
+      "time": "Phase III, 2020–2022; groups defined in Phase II",
+      "attrs": {
+        "survivors": 274,
+        "evaluated": 155,
+        "excluded": 4,
+        "analyzed": 151,
+        "cni_count": 71,
+        "mci_count": 80,
+        "response_percent": 55.1,
+        "followup_mean_years": 7.12,
+        "followup_sd_years": 0.92
+      },
+      "conditions": [
+        "Severe medical comorbidity or sensory loss excluded",
+        "Response denominator survivors, not all 377 eligible adults"
+      ]
+    },
+    {
+      "key": "home_protocol",
+      "units": [
+        18,
+        19,
+        20,
+        5
+      ],
+      "en": "Telephone-contact participants from 11 Heraklion districts and examine them at home with comparable Phase II procedures: history/physical examination, neuropsychology, one PSG night, 7-day 24-h actigraphy and morning blood draw.",
+      "ru": "Связаться по телефону с участниками 11 районов Ираклиона и обследовать дома методами, сопоставимыми с фазой II: анамнез/осмотр, нейропсихология, одна ночь PSG, семисуточная актография и утренняя кровь.",
+      "predicate": "performed_home_followup",
+      "roles": {
+        "cohort": "Cretan Aging Cohort",
+        "population": "Phase III analyzed sample",
+        "sleep": "Objective sleep"
+      },
+      "kind": "action",
+      "status": "performed",
+      "time": "Phase III, 2020–2022",
+      "attrs": {
+        "districts": 11,
+        "psg_nights": 1,
+        "actigraphy_days": 7,
+        "actigraphy_hours_per_day": 24
+      }
+    },
+    {
+      "key": "psg_collection",
+      "units": [
+        24,
+        5
+      ],
+      "en": "Collect one ad-libitum home PSG night in 144 adults using Alice PDx portable Type II7 16-channel PSG: airflow, respiratory effort, oxygen/pulse, position, ECG, C3M2/C4M1 EEG, EOG and chin/leg EMG.",
+      "ru": "Записать одну свободную ночь домашней PSG у 144 человек портативным Alice PDx Type II7, 16 каналов: поток воздуха, дыхательные усилия, кислород/пульс, положение, ЭКГ, C3M2/C4M1 ЭЭГ, ЭОГ и подбородочная/ножная ЭМГ.",
+      "predicate": "recorded_polysomnography",
+      "roles": {
+        "population": "Phase III analyzed sample",
+        "instrument": "Polysomnography"
+      },
+      "kind": "action",
+      "status": "performed",
+      "time": "Phase III",
+      "attrs": {
+        "participants": 144,
+        "nights": 1,
+        "channels": 16
+      },
+      "conditions": [
+        "Portable Type II7 Alice PDx; home sleep ad libitum"
+      ]
+    },
+    {
+      "key": "psg_scoring",
+      "units": [
+        24
+      ],
+      "en": "A sleep-expert physician manually scored PSG under AASM v2.6.2020; AASM 2007 procedures defined apnea/hypopnea and sleep variables. OSA was defined as AHI ≥15.",
+      "ru": "Врач-сомнолог вручную оценивал PSG по AASM v2.6.2020; AASM 2007 использован для апноэ/гипопноэ и параметров сна. OSA определена как AHI ≥15.",
+      "predicate": "scored_sleep_recordings",
+      "roles": {
+        "instrument": "Polysomnography",
+        "condition": "Obstructive sleep apnea",
+        "measurement": "Apnea hypopnea index"
+      },
+      "kind": "action",
+      "status": "performed",
+      "time": "Phase III",
+      "attrs": {
+        "osa_ahi_lower_bound": 15,
+        "aasm_procedure_year": 2007
+      },
+      "conditions": [
+        "Manual scoring, AASM version 2.6.2020",
+        "Sleep latency, total sleep time/time in bed, efficiency, wake after onset"
+      ]
+    },
+    {
+      "key": "actigraphy_collection",
+      "units": [
+        26,
+        5
+      ],
+      "en": "Record 7-day 24-h wrist actigraphy in 110 adults with GT3XP, using Phase II procedures; estimate movement-based sleep/wake with ActLife v6.9.5 and sleep diaries.",
+      "ru": "Записать семь суток актографии у 110 человек с GT3XP по процедурам фазы II; оценить сон/бодрствование по движению с ActLife v6.9.5 и дневниками сна.",
+      "predicate": "recorded_actigraphy",
+      "roles": {
+        "population": "Phase III analyzed sample",
+        "instrument": "Actigraphy"
+      },
+      "kind": "action",
+      "status": "performed",
+      "time": "Phase III",
+      "attrs": {
+        "participants": 110,
+        "recording_days": 7,
+        "hours_per_day": 24
+      },
+      "conditions": [
+        "GT3XP; ActLife v6.9.5",
+        "Movement and movement-absence epochs; sleep diaries"
+      ]
+    },
+    {
+      "key": "actigraphy_processing",
+      "units": [
+        26
+      ],
+      "en": "Average actigraphy separately over seven and three days; derive night/24-h sleep and bed time, latency, efficiency, wake after onset, and number/mean duration of awakenings. PSG timing: 104 recordings concurrent/within 24 h; six delayed 1–4 months for technical reasons.",
+      "ru": "Усреднить актографию отдельно за семь и три дня; получить ночной/суточный сон и время в постели, латентность, эффективность, бодрствование после засыпания и пробуждения. У 104 запись одновременно/≤24 ч от PSG; у шести — через 1–4 месяца из-за техники.",
+      "predicate": "derived_actigraphy_measures",
+      "roles": {
+        "instrument": "Actigraphy",
+        "comparator": "Polysomnography"
+      },
+      "kind": "action",
+      "status": "performed",
+      "time": "Phase III",
+      "attrs": {
+        "averaging_window_days_1": 7,
+        "averaging_window_days_2": 3,
+        "within24h_count": 104,
+        "delayed_count": 6,
+        "delay_min_months": 1,
+        "delay_max_months": 4
+      },
+      "conditions": [
+        "Do not treat all measurements as simultaneous"
+      ]
+    },
+    {
+      "key": "blood_collection",
+      "units": [
+        28,
+        5
+      ],
+      "en": "Collect a single 10:00–12:00 morning sample for inflammatory markers (IL-6, TNFα, CRP; n=119) and plasma cortisol (n=116); use EDTA, refrigeration, centrifugation and −80°C freezing.",
+      "ru": "Взять одну утреннюю пробу 10:00–12:00 на IL-6, TNFα, CRP (119 человек) и кортизол плазмы (116); EDTA, охлаждение, центрифугирование и −80°C.",
+      "predicate": "collected_and_preserved_blood",
+      "roles": {
+        "population": "Phase III analyzed sample",
+        "inflammation": "Inflammatory cytokines",
+        "hormone": "Cortisol"
+      },
+      "kind": "action",
+      "status": "performed",
+      "time": "Phase III, 10:00–12:00",
+      "attrs": {
+        "inflammation_sample": 119,
+        "cortisol_sample": 116,
+        "storage_celsius": -80
+      }
+    },
+    {
+      "key": "elisa",
+      "units": [
+        28
+      ],
+      "en": "Measure plasma TNFα/IL-6 with Quantikine HS ELISA kits and cortisol with Cusabio ELISA; the same Phase II procedure makes these measurements comparable across phases.",
+      "ru": "Измерить TNFα/IL-6 плазмы наборами Quantikine HS ELISA, кортизол — Cusabio ELISA; одинаковая процедура фазы II обеспечивает сопоставимость измерений.",
+      "predicate": "measured_biomarkers_elisa",
+      "roles": {
+        "inflammation": "Inflammatory cytokines",
+        "hormone": "Cortisol",
+        "method": "ELISA"
+      },
+      "kind": "action",
+      "status": "performed",
+      "time": "Phases II and III",
+      "conditions": [
+        "R&D Systems TNF-alpha and IL-6 Quantikine HS kits",
+        "Cusabio cortisol kit",
+        "Same procedure across phases; CRP assay not specified here"
+      ]
+    },
+    {
+      "key": "neuropsych_tests",
+      "units": [
+        31
+      ],
+      "en": "Administer ≤2.5-h neuropsychological testing: episodic/verbal/spatial/working memory (Greek Memory Scale, RAVLT, Taylor Figure, Digits Reverse), naming/semantic fluency, and processing/visuomotor speed, shifting and attention (SDMT, Trails A/B). Severe impairment used MMSE instead; CDR aided classification, especially with sensory limitations.",
+      "ru": "Провести нейропсихологическое обследование ≤2,5 ч: эпизодическая/вербальная/пространственная/рабочая память (Greek Memory Scale, RAVLT, Taylor Figure, Digits Reverse), называние/семантическая беглость, скорость, переключение и внимание (SDMT, Trails A/B). При тяжёлом нарушении использовали MMSE вместо батареи; CDR помогала классификации, особенно при сенсорных ограничениях.",
+      "predicate": "administered_neuropsychological_battery",
+      "roles": {
+        "population": "Phase III analyzed sample",
+        "measurement": "Cognitive domain scores"
+      },
+      "kind": "action",
+      "status": "performed",
+      "time": "Phase III",
+      "quantifier": "all participants",
+      "attrs": {
+        "mean_duration_hours_upper_bound": 2.5
+      },
+      "conditions": [
+        "Boston Naming Test-short version; Semantic Verbal Fluency test",
+        "Severe impairment: MMSE instead; CDR aids classification with sensory limitation"
+      ]
+    },
+    {
+      "key": "cognitive_standardization",
+      "units": [
+        31
+      ],
+      "en": "Transform raw cognitive scores using age/education norms and average z-scores within domains; use a domain mean ≥1.5 SD below norms as impaired performance.",
+      "ru": "Преобразовать когнитивные сырые оценки по возрастным/образовательным нормам, усреднить z-оценки доменов; среднее минимум на 1,5 SD ниже нормы считать нарушением.",
+      "predicate": "standardized_cognitive_scores",
+      "roles": {
+        "measurement": "Cognitive domain scores",
+        "population": "Phase III analyzed sample"
+      },
+      "kind": "action",
+      "status": "performed",
+      "attrs": {
+        "impairment_sd_below_norm": 1.5
+      },
+      "conditions": [
+        "Age and education standardization",
+        "Average within each domain"
+      ]
+    },
+    {
+      "key": "informants",
+      "units": [
+        33
+      ],
+      "en": "Relatives/caregivers completed Greek 13-item IADL, Cambridge Behavioral Inventory and four-item Mayo Fluctuations Scale for daily functioning, cognitive/neuropsychiatric symptoms and possible Lewy-body dementia.",
+      "ru": "Родственники/ухаживающие заполнили греческую IADL (13 пунктов), Cambridge Behavioral Inventory и Mayo Fluctuations Scale (4 пункта) для функционирования, симптомов и возможной деменции с тельцами Леви.",
+      "predicate": "collected_informant_scales",
+      "roles": {
+        "population": "Phase III analyzed sample",
+        "instrument": "IADL",
+        "informants": "Relatives and caregivers"
+      },
+      "kind": "action",
+      "status": "performed",
+      "attrs": {
+        "iadl_items": 13,
+        "mayo_items": 4
+      }
+    },
+    {
+      "key": "iadl_threshold",
+      "units": [
+        33
+      ],
+      "en": "IADL ranges from 0 to 1: <0.78 indicates substantial functional impairment, while >0.78 marks preserved functioning for MCI/CNI.",
+      "ru": "IADL от 0 до 1: <0,78 указывает на существенное нарушение, >0,78 — на сохранность функционирования при MCI/CNI.",
+      "predicate": "functional_threshold",
+      "roles": {
+        "measurement": "IADL",
+        "condition": "Mild cognitive impairment"
+      },
+      "type": "definition",
+      "logic": "contrast",
+      "claims": [
+        {
+          "predicate": "significant_functional_impairment",
+          "attrs": {
+            "lower_range": 0,
+            "upper_range": 1,
+            "strict_upper_bound": 0.78
+          }
+        },
+        {
+          "predicate": "preserved_function",
+          "attrs": {
+            "strict_lower_bound": 0.78
+          }
+        }
+      ],
+      "conditions": [
+        "No equality threshold is inferred"
+      ]
+    },
+    {
+      "key": "history",
+      "units": [
+        35,
+        36
+      ],
+      "en": "Take baseline-comparable history of current/past illnesses, follow-up operations, TBI, stroke and medication (especially psychotropics); count hypertension, diabetes, heart/pulmonary/hematological/liver/gastrointestinal/thyroid disease, cancer and arthritis as major morbidities.",
+      "ru": "Собрать сопоставимый с исходным анамнез болезней, операций, ЧМТ, инсульта и лекарств (особенно психотропных); подсчитать гипертензию, диабет, сердечные/лёгочные/кровяные/печёночные/ЖКТ/тиреоидные болезни, рак и артрит.",
+      "predicate": "recorded_medical_history",
+      "roles": {
+        "population": "Phase III analyzed sample",
+        "measure": "Major medical morbidities"
+      },
+      "kind": "action",
+      "status": "performed",
+      "time": "Phase III; intervening follow-up history"
+    },
+    {
+      "key": "mental_diagnosis",
+      "units": [
+        37,
+        45
+      ],
+      "en": "Assess depression/anxiety diagnoses using DSM-5 clinical interview, prior diagnosis and neuropsychological assessment; in Phase III trained physician/psychologist also used scale cutoffs (HADS-A 7, GDS 4) and psychotropic prescriptions, following Phase II procedures.",
+      "ru": "Оценить диагнозы депрессии/тревоги по DSM-5, интервью, прежнему диагнозу и нейропсихологии; в фазе III врач/психолог также использовали пороги HADS-A 7, GDS 4 и назначения психотропных средств по процедурам фазы II.",
+      "predicate": "assessed_psychiatric_diagnoses",
+      "roles": {
+        "population": "Phase III analyzed sample",
+        "anxiety": "Anxiety",
+        "depression": "Depression",
+        "instrument": "HADS-A and GDS"
+      },
+      "kind": "action",
+      "status": "performed",
+      "time": "Phases II and III",
+      "attrs": {
+        "hads_a_cutoff": 7,
+        "gds_cutoff": 4
+      },
+      "conditions": [
+        "Clinical diagnoses and self-reported symptom scores remain distinct",
+        "Antidepressants/anxiolytics/antipsychotics considered"
+      ]
+    },
+    {
+      "key": "anthropometry",
+      "units": [
+        38
+      ],
+      "en": "Measure weight, height and BMI using the previously described CAC procedure.",
+      "ru": "Измерить массу, рост и BMI по ранее описанной процедуре CAC.",
+      "predicate": "measured_anthropometry",
+      "roles": {
+        "population": "Phase III analyzed sample",
+        "measure": "Body mass index"
+      },
+      "kind": "action",
+      "status": "performed"
+    },
+    {
+      "key": "frailty",
+      "units": [
+        39
+      ],
+      "en": "Calculate frailty from physical activity, self-reported exhaustion/appetite loss and dynamometer-assessed upper-limb weakness; classify absence of frailty, pre-frailty or frailty.",
+      "ru": "Рассчитать хрупкость по активности, истощению/потере аппетита и силе руки динамометром; классифицировать отсутствие хрупкости, прехрупкость или хрупкость.",
+      "predicate": "assessed_frailty",
+      "roles": {
+        "population": "Phase III analyzed sample",
+        "measure": "Frailty"
+      },
+      "kind": "action",
+      "status": "performed",
+      "attrs": {
+        "classes": 3
+      },
+      "conditions": [
+        "Activity and self-report plus objective dynamometry"
+      ]
+    },
+    {
+      "key": "subjective_memory",
+      "units": [
+        40
+      ],
+      "en": "Ask binary WHICAP-style questions on overall memory problems and difficulty recalling recent information, words and names.",
+      "ru": "Задать бинарные вопросы WHICAP об общей памяти и трудностях воспроизведения недавней информации, слов и имён.",
+      "predicate": "assessed_memory_complaints",
+      "roles": {
+        "population": "Phase III analyzed sample",
+        "measure": "Subjective memory complaints"
+      },
+      "kind": "action",
+      "status": "performed",
+      "conditions": [
+        "Yes/no answers; not objective cognitive test scores"
+      ]
+    },
+    {
+      "key": "sleep_questionnaire",
+      "units": [
+        41
+      ],
+      "en": "Use a shortened 12-item Penn State Sleep Questionnaire with scores 0–3 to assess apnea/snoring/movement, insomnia, early awakening, quality, latency, night duration and naps.",
+      "ru": "Использовать сокращённый Penn State Sleep Questionnaire (12 пунктов, оценки 0–3) для апноэ/храпа/движений, бессонницы, ранних пробуждений, качества, латентности, ночного сна и дневного сна.",
+      "predicate": "assessed_sleep_complaints",
+      "roles": {
+        "population": "Phase III analyzed sample",
+        "measure": "Sleep disturbances"
+      },
+      "kind": "action",
+      "status": "performed",
+      "attrs": {
+        "items": 12,
+        "scale_min": 0,
+        "scale_max": 3
+      },
+      "conditions": [
+        "0 absent symptoms; 3 serious symptoms",
+        "Napping frequency/duration if applicable"
+      ]
+    },
+    {
+      "key": "lifestyle",
+      "units": [
+        42
+      ],
+      "en": "Record smoking quantity/cessation year, daily drinking frequency and last-week activity (gardening, housework, handiwork, shopping), including days with >10 minutes of continuous brisk walking.",
+      "ru": "Записать количество курения/год отказа, частоту алкоголя и активность последней недели (сад, дом, ручная работа, покупки), включая дни ходьбы >10 минут подряд быстрым шагом.",
+      "predicate": "recorded_lifestyle",
+      "roles": {
+        "population": "Phase III analyzed sample",
+        "measure": "Lifestyle habits"
+      },
+      "kind": "action",
+      "status": "performed",
+      "time": "Current habits and previous week",
+      "attrs": {
+        "continuous_brisk_walk_minutes_lower_bound": 10
+      },
+      "conditions": [
+        "Smoking quantity only for current smokers"
+      ]
+    },
+    {
+      "key": "social_support",
+      "units": [
+        43
+      ],
+      "en": "Count last-month contacts with relatives/friends; ask two adapted Social Support Questionnaire–Short Form questions on practical/emotional availability and rate satisfaction on 0–4 (none to complete).",
+      "ru": "Подсчитать контакты с близкими за последний месяц; два адаптированных вопроса Social Support Questionnaire–Short Form о практической/эмоциональной помощи, удовлетворённость 0–4.",
+      "predicate": "assessed_social_support",
+      "roles": {
+        "population": "Phase III analyzed sample",
+        "measure": "Social support"
+      },
+      "kind": "action",
+      "status": "performed",
+      "time": "Last month",
+      "attrs": {
+        "availability_questions": 2,
+        "satisfaction_min": 0,
+        "satisfaction_max": 4
+      }
+    },
+    {
+      "key": "symptom_scales",
+      "units": [
+        45
+      ],
+      "en": "Assess self-reported anxiety with seven-item HADS-A and depression with 15-item GDS.",
+      "ru": "Оценить самоотчёт тревоги семипунктовой HADS-A и депрессии пятнадцатипунктовой GDS.",
+      "predicate": "measured_psychiatric_symptoms",
+      "roles": {
+        "population": "Phase III analyzed sample",
+        "instrument": "HADS-A and GDS",
+        "anxiety": "Anxiety",
+        "depression": "Depression"
+      },
+      "kind": "action",
+      "status": "performed",
+      "attrs": {
+        "hads_a_items": 7,
+        "gds_items": 15
+      },
+      "conditions": [
+        "Symptoms are separate from clinical diagnoses"
+      ]
+    },
+    {
+      "key": "stressors",
+      "units": [
+        45
+      ],
+      "en": "Retrospectively record ≥1 major stressor over seven years as a binary variable: severe sensory loss/cancer, death/illness of relatives or natural disaster survival, including recent frequent severe Cretan earthquakes.",
+      "ru": "Ретроспективно записать ≥1 сильный стрессор за семь лет бинарно: сенсорная потеря/рак, смерть/болезнь близких, выживание при бедствии, включая недавние сильные частые землетрясения Крита.",
+      "predicate": "recorded_major_stressors",
+      "roles": {
+        "population": "Phase III analyzed sample",
+        "measure": "Major stressful events"
+      },
+      "kind": "action",
+      "status": "performed",
+      "time": "Seven-year interval preceding examination",
+      "attrs": {
+        "minimum_events_for_indicator": 1,
+        "interval_years": 7
+      },
+      "quantifier": "at least one"
+    },
+    {
+      "key": "consensus",
+      "units": [
+        46
+      ],
+      "en": "Psychiatrist, neurologist and neuropsychologist integrated domain performance, IADL and psychiatric symptoms for consensus: DSM-IV in Phase II, DSM-5 in III for major neurocognitive disorder, and IWG for MCI.",
+      "ru": "Психиатр, невролог и нейропсихолог объединили доменные оценки, IADL и психиатрические симптомы для консенсуса: DSM-IV во II, DSM-5 в III для большого нейрокогнитивного расстройства, IWG для MCI.",
+      "predicate": "integrated_consensus_diagnosis",
+      "roles": {
+        "population": "Phase III analyzed sample",
+        "cognition": "Cognitive domain scores",
+        "function": "IADL",
+        "criteria": "Diagnostic criteria"
+      },
+      "kind": "action",
+      "status": "performed",
+      "time": "Phases II and III",
+      "conditions": [
+        "MCI diagnosis uses IWG",
+        "Different DSM editions by phase"
+      ]
+    },
+    {
+      "key": "dementia_differential",
+      "units": [
+        46
+      ],
+      "en": "Use NINCDS-ADRDA for probable AD, NINDS-AIREN for vascular dementia, DLB Consortium for Lewy-body dementia, international behavioral-variant FTD and Neary criteria for frontotemporal types; mixed dementia requires signs of both probable AD and vascular dementia.",
+      "ru": "Использовать NINCDS-ADRDA для вероятной AD, NINDS-AIREN для сосудистой деменции, DLB Consortium, международные критерии поведенческой FTD и Neary для лобно-височных типов; смешанная деменция требует признаков AD и сосудистой формы.",
+      "predicate": "performed_dementia_differential",
+      "roles": {
+        "condition": "Dementia",
+        "criteria": "Diagnostic criteria"
+      },
+      "kind": "action",
+      "status": "performed",
+      "conditions": [
+        "Differential diagnostic procedure; not counts of diagnosed outcomes"
+      ]
+    },
+    {
+      "key": "nonnormality",
+      "units": [
+        48
+      ],
+      "en": "Several variables significantly deviated from normality on Kolmogorov–Smirnov testing (p<0.05).",
+      "ru": "Несколько переменных значимо отклонялись от нормальности по Колмогорову–Смирнову (p<0,05).",
+      "predicate": "deviation_from_normality",
+      "roles": {
+        "measure": "Statistical variables",
+        "method": "Kolmogorov Smirnov test"
+      },
+      "attrs": {
+        "p_upper_bound": 0.05
+      },
+      "quantifier": "a number of variables"
+    },
+    {
+      "key": "statistical_tests",
+      "units": [
+        48,
+        53,
+        57
+      ],
+      "en": "Use SPSS 28.0 (IBM, 2022), Wilcoxon signed-rank for within-group time changes, Mann–Whitney U for group differences at each phase, and chi-square for proportions.",
+      "ru": "Использовать SPSS 28.0 (IBM, 2022), Wilcoxon для изменений во времени внутри группы, Mann–Whitney U для межгрупповых различий в фазе и χ² для долей.",
+      "predicate": "performed_nonparametric_comparisons",
+      "roles": {
+        "population": "Phase III analyzed sample",
+        "method": "Statistical comparison tests"
+      },
+      "kind": "action",
+      "status": "performed",
+      "time": "Phases II and III compared",
+      "attrs": {
+        "spss_version": 28,
+        "software_year": 2022
+      },
+      "conditions": [
+        "Between-group p-values and within-group time-change markers are distinct"
+      ]
+    },
+    {
+      "key": "statistical_power",
+      "units": [
+        48
+      ],
+      "en": "At p<0.05 the final sample provides reported power of 85% for small-to-medium between-group effects and 95% for small longitudinal effects.",
+      "ru": "При p<0,05 выборка обеспечивает заявленную мощность 85% для малых/средних межгрупповых эффектов и 95% для малых продольных эффектов.",
+      "predicate": "reported_statistical_power",
+      "roles": {
+        "population": "Phase III analyzed sample",
+        "method": "Statistical comparison tests"
+      },
+      "attrs": {
+        "between_group_power_percent": 85,
+        "longitudinal_power_percent": 95,
+        "p_upper_bound": 0.05
+      },
+      "conditions": [
+        "Power claim, not detected significance or demonstrated predictive ability"
+      ]
+    },
+    {
+      "key": "retention_bias",
+      "units": [
+        50
+      ],
+      "en": "Compared with the full Phase II pool (377), followed-up adults were younger (72.8 vs 77.2 years, p<0.001), more often female (77.5% vs 63.3%, p=0.004) and less often alone (p=0.03); education trended higher without significance (p=0.059).",
+      "ru": "По сравнению с полным пулом II (377), повторно обследованные моложе (72,8 против 77,2; p<0,001), чаще женщины (77,5% против 63,3%; p=0,004), реже одиноки (p=0,03); тенденция к большему образованию незначима (p=0,059).",
+      "predicate": "followup_selection_difference",
+      "roles": {
+        "population": "Phase III analyzed sample",
+        "comparator": "Phase III eligible pool"
+      },
+      "type": "comparison",
+      "attrs": {
+        "pool_size": 377,
+        "followed_age": 72.8,
+        "pool_age": 77.2,
+        "age_p_upper": 0.001,
+        "followed_female_percent": 77.5,
+        "pool_female_percent": 63.3,
+        "female_p": 0.004,
+        "alone_p": 0.03,
+        "education_p": 0.059
+      },
+      "time": "Phase II characteristics compared by follow-up participation"
+    },
+    {
+      "key": "retention_similarity",
+      "units": [
+        50
+      ],
+      "en": "Followed-up and total pools were comparable in origin (p=0.4), major morbidity (p=0.9) and previous occupation (p=0.1).",
+      "ru": "Повторно обследованная и полная выборки сопоставимы по происхождению (p=0,4), серьёзным заболеваниям (p=0,9) и прежней занятости (p=0,1).",
+      "predicate": "followup_selection_similarity",
+      "roles": {
+        "population": "Phase III analyzed sample",
+        "comparator": "Phase III eligible pool"
+      },
+      "type": "comparison",
+      "attrs": {
+        "origin_p": 0.4,
+        "morbidity_p": 0.9,
+        "occupation_p": 0.1
+      }
+    },
+    {
+      "key": "sample_profile",
+      "units": [
+        50,
+        60
+      ],
+      "en": "The analyzed cohort was mainly rural (84.1%), formerly in domestic/agricultural work (63.6%) and educated for ≤6 years (92.1%); the discussion reports baseline age 72.9 years, range 60–89.",
+      "ru": "Анализируемая выборка преимущественно сельская (84,1%), ранее домашняя/аграрная работа (63,6%), образование ≤6 лет (92,1%); обсуждение указывает исходный возраст 72,9, диапазон 60–89.",
+      "predicate": "descriptive_cohort_profile",
+      "roles": {
+        "population": "Phase III analyzed sample"
+      },
+      "attrs": {
+        "rural_percent": 84.1,
+        "domestic_agricultural_percent": 63.6,
+        "low_education_percent": 92.1,
+        "education_years_upper_bound": 6,
+        "discussion_baseline_age": 72.9,
+        "baseline_age_min": 60,
+        "baseline_age_max": 89
+      },
+      "conditions": [
+        "Different rounding/age summaries retained with their provenance"
+      ]
+    },
+    {
+      "key": "age_table",
+      "units": [
+        51,
+        52,
+        53,
+        5
+      ],
+      "en": "Age, mean (SD), rose from 70.48 (6.31) to 78.32 (6.16)* years in CNI and 75.03 (6.34) to 83.30 (6.27)† in MCI; MCI–CNI p<0.001 at both phases.",
+      "ru": "Возраст, среднее (SD): CNI 70,48 (6,31) → 78,32 (6,16)*; MCI 75,03 (6,34) → 83,30 (6,27)† года; между группами p<0,001 в обеих фазах.",
+      "predicate": "reported_table_comparison",
+      "roles": {
+        "cni": "Cognitively non-impaired participants",
+        "mci": "Mild cognitive impairment",
+        "population": "Phase III analyzed sample",
+        "measurement": "Age"
+      },
+      "type": "comparison",
+      "time": "Phase II and III; diagnostic groups fixed at Phase II",
+      "logic": "contrast",
+      "claims": [
+        {
+          "predicate": "reported_cni_values",
+          "roles": {
+            "group": "Cognitively non-impaired participants",
+            "measurement": "Age"
+          },
+          "attrs": {
+            "Phase_II": "70.48 (6.31)",
+            "Phase_III": "78.32 (6.16) *"
+          }
+        },
+        {
+          "predicate": "reported_mci_values",
+          "roles": {
+            "group": "Mild cognitive impairment",
+            "measurement": "Age"
+          },
+          "attrs": {
+            "Phase_II": "75.03 (6.34)",
+            "Phase_III": "83.30 (6.27) dagger"
+          }
+        },
+        {
+          "predicate": "reported_between_group_tests",
+          "roles": {
+            "cni": "Cognitively non-impaired participants",
+            "mci": "Mild cognitive impairment",
+            "population": "Phase III analyzed sample",
+            "measurement": "Age"
+          },
+          "attrs": {
+            "Phase_II_p": "<0.001",
+            "Phase_III_p": "<0.001"
+          }
+        }
+      ],
+      "conditions": [
+        "Values are mean (SD)",
+        "Within-group significant changes marked * for CNI or dagger for MCI at p<0.05"
+      ]
+    },
+    {
+      "key": "bmi_table",
+      "units": [
+        51,
+        52,
+        53
+      ],
+      "en": "BMI means (SD): CNI 31.22 (4.22)→31.10 (5.89), MCI 30.12 (4.55)→30.05 (5.95); group p=0.07 (II), 0.3 (III).",
+      "ru": "BMI, среднее (SD): CNI 31,22 (4,22)→31,10 (5,89), MCI 30,12 (4,55)→30,05 (5,95); межгрупповое p=0,07 (II), 0,3 (III).",
+      "predicate": "reported_table_comparison",
+      "roles": {
+        "cni": "Cognitively non-impaired participants",
+        "mci": "Mild cognitive impairment",
+        "population": "Phase III analyzed sample",
+        "measurement": "Body mass index"
+      },
+      "type": "comparison",
+      "time": "Phase II and III; diagnostic groups fixed at Phase II",
+      "logic": "contrast",
+      "claims": [
+        {
+          "predicate": "reported_cni_values",
+          "roles": {
+            "group": "Cognitively non-impaired participants",
+            "measurement": "Body mass index"
+          },
+          "attrs": {
+            "Phase_II": "31.22 (4.22)",
+            "Phase_III": "31.10 (5.89)"
+          }
+        },
+        {
+          "predicate": "reported_mci_values",
+          "roles": {
+            "group": "Mild cognitive impairment",
+            "measurement": "Body mass index"
+          },
+          "attrs": {
+            "Phase_II": "30.12 (4.55)",
+            "Phase_III": "30.05 (5.95)"
+          }
+        },
+        {
+          "predicate": "reported_between_group_tests",
+          "roles": {
+            "cni": "Cognitively non-impaired participants",
+            "mci": "Mild cognitive impairment",
+            "population": "Phase III analyzed sample",
+            "measurement": "Body mass index"
+          },
+          "attrs": {
+            "Phase_II_p": "0.07",
+            "Phase_III_p": "0.3"
+          }
+        }
+      ],
+      "conditions": [
+        "Values are mean (SD)",
+        "Within-group significant changes marked * for CNI or dagger for MCI at p<0.05"
+      ]
+    },
+    {
+      "key": "alone_table",
+      "units": [
+        51,
+        52,
+        53
+      ],
+      "en": "Living alone: CNI 17 (23.2%)→23 (32.4%)*; MCI 16 (20.0%)→18 (22.5%); group p=0.6 (II), 0.2 (III).",
+      "ru": "Живут одни: CNI 17 (23,2%)→23 (32,4%)*; MCI 16 (20,0%)→18 (22,5%); межгрупповое p=0,6 (II), 0,2 (III).",
+      "predicate": "reported_table_comparison",
+      "roles": {
+        "cni": "Cognitively non-impaired participants",
+        "mci": "Mild cognitive impairment",
+        "population": "Phase III analyzed sample",
+        "measurement": "Living alone"
+      },
+      "type": "comparison",
+      "time": "Phase II and III; diagnostic groups fixed at Phase II",
+      "logic": "contrast",
+      "claims": [
+        {
+          "predicate": "reported_cni_values",
+          "roles": {
+            "group": "Cognitively non-impaired participants",
+            "measurement": "Living alone"
+          },
+          "attrs": {
+            "Phase_II": "17 (23.2)",
+            "Phase_III": "23 (32.4) *"
+          }
+        },
+        {
+          "predicate": "reported_mci_values",
+          "roles": {
+            "group": "Mild cognitive impairment",
+            "measurement": "Living alone"
+          },
+          "attrs": {
+            "Phase_II": "16 (20.0)",
+            "Phase_III": "18 (22.5)"
+          }
+        },
+        {
+          "predicate": "reported_between_group_tests",
+          "roles": {
+            "cni": "Cognitively non-impaired participants",
+            "mci": "Mild cognitive impairment",
+            "population": "Phase III analyzed sample",
+            "measurement": "Living alone"
+          },
+          "attrs": {
+            "Phase_II_p": "0.6",
+            "Phase_III_p": "0.2"
+          }
+        }
+      ],
+      "conditions": [
+        "Values are count (percentage)",
+        "Within-group significant changes marked * for CNI or dagger for MCI at p<0.05"
+      ]
+    },
+    {
+      "key": "illness_table",
+      "units": [
+        51,
+        52,
+        53
+      ],
+      "en": "Number of major illnesses, mean (SD): CNI 2.55 (1.62)→3.28 (1.62)*; MCI 2.49 (1.37)→3.18 (1.50)†; group p=0.8 (II), 0.5 (III).",
+      "ru": "Число серьёзных болезней, среднее (SD): CNI 2,55 (1,62)→3,28 (1,62)*; MCI 2,49 (1,37)→3,18 (1,50)†; межгрупповое p=0,8 (II), 0,5 (III).",
+      "predicate": "reported_table_comparison",
+      "roles": {
+        "cni": "Cognitively non-impaired participants",
+        "mci": "Mild cognitive impairment",
+        "population": "Phase III analyzed sample",
+        "measurement": "Major medical morbidities"
+      },
+      "type": "comparison",
+      "time": "Phase II and III; diagnostic groups fixed at Phase II",
+      "logic": "contrast",
+      "claims": [
+        {
+          "predicate": "reported_cni_values",
+          "roles": {
+            "group": "Cognitively non-impaired participants",
+            "measurement": "Major medical morbidities"
+          },
+          "attrs": {
+            "Phase_II": "2.55 (1.62)",
+            "Phase_III": "3.28 (1.62) *"
+          }
+        },
+        {
+          "predicate": "reported_mci_values",
+          "roles": {
+            "group": "Mild cognitive impairment",
+            "measurement": "Major medical morbidities"
+          },
+          "attrs": {
+            "Phase_II": "2.49 (1.37)",
+            "Phase_III": "3.18 (1.50) dagger"
+          }
+        },
+        {
+          "predicate": "reported_between_group_tests",
+          "roles": {
+            "cni": "Cognitively non-impaired participants",
+            "mci": "Mild cognitive impairment",
+            "population": "Phase III analyzed sample",
+            "measurement": "Major medical morbidities"
+          },
+          "attrs": {
+            "Phase_II_p": "0.8",
+            "Phase_III_p": "0.5"
+          }
+        }
+      ],
+      "conditions": [
+        "Values are mean (SD)",
+        "Within-group significant changes marked * for CNI or dagger for MCI at p<0.05"
+      ]
+    },
+    {
+      "key": "smoking_table",
+      "units": [
+        51,
+        52,
+        53
+      ],
+      "en": "Smoking: CNI 7 (9.9%)→6 (8.6%)*; MCI 3 (3.8%)→2 (2.5%)†; group p=0.1 at both phases.",
+      "ru": "Курение: CNI 7 (9,9%)→6 (8,6%)*; MCI 3 (3,8%)→2 (2,5%)†; межгрупповое p=0,1 в обеих фазах.",
+      "predicate": "reported_table_comparison",
+      "roles": {
+        "cni": "Cognitively non-impaired participants",
+        "mci": "Mild cognitive impairment",
+        "population": "Phase III analyzed sample",
+        "measurement": "Smoking"
+      },
+      "type": "comparison",
+      "time": "Phase II and III; diagnostic groups fixed at Phase II",
+      "logic": "contrast",
+      "claims": [
+        {
+          "predicate": "reported_cni_values",
+          "roles": {
+            "group": "Cognitively non-impaired participants",
+            "measurement": "Smoking"
+          },
+          "attrs": {
+            "Phase_II": "7 (9.9)",
+            "Phase_III": "6 (8.6) *"
+          }
+        },
+        {
+          "predicate": "reported_mci_values",
+          "roles": {
+            "group": "Mild cognitive impairment",
+            "measurement": "Smoking"
+          },
+          "attrs": {
+            "Phase_II": "3 (3.8)",
+            "Phase_III": "2 (2.5) dagger"
+          }
+        },
+        {
+          "predicate": "reported_between_group_tests",
+          "roles": {
+            "cni": "Cognitively non-impaired participants",
+            "mci": "Mild cognitive impairment",
+            "population": "Phase III analyzed sample",
+            "measurement": "Smoking"
+          },
+          "attrs": {
+            "Phase_II_p": "0.1",
+            "Phase_III_p": "0.1"
+          }
+        }
+      ],
+      "conditions": [
+        "Values are count (percentage)",
+        "Within-group significant changes marked * for CNI or dagger for MCI at p<0.05"
+      ]
+    },
+    {
+      "key": "alcohol_table",
+      "units": [
+        51,
+        52,
+        53
+      ],
+      "en": "Alcohol use: CNI 21 (29.6%)→13 (18.8%)*; MCI 35 (43.6%)→16 (20.0%)†; group p=0.08 (II), 0.8 (III).",
+      "ru": "Алкоголь: CNI 21 (29,6%)→13 (18,8%)*; MCI 35 (43,6%)→16 (20,0%)†; межгрупповое p=0,08 (II), 0,8 (III).",
+      "predicate": "reported_table_comparison",
+      "roles": {
+        "cni": "Cognitively non-impaired participants",
+        "mci": "Mild cognitive impairment",
+        "population": "Phase III analyzed sample",
+        "measurement": "Alcohol use"
+      },
+      "type": "comparison",
+      "time": "Phase II and III; diagnostic groups fixed at Phase II",
+      "logic": "contrast",
+      "claims": [
+        {
+          "predicate": "reported_cni_values",
+          "roles": {
+            "group": "Cognitively non-impaired participants",
+            "measurement": "Alcohol use"
+          },
+          "attrs": {
+            "Phase_II": "21 (29.6)",
+            "Phase_III": "13 (18.8) *"
+          }
+        },
+        {
+          "predicate": "reported_mci_values",
+          "roles": {
+            "group": "Mild cognitive impairment",
+            "measurement": "Alcohol use"
+          },
+          "attrs": {
+            "Phase_II": "35 (43.6)",
+            "Phase_III": "16 (20.0) dagger"
+          }
+        },
+        {
+          "predicate": "reported_between_group_tests",
+          "roles": {
+            "cni": "Cognitively non-impaired participants",
+            "mci": "Mild cognitive impairment",
+            "population": "Phase III analyzed sample",
+            "measurement": "Alcohol use"
+          },
+          "attrs": {
+            "Phase_II_p": "0.08",
+            "Phase_III_p": "0.8"
+          }
+        }
+      ],
+      "conditions": [
+        "Values are count (percentage)",
+        "Within-group significant changes marked * for CNI or dagger for MCI at p<0.05"
+      ]
+    },
+    {
+      "key": "gender_table",
+      "units": [
+        51,
+        52,
+        53
+      ],
+      "en": "Women: CNI 55/71 (77.5%), MCI 62/80 (77.5%); reported group p=0.9.",
+      "ru": "Женщины: CNI 55/71 (77,5%), MCI 62/80 (77,5%); межгрупповое p=0,9.",
+      "predicate": "reported_shared_column_comparison",
+      "roles": {
+        "population": "Phase III analyzed sample",
+        "cni": "Cognitively non-impaired participants",
+        "mci": "Mild cognitive impairment",
+        "measurement": "Sex"
+      },
+      "type": "comparison",
+      "logic": "contrast",
+      "claims": [
+        {
+          "predicate": "reported_cni_shared_value",
+          "roles": {
+            "group": "Cognitively non-impaired participants",
+            "measurement": "Sex"
+          },
+          "attrs": {
+            "value": "55 (77.5%)"
+          }
+        },
+        {
+          "predicate": "reported_mci_shared_value",
+          "roles": {
+            "group": "Mild cognitive impairment",
+            "measurement": "Sex"
+          },
+          "attrs": {
+            "value": "62 (77.5%)"
+          }
+        },
+        {
+          "predicate": "reported_group_test",
+          "attrs": {
+            "p": "0.9"
+          },
+          "roles": {
+            "population": "Phase III analyzed sample",
+            "cni": "Cognitively non-impaired participants",
+            "mci": "Mild cognitive impairment",
+            "measurement": "Sex"
+          }
+        }
+      ],
+      "time": "Shared across phase columns; groups defined at Phase II",
+      "conditions": [
+        "Shared table cells are not separate measurements at each phase"
+      ]
+    },
+    {
+      "key": "rural_table",
+      "units": [
+        51,
+        52,
+        53
+      ],
+      "en": "Rural residence: CNI 59 (83.1%), MCI 68 (85.0%); group p=0.7.",
+      "ru": "Сельское проживание: CNI 59 (83,1%), MCI 68 (85,0%); межгрупповое p=0,7.",
+      "predicate": "reported_shared_column_comparison",
+      "roles": {
+        "population": "Phase III analyzed sample",
+        "cni": "Cognitively non-impaired participants",
+        "mci": "Mild cognitive impairment",
+        "measurement": "Rural residence"
+      },
+      "type": "comparison",
+      "logic": "contrast",
+      "claims": [
+        {
+          "predicate": "reported_cni_shared_value",
+          "roles": {
+            "group": "Cognitively non-impaired participants",
+            "measurement": "Rural residence"
+          },
+          "attrs": {
+            "value": "59 (83.1%)"
+          }
+        },
+        {
+          "predicate": "reported_mci_shared_value",
+          "roles": {
+            "group": "Mild cognitive impairment",
+            "measurement": "Rural residence"
+          },
+          "attrs": {
+            "value": "68 (85.0%)"
+          }
+        },
+        {
+          "predicate": "reported_group_test",
+          "attrs": {
+            "p": "0.7"
+          },
+          "roles": {
+            "population": "Phase III analyzed sample",
+            "cni": "Cognitively non-impaired participants",
+            "mci": "Mild cognitive impairment",
+            "measurement": "Rural residence"
+          }
+        }
+      ],
+      "time": "Shared across phase columns; groups defined at Phase II",
+      "conditions": [
+        "Shared table cells are not separate measurements at each phase"
+      ]
+    },
+    {
+      "key": "education_table",
+      "units": [
+        51,
+        52,
+        53
+      ],
+      "en": "Education, years mean (SD): CNI 5.49 (3.23), MCI 4.70 (2.55); group p=0.06.",
+      "ru": "Образование, годы, среднее (SD): CNI 5,49 (3,23), MCI 4,70 (2,55); межгрупповое p=0,06.",
+      "predicate": "reported_shared_column_comparison",
+      "roles": {
+        "population": "Phase III analyzed sample",
+        "cni": "Cognitively non-impaired participants",
+        "mci": "Mild cognitive impairment",
+        "measurement": "Education"
+      },
+      "type": "comparison",
+      "logic": "contrast",
+      "claims": [
+        {
+          "predicate": "reported_cni_shared_value",
+          "roles": {
+            "group": "Cognitively non-impaired participants",
+            "measurement": "Education"
+          },
+          "attrs": {
+            "value": "5.49 (3.23)"
+          }
+        },
+        {
+          "predicate": "reported_mci_shared_value",
+          "roles": {
+            "group": "Mild cognitive impairment",
+            "measurement": "Education"
+          },
+          "attrs": {
+            "value": "4.70 (2.55)"
+          }
+        },
+        {
+          "predicate": "reported_group_test",
+          "attrs": {
+            "p": "0.06"
+          },
+          "roles": {
+            "population": "Phase III analyzed sample",
+            "cni": "Cognitively non-impaired participants",
+            "mci": "Mild cognitive impairment",
+            "measurement": "Education"
+          }
+        }
+      ],
+      "time": "Shared across phase columns; groups defined at Phase II",
+      "conditions": [
+        "Shared table cells are not separate measurements at each phase"
+      ]
+    },
+    {
+      "key": "family_table",
+      "units": [
+        51,
+        52,
+        53
+      ],
+      "en": "Family dementia history: CNI 20 (28.2%), MCI 24 (30.0%); group p=0.8.",
+      "ru": "Семейная история деменции: CNI 20 (28,2%), MCI 24 (30,0%); межгрупповое p=0,8.",
+      "predicate": "reported_shared_column_comparison",
+      "roles": {
+        "population": "Phase III analyzed sample",
+        "cni": "Cognitively non-impaired participants",
+        "mci": "Mild cognitive impairment",
+        "measurement": "Family dementia history"
+      },
+      "type": "comparison",
+      "logic": "contrast",
+      "claims": [
+        {
+          "predicate": "reported_cni_shared_value",
+          "roles": {
+            "group": "Cognitively non-impaired participants",
+            "measurement": "Family dementia history"
+          },
+          "attrs": {
+            "value": "20 (28.2%)"
+          }
+        },
+        {
+          "predicate": "reported_mci_shared_value",
+          "roles": {
+            "group": "Mild cognitive impairment",
+            "measurement": "Family dementia history"
+          },
+          "attrs": {
+            "value": "24 (30.0%)"
+          }
+        },
+        {
+          "predicate": "reported_group_test",
+          "attrs": {
+            "p": "0.8"
+          },
+          "roles": {
+            "population": "Phase III analyzed sample",
+            "cni": "Cognitively non-impaired participants",
+            "mci": "Mild cognitive impairment",
+            "measurement": "Family dementia history"
+          }
+        }
+      ],
+      "time": "Shared across phase columns; groups defined at Phase II",
+      "conditions": [
+        "Shared table cells are not separate measurements at each phase"
+      ]
+    },
+    {
+      "key": "apoe_table",
+      "units": [
+        51,
+        52,
+        53
+      ],
+      "en": "APOE ε4 carriers: CNI 6 (8.5%), MCI 19 (24.4%); group p=0.04.",
+      "ru": "Носители APOE ε4: CNI 6 (8,5%), MCI 19 (24,4%); межгрупповое p=0,04.",
+      "predicate": "reported_shared_column_comparison",
+      "roles": {
+        "population": "Phase III analyzed sample",
+        "cni": "Cognitively non-impaired participants",
+        "mci": "Mild cognitive impairment",
+        "measurement": "APOE ε4"
+      },
+      "type": "comparison",
+      "logic": "contrast",
+      "claims": [
+        {
+          "predicate": "reported_cni_shared_value",
+          "roles": {
+            "group": "Cognitively non-impaired participants",
+            "measurement": "APOE ε4"
+          },
+          "attrs": {
+            "value": "6 (8.5%)"
+          }
+        },
+        {
+          "predicate": "reported_mci_shared_value",
+          "roles": {
+            "group": "Mild cognitive impairment",
+            "measurement": "APOE ε4"
+          },
+          "attrs": {
+            "value": "19 (24.4%)"
+          }
+        },
+        {
+          "predicate": "reported_group_test",
+          "attrs": {
+            "p": "0.04"
+          },
+          "roles": {
+            "population": "Phase III analyzed sample",
+            "cni": "Cognitively non-impaired participants",
+            "mci": "Mild cognitive impairment",
+            "measurement": "APOE ε4"
+          }
+        }
+      ],
+      "time": "Shared across phase columns; groups defined at Phase II",
+      "conditions": [
+        "Shared table cells are not separate measurements at each phase"
+      ]
+    },
+    {
+      "key": "occupation_table",
+      "units": [
+        51,
+        52,
+        53
+      ],
+      "en": "Previous occupations, CNI/MCI count (%): housekeeping 13(18.3)/22(27.5), farmer 28(39.4)/33(41.2), worker 7(9.9)/9(11.2), technician 1(1.4)/1(1.3), employee 11(15.5)/6(7.5), self-employed 9(12.7)/8(10.0), teacher 2(2.8)/1(1.3); reported p=0.6.",
+      "ru": "Прежние занятия CNI/MCI, число (%): дом 13(18,3)/22(27,5), фермер 28(39,4)/33(41,2), рабочий 7(9,9)/9(11,2), техник 1(1,4)/1(1,3), служащий 11(15,5)/6(7,5), самозанятый 9(12,7)/8(10,0), учитель 2(2,8)/1(1,3); p=0,6.",
+      "predicate": "reported_shared_column_comparison",
+      "roles": {
+        "population": "Phase III analyzed sample",
+        "cni": "Cognitively non-impaired participants",
+        "mci": "Mild cognitive impairment",
+        "measurement": "Previous occupation"
+      },
+      "type": "comparison",
+      "logic": "contrast",
+      "claims": [
+        {
+          "predicate": "reported_cni_shared_value",
+          "roles": {
+            "group": "Cognitively non-impaired participants",
+            "measurement": "Previous occupation"
+          },
+          "attrs": {
+            "value": "Housekeeping 13(18.3%); farmer 28(39.4%); worker 7(9.9%); technician 1(1.4%); employee 11(15.5%); self-employed 9(12.7%); teacher 2(2.8%)"
+          }
+        },
+        {
+          "predicate": "reported_mci_shared_value",
+          "roles": {
+            "group": "Mild cognitive impairment",
+            "measurement": "Previous occupation"
+          },
+          "attrs": {
+            "value": "Housekeeping 22(27.5%); farmer 33(41.2%); worker 9(11.2%); technician 1(1.3%); employee 6(7.5%); self-employed 8(10.0%); teacher 1(1.3%)"
+          }
+        },
+        {
+          "predicate": "reported_group_test",
+          "attrs": {
+            "p": "0.6"
+          },
+          "roles": {
+            "population": "Phase III analyzed sample",
+            "cni": "Cognitively non-impaired participants",
+            "mci": "Mild cognitive impairment",
+            "measurement": "Previous occupation"
+          }
+        }
+      ],
+      "time": "Shared across phase columns; groups defined at Phase II",
+      "conditions": [
+        "Shared table cells are not separate measurements at each phase"
+      ]
+    },
+    {
+      "key": "anxiety_table",
+      "units": [
+        55,
+        56,
+        57
+      ],
+      "en": "HADS-A means (SD): CNI 3.57 (3.71)→5.83 (4.28)*; MCI 2.81 (3.09)→4.79 (3.63)†; group p=0.5 (II), 0.2 (III).",
+      "ru": "HADS-A, среднее (SD): CNI 3,57 (3,71)→5,83 (4,28)*; MCI 2,81 (3,09)→4,79 (3,63)†; межгрупповое p=0,5 (II), 0,2 (III).",
+      "predicate": "reported_table_comparison",
+      "roles": {
+        "cni": "Cognitively non-impaired participants",
+        "mci": "Mild cognitive impairment",
+        "population": "Phase III analyzed sample",
+        "measurement": "Anxiety symptom score"
+      },
+      "type": "comparison",
+      "time": "Phase II and III; diagnostic groups fixed at Phase II",
+      "logic": "contrast",
+      "claims": [
+        {
+          "predicate": "reported_cni_values",
+          "roles": {
+            "group": "Cognitively non-impaired participants",
+            "measurement": "Anxiety symptom score"
+          },
+          "attrs": {
+            "Phase_II": "3.57 (3.71)",
+            "Phase_III": "5.83 (4.28) *"
+          }
+        },
+        {
+          "predicate": "reported_mci_values",
+          "roles": {
+            "group": "Mild cognitive impairment",
+            "measurement": "Anxiety symptom score"
+          },
+          "attrs": {
+            "Phase_II": "2.81 (3.09)",
+            "Phase_III": "4.79 (3.63) dagger"
+          }
+        },
+        {
+          "predicate": "reported_between_group_tests",
+          "roles": {
+            "cni": "Cognitively non-impaired participants",
+            "mci": "Mild cognitive impairment",
+            "population": "Phase III analyzed sample",
+            "measurement": "Anxiety symptom score"
+          },
+          "attrs": {
+            "Phase_II_p": "0.5",
+            "Phase_III_p": "0.2"
+          }
+        }
+      ],
+      "conditions": [
+        "Values are mean (SD)",
+        "Within-group significant changes marked * for CNI or dagger for MCI at p<0.05"
+      ]
+    },
+    {
+      "key": "depressive_symptoms_table",
+      "units": [
+        55,
+        56,
+        57
+      ],
+      "en": "GDS means (SD): CNI 3.84 (3.62)→3.59 (2.88); MCI 3.93 (3.07)→3.58 (3.05); group p=0.8 (II), 0.9 (III).",
+      "ru": "GDS, среднее (SD): CNI 3,84 (3,62)→3,59 (2,88); MCI 3,93 (3,07)→3,58 (3,05); межгрупповое p=0,8 (II), 0,9 (III).",
+      "predicate": "reported_table_comparison",
+      "roles": {
+        "cni": "Cognitively non-impaired participants",
+        "mci": "Mild cognitive impairment",
+        "population": "Phase III analyzed sample",
+        "measurement": "Depressive symptom score"
+      },
+      "type": "comparison",
+      "time": "Phase II and III; diagnostic groups fixed at Phase II",
+      "logic": "contrast",
+      "claims": [
+        {
+          "predicate": "reported_cni_values",
+          "roles": {
+            "group": "Cognitively non-impaired participants",
+            "measurement": "Depressive symptom score"
+          },
+          "attrs": {
+            "Phase_II": "3.84 (3.62)",
+            "Phase_III": "3.59 (2.88)"
+          }
+        },
+        {
+          "predicate": "reported_mci_values",
+          "roles": {
+            "group": "Mild cognitive impairment",
+            "measurement": "Depressive symptom score"
+          },
+          "attrs": {
+            "Phase_II": "3.93 (3.07)",
+            "Phase_III": "3.58 (3.05)"
+          }
+        },
+        {
+          "predicate": "reported_between_group_tests",
+          "roles": {
+            "cni": "Cognitively non-impaired participants",
+            "mci": "Mild cognitive impairment",
+            "population": "Phase III analyzed sample",
+            "measurement": "Depressive symptom score"
+          },
+          "attrs": {
+            "Phase_II_p": "0.8",
+            "Phase_III_p": "0.9"
+          }
+        }
+      ],
+      "conditions": [
+        "Values are mean (SD)",
+        "Within-group significant changes marked * for CNI or dagger for MCI at p<0.05"
+      ]
+    },
+    {
+      "key": "depression_diagnosis_table",
+      "units": [
+        55,
+        56,
+        57
+      ],
+      "en": "Depression diagnosis: CNI 20 (28.2%)→26 (36.6%)*; MCI 27 (33.8%)→30 (37.5%); group p=0.5 (II), 0.9 (III).",
+      "ru": "Диагноз депрессии: CNI 20 (28,2%)→26 (36,6%)*; MCI 27 (33,8%)→30 (37,5%); межгрупповое p=0,5 (II), 0,9 (III).",
+      "predicate": "reported_table_comparison",
+      "roles": {
+        "cni": "Cognitively non-impaired participants",
+        "mci": "Mild cognitive impairment",
+        "population": "Phase III analyzed sample",
+        "measurement": "Depression diagnosis"
+      },
+      "type": "comparison",
+      "time": "Phase II and III; diagnostic groups fixed at Phase II",
+      "logic": "contrast",
+      "claims": [
+        {
+          "predicate": "reported_cni_values",
+          "roles": {
+            "group": "Cognitively non-impaired participants",
+            "measurement": "Depression diagnosis"
+          },
+          "attrs": {
+            "Phase_II": "20 (28.2)",
+            "Phase_III": "26 (36.6) *"
+          }
+        },
+        {
+          "predicate": "reported_mci_values",
+          "roles": {
+            "group": "Mild cognitive impairment",
+            "measurement": "Depression diagnosis"
+          },
+          "attrs": {
+            "Phase_II": "27 (33.8)",
+            "Phase_III": "30 (37.5)"
+          }
+        },
+        {
+          "predicate": "reported_between_group_tests",
+          "roles": {
+            "cni": "Cognitively non-impaired participants",
+            "mci": "Mild cognitive impairment",
+            "population": "Phase III analyzed sample",
+            "measurement": "Depression diagnosis"
+          },
+          "attrs": {
+            "Phase_II_p": "0.5",
+            "Phase_III_p": "0.9"
+          }
+        }
+      ],
+      "conditions": [
+        "Values are count (percentage)",
+        "Within-group significant changes marked * for CNI or dagger for MCI at p<0.05"
+      ]
+    },
+    {
+      "key": "anxiety_diagnosis_table",
+      "units": [
+        55,
+        56,
+        57
+      ],
+      "en": "Anxiety diagnosis: CNI 19 (26.8%)→26 (36.6%); MCI 26 (32.5%)→20 (25.0%); group p=0.4 (II), 0.1 (III).",
+      "ru": "Диагноз тревоги: CNI 19 (26,8%)→26 (36,6%); MCI 26 (32,5%)→20 (25,0%); межгрупповое p=0,4 (II), 0,1 (III).",
+      "predicate": "reported_table_comparison",
+      "roles": {
+        "cni": "Cognitively non-impaired participants",
+        "mci": "Mild cognitive impairment",
+        "population": "Phase III analyzed sample",
+        "measurement": "Anxiety diagnosis"
+      },
+      "type": "comparison",
+      "time": "Phase II and III; diagnostic groups fixed at Phase II",
+      "logic": "contrast",
+      "claims": [
+        {
+          "predicate": "reported_cni_values",
+          "roles": {
+            "group": "Cognitively non-impaired participants",
+            "measurement": "Anxiety diagnosis"
+          },
+          "attrs": {
+            "Phase_II": "19 (26.8)",
+            "Phase_III": "26 (36.6)"
+          }
+        },
+        {
+          "predicate": "reported_mci_values",
+          "roles": {
+            "group": "Mild cognitive impairment",
+            "measurement": "Anxiety diagnosis"
+          },
+          "attrs": {
+            "Phase_II": "26 (32.5)",
+            "Phase_III": "20 (25.0)"
+          }
+        },
+        {
+          "predicate": "reported_between_group_tests",
+          "roles": {
+            "cni": "Cognitively non-impaired participants",
+            "mci": "Mild cognitive impairment",
+            "population": "Phase III analyzed sample",
+            "measurement": "Anxiety diagnosis"
+          },
+          "attrs": {
+            "Phase_II_p": "0.4",
+            "Phase_III_p": "0.1"
+          }
+        }
+      ],
+      "conditions": [
+        "Values are count (percentage)",
+        "Within-group significant changes marked * for CNI or dagger for MCI at p<0.05"
+      ]
+    },
+    {
+      "key": "psychotropic_table",
+      "units": [
+        55,
+        56,
+        57
+      ],
+      "en": "Psychotropic use (antidepressants, anxiolytics, antipsychotics): CNI 26 (36.6%)→32 (45.1%)*; MCI 21 (26.3%)→36 (45.6%)†; group p=0.2 (II), 0.9 (III).",
+      "ru": "Психотропные средства (антидепрессанты, анксиолитики, антипсихотики): CNI 26 (36,6%)→32 (45,1%)*; MCI 21 (26,3%)→36 (45,6%)†; межгрупповое p=0,2 (II), 0,9 (III).",
+      "predicate": "reported_table_comparison",
+      "roles": {
+        "cni": "Cognitively non-impaired participants",
+        "mci": "Mild cognitive impairment",
+        "population": "Phase III analyzed sample",
+        "measurement": "Psychotropic medication use"
+      },
+      "type": "comparison",
+      "time": "Phase II and III; diagnostic groups fixed at Phase II",
+      "logic": "contrast",
+      "claims": [
+        {
+          "predicate": "reported_cni_values",
+          "roles": {
+            "group": "Cognitively non-impaired participants",
+            "measurement": "Psychotropic medication use"
+          },
+          "attrs": {
+            "Phase_II": "26 (36.6)",
+            "Phase_III": "32 (45.1) *"
+          }
+        },
+        {
+          "predicate": "reported_mci_values",
+          "roles": {
+            "group": "Mild cognitive impairment",
+            "measurement": "Psychotropic medication use"
+          },
+          "attrs": {
+            "Phase_II": "21 (26.3)",
+            "Phase_III": "36 (45.6) dagger"
+          }
+        },
+        {
+          "predicate": "reported_between_group_tests",
+          "roles": {
+            "cni": "Cognitively non-impaired participants",
+            "mci": "Mild cognitive impairment",
+            "population": "Phase III analyzed sample",
+            "measurement": "Psychotropic medication use"
+          },
+          "attrs": {
+            "Phase_II_p": "0.2",
+            "Phase_III_p": "0.9"
+          }
+        }
+      ],
+      "conditions": [
+        "Values are count (percentage)",
+        "Within-group significant changes marked * for CNI or dagger for MCI at p<0.05"
+      ]
+    },
+    {
+      "key": "persistent_depression_table",
+      "units": [
+        55,
+        56,
+        57
+      ],
+      "en": "Persistent depression over the seven-year interval: CNI 15 (21.1%), MCI 14 (17.5%); group p=0.6.",
+      "ru": "Стойкая депрессия за семь лет: CNI 15 (21,1%), MCI 14 (17,5%); межгрупповое p=0,6.",
+      "predicate": "reported_shared_column_comparison",
+      "roles": {
+        "population": "Phase III analyzed sample",
+        "cni": "Cognitively non-impaired participants",
+        "mci": "Mild cognitive impairment",
+        "measurement": "Persistent depression"
+      },
+      "type": "comparison",
+      "logic": "contrast",
+      "claims": [
+        {
+          "predicate": "reported_cni_shared_value",
+          "roles": {
+            "group": "Cognitively non-impaired participants",
+            "measurement": "Persistent depression"
+          },
+          "attrs": {
+            "value": "15 (21.1%)"
+          }
+        },
+        {
+          "predicate": "reported_mci_shared_value",
+          "roles": {
+            "group": "Mild cognitive impairment",
+            "measurement": "Persistent depression"
+          },
+          "attrs": {
+            "value": "14 (17.5%)"
+          }
+        },
+        {
+          "predicate": "reported_group_test",
+          "attrs": {
+            "p": "0.6"
+          },
+          "roles": {
+            "population": "Phase III analyzed sample",
+            "cni": "Cognitively non-impaired participants",
+            "mci": "Mild cognitive impairment",
+            "measurement": "Persistent depression"
+          }
+        }
+      ],
+      "time": "Seven-year interval",
+      "conditions": [
+        "Shared table cells are not separate measurements at each phase"
+      ]
+    },
+    {
+      "key": "stressors_table",
+      "units": [
+        55,
+        56,
+        57
+      ],
+      "en": "Major stressful events over seven years: CNI 21 (29.6%), MCI 30 (37.5%); group p=0.3.",
+      "ru": "Сильные стрессовые события за семь лет: CNI 21 (29,6%), MCI 30 (37,5%); межгрупповое p=0,3.",
+      "predicate": "reported_shared_column_comparison",
+      "roles": {
+        "population": "Phase III analyzed sample",
+        "cni": "Cognitively non-impaired participants",
+        "mci": "Mild cognitive impairment",
+        "measurement": "Major stressful events"
+      },
+      "type": "comparison",
+      "logic": "contrast",
+      "claims": [
+        {
+          "predicate": "reported_cni_shared_value",
+          "roles": {
+            "group": "Cognitively non-impaired participants",
+            "measurement": "Major stressful events"
+          },
+          "attrs": {
+            "value": "21 (29.6%)"
+          }
+        },
+        {
+          "predicate": "reported_mci_shared_value",
+          "roles": {
+            "group": "Mild cognitive impairment",
+            "measurement": "Major stressful events"
+          },
+          "attrs": {
+            "value": "30 (37.5%)"
+          }
+        },
+        {
+          "predicate": "reported_group_test",
+          "attrs": {
+            "p": "0.3"
+          },
+          "roles": {
+            "population": "Phase III analyzed sample",
+            "cni": "Cognitively non-impaired participants",
+            "mci": "Mild cognitive impairment",
+            "measurement": "Major stressful events"
+          }
+        }
+      ],
+      "time": "Seven-year interval",
+      "conditions": [
+        "Shared table cells are not separate measurements at each phase"
+      ]
+    },
+    {
+      "key": "baseline_summary",
+      "units": [
+        54,
+        62
+      ],
+      "en": "At Phase II the authors describe CNI/MCI as comparable in BMI, sex, lifestyle, occupation, living alone, morbidity, dementia family history and psychiatric measures, except MCI were older (p<0.001) and more often APOE ε4 carriers (p=0.04).",
+      "ru": "В фазе II авторы считают CNI/MCI сопоставимыми по BMI, полу, образу жизни, профессии, одиночеству, болезням, семейной деменции и психиатрии; исключения — старший возраст MCI (p<0,001) и более частый APOE ε4 (p=0,04).",
+      "predicate": "author_baseline_group_summary",
+      "roles": {
+        "cni": "Cognitively non-impaired participants",
+        "mci": "Mild cognitive impairment",
+        "age": "@age_table",
+        "genetic_comparison": "@apoe_table"
+      },
+      "type": "conclusion",
+      "grounding": "source_argument",
+      "time": "Phase II",
+      "attrs": {
+        "age_p_upper_bound": 0.001,
+        "apoe_p": 0.04
+      },
+      "conditions": [
+        "Observed comparability does not prove equivalence"
+      ]
+    },
+    {
+      "key": "phase3_summary",
+      "units": [
+        54
+      ],
+      "en": "The Results prose states that Phase III groups were comparable in all variables; it also reports similar stressors and persistent depression (21.1% CNI vs 17.5% MCI, p=0.6).",
+      "ru": "Текст результатов утверждает сопоставимость групп III по всем переменным; стрессоры и стойкая депрессия также сходны (21,1% CNI против 17,5% MCI; p=0,6).",
+      "predicate": "author_phase3_comparability_claim",
+      "roles": {
+        "cni": "Cognitively non-impaired participants",
+        "mci": "Mild cognitive impairment"
+      },
+      "type": "conclusion",
+      "grounding": "source_argument",
+      "time": "Phase III",
+      "quantifier": "all variables, as stated in prose",
+      "attrs": {
+        "persistent_cni_percent": 21.1,
+        "persistent_mci_percent": 17.5,
+        "persistent_group_p": 0.6
+      },
+      "conditions": [
+        "Source claim retained; Table 1 reports age p<0.001 in Phase III"
+      ]
+    },
+    {
+      "key": "anxiety_time",
+      "units": [
+        58,
+        62,
+        5
+      ],
+      "en": "Anxiety symptoms increased in both groups (p<0.001), while anxiety-diagnosis frequency did not significantly change (CNI p=0.6, MCI p=0.2).",
+      "ru": "Симптомы тревоги возросли в обеих группах (p<0,001), но частота диагноза тревоги значимо не изменилась (CNI p=0,6; MCI p=0,2).",
+      "predicate": "anxiety_symptoms_vs_diagnosis",
+      "roles": {
+        "symptoms": "@anxiety_table",
+        "diagnosis": "@anxiety_diagnosis_table"
+      },
+      "logic": "contrast",
+      "claims": [
+        {
+          "predicate": "increased_anxiety_symptoms",
+          "attrs": {
+            "both_groups_p_upper": 0.001
+          }
+        },
+        {
+          "predicate": "significant_anxiety_diagnosis_change",
+          "negated": true,
+          "attrs": {
+            "cni_p": 0.6,
+            "mci_p": 0.2
+          }
+        }
+      ],
+      "type": "conclusion",
+      "grounding": "source_argument",
+      "time": "Phase II to Phase III"
+    },
+    {
+      "key": "psychotropic_time",
+      "units": [
+        58,
+        62,
+        5
+      ],
+      "en": "Use of at least one psychotropic increased significantly in CNI (p<0.001) and MCI (p=0.005), concurrently with the anxiety-symptom increase.",
+      "ru": "Применение минимум одного психотропного средства значимо возросло в CNI (p<0,001) и MCI (p=0,005), одновременно с ростом симптомов тревоги.",
+      "predicate": "increased_psychotropic_use",
+      "roles": {
+        "medication": "@psychotropic_table",
+        "population": "Phase III analyzed sample"
+      },
+      "type": "conclusion",
+      "grounding": "source_argument",
+      "time": "Phase II to Phase III",
+      "quantifier": "at least one medication",
+      "attrs": {
+        "cni_p_upper": 0.001,
+        "mci_p": 0.005
+      },
+      "conditions": [
+        "Concurrency does not establish medication as cause of anxiety"
+      ]
+    },
+    {
+      "key": "depression_contrast",
+      "units": [
+        58,
+        62
+      ],
+      "en": "Depressive symptom scores remained relatively stable, whereas depression diagnoses increased, significantly in CNI (p<0.001). The authors propose greater antidepressant use as a possible explanation for symptom alleviation.",
+      "ru": "Депрессивные симптомы относительно стабильны, а диагнозы участились, значимо в CNI (p<0,001). Авторы предполагают, что рост антидепрессантов мог облегчить симптомы.",
+      "predicate": "depression_symptom_diagnosis_contrast",
+      "roles": {
+        "symptoms": "@depressive_symptoms_table",
+        "diagnosis": "@depression_diagnosis_table",
+        "medication": "@psychotropic_time"
+      },
+      "logic": "contrast",
+      "claims": [
+        {
+          "predicate": "significant_symptom_change",
+          "negated": true
+        },
+        {
+          "predicate": "increased_diagnosis",
+          "attrs": {
+            "cni_p_upper": 0.001
+          }
+        },
+        {
+          "predicate": "medication_explains_alleviation",
+          "modality": "authors assumption"
+        }
+      ],
+      "type": "conclusion",
+      "grounding": "source_argument",
+      "time": "Phase II to Phase III"
+    },
+    {
+      "key": "lifestyle_morbidity_time",
+      "units": [
+        58,
+        5,
+        62
+      ],
+      "en": "Over follow-up, alcohol use fell (CNI p=0.028, MCI p=0.023); living alone rose in CNI (p=0.003); major morbidities rose in both groups (CNI p=0.001, MCI p<0.001), possibly with aging.",
+      "ru": "За наблюдение алкоголь сократился (CNI p=0,028; MCI p=0,023), одиночество возросло в CNI (p=0,003), болезни — в обеих группах (CNI p=0,001; MCI p<0,001), возможно из-за старения.",
+      "predicate": "longitudinal_lifestyle_morbidity_changes",
+      "roles": {
+        "alcohol": "@alcohol_table",
+        "alone": "@alone_table",
+        "morbidity": "@illness_table"
+      },
+      "type": "conclusion",
+      "grounding": "source_argument",
+      "time": "Phase II to Phase III",
+      "attrs": {
+        "alcohol_cni_p": 0.028,
+        "alcohol_mci_p": 0.023,
+        "alone_cni_p": 0.003,
+        "morbidity_cni_p": 0.001,
+        "morbidity_mci_p_upper": 0.001
+      },
+      "modality": "aging explanation is possible"
+    },
+    {
+      "key": "crisis_hypothesis",
+      "units": [
+        62
+      ],
+      "en": "The authors suggest anxiety/psychotropic increases may reflect aging and continuing effects of the 2009–2019 Greek financial crisis and COVID-19 insecurity/distress; this is a proposed explanation, not a tested causal estimate.",
+      "ru": "Авторы предполагают, что рост тревоги/психотропных средств связан со старением и последствиями финансового кризиса Греции 2009–2019 и COVID-19; это объяснительная гипотеза, не проверенная причинная оценка.",
+      "predicate": "proposed_crisis_explanation",
+      "roles": {
+        "anxiety": "@anxiety_time",
+        "medication": "@psychotropic_time",
+        "factor": "Aging and societal crises"
+      },
+      "type": "conclusion",
+      "grounding": "source_argument",
+      "modality": "possibly",
+      "attrs": {
+        "financial_crisis_start": 2009,
+        "financial_crisis_end": 2019
+      },
+      "time": "Seven-year follow-up including financial and pandemic crises"
+    },
+    {
+      "key": "stress_background",
+      "units": [
+        62
+      ],
+      "en": "The discussion links co-occurring depression/anxiety with somatic symptoms and cognitive deterioration, and links their development with multimorbidity/chronic illness/stressful events. Major threatening or independence-reducing stressors predict both symptom types in cited studies.",
+      "ru": "Обсуждение связывает сочетание депрессии/тревоги с соматическими симптомами и снижением когниции, их развитие — с мультиморбидностью/хроническими болезнями/стрессом. Угрожающие или ограничивающие независимость стрессоры предсказывают оба вида симптомов в литературе.",
+      "predicate": "cited_stress_multimorbidity_associations",
+      "roles": {
+        "depression": "Depression",
+        "anxiety": "Anxiety",
+        "factor": "Major stressful events",
+        "outcome": "Cognitive decline"
+      },
+      "conditions": [
+        "Cited background, not a fitted predictive rule in this report"
+      ]
+    },
+    {
+      "key": "stress_observation",
+      "units": [
+        62
+      ],
+      "en": "At Phase III morbidity had increased and approximately one third reported at least one major stressful event during follow-up.",
+      "ru": "В фазе III число болезней возросло, примерно треть сообщила минимум об одном сильном стрессовом событии за наблюдение.",
+      "predicate": "author_joint_stress_morbidity_observation",
+      "roles": {
+        "morbidity": "@illness_table",
+        "stress": "@stressors_table"
+      },
+      "type": "conclusion",
+      "grounding": "source_argument",
+      "time": "Seven-year follow-up",
+      "quantifier": "approximately one third; at least one event"
+    },
+    {
+      "key": "pandemic_delay",
+      "units": [
+        63
+      ],
+      "en": "COVID-19 restrictions delayed the project seven months; worry about infection and inconsistent protective-measure information may have reduced participation.",
+      "ru": "Ограничения COVID-19 задержали проект на семь месяцев; страх заражения и противоречивые сведения о защите могли снизить участие.",
+      "predicate": "pandemic_implementation_constraint",
+      "roles": {
+        "cohort": "Cretan Aging Cohort",
+        "factor": "COVID-19 pandemic"
+      },
+      "attrs": {
+        "delay_months": 7
+      },
+      "time": "Phase III",
+      "modality": "may have affected response"
+    },
+    {
+      "key": "response_appraisal",
+      "units": [
+        60,
+        63
+      ],
+      "en": "The authors consider response satisfactory despite low education, rural residence, unfamiliar/time-consuming procedures, no remuneration and pandemic obstacles. Discussion paragraph 4 reports 51.1%, while Methods and an earlier discussion paragraph report 55.1%.",
+      "ru": "Авторы считают отклик удовлетворительным при низком образовании, сельском проживании, непривычных/длительных процедурах, без оплаты и при пандемии. Один абзац обсуждения сообщает 51,1%, методы и другой абзац — 55,1%.",
+      "predicate": "author_response_appraisal",
+      "roles": {
+        "cohort": "Cretan Aging Cohort",
+        "sample": "@sample_profile",
+        "attrition": "@final_sample"
+      },
+      "logic": "argument",
+      "claims": [
+        {
+          "predicate": "satisfactory_response",
+          "modality": "author appraisal"
+        },
+        {
+          "predicate": "reported_response_rate",
+          "attrs": {
+            "discussion_paragraph4_percent": 51.1,
+            "methods_percent": 55.1
+          }
+        }
+      ],
+      "type": "conclusion",
+      "grounding": "source_argument",
+      "conditions": [
+        "Source inconsistency retained, not reconciled",
+        "Comparison with similar Greek/Southern-European studies is an author claim"
+      ]
+    },
+    {
+      "key": "home_limitations",
+      "units": [
+        64
+      ],
+      "en": "Home assessment reduced hospital inconvenience and aimed to improve ecological validity, but environmental distractions, fatigue and reduced PSG compliance could not be controlled despite seeking a distraction-free setting.",
+      "ru": "Домашнее обследование уменьшало неудобство больницы и повышало экологическую валидность, но отвлечения, усталость и недостаточное выполнение PSG-инструкций не контролировались, несмотря на попытку обеспечить спокойную обстановку.",
+      "predicate": "home_testing_limitations",
+      "roles": {
+        "procedure": "@home_protocol",
+        "measurement": "Cognitive domain scores",
+        "sleep": "Polysomnography"
+      },
+      "logic": "contrast",
+      "claims": [
+        {
+          "predicate": "home_testing_benefit",
+          "modality": "intended benefit"
+        },
+        {
+          "predicate": "distractors_fatigue_compliance_controlled",
+          "negated": true
+        }
+      ],
+      "type": "limitation"
+    },
+    {
+      "key": "psg_limitations",
+      "units": [
+        64
+      ],
+      "en": "Home PSG is described as validated, yet vulnerable to artifacts and data loss without continuous overnight technical monitoring.",
+      "ru": "Домашняя PSG описана как валидированная, но подверженная артефактам и потере данных без непрерывного ночного технического контроля.",
+      "predicate": "home_psg_limitations",
+      "roles": {
+        "procedure": "@psg_collection",
+        "instrument": "Polysomnography"
+      },
+      "logic": "contrast",
+      "claims": [
+        {
+          "predicate": "validated_sleep_assessment"
+        },
+        {
+          "predicate": "susceptible_to_artifacts_and_data_loss",
+          "conditions": [
+            "No continuous overnight technical staff monitoring"
+          ]
+        }
+      ],
+      "type": "limitation"
+    },
+    {
+      "key": "integrative_design",
+      "units": [
+        60,
+        61,
+        66,
+        5
+      ],
+      "en": "Longitudinal CAC integrates objective sleep, inflammatory/genetic biomarkers, stress, mental/physical morbidity and cognition in a relatively large MCI-inclusive cohort to examine predictors, moderators and confounding factors.",
+      "ru": "Продольная CAC объединяет объективный сон, воспалительные/генетические маркеры, стресс, психические/соматические болезни и когницию в относительно большой выборке с MCI для изучения предикторов, модераторов и смешивающих факторов.",
+      "predicate": "integrative_longitudinal_design",
+      "roles": {
+        "cohort": "Cretan Aging Cohort",
+        "aim": "@research_task",
+        "sleep": "Objective sleep",
+        "inflammation": "Inflammatory cytokines",
+        "hormone": "Cortisol"
+      },
+      "type": "conclusion",
+      "grounding": "source_argument",
+      "modality": "could act as predictors or moderators",
+      "conditions": [
+        "No actual predictor estimates in this report"
+      ]
+    },
+    {
+      "key": "expected_utility",
+      "units": [
+        66
+      ],
+      "en": "The authors expect the longitudinal design, many MCI participants, defined socioeconomic/cultural sample, long follow-up and control group to yield scientifically valid, clinically useful findings on modifiable progression factors.",
+      "ru": "Авторы ожидают, что продольный дизайн, множество MCI, определённая социально-культурная выборка, длительное наблюдение и контрольная группа дадут научно валидные и клинически полезные сведения об изменяемых факторах.",
+      "predicate": "expected_future_utility",
+      "roles": {
+        "cohort": "Cretan Aging Cohort",
+        "aim": "@research_task",
+        "design": "@integrative_design"
+      },
+      "type": "conclusion",
+      "grounding": "source_argument",
+      "modality": "authors expectation, not established utility",
+      "time": "Future findings",
+      "conditions": [
+        "Not validation of predictor performance or of this knowledge map"
+      ]
+    },
+    {
+      "key": "ethics",
+      "units": [
+        18,
+        72
+      ],
+      "en": "HFRI and NSRF studies received University of Crete approval 61/9-3-2020 and Heraklion University Hospital bioethics approval 13541/20-11-2010 respectively; procedures followed the 1975 Helsinki Declaration and amendments/comparable standards.",
+      "ru": "Исследования HFRI и NSRF одобрены комитетами Университета Крита 61/9-3-2020 и больницы Ираклиона 13541/20-11-2010 соответственно; соблюдалась Хельсинкская декларация 1975 и поправки/сопоставимые нормы.",
+      "predicate": "ethics_approval",
+      "roles": {
+        "cohort": "Cretan Aging Cohort",
+        "authority": "Ethics review committees"
+      },
+      "attrs": {
+        "hfRI_approval": "61/9-3-2020",
+        "nsrf_approval": "13541/20-11-2010",
+        "declaration_year": 1975
+      }
+    },
+    {
+      "key": "consent",
+      "units": [
+        74
+      ],
+      "en": "All participants provided written informed consent; this also applied to Phase II.",
+      "ru": "Все участники дали письменное информированное согласие; это относилось и к фазе II.",
+      "predicate": "obtained_written_consent",
+      "roles": {
+        "population": "CAC participants"
+      },
+      "kind": "action",
+      "status": "performed",
+      "quantifier": "all subjects",
+      "time": "Current study and Phase II"
+    },
+    {
+      "key": "data_privacy",
+      "units": [
+        76
+      ],
+      "en": "Study data are available on request from the corresponding author and are not publicly accessible because of privacy restrictions.",
+      "ru": "Данные доступны по запросу ответственному автору и не доступны публично из-за ограничений приватности.",
+      "predicate": "restricted_data_availability",
+      "roles": {
+        "data": "CAC study data"
+      },
+      "logic": "contrast",
+      "claims": [
+        {
+          "predicate": "available_on_request"
+        },
+        {
+          "predicate": "publicly_available",
+          "negated": true,
+          "conditions": [
+            "Privacy restrictions"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "no_conflict",
+      "units": [
+        78
+      ],
+      "en": "The authors declare no conflict of interest.",
+      "ru": "Авторы заявляют об отсутствии конфликта интересов.",
+      "predicate": "declared_conflict_of_interest",
+      "roles": {
+        "agent": "Study authors"
+      },
+      "negated": true
+    },
+    {
+      "key": "funding",
+      "units": [
+        80
+      ],
+      "en": "Phase III research was funded by HFRI ELIDEK 2020–2022, grant HFRI-FM17-4397 (M. Basta); Phases I/II by NSRF THALES 2007–2013, MIS 377299 (A. N. Vgontzas).",
+      "ru": "Фаза III финансировалась HFRI ELIDEK 2020–2022, HFRI-FM17-4397 (M. Basta); I/II — NSRF THALES 2007–2013, MIS 377299 (A. N. Vgontzas).",
+      "predicate": "research_funding",
+      "roles": {
+        "cohort": "Cretan Aging Cohort",
+        "funder": "HFRI and NSRF"
+      },
+      "logic": "contrast",
+      "claims": [
+        {
+          "predicate": "phase3_funded",
+          "attrs": {
+            "program": "HFRI ELIDEK",
+            "interval": "2020–2022",
+            "grant": "HFRI-FM17-4397",
+            "principal_investigator": "M. Basta"
+          }
+        },
+        {
+          "predicate": "phase1_2_funded",
+          "attrs": {
+            "program": "NSRF THALES",
+            "interval": "2007–2013",
+            "grant": "MIS 377299",
+            "principal_investigator": "A. N. Vgontzas"
+          }
+        }
+      ]
+    }
+  ],
+  "transitions": [
+    {
+      "sources": [
+        "cortisol_memory"
+      ],
+      "target": "cortisol_executive",
+      "units": [
+        10
+      ],
+      "usage": "development",
+      "reason": "The author explicitly links the previously described cortisol–memory process to executive-function mediation; the earlier process is used in this synthesis.",
+      "conditions": []
+    },
+    {
+      "sources": [
+        "mci_progression"
+      ],
+      "target": "research_task",
+      "units": [
+        66
+      ],
+      "usage": "premise",
+      "reason": "The conclusion uses progression from MCI to dementia and the need for timely intervention to motivate investigation of modifiable predictors.",
+      "conditions": []
+    },
+    {
+      "sources": [
+        "cac_established"
+      ],
+      "target": "eligibility",
+      "units": [
+        16
+      ],
+      "usage": "development",
+      "reason": "The established CAC cohort is developed into its actual recruitment and eligibility procedure, rather than merely sharing a topic.",
+      "conditions": []
+    },
+    {
+      "sources": [
+        "eligibility"
+      ],
+      "target": "phase1_comparison",
+      "units": [
+        16
+      ],
+      "usage": "data",
+      "reason": "The recruited Phase I participants are the examined group for demographic collection, census comparison and MMSE administration.",
+      "conditions": []
+    },
+    {
+      "sources": [
+        "phase1_comparison"
+      ],
+      "target": "phase2_sampling",
+      "units": [
+        16
+      ],
+      "usage": "data",
+      "reason": "Phase II invitations and stratified controls explicitly use Phase I MMSE results and demographic information.",
+      "conditions": []
+    },
+    {
+      "sources": [
+        "phase2_sampling"
+      ],
+      "target": "phase2_protocol",
+      "units": [
+        16
+      ],
+      "usage": "prerequisite",
+      "reason": "Consenting selected participants form the input population for the Phase II examination.",
+      "conditions": []
+    },
+    {
+      "sources": [
+        "phase2_protocol"
+      ],
+      "target": "phase2_diagnosis",
+      "units": [
+        16
+      ],
+      "usage": "data",
+      "reason": "Consensus Phase II diagnoses are based on the comprehensive Phase II evaluations.",
+      "conditions": []
+    },
+    {
+      "sources": [
+        "phase2_diagnosis"
+      ],
+      "target": "phase3_pool",
+      "units": [
+        18
+      ],
+      "usage": "result",
+      "reason": "Phase III eligibility is explicitly restricted to the CNI and MCI classifications established in Phase II.",
+      "conditions": []
+    },
+    {
+      "sources": [
+        "phase3_pool"
+      ],
+      "target": "attrition",
+      "units": [
+        18
+      ],
+      "usage": "data",
+      "reason": "The deaths, unlocated participants and refusals are counted relative to the explicitly defined Phase III eligible pool.",
+      "conditions": []
+    },
+    {
+      "sources": [
+        "phase3_pool"
+      ],
+      "target": "home_protocol",
+      "units": [
+        18
+      ],
+      "usage": "prerequisite",
+      "reason": "The eligible CNI/MCI pool supplies the persons contacted for Phase III home evaluation.",
+      "conditions": []
+    },
+    {
+      "sources": [
+        "attrition",
+        "home_protocol"
+      ],
+      "target": "final_sample",
+      "units": [
+        18,
+        50
+      ],
+      "usage": "result",
+      "reason": "The final analyzed sample jointly uses survival/participation accounting and completed home evaluations, including four exclusions.",
+      "conditions": []
+    },
+    {
+      "sources": [
+        "home_protocol"
+      ],
+      "target": "psg_collection",
+      "units": [
+        24,
+        5
+      ],
+      "usage": "development",
+      "reason": "The stated home assessment is directly refined into this performed measurement procedure; the arrow does not denote a relation between bare instruments.",
+      "conditions": []
+    },
+    {
+      "sources": [
+        "home_protocol"
+      ],
+      "target": "actigraphy_collection",
+      "units": [
+        26,
+        5
+      ],
+      "usage": "development",
+      "reason": "The stated home assessment is directly refined into this performed measurement procedure; the arrow does not denote a relation between bare instruments.",
+      "conditions": []
+    },
+    {
+      "sources": [
+        "home_protocol"
+      ],
+      "target": "blood_collection",
+      "units": [
+        28,
+        5
+      ],
+      "usage": "development",
+      "reason": "The stated home assessment is directly refined into this performed measurement procedure; the arrow does not denote a relation between bare instruments.",
+      "conditions": []
+    },
+    {
+      "sources": [
+        "home_protocol"
+      ],
+      "target": "neuropsych_tests",
+      "units": [
+        31
+      ],
+      "usage": "development",
+      "reason": "The stated home assessment is directly refined into this performed measurement procedure; the arrow does not denote a relation between bare instruments.",
+      "conditions": []
+    },
+    {
+      "sources": [
+        "home_protocol"
+      ],
+      "target": "history",
+      "units": [
+        35,
+        36
+      ],
+      "usage": "development",
+      "reason": "The stated home assessment is directly refined into this performed measurement procedure; the arrow does not denote a relation between bare instruments.",
+      "conditions": []
+    },
+    {
+      "sources": [
+        "home_protocol"
+      ],
+      "target": "anthropometry",
+      "units": [
+        38
+      ],
+      "usage": "development",
+      "reason": "The stated home assessment is directly refined into this performed measurement procedure; the arrow does not denote a relation between bare instruments.",
+      "conditions": []
+    },
+    {
+      "sources": [
+        "home_protocol"
+      ],
+      "target": "frailty",
+      "units": [
+        39
+      ],
+      "usage": "development",
+      "reason": "The stated home assessment is directly refined into this performed measurement procedure; the arrow does not denote a relation between bare instruments.",
+      "conditions": []
+    },
+    {
+      "sources": [
+        "home_protocol"
+      ],
+      "target": "subjective_memory",
+      "units": [
+        40
+      ],
+      "usage": "development",
+      "reason": "The stated home assessment is directly refined into this performed measurement procedure; the arrow does not denote a relation between bare instruments.",
+      "conditions": []
+    },
+    {
+      "sources": [
+        "home_protocol"
+      ],
+      "target": "sleep_questionnaire",
+      "units": [
+        41
+      ],
+      "usage": "development",
+      "reason": "The stated home assessment is directly refined into this performed measurement procedure; the arrow does not denote a relation between bare instruments.",
+      "conditions": []
+    },
+    {
+      "sources": [
+        "home_protocol"
+      ],
+      "target": "lifestyle",
+      "units": [
+        42
+      ],
+      "usage": "development",
+      "reason": "The stated home assessment is directly refined into this performed measurement procedure; the arrow does not denote a relation between bare instruments.",
+      "conditions": []
+    },
+    {
+      "sources": [
+        "home_protocol"
+      ],
+      "target": "social_support",
+      "units": [
+        43
+      ],
+      "usage": "development",
+      "reason": "The stated home assessment is directly refined into this performed measurement procedure; the arrow does not denote a relation between bare instruments.",
+      "conditions": []
+    },
+    {
+      "sources": [
+        "home_protocol"
+      ],
+      "target": "symptom_scales",
+      "units": [
+        45
+      ],
+      "usage": "development",
+      "reason": "The stated home assessment is directly refined into this performed measurement procedure; the arrow does not denote a relation between bare instruments.",
+      "conditions": []
+    },
+    {
+      "sources": [
+        "home_protocol"
+      ],
+      "target": "stressors",
+      "units": [
+        45
+      ],
+      "usage": "development",
+      "reason": "The stated home assessment is directly refined into this performed measurement procedure; the arrow does not denote a relation between bare instruments.",
+      "conditions": []
+    },
+    {
+      "sources": [
+        "home_protocol"
+      ],
+      "target": "informants",
+      "units": [
+        33
+      ],
+      "usage": "development",
+      "reason": "The stated home assessment is directly refined into this performed measurement procedure; the arrow does not denote a relation between bare instruments.",
+      "conditions": []
+    },
+    {
+      "sources": [
+        "psg_collection"
+      ],
+      "target": "psg_scoring",
+      "units": [
+        24
+      ],
+      "usage": "data",
+      "reason": "Manual scoring immediately uses the recorded overnight PSG channels.",
+      "conditions": []
+    },
+    {
+      "sources": [
+        "actigraphy_collection"
+      ],
+      "target": "actigraphy_processing",
+      "units": [
+        26
+      ],
+      "usage": "data",
+      "reason": "Derived sleep variables and averaging windows use the recorded actigraphy epochs and diaries.",
+      "conditions": []
+    },
+    {
+      "sources": [
+        "blood_collection"
+      ],
+      "target": "elisa",
+      "units": [
+        28
+      ],
+      "usage": "data",
+      "reason": "The ELISA procedure immediately uses the isolated and preserved plasma samples.",
+      "conditions": []
+    },
+    {
+      "sources": [
+        "neuropsych_tests"
+      ],
+      "target": "cognitive_standardization",
+      "units": [
+        31
+      ],
+      "usage": "data",
+      "reason": "Normative transformations and domain means use the administered tests raw scores.",
+      "conditions": []
+    },
+    {
+      "sources": [
+        "iadl_threshold"
+      ],
+      "target": "mci_definition",
+      "units": [
+        33
+      ],
+      "usage": "definition",
+      "reason": "The article explicitly uses preserved IADL functioning as a diagnostic requirement for MCI.",
+      "conditions": []
+    },
+    {
+      "sources": [
+        "cognitive_standardization",
+        "informants",
+        "symptom_scales",
+        "mci_definition"
+      ],
+      "target": "consensus",
+      "units": [
+        46
+      ],
+      "usage": "data",
+      "reason": "The consensus explicitly integrates domain performance, daily functioning and neuropsychiatric symptoms and applies the MCI diagnostic requirement as joint inputs.",
+      "conditions": []
+    },
+    {
+      "sources": [
+        "consensus"
+      ],
+      "target": "dementia_differential",
+      "units": [
+        46
+      ],
+      "usage": "development",
+      "reason": "The described consensus diagnostic procedure is directly refined by the differential criteria for dementia subtypes.",
+      "conditions": []
+    },
+    {
+      "sources": [
+        "symptom_scales",
+        "history"
+      ],
+      "target": "mental_diagnosis",
+      "units": [
+        45
+      ],
+      "usage": "data",
+      "reason": "Clinical psychiatric assessment uses symptom scales and medical/prescription history together; a symptom score alone is not a diagnosis.",
+      "conditions": []
+    },
+    {
+      "sources": [
+        "nonnormality"
+      ],
+      "target": "statistical_tests",
+      "units": [
+        48
+      ],
+      "usage": "condition",
+      "reason": "The authors explicitly choose non-parametric comparisons in view of significant departures from normality.",
+      "conditions": []
+    },
+    {
+      "sources": [
+        "final_sample"
+      ],
+      "target": "statistical_power",
+      "units": [
+        48
+      ],
+      "usage": "data",
+      "reason": "The reported power is explicitly a property of the final sample size, not of an invented predictive model.",
+      "conditions": []
+    },
+    {
+      "sources": [
+        "final_sample",
+        "statistical_tests"
+      ],
+      "target": "retention_bias",
+      "units": [
+        50
+      ],
+      "usage": "data",
+      "reason": "Retention comparisons use the followed-up subgroup versus the full eligible pool and the stated group-comparison methods.",
+      "conditions": []
+    },
+    {
+      "sources": [
+        "final_sample",
+        "statistical_tests"
+      ],
+      "target": "retention_similarity",
+      "units": [
+        50
+      ],
+      "usage": "data",
+      "reason": "Comparability of retained and full pools is assessed using the identified samples and reported comparison methods.",
+      "conditions": []
+    },
+    {
+      "sources": [
+        "final_sample"
+      ],
+      "target": "sample_profile",
+      "units": [
+        50,
+        60
+      ],
+      "usage": "development",
+      "reason": "The descriptive profile directly refines the final analyzed cohort with residence, occupation, education and baseline age characteristics.",
+      "conditions": []
+    },
+    {
+      "sources": [
+        "statistical_tests"
+      ],
+      "target": "age_table",
+      "units": [
+        51,
+        52,
+        53,
+        5
+      ],
+      "usage": "result",
+      "reason": "This table comparison is a reported output of the stated statistical analysis. The edge represents analysis-to-result, not temporal text order.",
+      "conditions": [
+        "Group labels refer to Phase II diagnosis; retain both measurement phases"
+      ]
+    },
+    {
+      "sources": [
+        "statistical_tests",
+        "anthropometry"
+      ],
+      "target": "bmi_table",
+      "units": [
+        51,
+        52,
+        53
+      ],
+      "usage": "result",
+      "reason": "This table comparison is a reported output of the stated statistical analysis using the corresponding measured information as a joint input.",
+      "conditions": [
+        "Group labels refer to Phase II diagnosis; retain both measurement phases"
+      ]
+    },
+    {
+      "sources": [
+        "statistical_tests"
+      ],
+      "target": "alone_table",
+      "units": [
+        51,
+        52,
+        53
+      ],
+      "usage": "result",
+      "reason": "This table comparison is a reported output of the stated statistical analysis. The edge represents analysis-to-result, not temporal text order.",
+      "conditions": [
+        "Group labels refer to Phase II diagnosis; retain both measurement phases"
+      ]
+    },
+    {
+      "sources": [
+        "statistical_tests",
+        "history"
+      ],
+      "target": "illness_table",
+      "units": [
+        51,
+        52,
+        53
+      ],
+      "usage": "result",
+      "reason": "This table comparison is a reported output of the stated statistical analysis using the corresponding measured information as a joint input.",
+      "conditions": [
+        "Group labels refer to Phase II diagnosis; retain both measurement phases"
+      ]
+    },
+    {
+      "sources": [
+        "statistical_tests",
+        "lifestyle"
+      ],
+      "target": "smoking_table",
+      "units": [
+        51,
+        52,
+        53
+      ],
+      "usage": "result",
+      "reason": "This table comparison is a reported output of the stated statistical analysis using the corresponding measured information as a joint input.",
+      "conditions": [
+        "Group labels refer to Phase II diagnosis; retain both measurement phases"
+      ]
+    },
+    {
+      "sources": [
+        "statistical_tests",
+        "lifestyle"
+      ],
+      "target": "alcohol_table",
+      "units": [
+        51,
+        52,
+        53
+      ],
+      "usage": "result",
+      "reason": "This table comparison is a reported output of the stated statistical analysis using the corresponding measured information as a joint input.",
+      "conditions": [
+        "Group labels refer to Phase II diagnosis; retain both measurement phases"
+      ]
+    },
+    {
+      "sources": [
+        "statistical_tests"
+      ],
+      "target": "gender_table",
+      "units": [
+        51,
+        52,
+        53
+      ],
+      "usage": "result",
+      "reason": "This table comparison is a reported output of the stated statistical analysis. The edge represents analysis-to-result, not temporal text order.",
+      "conditions": [
+        "Group labels refer to Phase II diagnosis; retain both measurement phases"
+      ]
+    },
+    {
+      "sources": [
+        "statistical_tests"
+      ],
+      "target": "rural_table",
+      "units": [
+        51,
+        52,
+        53
+      ],
+      "usage": "result",
+      "reason": "This table comparison is a reported output of the stated statistical analysis. The edge represents analysis-to-result, not temporal text order.",
+      "conditions": [
+        "Group labels refer to Phase II diagnosis; retain both measurement phases"
+      ]
+    },
+    {
+      "sources": [
+        "statistical_tests"
+      ],
+      "target": "education_table",
+      "units": [
+        51,
+        52,
+        53
+      ],
+      "usage": "result",
+      "reason": "This table comparison is a reported output of the stated statistical analysis. The edge represents analysis-to-result, not temporal text order.",
+      "conditions": [
+        "Group labels refer to Phase II diagnosis; retain both measurement phases"
+      ]
+    },
+    {
+      "sources": [
+        "statistical_tests"
+      ],
+      "target": "family_table",
+      "units": [
+        51,
+        52,
+        53
+      ],
+      "usage": "result",
+      "reason": "This table comparison is a reported output of the stated statistical analysis. The edge represents analysis-to-result, not temporal text order.",
+      "conditions": [
+        "Group labels refer to Phase II diagnosis; retain both measurement phases"
+      ]
+    },
+    {
+      "sources": [
+        "statistical_tests"
+      ],
+      "target": "apoe_table",
+      "units": [
+        51,
+        52,
+        53
+      ],
+      "usage": "result",
+      "reason": "This table comparison is a reported output of the stated statistical analysis. The edge represents analysis-to-result, not temporal text order.",
+      "conditions": [
+        "Group labels refer to Phase II diagnosis; retain both measurement phases"
+      ]
+    },
+    {
+      "sources": [
+        "statistical_tests"
+      ],
+      "target": "occupation_table",
+      "units": [
+        51,
+        52,
+        53
+      ],
+      "usage": "result",
+      "reason": "This table comparison is a reported output of the stated statistical analysis. The edge represents analysis-to-result, not temporal text order.",
+      "conditions": [
+        "Group labels refer to Phase II diagnosis; retain both measurement phases"
+      ]
+    },
+    {
+      "sources": [
+        "statistical_tests",
+        "symptom_scales"
+      ],
+      "target": "anxiety_table",
+      "units": [
+        55,
+        56,
+        57
+      ],
+      "usage": "result",
+      "reason": "This table comparison is a reported output of the stated statistical analysis using the corresponding measured information as a joint input.",
+      "conditions": [
+        "Group labels refer to Phase II diagnosis; retain both measurement phases"
+      ]
+    },
+    {
+      "sources": [
+        "statistical_tests",
+        "symptom_scales"
+      ],
+      "target": "depressive_symptoms_table",
+      "units": [
+        55,
+        56,
+        57
+      ],
+      "usage": "result",
+      "reason": "This table comparison is a reported output of the stated statistical analysis using the corresponding measured information as a joint input.",
+      "conditions": [
+        "Group labels refer to Phase II diagnosis; retain both measurement phases"
+      ]
+    },
+    {
+      "sources": [
+        "statistical_tests",
+        "mental_diagnosis"
+      ],
+      "target": "depression_diagnosis_table",
+      "units": [
+        55,
+        56,
+        57
+      ],
+      "usage": "result",
+      "reason": "This table comparison is a reported output of the stated statistical analysis using the corresponding measured information as a joint input.",
+      "conditions": [
+        "Group labels refer to Phase II diagnosis; retain both measurement phases"
+      ]
+    },
+    {
+      "sources": [
+        "statistical_tests",
+        "mental_diagnosis"
+      ],
+      "target": "anxiety_diagnosis_table",
+      "units": [
+        55,
+        56,
+        57
+      ],
+      "usage": "result",
+      "reason": "This table comparison is a reported output of the stated statistical analysis using the corresponding measured information as a joint input.",
+      "conditions": [
+        "Group labels refer to Phase II diagnosis; retain both measurement phases"
+      ]
+    },
+    {
+      "sources": [
+        "statistical_tests",
+        "history"
+      ],
+      "target": "psychotropic_table",
+      "units": [
+        55,
+        56,
+        57
+      ],
+      "usage": "result",
+      "reason": "This table comparison is a reported output of the stated statistical analysis using the corresponding measured information as a joint input.",
+      "conditions": [
+        "Group labels refer to Phase II diagnosis; retain both measurement phases"
+      ]
+    },
+    {
+      "sources": [
+        "statistical_tests",
+        "mental_diagnosis"
+      ],
+      "target": "persistent_depression_table",
+      "units": [
+        55,
+        56,
+        57
+      ],
+      "usage": "result",
+      "reason": "This table comparison is a reported output of the stated statistical analysis using the corresponding measured information as a joint input.",
+      "conditions": [
+        "Group labels refer to Phase II diagnosis; retain both measurement phases"
+      ]
+    },
+    {
+      "sources": [
+        "statistical_tests",
+        "stressors"
+      ],
+      "target": "stressors_table",
+      "units": [
+        55,
+        56,
+        57
+      ],
+      "usage": "result",
+      "reason": "This table comparison is a reported output of the stated statistical analysis using the corresponding measured information as a joint input.",
+      "conditions": [
+        "Group labels refer to Phase II diagnosis; retain both measurement phases"
+      ]
+    },
+    {
+      "sources": [
+        "age_table",
+        "apoe_table"
+      ],
+      "target": "baseline_summary",
+      "units": [
+        54
+      ],
+      "usage": "evidence",
+      "reason": "The author summarizes the two reported exceptions to baseline group comparability: age and APOE ε4 frequency.",
+      "conditions": []
+    },
+    {
+      "sources": [
+        "persistent_depression_table",
+        "stressors_table"
+      ],
+      "target": "phase3_summary",
+      "units": [
+        54
+      ],
+      "usage": "evidence",
+      "reason": "The prose comparison explicitly refers to persistent depression and stressful-event frequencies; its broad comparability claim is preserved with the table discrepancy.",
+      "conditions": []
+    },
+    {
+      "sources": [
+        "anxiety_table",
+        "anxiety_diagnosis_table"
+      ],
+      "target": "anxiety_time",
+      "units": [
+        58
+      ],
+      "usage": "evidence",
+      "reason": "The author contrasts increased symptom scores with non-significant changes in clinical anxiety diagnoses.",
+      "conditions": []
+    },
+    {
+      "sources": [
+        "psychotropic_table"
+      ],
+      "target": "psychotropic_time",
+      "units": [
+        58
+      ],
+      "usage": "evidence",
+      "reason": "The longitudinal inference immediately interprets the tabulated within-group psychotropic changes, with separate time-comparison p-values.",
+      "conditions": []
+    },
+    {
+      "sources": [
+        "depressive_symptoms_table",
+        "depression_diagnosis_table",
+        "psychotropic_time"
+      ],
+      "target": "depression_contrast",
+      "units": [
+        62
+      ],
+      "usage": "evidence",
+      "reason": "The author uses stable symptom scores, increased diagnoses and greater medication use jointly to formulate the explicit contrast and tentative explanation.",
+      "conditions": []
+    },
+    {
+      "sources": [
+        "alcohol_table",
+        "alone_table",
+        "illness_table"
+      ],
+      "target": "lifestyle_morbidity_time",
+      "units": [
+        58
+      ],
+      "usage": "evidence",
+      "reason": "The author directly summarizes longitudinal alcohol, living-alone and morbidity changes from the reported measurements.",
+      "conditions": []
+    },
+    {
+      "sources": [
+        "anxiety_time",
+        "psychotropic_time"
+      ],
+      "target": "crisis_hypothesis",
+      "units": [
+        62
+      ],
+      "usage": "evidence",
+      "reason": "The author proposes an aging/crisis explanation specifically for the observed anxiety and medication increases; this is a hypothesis, not a proven causal arrow.",
+      "conditions": []
+    },
+    {
+      "sources": [
+        "illness_table",
+        "stressors_table"
+      ],
+      "target": "stress_observation",
+      "units": [
+        62
+      ],
+      "usage": "evidence",
+      "reason": "The discussion combines morbidity increase and reported stressful events as joint observations.",
+      "conditions": []
+    },
+    {
+      "sources": [
+        "sample_profile",
+        "pandemic_delay",
+        "final_sample"
+      ],
+      "target": "response_appraisal",
+      "units": [
+        63
+      ],
+      "usage": "premise",
+      "reason": "The response appraisal explicitly takes account of sample demographics, implementation obstacles and attained participation.",
+      "conditions": []
+    },
+    {
+      "sources": [
+        "home_protocol"
+      ],
+      "target": "home_limitations",
+      "units": [
+        64
+      ],
+      "usage": "development",
+      "reason": "The limitation directly qualifies the performed home assessment with uncontrolled distractions, fatigue and compliance.",
+      "conditions": []
+    },
+    {
+      "sources": [
+        "psg_collection"
+      ],
+      "target": "psg_limitations",
+      "units": [
+        64
+      ],
+      "usage": "development",
+      "reason": "The limitation directly qualifies the home PSG procedure with absent continuous technical monitoring and resulting vulnerability.",
+      "conditions": []
+    },
+    {
+      "sources": [
+        "psg_scoring",
+        "actigraphy_processing",
+        "elisa",
+        "consensus"
+      ],
+      "target": "integrative_design",
+      "units": [
+        60,
+        61
+      ],
+      "usage": "premise",
+      "reason": "The author synthesizes objective sleep, biomarkers and integrated cognitive assessment into the stated multimodal longitudinal design; these are joint methodological components.",
+      "conditions": []
+    },
+    {
+      "sources": [
+        "integrative_design",
+        "final_sample",
+        "phase2_sampling"
+      ],
+      "target": "expected_utility",
+      "units": [
+        66
+      ],
+      "usage": "premise",
+      "reason": "The conclusion expressly bases expected future utility on longitudinal multimodal design, MCI-inclusive follow-up and a control-group methodology; expectation remains modal.",
+      "conditions": []
+    }
+  ]
+}

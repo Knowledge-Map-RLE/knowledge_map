@@ -1,0 +1,345 @@
+{
+  "occurrences": [],
+  "transitions": [
+    {
+      "id": "T110",
+      "sources": [
+        "B23"
+      ],
+      "target": "B121",
+      "usage": "result",
+      "reason": "The table footnote reports correlations separately in the diagnosed groups.",
+      "unit_ids": [
+        "U57"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T111",
+      "sources": [
+        "B23"
+      ],
+      "target": "B122",
+      "usage": "result",
+      "reason": "The table footnote reports correlations separately in the diagnosed groups.",
+      "unit_ids": [
+        "U57"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T112",
+      "sources": [
+        "B23"
+      ],
+      "target": "B123",
+      "usage": "result",
+      "reason": "The table footnote reports correlations separately in the diagnosed groups.",
+      "unit_ids": [
+        "U57"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T113",
+      "sources": [
+        "B125"
+      ],
+      "target": "B126",
+      "usage": "result",
+      "reason": "Table 5 supplies the coefficient for the defined TNF model.",
+      "unit_ids": [
+        "U60",
+        "U61",
+        "U62"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T114",
+      "sources": [
+        "B125"
+      ],
+      "target": "B127",
+      "usage": "result",
+      "reason": "Table 5 supplies the coefficient for the defined TNF model.",
+      "unit_ids": [
+        "U60",
+        "U61",
+        "U62"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T115",
+      "sources": [
+        "B125"
+      ],
+      "target": "B128",
+      "usage": "result",
+      "reason": "Table 5 supplies the coefficient for the defined TNF model.",
+      "unit_ids": [
+        "U60",
+        "U61",
+        "U62"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T116",
+      "sources": [
+        "B125"
+      ],
+      "target": "B129",
+      "usage": "result",
+      "reason": "Table 5 supplies the coefficient for the defined TNF model.",
+      "unit_ids": [
+        "U60",
+        "U61",
+        "U62"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T117",
+      "sources": [
+        "B23"
+      ],
+      "target": "B130",
+      "usage": "result",
+      "reason": "The regression footnote gives the stratified coefficient using the stated group models.",
+      "unit_ids": [
+        "U62"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T118",
+      "sources": [
+        "B23"
+      ],
+      "target": "B131",
+      "usage": "result",
+      "reason": "The regression footnote gives the stratified coefficient using the stated group models.",
+      "unit_ids": [
+        "U62"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T119",
+      "sources": [
+        "B132"
+      ],
+      "target": "B133",
+      "usage": "result",
+      "reason": "Table 6 supplies the coefficient for the defined IL-6 model.",
+      "unit_ids": [
+        "U64",
+        "U65",
+        "U66"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T120",
+      "sources": [
+        "B132"
+      ],
+      "target": "B134",
+      "usage": "result",
+      "reason": "Table 6 supplies the coefficient for the defined IL-6 model.",
+      "unit_ids": [
+        "U64",
+        "U65",
+        "U66"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T121",
+      "sources": [
+        "B132"
+      ],
+      "target": "B135",
+      "usage": "result",
+      "reason": "Table 6 supplies the coefficient for the defined IL-6 model.",
+      "unit_ids": [
+        "U64",
+        "U65",
+        "U66"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T122",
+      "sources": [
+        "B23"
+      ],
+      "target": "B136",
+      "usage": "result",
+      "reason": "The regression footnote gives the stratified coefficient using the stated group models.",
+      "unit_ids": [
+        "U66"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T123",
+      "sources": [
+        "B23"
+      ],
+      "target": "B137",
+      "usage": "result",
+      "reason": "The regression footnote gives the stratified coefficient using the stated group models.",
+      "unit_ids": [
+        "U66"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T126",
+      "sources": [
+        "B107",
+        "B23"
+      ],
+      "target": "B125",
+      "usage": "method",
+      "reason": "The significant preliminary associations select the TNF model exposures.",
+      "unit_ids": [
+        "U59"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T127",
+      "sources": [
+        "B107",
+        "B23"
+      ],
+      "target": "B132",
+      "usage": "method",
+      "reason": "The preliminary associations select the IL-6 model exposures.",
+      "unit_ids": [
+        "U63"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T128",
+      "sources": [
+        "B23"
+      ],
+      "target": "B138",
+      "usage": "result",
+      "reason": "Post-hoc power evaluates the fitted models under the specified analysis.",
+      "unit_ids": [
+        "U63"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T129",
+      "sources": [
+        "B107"
+      ],
+      "target": "B124",
+      "usage": "evidence",
+      "reason": "The authors interpret the similar patterns and weak stratified significance.",
+      "unit_ids": [
+        "U58"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T130",
+      "sources": [
+        "B125",
+        "B132",
+        "B124"
+      ],
+      "target": "B139",
+      "usage": "evidence",
+      "reason": "The discussion develops the vegetable interpretation from both cytokine models and stratified observations.",
+      "unit_ids": [
+        "U68",
+        "U69",
+        "U70"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T131",
+      "sources": [
+        "B125"
+      ],
+      "target": "B140",
+      "usage": "evidence",
+      "reason": "The discussion interprets the long-sleep TNF model; its discrepancy with Results remains visible.",
+      "unit_ids": [
+        "U71"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T132",
+      "sources": [
+        "B140"
+      ],
+      "target": "B141",
+      "usage": "development",
+      "reason": "The discussion considers reverse causality and prior evidence to interpret the reported sleep association.",
+      "unit_ids": [
+        "U72"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T133",
+      "sources": [
+        "B132",
+        "B4"
+      ],
+      "target": "B142",
+      "usage": "premise",
+      "reason": "Observed IL-6 activity relations and earlier exercise evidence motivate the proposed walking implication.",
+      "unit_ids": [
+        "U73"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T134",
+      "sources": [
+        "B139",
+        "B142",
+        "B144"
+      ],
+      "target": "B145",
+      "usage": "premise",
+      "reason": "The suggested benefits require validation because the current study has observational limitations.",
+      "unit_ids": [
+        "U70",
+        "U76",
+        "U78"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T135",
+      "sources": [
+        "B139",
+        "B142",
+        "B141",
+        "B144"
+      ],
+      "target": "B146",
+      "usage": "premise",
+      "reason": "The practical suggestions draw jointly on lifestyle interpretations and causal limitations.",
+      "unit_ids": [
+        "U78"
+      ],
+      "conditions": []
+    }
+  ]
+}

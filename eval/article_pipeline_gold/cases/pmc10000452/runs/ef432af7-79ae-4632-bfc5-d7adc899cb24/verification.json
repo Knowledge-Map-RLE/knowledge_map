@@ -1,0 +1,119 @@
+{
+  "run_id": "ef432af7-79ae-4632-bfc5-d7adc899cb24",
+  "verified_at": "2026-10-05T19:54:28.267198+00:00",
+  "manifest_sha256": "e669b223882268b1929d45f94b344394f017f1223921ca0af6eb51b53d881ba8",
+  "model_calls": {
+    "provider": 0,
+    "local": 0,
+    "translation": 0
+  },
+  "scientific_accuracy": "requires expert review",
+  "python_checks": {
+    "pipeline_and_domain": 88,
+    "history_routes": 6,
+    "experiment_compatibility_and_cache": 31,
+    "real_neo4j_integration": 1
+  },
+  "client_checks": {
+    "tests": 21,
+    "typecheck": "passed",
+    "production_build": "passed"
+  },
+  "live_api": {
+    "port": 8000,
+    "run_id_parameter": true,
+    "transition_provenance_route": true
+  },
+  "browser": {
+    "passed": true,
+    "browser": "Microsoft Edge headless",
+    "client_port": 5555,
+    "api_port": 8000,
+    "run_id": "ef432af7-79ae-4632-bfc5-d7adc899cb24",
+    "fixture": "Published Neo4j graph and actual owner-checked route outputs; isolated test authentication. HTTP API writes and all external requests blocked.",
+    "model_calls": 0,
+    "map_generation_requests": 0,
+    "map_translation_requests": 0,
+    "checks": [
+      "neighbor build buttons",
+      "current schema 6 English",
+      "whole-map overview",
+      "knowledge selection and source",
+      "transition selection and grouped premises",
+      "saved Russian translation",
+      "historical schema 5",
+      "session run selection",
+      "English interface"
+    ],
+    "blocked_requests": [
+      "/api/analytics/page-view",
+      "/api/article_editor/parse_stream",
+      "/api/article_editor/parse"
+    ],
+    "unhandled_reads": [
+      "/api/article_editor/articles/pilot-pmc10000452-pmc10000452-f7df96ff746be4a6/localization",
+      "/api/article_editor/articles/pilot-pmc10000452-pmc10000452-f7df96ff746be4a6/localization",
+      "/api/article_editor/articles/pilot-pmc10000452-pmc10000452-f7df96ff746be4a6/maps/text_reified/transitions/T64",
+      "/api/article_editor/articles/pilot-pmc10000452-pmc10000452-f7df96ff746be4a6/maps/text_reified/transitions/T64"
+    ],
+    "client_errors": [],
+    "screenshots": [
+      "ui.final.initial.png",
+      "ui.final.overview.png",
+      "ui.final.english.png",
+      "ui.final.transition.png",
+      "ui.final.russian.png",
+      "ui.final.previous.png"
+    ]
+  },
+  "offline": {
+    "passed": true,
+    "browser": "Microsoft Edge headless",
+    "offline": true,
+    "network_requests": 0,
+    "model_calls": 0,
+    "checks": [
+      "render",
+      "selection and source",
+      "English/Russian",
+      "full source",
+      "zoom",
+      "pan"
+    ],
+    "screenshots": [
+      "map.preview.en.png",
+      "map.preview.ru.png"
+    ]
+  },
+  "protected_data": {
+    "prior_gold_hashes": "unchanged",
+    "experiment_files": 511,
+    "experiment_hashes": "unchanged"
+  },
+  "diff_check": "passed",
+  "commits_created": 0,
+  "regression_limitations": {
+    "broad_run": {
+      "passed": 471,
+      "failed": 16
+    },
+    "resolved_after_run": "Experimental cache test explicitly bound to legacy schema 5; 31 related tests passed afterwards.",
+    "remaining": "15 failures in old DSL pipeline tests; that pipeline and its tests were not edited."
+  },
+  "production_build_warnings": [
+    "Existing large JavaScript bundle and font/logo asset-resolution warnings"
+  ],
+  "verification_artifacts": {
+    "published.json": "eda00bc728f44fdc99d42c79cc7ce927b2f809fadbb648162f747a82b48151fe",
+    "validation.json": "24843a5ade4034ae43b88a9e0e88de39caddc4f64a7da6b048706100ff334d35",
+    "offline.verification.json": "a6b3cadcdaf816bba4b17372747e53d0a90fd8022bd192c2efa83c2990e3dad4",
+    "offline.browser.verification.json": "d119fba8e97d25becccf9e282634d5a20dc36c5d25b7b537835ab686e2d9d03b",
+    "ui.final.browser.verification.json": "30807a1b03181f33db3636b46215c9305fa1af4a39f118ab1d24229576cd3d8a",
+    "ui.final.initial.png": "fdaf31cabb17ecc41ba511a3dbcbaf7aec380f2cf70b3e3fa63bb439b6ad078e",
+    "ui.final.overview.png": "031074ef6076fac04d0038f4b74a1c05c088711a5f75080618f5d878170c2a67",
+    "ui.final.english.png": "b3bdb3ac21c65e6d802bce49dbe610889cff148753b206f4a007eb86465ddb95",
+    "ui.final.transition.png": "86ebd4b7bf38028f558a83f5228ead0e13a6ba218481eeba75950340271e0a4b",
+    "ui.final.russian.png": "e5a8e14c2575dbd103f3795f2517cc184a5c181033064df20ba589795abd237b",
+    "ui.final.previous.png": "310a6941a2d46151ce0268e39830e2083151a2cc8ac3ba07096b22e4ad4e8b8d"
+  }
+}

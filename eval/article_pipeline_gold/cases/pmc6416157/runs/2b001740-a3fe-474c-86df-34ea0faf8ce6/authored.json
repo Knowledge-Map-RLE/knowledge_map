@@ -1,0 +1,3722 @@
+{
+  "knowledge": [
+    {
+      "key": "mci_definition",
+      "units": [
+        12
+      ],
+      "en": "Mild cognitive impairment is a noticeable cognitive decline that does not interfere with daily functioning; affected individuals are at increased risk of Alzheimer disease or other dementia.",
+      "ru": "Умеренные когнитивные нарушения — заметное снижение когнитивных способностей без нарушения повседневного функционирования; риск болезни Альцгеймера и других деменций повышен.",
+      "predicate": "characterized_by",
+      "roles": {
+        "subject": "Mild cognitive impairment"
+      },
+      "type": "definition",
+      "logic": "conjunction",
+      "claims": [
+        {
+          "predicate": "characterized_by",
+          "roles": {
+            "subject": "Mild cognitive impairment",
+            "feature": "Noticeable cognitive decline"
+          }
+        },
+        {
+          "predicate": "interferes_with",
+          "roles": {
+            "subject": "Mild cognitive impairment",
+            "function": "Daily functioning"
+          },
+          "negated": true
+        },
+        {
+          "predicate": "associated_with_increased_risk",
+          "roles": {
+            "condition": "Mild cognitive impairment",
+            "outcome": "Alzheimer disease or other dementia"
+          }
+        }
+      ]
+    },
+    {
+      "key": "ad_pathology",
+      "units": [
+        12
+      ],
+      "en": "An estimated 40–60% of people aged 58 years or older with MCI have underlying Alzheimer pathology.",
+      "ru": "По цитируемой оценке у 40–60% людей с MCI в возрасте от 58 лет имеется патология болезни Альцгеймера.",
+      "predicate": "estimated_pathology_prevalence",
+      "roles": {
+        "population": "People aged 58 years or older with mild cognitive impairment",
+        "pathology": "Alzheimer disease pathology"
+      },
+      "modality": "estimated",
+      "attrs": {
+        "proportion": {
+          "value": "40–60",
+          "unit": "percent"
+        },
+        "minimum_age": {
+          "value": 58,
+          "unit": "year"
+        }
+      },
+      "conditions": [
+        "Cited estimate; MCI population, not incidence in the general population"
+      ]
+    },
+    {
+      "key": "background",
+      "units": [
+        5,
+        12
+      ],
+      "en": "Earlier MCI-incidence reviews lacked synthesis and reported broad ranges, including 21.5–71.3 and 49.2–78.1 per 1000 person-years; age composition, diagnostic operationalization and follow-up methods may contribute.",
+      "ru": "Прежние обзоры заболеваемости MCI давали широкие диапазоны 21,5–71,3 и 49,2–78,1 на 1000 человеко-лет; возможные причины — возраст, диагностика и методы наблюдения.",
+      "predicate": "heterogeneity_background",
+      "roles": {
+        "measure": "MCI incidence estimates"
+      },
+      "attrs": {
+        "earlier_range1": {
+          "value": "21.5–71.3",
+          "unit": "per 1000 person-years"
+        },
+        "earlier_range2": {
+          "value": "49.2–78.1",
+          "unit": "per 1000 person-years"
+        },
+        "prior_reviews": "incidence reviews last published in 2012; prevalence updated in 2018"
+      },
+      "conditions": [
+        "Previously published literature"
+      ],
+      "modality": "may reflect methodological differences"
+    },
+    {
+      "key": "review_aim",
+      "units": [
+        5,
+        13
+      ],
+      "en": "Obtain updated age-specific MCI-incidence estimates and investigate population/methodological heterogeneity through a restrictive systematic review and quantitative/qualitative synthesis.",
+      "ru": "Получить актуальные возрастные оценки заболеваемости MCI и исследовать популяционную/методическую неоднородность с помощью строгого обзора и нескольких способов синтеза.",
+      "predicate": "conduct_review",
+      "roles": {
+        "subject": "Population-based MCI incidence studies",
+        "region": "Americas, Europe and Australia"
+      },
+      "kind": "action",
+      "status": "performed",
+      "type": "operation",
+      "conditions": [
+        "Reported completed review; aim does not imply heterogeneity was eliminated"
+      ]
+    },
+    {
+      "key": "eligibility",
+      "units": [
+        6,
+        13,
+        18,
+        20,
+        26,
+        34,
+        35,
+        41
+      ],
+      "en": "Eligible studies represented general populations in the Americas, Europe or Australia, used accepted MCI definitions with subjective concerns plus objective decline, and reported comparable five-year age bands (±1 year); CIND/age-associated conditions and several nonpopulation or ineligible designs were excluded.",
+      "ru": "Включали общепопуляционные исследования Америки, Европы и Австралии с принятой диагностикой MCI (субъективная жалоба и объективное снижение) и сопоставимыми пятилетними группами (±1 год); CIND, другие возрастные состояния и неподходящие дизайны исключались.",
+      "predicate": "study_eligibility",
+      "roles": {
+        "subject": "MCI incidence studies"
+      },
+      "type": "method",
+      "attrs": {
+        "age_bands": "65–69; 70–74; 75–79; 80–84; 85+",
+        "band_width": {
+          "value": 5,
+          "unit": "year"
+        },
+        "band_tolerance": {
+          "value": 1,
+          "unit": "year"
+        },
+        "excluded_designs": "unclear definitions or sampling; disease-specific/convenience samples; clinical trials; review papers; outside regions; nonincidence focus; sex-only strata; absent subjective concern"
+      },
+      "conditions": [
+        "English-language peer-reviewed human population-based studies; accepted MCI definitions"
+      ],
+      "quantifier": "all included analysis studies"
+    },
+    {
+      "key": "search",
+      "units": [
+        19
+      ],
+      "en": "Two independent researchers searched PubMed/Medline for English articles from January 2007 through September 2016 using MCI, incidence and population/cohort keywords, reviewed the earlier 1984–August2008 corpus and considered expert-suggested additions.",
+      "ru": "Два независимых исследователя искали в PubMed/Medline англоязычные статьи января 2007 — сентября 2016 по MCI, заболеваемости и популяционному дизайну; проверили прежний корпус 1984–август 2008 и предложения экспертов.",
+      "predicate": "search_literature",
+      "roles": {
+        "database": "PubMed/Medline",
+        "subject": "MCI incidence"
+      },
+      "kind": "action",
+      "status": "performed",
+      "time": "January 2007–September 2016 search window; earlier January 1984–August 2008 review",
+      "attrs": {
+        "researchers": {
+          "value": 2,
+          "unit": "researchers"
+        },
+        "terms": "incipient dementia; mild cognitive impairment; cognitive impairment; early stage dementia; incidence; population-based; registry; cohort",
+        "excluded_terms": "case reports; editorials"
+      }
+    },
+    {
+      "key": "screen",
+      "units": [
+        18,
+        20
+      ],
+      "en": "Screen titles/abstracts, assess full-text eligibility and retain only the longest-follow-up article when populations and periods overlap; follow MOOSE guidance.",
+      "ru": "Проверить заголовки/аннотации и полные тексты; при одинаковых популяциях и периодах оставить статью с самым длительным наблюдением; следовать MOOSE.",
+      "predicate": "screen_and_select",
+      "roles": {
+        "subject": "Retrieved incidence publications"
+      },
+      "kind": "action",
+      "status": "performed",
+      "conditions": [
+        "Population overlap and similar periods trigger duplicate-population selection"
+      ],
+      "attrs": {
+        "guideline": "Meta-analysis of Observational Studies in Epidemiology"
+      }
+    },
+    {
+      "key": "extract",
+      "units": [
+        23
+      ],
+      "en": "Extract incidence per 1000 person-years, cases/person-time, design, sampling, follow-up, statistics, population, diagnostic definitions, norms, cognitive tests, thresholds and staging measures for detailed study comparison.",
+      "ru": "Извлечь заболеваемость, случаи/человеко-время, дизайн, выборку, наблюдение, статистику, популяцию и диагностику, нормы, тесты и пороги для сравнения исследований.",
+      "predicate": "extract_study_data",
+      "roles": {
+        "subject": "Selected MCI, aMCI and naMCI studies"
+      },
+      "kind": "action",
+      "status": "performed",
+      "attrs": {
+        "rate_unit": "per 1000 person-years",
+        "data_domains": "study design; region/period; follow-up frequency/duration; response/selection; sex/ethnicity/age; definitions; education-adjusted norms; blinding; cognitive measures/cutoffs",
+        "staging_examples": "MMSE; Montreal Cognitive Assessment; Clinical Dementia Rating"
+      },
+      "conditions": [
+        "Where reported; missing values not inferred"
+      ]
+    },
+    {
+      "key": "subtypes",
+      "units": [
+        13,
+        26
+      ],
+      "en": "The review distinguishes amnestic MCI and nonamnestic MCI and analyzes MCI, aMCI and naMCI separately when subtype data are available.",
+      "ru": "Обзор различает амнестический и неамнестический подтипы и анализирует MCI, aMCI и naMCI отдельно при наличии данных.",
+      "predicate": "subtype_partition",
+      "roles": {
+        "subject": "Mild cognitive impairment",
+        "subtypes": "Amnestic MCI and nonamnestic MCI"
+      },
+      "type": "definition",
+      "logic": "partition",
+      "claims": [
+        {
+          "predicate": "subtype_of",
+          "roles": {
+            "subtype": "Amnestic mild cognitive impairment",
+            "class": "Mild cognitive impairment"
+          }
+        },
+        {
+          "predicate": "subtype_of",
+          "roles": {
+            "subtype": "Nonamnestic mild cognitive impairment",
+            "class": "Mild cognitive impairment"
+          }
+        }
+      ]
+    },
+    {
+      "key": "descriptive",
+      "units": [
+        27
+      ],
+      "en": "For each age/outcome, calculate median, IQR, minimum and maximum; select the most clinically consistent diagnostic operationalization and prefer attrition-adjusted estimates over crude values.",
+      "ru": "Для каждой возрастной группы/исхода вычислить медиану, IQR, минимум и максимум; выбрать диагностику, наиболее близкую стандартным критериям, и предпочесть поправку на выбытие грубым оценкам.",
+      "predicate": "descriptive_analysis",
+      "roles": {
+        "subject": "Eligible incidence estimates"
+      },
+      "kind": "action",
+      "status": "performed",
+      "conditions": [
+        "Revised Petersen or International Working Group criteria preferred; adjusted estimates if both reported"
+      ]
+    },
+    {
+      "key": "meta",
+      "units": [
+        28,
+        44
+      ],
+      "en": "Perform random-effects Metaprop meta-analysis in Stata only for age strata with at least three studies, calculate 95% CIs, Cochran Q and I²; weighted summaries under high heterogeneity may not represent any particular population.",
+      "ru": "Выполнить случайно-эффектный метаанализ Metaprop/Stata лишь при минимум трёх исследованиях на страту, вычислить 95% ДИ, Q и I²; при сильной неоднородности средняя оценка может не представлять отдельную популяцию.",
+      "predicate": "meta_analysis",
+      "roles": {
+        "subject": "Age-specific MCI incidence estimates"
+      },
+      "kind": "action",
+      "status": "performed",
+      "attrs": {
+        "minimum_studies": {
+          "value": 3,
+          "unit": "studies"
+        },
+        "confidence_level": {
+          "value": 95,
+          "unit": "percent"
+        }
+      },
+      "conditions": [
+        "Random-effects models; at least three studies in each five-year age stratum"
+      ]
+    },
+    {
+      "key": "i2",
+      "units": [
+        28,
+        45
+      ],
+      "en": "I² quantifies between-study inconsistency rather than sampling error: 0–40% may be unimportant, 30–60% moderate, 50–90% substantial and 75–100% considerable; the categories overlap.",
+      "ru": "I² характеризует межисследовательскую неоднородность: 0–40% может быть несущественной, 30–60% умеренной, 50–90% значительной, 75–100% выраженной; интервалы перекрываются.",
+      "predicate": "characterized_by",
+      "roles": {
+        "subject": "I-squared heterogeneity statistic"
+      },
+      "type": "definition",
+      "attrs": {
+        "possibly_unimportant": {
+          "value": "0–40",
+          "unit": "percent"
+        },
+        "moderate": {
+          "value": "30–60",
+          "unit": "percent"
+        },
+        "substantial": {
+          "value": "50–90",
+          "unit": "percent"
+        },
+        "considerable": {
+          "value": "75–100",
+          "unit": "percent"
+        }
+      }
+    },
+    {
+      "key": "selected",
+      "units": [
+        33,
+        34,
+        35,
+        36
+      ],
+      "en": "The search yielded 617 unique articles and three additional prior-review articles; 23 met extraction criteria and seven met the stricter final analysis criteria.",
+      "ru": "Поиск дал 617 уникальных статей и три добавления из прежнего обзора; 23 подходили для извлечения, семь — для окончательного анализа.",
+      "predicate": "study_selection_result",
+      "roles": {
+        "subject": "2019 MCI incidence review"
+      },
+      "type": "result",
+      "attrs": {
+        "unique_articles": {
+          "value": 617,
+          "unit": "articles"
+        },
+        "additional_prior_articles": {
+          "value": 3,
+          "unit": "articles"
+        },
+        "extracted_studies": {
+          "value": 23,
+          "unit": "studies"
+        },
+        "analyzed_studies": {
+          "value": 7,
+          "unit": "studies"
+        },
+        "duplicate_note": "one duplicate study excluded as reported"
+      },
+      "conditions": [
+        "Figure 1 selection process"
+      ]
+    },
+    {
+      "key": "exclusions",
+      "units": [
+        36
+      ],
+      "en": "Among 23 extracted studies, 18 (78%) required subjective cognitive/memory concerns; exclusions comprised two without concerns, three CIND studies, one sex-only study and ten with incompatible age bands (six overall, one below65, three ten-year).",
+      "ru": "Из 23 исследований 18 (78%) требовали субъективной жалобы; исключили два без жалобы, три CIND, одно только по полу и десять с неподходящими возрастными группами (шесть общих, одно до 65, три десятилетних).",
+      "predicate": "analysis_exclusions",
+      "roles": {
+        "subject": "Extracted incidence studies"
+      },
+      "attrs": {
+        "requiring_complaint": {
+          "value": 18,
+          "unit": "studies"
+        },
+        "requiring_complaint_percent": {
+          "value": 78,
+          "unit": "percent"
+        },
+        "no_complaint": {
+          "value": 2,
+          "unit": "studies"
+        },
+        "CIND": {
+          "value": 3,
+          "unit": "studies"
+        },
+        "sex_only": {
+          "value": 1,
+          "unit": "studies"
+        },
+        "age_band_exclusions": {
+          "value": 10,
+          "unit": "studies"
+        },
+        "overall_only": {
+          "value": 6,
+          "unit": "studies"
+        },
+        "under65_only": {
+          "value": 1,
+          "unit": "studies"
+        },
+        "ten_year_bands": {
+          "value": 3,
+          "unit": "studies"
+        }
+      },
+      "conditions": [
+        "Reported exclusion accounting"
+      ]
+    },
+    {
+      "key": "corpus",
+      "units": [
+        37
+      ],
+      "en": "The final seven cohorts comprised three US, two German, one French and one Swedish study; sample sizes ranged732–2364 and follow-up averaged3.4 to a maximum16years, with uneven subtype reporting.",
+      "ru": "Семь когорт: три США, две Германии, по одной Франции и Швеции; выборки 732–2364, наблюдение от среднего 3,4 до максимума 16 лет; подтипы описаны неравномерно.",
+      "predicate": "included_corpus",
+      "roles": {
+        "subject": "Seven analyzed MCI incidence cohorts"
+      },
+      "attrs": {
+        "countries": "USA 3; Germany 2; France 1; Sweden 1",
+        "sample_range": {
+          "value": "732–2364",
+          "unit": "participants"
+        },
+        "follow_up_range": {
+          "value": "average 3.4 to maximum 16",
+          "unit": "year"
+        },
+        "outcome_availability": "MCI only 2; MCI plus both subtypes 2; subtypes only 2; aMCI only 1"
+      },
+      "conditions": [
+        "Do not equate an average with a maximum follow-up"
+      ]
+    },
+    {
+      "key": "table_conventions",
+      "units": [
+        42,
+        43
+      ],
+      "en": "The85+ band combines85–89,85–94 and≥85 definitions; with only two estimates the descriptive median equals the mean and no IQR is calculated.",
+      "ru": "Группа 85+ объединяет диапазоны 85–89, 85–94 и ≥85; при двух оценках медиана равна среднему, IQR не вычисляется.",
+      "predicate": "table_summary_conventions",
+      "roles": {
+        "subject": "Age-specific incidence summaries"
+      },
+      "type": "method",
+      "attrs": {
+        "oldest_bands": "85–89; 85–94; ≥85 years",
+        "two_estimate_rule": "median equals mean; IQR not calculated"
+      },
+      "conditions": [
+        "Table 1 footnotes"
+      ]
+    },
+    {
+      "key": "rate_MCI_0",
+      "units": [
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45
+      ],
+      "en": "MCI ages 65–69 years: Number of studies: 0; Minimum IR estimate (95% CI): not reported/computed; Maximum IR estimate (95% CI): not reported/computed; Median IR‡: not reported/computed; IQR‡: not reported/computed; Meta-analysis estimate (95% CI)§: not reported/computed; I2 measure of heterogeneity, %¶: not reported/computed. Incidence statistics are per1000 person-years; I² is percent.",
+      "ru": "MCI, возраст 65–69 лет: Исследований: 0; Минимум (95% ДИ): нет данных / не вычислено; Максимум (95% ДИ): нет данных / не вычислено; Медиана: нет данных / не вычислено; IQR: нет данных / не вычислено; Метаанализ (95% ДИ): нет данных / не вычислено; I², %: нет данных / не вычислено. Заболеваемость — на 1000 человеко-лет.",
+      "predicate": "mci_incidence_by_age",
+      "roles": {
+        "condition": "Mild cognitive impairment",
+        "population": "Population-based incidence review cohorts",
+        "age_band": "65–69 years"
+      },
+      "type": "result",
+      "attrs": {
+        "number_of_studies": {
+          "value": "0",
+          "unit": "studies"
+        },
+        "minimum_ir_estimate_95_ci_": {
+          "value": "not reported or not computed",
+          "unit": null
+        },
+        "maximum_ir_estimate_95_ci_": {
+          "value": "not reported or not computed",
+          "unit": null
+        },
+        "median_ir_": {
+          "value": "not reported or not computed",
+          "unit": null
+        },
+        "iqr_": {
+          "value": "not reported or not computed",
+          "unit": null
+        },
+        "meta_analysis_estimate_95_ci_": {
+          "value": "not reported or not computed",
+          "unit": null
+        },
+        "i2_measure_of_heterogeneity_": {
+          "value": "not reported or not computed",
+          "unit": null
+        }
+      },
+      "conditions": [
+        "Five-year age bands; selected population-based studies from Americas, Europe and Australia; 85+ may include85–89 or85–94; pooled estimate requires at least3studies"
+      ],
+      "time": "Review search through September2016"
+    },
+    {
+      "key": "rate_MCI_1",
+      "units": [
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        48
+      ],
+      "en": "MCI ages 70–74 years: Number of studies: 2 ,; Minimum IR estimate (95% CI): 12.4 (11.6, 13.2); Maximum IR estimate (95% CI): 35.9 (20.4, 51.4); Median IR‡: 24.2; IQR‡: not reported/computed; Meta-analysis estimate (95% CI)§: not reported/computed; I2 measure of heterogeneity, %¶: not reported/computed. Incidence statistics are per1000 person-years; I² is percent.",
+      "ru": "MCI, возраст 70–74 лет: Исследований: 2 ,; Минимум (95% ДИ): 12.4 (11.6, 13.2); Максимум (95% ДИ): 35.9 (20.4, 51.4); Медиана: 24.2; IQR: нет данных / не вычислено; Метаанализ (95% ДИ): нет данных / не вычислено; I², %: нет данных / не вычислено. Заболеваемость — на 1000 человеко-лет.",
+      "predicate": "mci_incidence_by_age",
+      "roles": {
+        "condition": "Mild cognitive impairment",
+        "population": "Population-based incidence review cohorts",
+        "age_band": "70–74 years"
+      },
+      "type": "result",
+      "attrs": {
+        "number_of_studies": {
+          "value": "2 ,",
+          "unit": "studies"
+        },
+        "minimum_ir_estimate_95_ci_": {
+          "value": "12.4 (11.6, 13.2)",
+          "unit": "per 1000 person-years"
+        },
+        "maximum_ir_estimate_95_ci_": {
+          "value": "35.9 (20.4, 51.4)",
+          "unit": "per 1000 person-years"
+        },
+        "median_ir_": {
+          "value": "24.2",
+          "unit": "per 1000 person-years"
+        },
+        "iqr_": {
+          "value": "not reported or not computed",
+          "unit": null
+        },
+        "meta_analysis_estimate_95_ci_": {
+          "value": "not reported or not computed",
+          "unit": null
+        },
+        "i2_measure_of_heterogeneity_": {
+          "value": "not reported or not computed",
+          "unit": null
+        }
+      },
+      "conditions": [
+        "Five-year age bands; selected population-based studies from Americas, Europe and Australia; 85+ may include85–89 or85–94; pooled estimate requires at least3studies"
+      ],
+      "time": "Review search through September2016"
+    },
+    {
+      "key": "rate_MCI_2",
+      "units": [
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        7,
+        48
+      ],
+      "en": "MCI ages 75–79 years: Number of studies: 4 , , ,; Minimum IR estimate (95% CI): 5.3 (1.7, 12.4); Maximum IR estimate (95% CI): 50.3 (38.3, 66.0); Median IR‡: 26.3; IQR‡: 7.1–46.3; Meta-analysis estimate (95% CI)§: 22.5 (5.1, 51.4); I2 measure of heterogeneity, %¶: 96.4. Incidence statistics are per1000 person-years; I² is percent.",
+      "ru": "MCI, возраст 75–79 лет: Исследований: 4 , , ,; Минимум (95% ДИ): 5.3 (1.7, 12.4); Максимум (95% ДИ): 50.3 (38.3, 66.0); Медиана: 26.3; IQR: 7.1–46.3; Метаанализ (95% ДИ): 22.5 (5.1, 51.4); I², %: 96.4. Заболеваемость — на 1000 человеко-лет.",
+      "predicate": "mci_incidence_by_age",
+      "roles": {
+        "condition": "Mild cognitive impairment",
+        "population": "Population-based incidence review cohorts",
+        "age_band": "75–79 years"
+      },
+      "type": "result",
+      "attrs": {
+        "number_of_studies": {
+          "value": "4 , , ,",
+          "unit": "studies"
+        },
+        "minimum_ir_estimate_95_ci_": {
+          "value": "5.3 (1.7, 12.4)",
+          "unit": "per 1000 person-years"
+        },
+        "maximum_ir_estimate_95_ci_": {
+          "value": "50.3 (38.3, 66.0)",
+          "unit": "per 1000 person-years"
+        },
+        "median_ir_": {
+          "value": "26.3",
+          "unit": "per 1000 person-years"
+        },
+        "iqr_": {
+          "value": "7.1–46.3",
+          "unit": "per 1000 person-years"
+        },
+        "meta_analysis_estimate_95_ci_": {
+          "value": "22.5 (5.1, 51.4)",
+          "unit": "per 1000 person-years"
+        },
+        "i2_measure_of_heterogeneity_": {
+          "value": "96.4",
+          "unit": "percent"
+        }
+      },
+      "conditions": [
+        "Five-year age bands; selected population-based studies from Americas, Europe and Australia; 85+ may include85–89 or85–94; pooled estimate requires at least3studies"
+      ],
+      "time": "Review search through September2016"
+    },
+    {
+      "key": "rate_MCI_3",
+      "units": [
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        7,
+        48
+      ],
+      "en": "MCI ages 80–84 years: Number of studies: 4 , , ,; Minimum IR estimate (95% CI): 9.5 (8.9, 10.1); Maximum IR estimate (95% CI): 86.3 (63.6, 109.0); Median IR‡: 49.8; IQR‡: 13.4–85.2; Meta-analysis estimate (95% CI)§: 40.9 (7.7, 97.5); I2 measure of heterogeneity, %¶: 97.7. Incidence statistics are per1000 person-years; I² is percent.",
+      "ru": "MCI, возраст 80–84 лет: Исследований: 4 , , ,; Минимум (95% ДИ): 9.5 (8.9, 10.1); Максимум (95% ДИ): 86.3 (63.6, 109.0); Медиана: 49.8; IQR: 13.4–85.2; Метаанализ (95% ДИ): 40.9 (7.7, 97.5); I², %: 97.7. Заболеваемость — на 1000 человеко-лет.",
+      "predicate": "mci_incidence_by_age",
+      "roles": {
+        "condition": "Mild cognitive impairment",
+        "population": "Population-based incidence review cohorts",
+        "age_band": "80–84 years"
+      },
+      "type": "result",
+      "attrs": {
+        "number_of_studies": {
+          "value": "4 , , ,",
+          "unit": "studies"
+        },
+        "minimum_ir_estimate_95_ci_": {
+          "value": "9.5 (8.9, 10.1)",
+          "unit": "per 1000 person-years"
+        },
+        "maximum_ir_estimate_95_ci_": {
+          "value": "86.3 (63.6, 109.0)",
+          "unit": "per 1000 person-years"
+        },
+        "median_ir_": {
+          "value": "49.8",
+          "unit": "per 1000 person-years"
+        },
+        "iqr_": {
+          "value": "13.4–85.2",
+          "unit": "per 1000 person-years"
+        },
+        "meta_analysis_estimate_95_ci_": {
+          "value": "40.9 (7.7, 97.5)",
+          "unit": "per 1000 person-years"
+        },
+        "i2_measure_of_heterogeneity_": {
+          "value": "97.7",
+          "unit": "percent"
+        }
+      },
+      "conditions": [
+        "Five-year age bands; selected population-based studies from Americas, Europe and Australia; 85+ may include85–89 or85–94; pooled estimate requires at least3studies"
+      ],
+      "time": "Review search through September2016"
+    },
+    {
+      "key": "rate_MCI_4",
+      "units": [
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        7,
+        48
+      ],
+      "en": "MCI ages 85+ years: Number of studies: 4 , , ,; Minimum IR estimate (95% CI): 8.8 (1.8, 25.6); Maximum IR estimate (95% CI): 157.6 (117.7, 211.1); Median IR‡: 73.7; IQR‡: 11.5–140.1; Meta-analysis estimate (95% CI)§: 60.1 (6.7, 159.0); I2 measure of heterogeneity, %¶: 98.3. Incidence statistics are per1000 person-years; I² is percent.",
+      "ru": "MCI, возраст 85+ лет: Исследований: 4 , , ,; Минимум (95% ДИ): 8.8 (1.8, 25.6); Максимум (95% ДИ): 157.6 (117.7, 211.1); Медиана: 73.7; IQR: 11.5–140.1; Метаанализ (95% ДИ): 60.1 (6.7, 159.0); I², %: 98.3. Заболеваемость — на 1000 человеко-лет.",
+      "predicate": "mci_incidence_by_age",
+      "roles": {
+        "condition": "Mild cognitive impairment",
+        "population": "Population-based incidence review cohorts",
+        "age_band": "85+ years"
+      },
+      "type": "result",
+      "attrs": {
+        "number_of_studies": {
+          "value": "4 , , ,",
+          "unit": "studies"
+        },
+        "minimum_ir_estimate_95_ci_": {
+          "value": "8.8 (1.8, 25.6)",
+          "unit": "per 1000 person-years"
+        },
+        "maximum_ir_estimate_95_ci_": {
+          "value": "157.6 (117.7, 211.1)",
+          "unit": "per 1000 person-years"
+        },
+        "median_ir_": {
+          "value": "73.7",
+          "unit": "per 1000 person-years"
+        },
+        "iqr_": {
+          "value": "11.5–140.1",
+          "unit": "per 1000 person-years"
+        },
+        "meta_analysis_estimate_95_ci_": {
+          "value": "60.1 (6.7, 159.0)",
+          "unit": "per 1000 person-years"
+        },
+        "i2_measure_of_heterogeneity_": {
+          "value": "98.3",
+          "unit": "percent"
+        }
+      },
+      "conditions": [
+        "Five-year age bands; selected population-based studies from Americas, Europe and Australia; 85+ may include85–89 or85–94; pooled estimate requires at least3studies"
+      ],
+      "time": "Review search through September2016"
+    },
+    {
+      "key": "rate_aMCI_0",
+      "units": [
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45
+      ],
+      "en": "aMCI ages 65–69 years: Number of studies: 1; Minimum IR estimate (95% CI): 11 (5, 17); Maximum IR estimate (95% CI): not reported/computed; Median IR‡: not reported/computed; IQR‡: not reported/computed; Meta-analysis estimate (95% CI)§: not reported/computed; I2 measure of heterogeneity, %¶: not reported/computed. Incidence statistics are per1000 person-years; I² is percent.",
+      "ru": "MCI (амнестический), возраст 65–69 лет: Исследований: 1; Минимум (95% ДИ): 11 (5, 17); Максимум (95% ДИ): нет данных / не вычислено; Медиана: нет данных / не вычислено; IQR: нет данных / не вычислено; Метаанализ (95% ДИ): нет данных / не вычислено; I², %: нет данных / не вычислено. Заболеваемость — на 1000 человеко-лет.",
+      "predicate": "mci_incidence_by_age",
+      "roles": {
+        "condition": "Amnestic mild cognitive impairment",
+        "population": "Population-based incidence review cohorts",
+        "age_band": "65–69 years"
+      },
+      "type": "result",
+      "attrs": {
+        "number_of_studies": {
+          "value": "1",
+          "unit": "studies"
+        },
+        "minimum_ir_estimate_95_ci_": {
+          "value": "11 (5, 17)",
+          "unit": "per 1000 person-years"
+        },
+        "maximum_ir_estimate_95_ci_": {
+          "value": "not reported or not computed",
+          "unit": null
+        },
+        "median_ir_": {
+          "value": "not reported or not computed",
+          "unit": null
+        },
+        "iqr_": {
+          "value": "not reported or not computed",
+          "unit": null
+        },
+        "meta_analysis_estimate_95_ci_": {
+          "value": "not reported or not computed",
+          "unit": null
+        },
+        "i2_measure_of_heterogeneity_": {
+          "value": "not reported or not computed",
+          "unit": null
+        }
+      },
+      "conditions": [
+        "Five-year age bands; selected population-based studies from Americas, Europe and Australia; 85+ may include85–89 or85–94; pooled estimate requires at least3studies"
+      ],
+      "time": "Review search through September2016"
+    },
+    {
+      "key": "rate_aMCI_1",
+      "units": [
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        48
+      ],
+      "en": "aMCI ages 70–74 years: Number of studies: 3 , ,; Minimum IR estimate (95% CI): 21.0 (16.0, 27.0); Maximum IR estimate (95% CI): 26.0 (13.7, 49.4); Median IR‡: 24.1; IQR‡: 22.6–25.1; Meta-analysis estimate (95% CI)§: 22.4 (18.2, 27.1); I2 measure of heterogeneity, %¶: 0. Incidence statistics are per1000 person-years; I² is percent.",
+      "ru": "MCI (амнестический), возраст 70–74 лет: Исследований: 3 , ,; Минимум (95% ДИ): 21.0 (16.0, 27.0); Максимум (95% ДИ): 26.0 (13.7, 49.4); Медиана: 24.1; IQR: 22.6–25.1; Метаанализ (95% ДИ): 22.4 (18.2, 27.1); I², %: 0. Заболеваемость — на 1000 человеко-лет.",
+      "predicate": "mci_incidence_by_age",
+      "roles": {
+        "condition": "Amnestic mild cognitive impairment",
+        "population": "Population-based incidence review cohorts",
+        "age_band": "70–74 years"
+      },
+      "type": "result",
+      "attrs": {
+        "number_of_studies": {
+          "value": "3 , ,",
+          "unit": "studies"
+        },
+        "minimum_ir_estimate_95_ci_": {
+          "value": "21.0 (16.0, 27.0)",
+          "unit": "per 1000 person-years"
+        },
+        "maximum_ir_estimate_95_ci_": {
+          "value": "26.0 (13.7, 49.4)",
+          "unit": "per 1000 person-years"
+        },
+        "median_ir_": {
+          "value": "24.1",
+          "unit": "per 1000 person-years"
+        },
+        "iqr_": {
+          "value": "22.6–25.1",
+          "unit": "per 1000 person-years"
+        },
+        "meta_analysis_estimate_95_ci_": {
+          "value": "22.4 (18.2, 27.1)",
+          "unit": "per 1000 person-years"
+        },
+        "i2_measure_of_heterogeneity_": {
+          "value": "0",
+          "unit": "percent"
+        }
+      },
+      "conditions": [
+        "Five-year age bands; selected population-based studies from Americas, Europe and Australia; 85+ may include85–89 or85–94; pooled estimate requires at least3studies"
+      ],
+      "time": "Review search through September2016"
+    },
+    {
+      "key": "rate_aMCI_2",
+      "units": [
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        48
+      ],
+      "en": "aMCI ages 75–79 years: Number of studies: 5 , , , ,; Minimum IR estimate (95% CI): 5.4 (2.3, 12.8); Maximum IR estimate (95% CI): 26.3 (14.1, 38.4); Median IR‡: 19.8; IQR‡: 15.5–22.0; Meta-analysis estimate (95% CI)§: 18.7 (13.4, 24.9); I2 measure of heterogeneity, %¶: 58.7. Incidence statistics are per1000 person-years; I² is percent.",
+      "ru": "MCI (амнестический), возраст 75–79 лет: Исследований: 5 , , , ,; Минимум (95% ДИ): 5.4 (2.3, 12.8); Максимум (95% ДИ): 26.3 (14.1, 38.4); Медиана: 19.8; IQR: 15.5–22.0; Метаанализ (95% ДИ): 18.7 (13.4, 24.9); I², %: 58.7. Заболеваемость — на 1000 человеко-лет.",
+      "predicate": "mci_incidence_by_age",
+      "roles": {
+        "condition": "Amnestic mild cognitive impairment",
+        "population": "Population-based incidence review cohorts",
+        "age_band": "75–79 years"
+      },
+      "type": "result",
+      "attrs": {
+        "number_of_studies": {
+          "value": "5 , , , ,",
+          "unit": "studies"
+        },
+        "minimum_ir_estimate_95_ci_": {
+          "value": "5.4 (2.3, 12.8)",
+          "unit": "per 1000 person-years"
+        },
+        "maximum_ir_estimate_95_ci_": {
+          "value": "26.3 (14.1, 38.4)",
+          "unit": "per 1000 person-years"
+        },
+        "median_ir_": {
+          "value": "19.8",
+          "unit": "per 1000 person-years"
+        },
+        "iqr_": {
+          "value": "15.5–22.0",
+          "unit": "per 1000 person-years"
+        },
+        "meta_analysis_estimate_95_ci_": {
+          "value": "18.7 (13.4, 24.9)",
+          "unit": "per 1000 person-years"
+        },
+        "i2_measure_of_heterogeneity_": {
+          "value": "58.7",
+          "unit": "percent"
+        }
+      },
+      "conditions": [
+        "Five-year age bands; selected population-based studies from Americas, Europe and Australia; 85+ may include85–89 or85–94; pooled estimate requires at least3studies"
+      ],
+      "time": "Review search through September2016"
+    },
+    {
+      "key": "rate_aMCI_3",
+      "units": [
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        48
+      ],
+      "en": "aMCI ages 80–84 years: Number of studies: 4 , , ,; Minimum IR estimate (95% CI): 11.2 (6.6, 18.9); Maximum IR estimate (95% CI): 51.7 (34.6, 68.9); Median IR‡: 37.3; IQR‡: 28.2–43.4; Meta-analysis estimate (95% CI)§: 32.7 (16.8, 53.7); I2 measure of heterogeneity, %¶: 89.5. Incidence statistics are per1000 person-years; I² is percent.",
+      "ru": "MCI (амнестический), возраст 80–84 лет: Исследований: 4 , , ,; Минимум (95% ДИ): 11.2 (6.6, 18.9); Максимум (95% ДИ): 51.7 (34.6, 68.9); Медиана: 37.3; IQR: 28.2–43.4; Метаанализ (95% ДИ): 32.7 (16.8, 53.7); I², %: 89.5. Заболеваемость — на 1000 человеко-лет.",
+      "predicate": "mci_incidence_by_age",
+      "roles": {
+        "condition": "Amnestic mild cognitive impairment",
+        "population": "Population-based incidence review cohorts",
+        "age_band": "80–84 years"
+      },
+      "type": "result",
+      "attrs": {
+        "number_of_studies": {
+          "value": "4 , , ,",
+          "unit": "studies"
+        },
+        "minimum_ir_estimate_95_ci_": {
+          "value": "11.2 (6.6, 18.9)",
+          "unit": "per 1000 person-years"
+        },
+        "maximum_ir_estimate_95_ci_": {
+          "value": "51.7 (34.6, 68.9)",
+          "unit": "per 1000 person-years"
+        },
+        "median_ir_": {
+          "value": "37.3",
+          "unit": "per 1000 person-years"
+        },
+        "iqr_": {
+          "value": "28.2–43.4",
+          "unit": "per 1000 person-years"
+        },
+        "meta_analysis_estimate_95_ci_": {
+          "value": "32.7 (16.8, 53.7)",
+          "unit": "per 1000 person-years"
+        },
+        "i2_measure_of_heterogeneity_": {
+          "value": "89.5",
+          "unit": "percent"
+        }
+      },
+      "conditions": [
+        "Five-year age bands; selected population-based studies from Americas, Europe and Australia; 85+ may include85–89 or85–94; pooled estimate requires at least3studies"
+      ],
+      "time": "Review search through September2016"
+    },
+    {
+      "key": "rate_aMCI_4",
+      "units": [
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        48
+      ],
+      "en": "aMCI ages 85+ years: Number of studies: 4 , , ,; Minimum IR estimate (95% CI): 20.2 (13.1, 31.1); Maximum IR estimate (95% CI): 74.2 (45.8, 102.5); Median IR‡: 59.1; IQR‡: 46.3–65.9; Meta-analysis estimate (95% CI)§: 50.5 (26.6, 81.3); I2 measure of heterogeneity, %¶: 88.0. Incidence statistics are per1000 person-years; I² is percent.",
+      "ru": "MCI (амнестический), возраст 85+ лет: Исследований: 4 , , ,; Минимум (95% ДИ): 20.2 (13.1, 31.1); Максимум (95% ДИ): 74.2 (45.8, 102.5); Медиана: 59.1; IQR: 46.3–65.9; Метаанализ (95% ДИ): 50.5 (26.6, 81.3); I², %: 88.0. Заболеваемость — на 1000 человеко-лет.",
+      "predicate": "mci_incidence_by_age",
+      "roles": {
+        "condition": "Amnestic mild cognitive impairment",
+        "population": "Population-based incidence review cohorts",
+        "age_band": "85+ years"
+      },
+      "type": "result",
+      "attrs": {
+        "number_of_studies": {
+          "value": "4 , , ,",
+          "unit": "studies"
+        },
+        "minimum_ir_estimate_95_ci_": {
+          "value": "20.2 (13.1, 31.1)",
+          "unit": "per 1000 person-years"
+        },
+        "maximum_ir_estimate_95_ci_": {
+          "value": "74.2 (45.8, 102.5)",
+          "unit": "per 1000 person-years"
+        },
+        "median_ir_": {
+          "value": "59.1",
+          "unit": "per 1000 person-years"
+        },
+        "iqr_": {
+          "value": "46.3–65.9",
+          "unit": "per 1000 person-years"
+        },
+        "meta_analysis_estimate_95_ci_": {
+          "value": "50.5 (26.6, 81.3)",
+          "unit": "per 1000 person-years"
+        },
+        "i2_measure_of_heterogeneity_": {
+          "value": "88.0",
+          "unit": "percent"
+        }
+      },
+      "conditions": [
+        "Five-year age bands; selected population-based studies from Americas, Europe and Australia; 85+ may include85–89 or85–94; pooled estimate requires at least3studies"
+      ],
+      "time": "Review search through September2016"
+    },
+    {
+      "key": "rate_naMCI_0",
+      "units": [
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45
+      ],
+      "en": "naMCI ages 65–69 years: Number of studies: 1; Minimum IR estimate (95% CI): 17 (10, 24); Maximum IR estimate (95% CI): not reported/computed; Median IR‡: 17; IQR‡: not reported/computed; Meta-analysis estimate (95% CI)§: not reported/computed; I2 measure of heterogeneity, %¶: not reported/computed. Incidence statistics are per1000 person-years; I² is percent.",
+      "ru": "MCI (неамнестический), возраст 65–69 лет: Исследований: 1; Минимум (95% ДИ): 17 (10, 24); Максимум (95% ДИ): нет данных / не вычислено; Медиана: 17; IQR: нет данных / не вычислено; Метаанализ (95% ДИ): нет данных / не вычислено; I², %: нет данных / не вычислено. Заболеваемость — на 1000 человеко-лет.",
+      "predicate": "mci_incidence_by_age",
+      "roles": {
+        "condition": "Nonamnestic mild cognitive impairment",
+        "population": "Population-based incidence review cohorts",
+        "age_band": "65–69 years"
+      },
+      "type": "result",
+      "attrs": {
+        "number_of_studies": {
+          "value": "1",
+          "unit": "studies"
+        },
+        "minimum_ir_estimate_95_ci_": {
+          "value": "17 (10, 24)",
+          "unit": "per 1000 person-years"
+        },
+        "maximum_ir_estimate_95_ci_": {
+          "value": "not reported or not computed",
+          "unit": null
+        },
+        "median_ir_": {
+          "value": "17",
+          "unit": "per 1000 person-years"
+        },
+        "iqr_": {
+          "value": "not reported or not computed",
+          "unit": null
+        },
+        "meta_analysis_estimate_95_ci_": {
+          "value": "not reported or not computed",
+          "unit": null
+        },
+        "i2_measure_of_heterogeneity_": {
+          "value": "not reported or not computed",
+          "unit": null
+        }
+      },
+      "conditions": [
+        "Five-year age bands; selected population-based studies from Americas, Europe and Australia; 85+ may include85–89 or85–94; pooled estimate requires at least3studies"
+      ],
+      "time": "Review search through September2016"
+    },
+    {
+      "key": "rate_naMCI_1",
+      "units": [
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        48
+      ],
+      "en": "naMCI ages 70–74 years: Number of studies: 3 , ,; Minimum IR estimate (95% CI): 7.7 (0.7, 14.8); Maximum IR estimate (95% CI): 46.1 (29.1, 73.2); Median IR‡: 26.0; IQR‡: 16.9–36.1; Meta-analysis estimate (95% CI)§: 23.3 (7.9, 46.3); I2 measure of heterogeneity, %¶: 93.2. Incidence statistics are per1000 person-years; I² is percent.",
+      "ru": "MCI (неамнестический), возраст 70–74 лет: Исследований: 3 , ,; Минимум (95% ДИ): 7.7 (0.7, 14.8); Максимум (95% ДИ): 46.1 (29.1, 73.2); Медиана: 26.0; IQR: 16.9–36.1; Метаанализ (95% ДИ): 23.3 (7.9, 46.3); I², %: 93.2. Заболеваемость — на 1000 человеко-лет.",
+      "predicate": "mci_incidence_by_age",
+      "roles": {
+        "condition": "Nonamnestic mild cognitive impairment",
+        "population": "Population-based incidence review cohorts",
+        "age_band": "70–74 years"
+      },
+      "type": "result",
+      "attrs": {
+        "number_of_studies": {
+          "value": "3 , ,",
+          "unit": "studies"
+        },
+        "minimum_ir_estimate_95_ci_": {
+          "value": "7.7 (0.7, 14.8)",
+          "unit": "per 1000 person-years"
+        },
+        "maximum_ir_estimate_95_ci_": {
+          "value": "46.1 (29.1, 73.2)",
+          "unit": "per 1000 person-years"
+        },
+        "median_ir_": {
+          "value": "26.0",
+          "unit": "per 1000 person-years"
+        },
+        "iqr_": {
+          "value": "16.9–36.1",
+          "unit": "per 1000 person-years"
+        },
+        "meta_analysis_estimate_95_ci_": {
+          "value": "23.3 (7.9, 46.3)",
+          "unit": "per 1000 person-years"
+        },
+        "i2_measure_of_heterogeneity_": {
+          "value": "93.2",
+          "unit": "percent"
+        }
+      },
+      "conditions": [
+        "Five-year age bands; selected population-based studies from Americas, Europe and Australia; 85+ may include85–89 or85–94; pooled estimate requires at least3studies"
+      ],
+      "time": "Review search through September2016"
+    },
+    {
+      "key": "rate_naMCI_2",
+      "units": [
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        48
+      ],
+      "en": "naMCI ages 75–79 years: Number of studies: 4 , , ,; Minimum IR estimate (95% CI): 9.5 (2.3, 16.6); Maximum IR estimate (95% CI): 37.8 (20.9, 68.5); Median IR‡: 34.4; IQR‡: 27.9–35.6; Meta-analysis estimate (95% CI)§: 27.6 (15.1, 43.6); I2 measure of heterogeneity, %¶: 89.8. Incidence statistics are per1000 person-years; I² is percent.",
+      "ru": "MCI (неамнестический), возраст 75–79 лет: Исследований: 4 , , ,; Минимум (95% ДИ): 9.5 (2.3, 16.6); Максимум (95% ДИ): 37.8 (20.9, 68.5); Медиана: 34.4; IQR: 27.9–35.6; Метаанализ (95% ДИ): 27.6 (15.1, 43.6); I², %: 89.8. Заболеваемость — на 1000 человеко-лет.",
+      "predicate": "mci_incidence_by_age",
+      "roles": {
+        "condition": "Nonamnestic mild cognitive impairment",
+        "population": "Population-based incidence review cohorts",
+        "age_band": "75–79 years"
+      },
+      "type": "result",
+      "attrs": {
+        "number_of_studies": {
+          "value": "4 , , ,",
+          "unit": "studies"
+        },
+        "minimum_ir_estimate_95_ci_": {
+          "value": "9.5 (2.3, 16.6)",
+          "unit": "per 1000 person-years"
+        },
+        "maximum_ir_estimate_95_ci_": {
+          "value": "37.8 (20.9, 68.5)",
+          "unit": "per 1000 person-years"
+        },
+        "median_ir_": {
+          "value": "34.4",
+          "unit": "per 1000 person-years"
+        },
+        "iqr_": {
+          "value": "27.9–35.6",
+          "unit": "per 1000 person-years"
+        },
+        "meta_analysis_estimate_95_ci_": {
+          "value": "27.6 (15.1, 43.6)",
+          "unit": "per 1000 person-years"
+        },
+        "i2_measure_of_heterogeneity_": {
+          "value": "89.8",
+          "unit": "percent"
+        }
+      },
+      "conditions": [
+        "Five-year age bands; selected population-based studies from Americas, Europe and Australia; 85+ may include85–89 or85–94; pooled estimate requires at least3studies"
+      ],
+      "time": "Review search through September2016"
+    },
+    {
+      "key": "rate_naMCI_3",
+      "units": [
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        48
+      ],
+      "en": "naMCI ages 80–84 years: Number of studies: 3 , ,; Minimum IR estimate (95% CI): 21.1 (10.2, 32.1); Maximum IR estimate (95% CI): 50.9 (34.1, 75.9); Median IR‡: 28.6; IQR‡: 24.9–39.8; Meta-analysis estimate (95% CI)§: 31.1 (18.1, 47.3); I2 measure of heterogeneity, %¶: 79.7. Incidence statistics are per1000 person-years; I² is percent.",
+      "ru": "MCI (неамнестический), возраст 80–84 лет: Исследований: 3 , ,; Минимум (95% ДИ): 21.1 (10.2, 32.1); Максимум (95% ДИ): 50.9 (34.1, 75.9); Медиана: 28.6; IQR: 24.9–39.8; Метаанализ (95% ДИ): 31.1 (18.1, 47.3); I², %: 79.7. Заболеваемость — на 1000 человеко-лет.",
+      "predicate": "mci_incidence_by_age",
+      "roles": {
+        "condition": "Nonamnestic mild cognitive impairment",
+        "population": "Population-based incidence review cohorts",
+        "age_band": "80–84 years"
+      },
+      "type": "result",
+      "attrs": {
+        "number_of_studies": {
+          "value": "3 , ,",
+          "unit": "studies"
+        },
+        "minimum_ir_estimate_95_ci_": {
+          "value": "21.1 (10.2, 32.1)",
+          "unit": "per 1000 person-years"
+        },
+        "maximum_ir_estimate_95_ci_": {
+          "value": "50.9 (34.1, 75.9)",
+          "unit": "per 1000 person-years"
+        },
+        "median_ir_": {
+          "value": "28.6",
+          "unit": "per 1000 person-years"
+        },
+        "iqr_": {
+          "value": "24.9–39.8",
+          "unit": "per 1000 person-years"
+        },
+        "meta_analysis_estimate_95_ci_": {
+          "value": "31.1 (18.1, 47.3)",
+          "unit": "per 1000 person-years"
+        },
+        "i2_measure_of_heterogeneity_": {
+          "value": "79.7",
+          "unit": "percent"
+        }
+      },
+      "conditions": [
+        "Five-year age bands; selected population-based studies from Americas, Europe and Australia; 85+ may include85–89 or85–94; pooled estimate requires at least3studies"
+      ],
+      "time": "Review search through September2016"
+    },
+    {
+      "key": "rate_naMCI_4",
+      "units": [
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        48
+      ],
+      "en": "naMCI ages 85+ years: Number of studies: 3 , ,; Minimum IR estimate (95% CI): 32.0 (12.9, 51.2); Maximum IR estimate (95% CI): 94.6 (64.9, 137.9); Median IR‡: 49.7; IQR‡: 40.9–72.2; Meta-analysis estimate (95% CI)§: 54.3 (26.9, 90.4); I2 measure of heterogeneity, %¶: 87.8. Incidence statistics are per1000 person-years; I² is percent.",
+      "ru": "MCI (неамнестический), возраст 85+ лет: Исследований: 3 , ,; Минимум (95% ДИ): 32.0 (12.9, 51.2); Максимум (95% ДИ): 94.6 (64.9, 137.9); Медиана: 49.7; IQR: 40.9–72.2; Метаанализ (95% ДИ): 54.3 (26.9, 90.4); I², %: 87.8. Заболеваемость — на 1000 человеко-лет.",
+      "predicate": "mci_incidence_by_age",
+      "roles": {
+        "condition": "Nonamnestic mild cognitive impairment",
+        "population": "Population-based incidence review cohorts",
+        "age_band": "85+ years"
+      },
+      "type": "result",
+      "attrs": {
+        "number_of_studies": {
+          "value": "3 , ,",
+          "unit": "studies"
+        },
+        "minimum_ir_estimate_95_ci_": {
+          "value": "32.0 (12.9, 51.2)",
+          "unit": "per 1000 person-years"
+        },
+        "maximum_ir_estimate_95_ci_": {
+          "value": "94.6 (64.9, 137.9)",
+          "unit": "per 1000 person-years"
+        },
+        "median_ir_": {
+          "value": "49.7",
+          "unit": "per 1000 person-years"
+        },
+        "iqr_": {
+          "value": "40.9–72.2",
+          "unit": "per 1000 person-years"
+        },
+        "meta_analysis_estimate_95_ci_": {
+          "value": "54.3 (26.9, 90.4)",
+          "unit": "per 1000 person-years"
+        },
+        "i2_measure_of_heterogeneity_": {
+          "value": "87.8",
+          "unit": "percent"
+        }
+      },
+      "conditions": [
+        "Five-year age bands; selected population-based studies from Americas, Europe and Australia; 85+ may include85–89 or85–94; pooled estimate requires at least3studies"
+      ],
+      "time": "Review search through September2016"
+    },
+    {
+      "key": "cohort_0",
+      "units": [
+        52,
+        53,
+        54,
+        55,
+        56,
+        59,
+        60
+      ],
+      "en": "MCI in Larrieu 2002 (France, 1993–1998): N=1265, female=52%, ages 65-NR, response 69%, follow-up 60 months (maximum/mean 5 years); incidence per1000 person-years 70–74: 12.4 (11.6, 13.2); 75–79: 7.7 (7.3, 8.1); 80–84: 9.5 (8.9, 10.1); 85+: 12.4 (11.4, 13.4). Criteria: Petersen Original, threshold 1, norms Age, edu, dementia exclusion DSM-III-R.",
+      "ru": "Исследование Larrieu 2002 (France, 1993–1998), MCI: N=1265, женщин 52%, возраст 65-NR, отклик 69%, наблюдение 60 months (максимум/среднее 5 лет); заболеваемость на 1000 человеко-лет 70–74: 12.4 (11.6, 13.2); 75–79: 7.7 (7.3, 8.1); 80–84: 9.5 (8.9, 10.1); 85+: 12.4 (11.4, 13.4). Диагностика Petersen Original, порог 1, нормы Age, edu, исключение деменции DSM-III-R.",
+      "predicate": "reported_cohort_incidence",
+      "roles": {
+        "population": "Study cohort: Larrieu 2002 France",
+        "condition": "Mild cognitive impairment"
+      },
+      "type": "result",
+      "attrs": {
+        "study_years": {
+          "value": "1993–1998",
+          "unit": null
+        },
+        "age65_69_incidence": {
+          "value": "not reported",
+          "unit": null
+        },
+        "age70_74_incidence": {
+          "value": "12.4 (11.6, 13.2)",
+          "unit": "per 1000 person-years"
+        },
+        "age75_79_incidence": {
+          "value": "7.7 (7.3, 8.1)",
+          "unit": "per 1000 person-years"
+        },
+        "age80_84_incidence": {
+          "value": "9.5 (8.9, 10.1)",
+          "unit": "per 1000 person-years"
+        },
+        "age85plus_incidence": {
+          "value": "12.4 (11.4, 13.4)",
+          "unit": "per 1000 person-years"
+        },
+        "diagnostic_criteria": {
+          "value": "Petersen Original",
+          "unit": null
+        },
+        "impairment_threshold": {
+          "value": "1",
+          "unit": null
+        },
+        "dementia_exclusion": {
+          "value": "DSM-III-R",
+          "unit": null
+        },
+        "norms": {
+          "value": "Age, edu",
+          "unit": null
+        },
+        "female_percent": {
+          "value": "52",
+          "unit": "percent"
+        },
+        "sample_count": {
+          "value": "1265",
+          "unit": "participants"
+        },
+        "age_range": {
+          "value": "65-NR",
+          "unit": "year"
+        },
+        "response_rate": {
+          "value": "69%",
+          "unit": null
+        },
+        "education": {
+          "value": "77% primary school or greater",
+          "unit": null
+        },
+        "place": {
+          "value": "Mixed urban-rural",
+          "unit": null
+        },
+        "followup_frequency": {
+          "value": "60 months",
+          "unit": null
+        },
+        "lost_percent": {
+          "value": "NR",
+          "unit": "percent"
+        },
+        "followup_max": {
+          "value": "5",
+          "unit": "year"
+        }
+      },
+      "time": "1993–1998 calendar observation years",
+      "conditions": [
+        "Reported cohort; no missing demographics or follow-up endpoints inferred"
+      ]
+    },
+    {
+      "key": "cohort_1",
+      "units": [
+        52,
+        53,
+        54,
+        55,
+        56,
+        59,
+        60,
+        57
+      ],
+      "en": "MCI in Busse 2003‡ (Germany, 1997–2001): N=900, female=NR%, ages 75-NR, response 75%, follow-up 18, 36 months (maximum/mean 3 years); incidence per1000 person-years 75–79: 5.3 (1.7, 12.4); 80–84: 14.7 (5.9, 30.4); 85+: 8.8 (1.8, 25.6). Criteria: Petersen Revised, threshold 1, norms Age, edu, dementia exclusion DSM-IV.",
+      "ru": "Исследование Busse 2003‡ (Germany, 1997–2001), MCI: N=900, женщин NR%, возраст 75-NR, отклик 75%, наблюдение 18, 36 months (максимум/среднее 3 лет); заболеваемость на 1000 человеко-лет 75–79: 5.3 (1.7, 12.4); 80–84: 14.7 (5.9, 30.4); 85+: 8.8 (1.8, 25.6). Диагностика Petersen Revised, порог 1, нормы Age, edu, исключение деменции DSM-IV.",
+      "predicate": "reported_cohort_incidence",
+      "roles": {
+        "population": "Study cohort: Busse 2003‡ Germany",
+        "condition": "Mild cognitive impairment"
+      },
+      "type": "result",
+      "attrs": {
+        "study_years": {
+          "value": "1997–2001",
+          "unit": null
+        },
+        "age65_69_incidence": {
+          "value": "not reported",
+          "unit": null
+        },
+        "age70_74_incidence": {
+          "value": "not reported",
+          "unit": null
+        },
+        "age75_79_incidence": {
+          "value": "5.3 (1.7, 12.4)",
+          "unit": "per 1000 person-years"
+        },
+        "age80_84_incidence": {
+          "value": "14.7 (5.9, 30.4)",
+          "unit": "per 1000 person-years"
+        },
+        "age85plus_incidence": {
+          "value": "8.8 (1.8, 25.6)",
+          "unit": "per 1000 person-years"
+        },
+        "diagnostic_criteria": {
+          "value": "Petersen Revised",
+          "unit": null
+        },
+        "impairment_threshold": {
+          "value": "1",
+          "unit": null
+        },
+        "dementia_exclusion": {
+          "value": "DSM-IV",
+          "unit": null
+        },
+        "norms": {
+          "value": "Age, edu",
+          "unit": null
+        },
+        "female_percent": {
+          "value": "NR",
+          "unit": "percent"
+        },
+        "sample_count": {
+          "value": "900",
+          "unit": "participants"
+        },
+        "age_range": {
+          "value": "75-NR",
+          "unit": "year"
+        },
+        "response_rate": {
+          "value": "75%",
+          "unit": null
+        },
+        "education": {
+          "value": "Mostly moderate to low",
+          "unit": null
+        },
+        "place": {
+          "value": "Urban",
+          "unit": null
+        },
+        "followup_frequency": {
+          "value": "18, 36 months",
+          "unit": null
+        },
+        "lost_percent": {
+          "value": "24",
+          "unit": "percent"
+        },
+        "followup_max": {
+          "value": "3",
+          "unit": "year"
+        }
+      },
+      "time": "1997–2001 calendar observation years",
+      "conditions": [
+        "Reported cohort; no missing demographics or follow-up endpoints inferred"
+      ]
+    },
+    {
+      "key": "cohort_2",
+      "units": [
+        52,
+        53,
+        54,
+        55,
+        56,
+        59,
+        60
+      ],
+      "en": "MCI in Luck 2010 (Germany, 1997–2005): N=732, female=74%, ages 75-NR, response 75%, follow-up ≈ every 1.4 years (maximum/mean 8 years); incidence per1000 person-years 75–79: 50.3 (38.3, 66.0); 80–84: 84.8 (62.2, 115.6); 85+: 157.6 (117.7, 211.1). Criteria: Petersen Revised, threshold 1, norms Age, edu, dementia exclusion DSM-III-R & DSM-IV.",
+      "ru": "Исследование Luck 2010 (Germany, 1997–2005), MCI: N=732, женщин 74%, возраст 75-NR, отклик 75%, наблюдение ≈ every 1.4 years (максимум/среднее 8 лет); заболеваемость на 1000 человеко-лет 75–79: 50.3 (38.3, 66.0); 80–84: 84.8 (62.2, 115.6); 85+: 157.6 (117.7, 211.1). Диагностика Petersen Revised, порог 1, нормы Age, edu, исключение деменции DSM-III-R & DSM-IV.",
+      "predicate": "reported_cohort_incidence",
+      "roles": {
+        "population": "Study cohort: Luck 2010 Germany",
+        "condition": "Mild cognitive impairment"
+      },
+      "type": "result",
+      "attrs": {
+        "study_years": {
+          "value": "1997–2005",
+          "unit": null
+        },
+        "age65_69_incidence": {
+          "value": "not reported",
+          "unit": null
+        },
+        "age70_74_incidence": {
+          "value": "not reported",
+          "unit": null
+        },
+        "age75_79_incidence": {
+          "value": "50.3 (38.3, 66.0)",
+          "unit": "per 1000 person-years"
+        },
+        "age80_84_incidence": {
+          "value": "84.8 (62.2, 115.6)",
+          "unit": "per 1000 person-years"
+        },
+        "age85plus_incidence": {
+          "value": "157.6 (117.7, 211.1)",
+          "unit": "per 1000 person-years"
+        },
+        "diagnostic_criteria": {
+          "value": "Petersen Revised",
+          "unit": null
+        },
+        "impairment_threshold": {
+          "value": "1",
+          "unit": null
+        },
+        "dementia_exclusion": {
+          "value": "DSM-III-R & DSM-IV",
+          "unit": null
+        },
+        "norms": {
+          "value": "Age, edu",
+          "unit": null
+        },
+        "female_percent": {
+          "value": "74",
+          "unit": "percent"
+        },
+        "sample_count": {
+          "value": "732",
+          "unit": "participants"
+        },
+        "age_range": {
+          "value": "75-NR",
+          "unit": "year"
+        },
+        "response_rate": {
+          "value": "75%",
+          "unit": null
+        },
+        "education": {
+          "value": "67% low",
+          "unit": null
+        },
+        "place": {
+          "value": "Urban",
+          "unit": null
+        },
+        "followup_frequency": {
+          "value": "≈ every 1.4 years",
+          "unit": null
+        },
+        "lost_percent": {
+          "value": "35",
+          "unit": "percent"
+        },
+        "followup_max": {
+          "value": "8",
+          "unit": "year"
+        }
+      },
+      "time": "1997–2005 calendar observation years",
+      "conditions": [
+        "Reported cohort; no missing demographics or follow-up endpoints inferred"
+      ]
+    },
+    {
+      "key": "cohort_3",
+      "units": [
+        52,
+        53,
+        54,
+        55,
+        56,
+        59,
+        60
+      ],
+      "en": "MCI in Roberts 2012 (USA, 2004–NR): N=1640, female=NR%, ages 70-89, response 62%, follow-up Every 15 months (maximum/mean 3.4# years); incidence per1000 person-years 70–74: 35.9 (20.4, 51.4); 75–79: 44.9 (28.8, 61.0); 80–84: 86.3 (63.6, 109); 85+: 135 (95.6, 174.4). Criteria: Petersen Revised, threshold 1, norms Age, dementia exclusion DSM-IV.",
+      "ru": "Исследование Roberts 2012 (USA, 2004–NR), MCI: N=1640, женщин NR%, возраст 70-89, отклик 62%, наблюдение Every 15 months (максимум/среднее 3.4# лет); заболеваемость на 1000 человеко-лет 70–74: 35.9 (20.4, 51.4); 75–79: 44.9 (28.8, 61.0); 80–84: 86.3 (63.6, 109); 85+: 135 (95.6, 174.4). Диагностика Petersen Revised, порог 1, нормы Age, исключение деменции DSM-IV.",
+      "predicate": "reported_cohort_incidence",
+      "roles": {
+        "population": "Study cohort: Roberts 2012 USA",
+        "condition": "Mild cognitive impairment"
+      },
+      "type": "result",
+      "attrs": {
+        "study_years": {
+          "value": "2004–NR",
+          "unit": null
+        },
+        "age65_69_incidence": {
+          "value": "not reported",
+          "unit": null
+        },
+        "age70_74_incidence": {
+          "value": "35.9 (20.4, 51.4)",
+          "unit": "per 1000 person-years"
+        },
+        "age75_79_incidence": {
+          "value": "44.9 (28.8, 61.0)",
+          "unit": "per 1000 person-years"
+        },
+        "age80_84_incidence": {
+          "value": "86.3 (63.6, 109)",
+          "unit": "per 1000 person-years"
+        },
+        "age85plus_incidence": {
+          "value": "135 (95.6, 174.4)",
+          "unit": "per 1000 person-years"
+        },
+        "diagnostic_criteria": {
+          "value": "Petersen Revised",
+          "unit": null
+        },
+        "impairment_threshold": {
+          "value": "1",
+          "unit": null
+        },
+        "dementia_exclusion": {
+          "value": "DSM-IV",
+          "unit": null
+        },
+        "norms": {
+          "value": "Age",
+          "unit": null
+        },
+        "female_percent": {
+          "value": "NR",
+          "unit": "percent"
+        },
+        "sample_count": {
+          "value": "1640",
+          "unit": "participants"
+        },
+        "age_range": {
+          "value": "70-89",
+          "unit": "year"
+        },
+        "response_rate": {
+          "value": "62%",
+          "unit": null
+        },
+        "education": {
+          "value": "49% > 12 years",
+          "unit": null
+        },
+        "place": {
+          "value": "Mixed urban-rural",
+          "unit": null
+        },
+        "followup_frequency": {
+          "value": "Every 15 months",
+          "unit": null
+        },
+        "lost_percent": {
+          "value": "9",
+          "unit": "percent"
+        },
+        "followup_max": {
+          "value": "3.4#",
+          "unit": "year"
+        }
+      },
+      "time": "2004–NR calendar observation years",
+      "conditions": [
+        "Reported cohort; no missing demographics or follow-up endpoints inferred"
+      ]
+    },
+    {
+      "key": "cohort_4",
+      "units": [
+        52,
+        53,
+        54,
+        55,
+        56,
+        59,
+        60,
+        58
+      ],
+      "en": "aMCI in Caracciolo 2008 § (Sweden, 1987–1996): N=1070, female=75%, ages 75-90+, response 72%, follow-up 3 times (maximum/mean 9 years); incidence per1000 person-years 75–79: 5.4 (2.3, 12.8); 80–84: 11.2 (6.6, 18.9); 85+: 20.2 (13.1, 31.1). Criteria: Petersen Revised, threshold 1.5, norms Age, edu, dementia exclusion DSM-III-R or MMSE < 20.",
+      "ru": "Исследование Caracciolo 2008 § (Sweden, 1987–1996), aMCI: N=1070, женщин 75%, возраст 75-90+, отклик 72%, наблюдение 3 times (максимум/среднее 9 лет); заболеваемость на 1000 человеко-лет 75–79: 5.4 (2.3, 12.8); 80–84: 11.2 (6.6, 18.9); 85+: 20.2 (13.1, 31.1). Диагностика Petersen Revised, порог 1.5, нормы Age, edu, исключение деменции DSM-III-R or MMSE < 20.",
+      "predicate": "reported_cohort_incidence",
+      "roles": {
+        "population": "Study cohort: Caracciolo 2008 § Sweden",
+        "condition": "Amnestic mild cognitive impairment"
+      },
+      "type": "result",
+      "attrs": {
+        "study_years": {
+          "value": "1987–1996",
+          "unit": null
+        },
+        "age65_69_incidence": {
+          "value": "not reported",
+          "unit": null
+        },
+        "age70_74_incidence": {
+          "value": "not reported",
+          "unit": null
+        },
+        "age75_79_incidence": {
+          "value": "5.4 (2.3, 12.8)",
+          "unit": "per 1000 person-years"
+        },
+        "age80_84_incidence": {
+          "value": "11.2 (6.6, 18.9)",
+          "unit": "per 1000 person-years"
+        },
+        "age85plus_incidence": {
+          "value": "20.2 (13.1, 31.1)",
+          "unit": "per 1000 person-years"
+        },
+        "diagnostic_criteria": {
+          "value": "Petersen Revised",
+          "unit": null
+        },
+        "impairment_threshold": {
+          "value": "1.5",
+          "unit": null
+        },
+        "dementia_exclusion": {
+          "value": "DSM-III-R or MMSE < 20",
+          "unit": null
+        },
+        "norms": {
+          "value": "Age, edu",
+          "unit": null
+        },
+        "female_percent": {
+          "value": "75",
+          "unit": "percent"
+        },
+        "sample_count": {
+          "value": "1070",
+          "unit": "participants"
+        },
+        "age_range": {
+          "value": "75-90+",
+          "unit": "year"
+        },
+        "response_rate": {
+          "value": "72%",
+          "unit": null
+        },
+        "education": {
+          "value": "NR",
+          "unit": null
+        },
+        "place": {
+          "value": "Urban",
+          "unit": null
+        },
+        "followup_frequency": {
+          "value": "3 times",
+          "unit": null
+        },
+        "lost_percent": {
+          "value": "74",
+          "unit": "percent"
+        },
+        "followup_max": {
+          "value": "9",
+          "unit": "year"
+        }
+      },
+      "time": "1987–1996 calendar observation years",
+      "conditions": [
+        "Reported cohort; no missing demographics or follow-up endpoints inferred"
+      ]
+    },
+    {
+      "key": "cohort_5",
+      "units": [
+        52,
+        53,
+        54,
+        55,
+        56,
+        59,
+        60
+      ],
+      "en": "aMCI in Manly 2008 (USA, 1992–NR; 1999–NR): N=2364, female=69%, ages 65-NR, response 34%, follow-up Avg of 2.3 times (maximum/mean 5 years); incidence per1000 person-years 65–69: 11 (5, 17); 70–74: 21 (16, 27); 75–79: 22 (16, 29). Criteria: Petersen Revised, threshold 1.5, norms Age, edu, dementia exclusion DSM-III-R.",
+      "ru": "Исследование Manly 2008 (USA, 1992–NR; 1999–NR), aMCI: N=2364, женщин 69%, возраст 65-NR, отклик 34%, наблюдение Avg of 2.3 times (максимум/среднее 5 лет); заболеваемость на 1000 человеко-лет 65–69: 11 (5, 17); 70–74: 21 (16, 27); 75–79: 22 (16, 29). Диагностика Petersen Revised, порог 1.5, нормы Age, edu, исключение деменции DSM-III-R.",
+      "predicate": "reported_cohort_incidence",
+      "roles": {
+        "population": "Study cohort: Manly 2008 USA",
+        "condition": "Amnestic mild cognitive impairment"
+      },
+      "type": "result",
+      "attrs": {
+        "study_years": {
+          "value": "1992–NR; 1999–NR",
+          "unit": null
+        },
+        "age65_69_incidence": {
+          "value": "11 (5, 17)",
+          "unit": "per 1000 person-years"
+        },
+        "age70_74_incidence": {
+          "value": "21 (16, 27)",
+          "unit": "per 1000 person-years"
+        },
+        "age75_79_incidence": {
+          "value": "22 (16, 29)",
+          "unit": "per 1000 person-years"
+        },
+        "age80_84_incidence": {
+          "value": "not reported",
+          "unit": null
+        },
+        "age85plus_incidence": {
+          "value": "not reported",
+          "unit": null
+        },
+        "diagnostic_criteria": {
+          "value": "Petersen Revised",
+          "unit": null
+        },
+        "impairment_threshold": {
+          "value": "1.5",
+          "unit": null
+        },
+        "dementia_exclusion": {
+          "value": "DSM-III-R",
+          "unit": null
+        },
+        "norms": {
+          "value": "Age, edu",
+          "unit": null
+        },
+        "female_percent": {
+          "value": "69",
+          "unit": "percent"
+        },
+        "sample_count": {
+          "value": "2364",
+          "unit": "participants"
+        },
+        "age_range": {
+          "value": "65-NR",
+          "unit": "year"
+        },
+        "response_rate": {
+          "value": "34%",
+          "unit": null
+        },
+        "education": {
+          "value": "Mean 10 years",
+          "unit": null
+        },
+        "place": {
+          "value": "Urban",
+          "unit": null
+        },
+        "followup_frequency": {
+          "value": "Avg of 2.3 times",
+          "unit": null
+        },
+        "lost_percent": {
+          "value": "NR",
+          "unit": "percent"
+        },
+        "followup_max": {
+          "value": "5",
+          "unit": "year"
+        }
+      },
+      "time": "1992–NR; 1999–NR calendar observation years",
+      "conditions": [
+        "Reported cohort; no missing demographics or follow-up endpoints inferred"
+      ]
+    },
+    {
+      "key": "cohort_6",
+      "units": [
+        52,
+        53,
+        54,
+        55,
+        56,
+        59,
+        60
+      ],
+      "en": "aMCI in Katz 2012 (USA, 1993–2009): N=1168, female=61%, ages 70-NR, response NR, follow-up Annually (maximum/mean 16 years); incidence per1000 person-years 70–74: 26 (13.7, 49.4); 75–79: 19.8 (3.2, 125.0); 80–84: 40.6 (24.2, 68.0); 85+: 55 (18.4, 164.4). Criteria: Petersen Revised, threshold FCSRT† ≤ 24 or SD > 1.5, norms NR, dementia exclusion DSM-IV.",
+      "ru": "Исследование Katz 2012 (USA, 1993–2009), aMCI: N=1168, женщин 61%, возраст 70-NR, отклик NR, наблюдение Annually (максимум/среднее 16 лет); заболеваемость на 1000 человеко-лет 70–74: 26 (13.7, 49.4); 75–79: 19.8 (3.2, 125.0); 80–84: 40.6 (24.2, 68.0); 85+: 55 (18.4, 164.4). Диагностика Petersen Revised, порог FCSRT† ≤ 24 or SD > 1.5, нормы NR, исключение деменции DSM-IV.",
+      "predicate": "reported_cohort_incidence",
+      "roles": {
+        "population": "Study cohort: Katz 2012 USA",
+        "condition": "Amnestic mild cognitive impairment"
+      },
+      "type": "result",
+      "attrs": {
+        "study_years": {
+          "value": "1993–2009",
+          "unit": null
+        },
+        "age65_69_incidence": {
+          "value": "not reported",
+          "unit": null
+        },
+        "age70_74_incidence": {
+          "value": "26 (13.7, 49.4)",
+          "unit": "per 1000 person-years"
+        },
+        "age75_79_incidence": {
+          "value": "19.8 (3.2, 125.0)",
+          "unit": "per 1000 person-years"
+        },
+        "age80_84_incidence": {
+          "value": "40.6 (24.2, 68.0)",
+          "unit": "per 1000 person-years"
+        },
+        "age85plus_incidence": {
+          "value": "55 (18.4, 164.4)",
+          "unit": "per 1000 person-years"
+        },
+        "diagnostic_criteria": {
+          "value": "Petersen Revised",
+          "unit": null
+        },
+        "impairment_threshold": {
+          "value": "FCSRT† ≤ 24 or SD > 1.5",
+          "unit": null
+        },
+        "dementia_exclusion": {
+          "value": "DSM-IV",
+          "unit": null
+        },
+        "norms": {
+          "value": "NR",
+          "unit": null
+        },
+        "female_percent": {
+          "value": "61",
+          "unit": "percent"
+        },
+        "sample_count": {
+          "value": "1168",
+          "unit": "participants"
+        },
+        "age_range": {
+          "value": "70-NR",
+          "unit": "year"
+        },
+        "response_rate": {
+          "value": "NR",
+          "unit": null
+        },
+        "education": {
+          "value": "Mean 13.5 years",
+          "unit": null
+        },
+        "place": {
+          "value": "Urban",
+          "unit": null
+        },
+        "followup_frequency": {
+          "value": "Annually",
+          "unit": null
+        },
+        "lost_percent": {
+          "value": "NR",
+          "unit": "percent"
+        },
+        "followup_max": {
+          "value": "16",
+          "unit": "year"
+        }
+      },
+      "time": "1993–2009 calendar observation years",
+      "conditions": [
+        "Reported cohort; no missing demographics or follow-up endpoints inferred"
+      ]
+    },
+    {
+      "key": "cohort_7",
+      "units": [
+        52,
+        53,
+        54,
+        55,
+        56,
+        59,
+        60
+      ],
+      "en": "aMCI in Luck 2010 (Germany, 1997–2005): N=732, female=74%, ages 75-NR, response 75%, follow-up ≈ every 1.4 years (maximum/mean 8 years); incidence per1000 person-years 75–79: 15.5 (9.5, 25.3); 80–84: 33.9 (20.8, 55.4); 85+: 63.1 (39.7, 100.1). Criteria: Petersen Revised, threshold 1, norms Age, edu, dementia exclusion DSM-III-R & DSM-IV.",
+      "ru": "Исследование Luck 2010 (Germany, 1997–2005), aMCI: N=732, женщин 74%, возраст 75-NR, отклик 75%, наблюдение ≈ every 1.4 years (максимум/среднее 8 лет); заболеваемость на 1000 человеко-лет 75–79: 15.5 (9.5, 25.3); 80–84: 33.9 (20.8, 55.4); 85+: 63.1 (39.7, 100.1). Диагностика Petersen Revised, порог 1, нормы Age, edu, исключение деменции DSM-III-R & DSM-IV.",
+      "predicate": "reported_cohort_incidence",
+      "roles": {
+        "population": "Study cohort: Luck 2010 Germany",
+        "condition": "Amnestic mild cognitive impairment"
+      },
+      "type": "result",
+      "attrs": {
+        "study_years": {
+          "value": "1997–2005",
+          "unit": null
+        },
+        "age65_69_incidence": {
+          "value": "not reported",
+          "unit": null
+        },
+        "age70_74_incidence": {
+          "value": "not reported",
+          "unit": null
+        },
+        "age75_79_incidence": {
+          "value": "15.5 (9.5, 25.3)",
+          "unit": "per 1000 person-years"
+        },
+        "age80_84_incidence": {
+          "value": "33.9 (20.8, 55.4)",
+          "unit": "per 1000 person-years"
+        },
+        "age85plus_incidence": {
+          "value": "63.1 (39.7, 100.1)",
+          "unit": "per 1000 person-years"
+        },
+        "diagnostic_criteria": {
+          "value": "Petersen Revised",
+          "unit": null
+        },
+        "impairment_threshold": {
+          "value": "1",
+          "unit": null
+        },
+        "dementia_exclusion": {
+          "value": "DSM-III-R & DSM-IV",
+          "unit": null
+        },
+        "norms": {
+          "value": "Age, edu",
+          "unit": null
+        },
+        "female_percent": {
+          "value": "74",
+          "unit": "percent"
+        },
+        "sample_count": {
+          "value": "732",
+          "unit": "participants"
+        },
+        "age_range": {
+          "value": "75-NR",
+          "unit": "year"
+        },
+        "response_rate": {
+          "value": "75%",
+          "unit": null
+        },
+        "education": {
+          "value": "67% low",
+          "unit": null
+        },
+        "place": {
+          "value": "Urban",
+          "unit": null
+        },
+        "followup_frequency": {
+          "value": "≈ every 1.4 years",
+          "unit": null
+        },
+        "lost_percent": {
+          "value": "35",
+          "unit": "percent"
+        },
+        "followup_max": {
+          "value": "8",
+          "unit": "year"
+        }
+      },
+      "time": "1997–2005 calendar observation years",
+      "conditions": [
+        "Reported cohort; no missing demographics or follow-up endpoints inferred"
+      ]
+    },
+    {
+      "key": "cohort_8",
+      "units": [
+        52,
+        53,
+        54,
+        55,
+        56,
+        59,
+        60
+      ],
+      "en": "aMCI in Roberts 2012 (USA, 2004–NR): N=1640, female=NR%, ages 70-89, response 62%, follow-up Every 15 months (maximum/mean 3.4# years); incidence per1000 person-years 70–74: 24.1 (11.6, 36.6); 75–79: 26.3 (14.1, 38.4); 80–84: 51.7 (34.6, 68.9); 85+: 74.2 (45.8, 102.5). Criteria: Petersen Revised, threshold 1, norms Age, dementia exclusion DSM-IV.",
+      "ru": "Исследование Roberts 2012 (USA, 2004–NR), aMCI: N=1640, женщин NR%, возраст 70-89, отклик 62%, наблюдение Every 15 months (максимум/среднее 3.4# лет); заболеваемость на 1000 человеко-лет 70–74: 24.1 (11.6, 36.6); 75–79: 26.3 (14.1, 38.4); 80–84: 51.7 (34.6, 68.9); 85+: 74.2 (45.8, 102.5). Диагностика Petersen Revised, порог 1, нормы Age, исключение деменции DSM-IV.",
+      "predicate": "reported_cohort_incidence",
+      "roles": {
+        "population": "Study cohort: Roberts 2012 USA",
+        "condition": "Amnestic mild cognitive impairment"
+      },
+      "type": "result",
+      "attrs": {
+        "study_years": {
+          "value": "2004–NR",
+          "unit": null
+        },
+        "age65_69_incidence": {
+          "value": "not reported",
+          "unit": null
+        },
+        "age70_74_incidence": {
+          "value": "24.1 (11.6, 36.6)",
+          "unit": "per 1000 person-years"
+        },
+        "age75_79_incidence": {
+          "value": "26.3 (14.1, 38.4)",
+          "unit": "per 1000 person-years"
+        },
+        "age80_84_incidence": {
+          "value": "51.7 (34.6, 68.9)",
+          "unit": "per 1000 person-years"
+        },
+        "age85plus_incidence": {
+          "value": "74.2 (45.8, 102.5)",
+          "unit": "per 1000 person-years"
+        },
+        "diagnostic_criteria": {
+          "value": "Petersen Revised",
+          "unit": null
+        },
+        "impairment_threshold": {
+          "value": "1",
+          "unit": null
+        },
+        "dementia_exclusion": {
+          "value": "DSM-IV",
+          "unit": null
+        },
+        "norms": {
+          "value": "Age",
+          "unit": null
+        },
+        "female_percent": {
+          "value": "NR",
+          "unit": "percent"
+        },
+        "sample_count": {
+          "value": "1640",
+          "unit": "participants"
+        },
+        "age_range": {
+          "value": "70-89",
+          "unit": "year"
+        },
+        "response_rate": {
+          "value": "62%",
+          "unit": null
+        },
+        "education": {
+          "value": "49% > 12 years",
+          "unit": null
+        },
+        "place": {
+          "value": "Mixed urban-rural",
+          "unit": null
+        },
+        "followup_frequency": {
+          "value": "Every 15 months",
+          "unit": null
+        },
+        "lost_percent": {
+          "value": "9",
+          "unit": "percent"
+        },
+        "followup_max": {
+          "value": "3.4#",
+          "unit": "year"
+        }
+      },
+      "time": "2004–NR calendar observation years",
+      "conditions": [
+        "Reported cohort; no missing demographics or follow-up endpoints inferred"
+      ]
+    },
+    {
+      "key": "cohort_9",
+      "units": [
+        52,
+        53,
+        54,
+        55,
+        56,
+        59,
+        60
+      ],
+      "en": "naMCI in Manly 2008 (USA, 1992–NR; 1999–NR): N=2364, female=68.6%, ages 65-NR, response 34%, follow-up Avg of 2.3 times (maximum/mean 5 years); incidence per1000 person-years 65–69: 17 (10, 24); 70–74: 26 (20, 32); 75–79: 34 (26, 42). Criteria: Petersen Revised, threshold 1.5, norms Age, edu, dementia exclusion DSM-III-R.",
+      "ru": "Исследование Manly 2008 (USA, 1992–NR; 1999–NR), naMCI: N=2364, женщин 68.6%, возраст 65-NR, отклик 34%, наблюдение Avg of 2.3 times (максимум/среднее 5 лет); заболеваемость на 1000 человеко-лет 65–69: 17 (10, 24); 70–74: 26 (20, 32); 75–79: 34 (26, 42). Диагностика Petersen Revised, порог 1.5, нормы Age, edu, исключение деменции DSM-III-R.",
+      "predicate": "reported_cohort_incidence",
+      "roles": {
+        "population": "Study cohort: Manly 2008 USA",
+        "condition": "Nonamnestic mild cognitive impairment"
+      },
+      "type": "result",
+      "attrs": {
+        "study_years": {
+          "value": "1992–NR; 1999–NR",
+          "unit": null
+        },
+        "age65_69_incidence": {
+          "value": "17 (10, 24)",
+          "unit": "per 1000 person-years"
+        },
+        "age70_74_incidence": {
+          "value": "26 (20, 32)",
+          "unit": "per 1000 person-years"
+        },
+        "age75_79_incidence": {
+          "value": "34 (26, 42)",
+          "unit": "per 1000 person-years"
+        },
+        "age80_84_incidence": {
+          "value": "not reported",
+          "unit": null
+        },
+        "age85plus_incidence": {
+          "value": "not reported",
+          "unit": null
+        },
+        "diagnostic_criteria": {
+          "value": "Petersen Revised",
+          "unit": null
+        },
+        "impairment_threshold": {
+          "value": "1.5",
+          "unit": null
+        },
+        "dementia_exclusion": {
+          "value": "DSM-III-R",
+          "unit": null
+        },
+        "norms": {
+          "value": "Age, edu",
+          "unit": null
+        },
+        "female_percent": {
+          "value": "68.6",
+          "unit": "percent"
+        },
+        "sample_count": {
+          "value": "2364",
+          "unit": "participants"
+        },
+        "age_range": {
+          "value": "65-NR",
+          "unit": "year"
+        },
+        "response_rate": {
+          "value": "34%",
+          "unit": null
+        },
+        "education": {
+          "value": "Mean 10 years",
+          "unit": null
+        },
+        "place": {
+          "value": "Urban",
+          "unit": null
+        },
+        "followup_frequency": {
+          "value": "Avg of 2.3 times",
+          "unit": null
+        },
+        "lost_percent": {
+          "value": "NR",
+          "unit": "percent"
+        },
+        "followup_max": {
+          "value": "5",
+          "unit": "year"
+        }
+      },
+      "time": "1992–NR; 1999–NR calendar observation years",
+      "conditions": [
+        "Reported cohort; no missing demographics or follow-up endpoints inferred"
+      ]
+    },
+    {
+      "key": "cohort_10",
+      "units": [
+        52,
+        53,
+        54,
+        55,
+        56,
+        59,
+        60
+      ],
+      "en": "naMCI in Katz 2012 (USA, 1993–2009): N=1168, female=60.7%, ages 70-NR, response NR, follow-up Annually (maximum/mean 16 years); incidence per1000 person-years 70–74: 46.1 (29.1, 73.2); 75–79: 37.8 (20.9, 68.5); 80–84: 28.6 (14.5, 56.2); 85+: 49.7 (26.7, 92.4). Criteria: Petersen Revised, threshold FCSRT∗ ≤ 24 or SD > 1.5, norms NR, dementia exclusion DSM-IV.",
+      "ru": "Исследование Katz 2012 (USA, 1993–2009), naMCI: N=1168, женщин 60.7%, возраст 70-NR, отклик NR, наблюдение Annually (максимум/среднее 16 лет); заболеваемость на 1000 человеко-лет 70–74: 46.1 (29.1, 73.2); 75–79: 37.8 (20.9, 68.5); 80–84: 28.6 (14.5, 56.2); 85+: 49.7 (26.7, 92.4). Диагностика Petersen Revised, порог FCSRT∗ ≤ 24 or SD > 1.5, нормы NR, исключение деменции DSM-IV.",
+      "predicate": "reported_cohort_incidence",
+      "roles": {
+        "population": "Study cohort: Katz 2012 USA",
+        "condition": "Nonamnestic mild cognitive impairment"
+      },
+      "type": "result",
+      "attrs": {
+        "study_years": {
+          "value": "1993–2009",
+          "unit": null
+        },
+        "age65_69_incidence": {
+          "value": "not reported",
+          "unit": null
+        },
+        "age70_74_incidence": {
+          "value": "46.1 (29.1, 73.2)",
+          "unit": "per 1000 person-years"
+        },
+        "age75_79_incidence": {
+          "value": "37.8 (20.9, 68.5)",
+          "unit": "per 1000 person-years"
+        },
+        "age80_84_incidence": {
+          "value": "28.6 (14.5, 56.2)",
+          "unit": "per 1000 person-years"
+        },
+        "age85plus_incidence": {
+          "value": "49.7 (26.7, 92.4)",
+          "unit": "per 1000 person-years"
+        },
+        "diagnostic_criteria": {
+          "value": "Petersen Revised",
+          "unit": null
+        },
+        "impairment_threshold": {
+          "value": "FCSRT∗ ≤ 24 or SD > 1.5",
+          "unit": null
+        },
+        "dementia_exclusion": {
+          "value": "DSM-IV",
+          "unit": null
+        },
+        "norms": {
+          "value": "NR",
+          "unit": null
+        },
+        "female_percent": {
+          "value": "60.7",
+          "unit": "percent"
+        },
+        "sample_count": {
+          "value": "1168",
+          "unit": "participants"
+        },
+        "age_range": {
+          "value": "70-NR",
+          "unit": "year"
+        },
+        "response_rate": {
+          "value": "NR",
+          "unit": null
+        },
+        "education": {
+          "value": "Mean 13.5 years",
+          "unit": null
+        },
+        "place": {
+          "value": "Urban",
+          "unit": null
+        },
+        "followup_frequency": {
+          "value": "Annually",
+          "unit": null
+        },
+        "lost_percent": {
+          "value": "NR",
+          "unit": "percent"
+        },
+        "followup_max": {
+          "value": "16",
+          "unit": "year"
+        }
+      },
+      "time": "1993–2009 calendar observation years",
+      "conditions": [
+        "Reported cohort; no missing demographics or follow-up endpoints inferred"
+      ]
+    },
+    {
+      "key": "cohort_11",
+      "units": [
+        52,
+        53,
+        54,
+        55,
+        56,
+        59,
+        60
+      ],
+      "en": "naMCI in Luck 2010 (Germany, 1997–2005): N=732, female=73.9%, ages 75-NR, response 74.76%, follow-up ≈ every 1.4 years (maximum/mean 8 years); incidence per1000 person-years 75–79: 34.8 (25.1, 48.3); 80–84: 50.9 (34.1, 75.9); 85+: 94.6 (64.9, 137.9). Criteria: Petersen Revised, threshold 1, norms Age, edu, dementia exclusion DSM-III-R & DSM-IV.",
+      "ru": "Исследование Luck 2010 (Germany, 1997–2005), naMCI: N=732, женщин 73.9%, возраст 75-NR, отклик 74.76%, наблюдение ≈ every 1.4 years (максимум/среднее 8 лет); заболеваемость на 1000 человеко-лет 75–79: 34.8 (25.1, 48.3); 80–84: 50.9 (34.1, 75.9); 85+: 94.6 (64.9, 137.9). Диагностика Petersen Revised, порог 1, нормы Age, edu, исключение деменции DSM-III-R & DSM-IV.",
+      "predicate": "reported_cohort_incidence",
+      "roles": {
+        "population": "Study cohort: Luck 2010 Germany",
+        "condition": "Nonamnestic mild cognitive impairment"
+      },
+      "type": "result",
+      "attrs": {
+        "study_years": {
+          "value": "1997–2005",
+          "unit": null
+        },
+        "age65_69_incidence": {
+          "value": "not reported",
+          "unit": null
+        },
+        "age70_74_incidence": {
+          "value": "not reported",
+          "unit": null
+        },
+        "age75_79_incidence": {
+          "value": "34.8 (25.1, 48.3)",
+          "unit": "per 1000 person-years"
+        },
+        "age80_84_incidence": {
+          "value": "50.9 (34.1, 75.9)",
+          "unit": "per 1000 person-years"
+        },
+        "age85plus_incidence": {
+          "value": "94.6 (64.9, 137.9)",
+          "unit": "per 1000 person-years"
+        },
+        "diagnostic_criteria": {
+          "value": "Petersen Revised",
+          "unit": null
+        },
+        "impairment_threshold": {
+          "value": "1",
+          "unit": null
+        },
+        "dementia_exclusion": {
+          "value": "DSM-III-R & DSM-IV",
+          "unit": null
+        },
+        "norms": {
+          "value": "Age, edu",
+          "unit": null
+        },
+        "female_percent": {
+          "value": "73.9",
+          "unit": "percent"
+        },
+        "sample_count": {
+          "value": "732",
+          "unit": "participants"
+        },
+        "age_range": {
+          "value": "75-NR",
+          "unit": "year"
+        },
+        "response_rate": {
+          "value": "74.76%",
+          "unit": null
+        },
+        "education": {
+          "value": "67% low",
+          "unit": null
+        },
+        "place": {
+          "value": "Urban",
+          "unit": null
+        },
+        "followup_frequency": {
+          "value": "≈ every 1.4 years",
+          "unit": null
+        },
+        "lost_percent": {
+          "value": "35",
+          "unit": "percent"
+        },
+        "followup_max": {
+          "value": "8",
+          "unit": "year"
+        }
+      },
+      "time": "1997–2005 calendar observation years",
+      "conditions": [
+        "Reported cohort; no missing demographics or follow-up endpoints inferred"
+      ]
+    },
+    {
+      "key": "cohort_12",
+      "units": [
+        52,
+        53,
+        54,
+        55,
+        56,
+        59,
+        60
+      ],
+      "en": "naMCI in Roberts 2012 (USA, 2004–NR): N=1640, female=NR%, ages 70- 89, response 61.8%, follow-up Every 15 months (maximum/mean 3.4# years); incidence per1000 person-years 70–74: 7.7 (0.7, 14.8); 75–79: 9.5 (2.3, 16.6); 80–84: 21.1 (10.2, 32.1); 85+: 32 (12.9, 51.2). Criteria: Petersen Revised, threshold 1, norms Age, dementia exclusion DSM-IV.",
+      "ru": "Исследование Roberts 2012 (USA, 2004–NR), naMCI: N=1640, женщин NR%, возраст 70- 89, отклик 61.8%, наблюдение Every 15 months (максимум/среднее 3.4# лет); заболеваемость на 1000 человеко-лет 70–74: 7.7 (0.7, 14.8); 75–79: 9.5 (2.3, 16.6); 80–84: 21.1 (10.2, 32.1); 85+: 32 (12.9, 51.2). Диагностика Petersen Revised, порог 1, нормы Age, исключение деменции DSM-IV.",
+      "predicate": "reported_cohort_incidence",
+      "roles": {
+        "population": "Study cohort: Roberts 2012 USA",
+        "condition": "Nonamnestic mild cognitive impairment"
+      },
+      "type": "result",
+      "attrs": {
+        "study_years": {
+          "value": "2004–NR",
+          "unit": null
+        },
+        "age65_69_incidence": {
+          "value": "not reported",
+          "unit": null
+        },
+        "age70_74_incidence": {
+          "value": "7.7 (0.7, 14.8)",
+          "unit": "per 1000 person-years"
+        },
+        "age75_79_incidence": {
+          "value": "9.5 (2.3, 16.6)",
+          "unit": "per 1000 person-years"
+        },
+        "age80_84_incidence": {
+          "value": "21.1 (10.2, 32.1)",
+          "unit": "per 1000 person-years"
+        },
+        "age85plus_incidence": {
+          "value": "32 (12.9, 51.2)",
+          "unit": "per 1000 person-years"
+        },
+        "diagnostic_criteria": {
+          "value": "Petersen Revised",
+          "unit": null
+        },
+        "impairment_threshold": {
+          "value": "1",
+          "unit": null
+        },
+        "dementia_exclusion": {
+          "value": "DSM-IV",
+          "unit": null
+        },
+        "norms": {
+          "value": "Age",
+          "unit": null
+        },
+        "female_percent": {
+          "value": "NR",
+          "unit": "percent"
+        },
+        "sample_count": {
+          "value": "1640",
+          "unit": "participants"
+        },
+        "age_range": {
+          "value": "70- 89",
+          "unit": "year"
+        },
+        "response_rate": {
+          "value": "61.8%",
+          "unit": null
+        },
+        "education": {
+          "value": "49% > 12 years",
+          "unit": null
+        },
+        "place": {
+          "value": "Mixed urban-rural",
+          "unit": null
+        },
+        "followup_frequency": {
+          "value": "Every 15 months",
+          "unit": null
+        },
+        "lost_percent": {
+          "value": "9",
+          "unit": "percent"
+        },
+        "followup_max": {
+          "value": "3.4#",
+          "unit": "year"
+        }
+      },
+      "time": "2004–NR calendar observation years",
+      "conditions": [
+        "Reported cohort; no missing demographics or follow-up endpoints inferred"
+      ]
+    },
+    {
+      "key": "excluded_rates",
+      "units": [
+        57,
+        58
+      ],
+      "en": "Excluded estimates were retained as exclusions: Busse without cognitive-complaint criteria had7.6(3.1–15.7),21.4(10.3–39.4),11.9(3.3–30.6); Caracciolo crude attrition-unadjusted estimates were5.3(2.2–12.8),9.6(5.8–15.9),16.3(11.3–23.4), for75–79,80–84,85+ respectively, per1000 person-years.",
+      "ru": "Исключённые оценки сохранены отдельно: Busse без жалобы — 7,6(3,1–15,7), 21,4(10,3–39,4), 11,9(3,3–30,6); грубые Caracciolo без поправки на выбытие — 5,3(2,2–12,8), 9,6(5,8–15,9), 16,3(11,3–23,4) на 1000 человеко-лет для 75–79, 80–84 и 85+ соответственно.",
+      "predicate": "excluded_estimates",
+      "roles": {
+        "subject": "Excluded alternative cohort incidence estimates"
+      },
+      "logic": "partition",
+      "claims": [
+        {
+          "roles": {
+            "study": "Busse 2003",
+            "exclusion": "No required cognitive complaint"
+          },
+          "attrs": {
+            "rate75_79": {
+              "value": "7.6 (3.1–15.7)",
+              "unit": "per 1000 person-years"
+            },
+            "rate80_84": {
+              "value": "21.4 (10.3–39.4)",
+              "unit": "per 1000 person-years"
+            },
+            "rate85plus": {
+              "value": "11.9 (3.3–30.6)",
+              "unit": "per 1000 person-years"
+            }
+          }
+        },
+        {
+          "roles": {
+            "study": "Caracciolo 2008",
+            "exclusion": "Crude unadjusted for attrition"
+          },
+          "attrs": {
+            "rate75_79": {
+              "value": "5.3 (2.2–12.8)",
+              "unit": "per 1000 person-years"
+            },
+            "rate80_84": {
+              "value": "9.6 (5.8–15.9)",
+              "unit": "per 1000 person-years"
+            },
+            "rate85plus": {
+              "value": "16.3 (11.3–23.4)",
+              "unit": "per 1000 person-years"
+            }
+          }
+        }
+      ],
+      "conditions": [
+        "These values are excluded, not used as selected pooled inputs"
+      ]
+    },
+    {
+      "key": "age_pattern",
+      "units": [
+        8,
+        48
+      ],
+      "en": "Incidence generally increased with age and study-specific rates varied widely; most strata had I²58.7–98.3%, except aMCI ages70–74 with I²0 and descriptive median24.1 per1000 person-years.",
+      "ru": "Заболеваемость обычно росла с возрастом и сильно различалась между исследованиями; I² обычно 58,7–98,3%, исключение — aMCI 70–74 с I²=0 и описательной медианой 24,1 на 1000 человеко-лет.",
+      "predicate": "incidence_pattern",
+      "roles": {
+        "subject": "Age-specific MCI and subtype incidence summaries"
+      },
+      "attrs": {
+        "heterogeneity_range": {
+          "value": "58.7–98.3",
+          "unit": "percent"
+        },
+        "exception": "aMCI ages70–74; I²0%",
+        "exception_median": {
+          "value": 24.1,
+          "unit": "per 1000 person-years"
+        }
+      },
+      "conditions": [
+        "Selected review strata; medians are not pooled meta-analysis estimates"
+      ],
+      "time": "Literature searched through2016"
+    },
+    {
+      "key": "consistent",
+      "units": [
+        48
+      ],
+      "en": "Descriptive medians and IQRs lay within meta-analysis95% confidence intervals in each available MCI/subtype age band, supporting consistency of the two quantitative approaches.",
+      "ru": "Описательные медианы и IQR находились внутри 95% ДИ метаанализа в доступных возрастных группах MCI и подтипов; два количественных подхода были согласованы.",
+      "predicate": "consistent_with",
+      "roles": {
+        "method": "Descriptive statistics",
+        "reference": "Random-effects meta-analysis"
+      },
+      "type": "conclusion",
+      "grounding": "source_argument",
+      "attrs": {
+        "CI_level": {
+          "value": 95,
+          "unit": "percent"
+        }
+      },
+      "conditions": [
+        "Within reviewed age/outcome strata"
+      ]
+    },
+    {
+      "key": "qualitative",
+      "units": [
+        51
+      ],
+      "en": "Qualitative review examined82 variables and distilled13 likely heterogeneity contributors; all seven studies excluded baseline dementia via DSMIII/IV and used original/revised Petersen definitions, but one lacked age/education-adjusted norms.",
+      "ru": "Качественный анализ рассмотрел 82 переменные и выделил 13 вероятных причин неоднородности; семь исследований исключали исходную деменцию по DSM III/IV и использовали Petersen, но одно не применяло возрастные/образовательные нормы.",
+      "predicate": "qualitative_review_result",
+      "roles": {
+        "subject": "Seven MCI incidence studies"
+      },
+      "type": "result",
+      "attrs": {
+        "reviewed_variables": {
+          "value": 82,
+          "unit": "variables"
+        },
+        "selected_variables": {
+          "value": 13,
+          "unit": "variables"
+        },
+        "baseline_dementia_exclusion": "DSM III or DSM IV",
+        "MCI_definitions": "original or revised Petersen",
+        "norm_exception": "all but Katz2012 used age and/or education adjusted norms"
+      },
+      "conditions": [
+        "Qualitative corpus; Supplementary TableA3 referenced but not transcribed"
+      ]
+    },
+    {
+      "key": "calendar",
+      "units": [
+        61
+      ],
+      "en": "More recent calendar data appeared associated with higher MCI and aMCI incidence, but not naMCI; few studies prevented further assessment of this possible trend.",
+      "ru": "Более поздние календарные данные предположительно связаны с большей заболеваемостью MCI и aMCI, но не naMCI; исследований недостаточно для проверки тенденции.",
+      "predicate": "calendar_trend",
+      "roles": {
+        "measure": "MCI subtype incidence",
+        "factor": "More recent data collection"
+      },
+      "modality": "appeared; potential association",
+      "logic": "contrast",
+      "claims": [
+        {
+          "predicate": "associated_with_higher_incidence",
+          "roles": {
+            "condition": "MCI and amnestic MCI"
+          }
+        },
+        {
+          "predicate": "associated_with_higher_incidence",
+          "roles": {
+            "condition": "Nonamnestic MCI"
+          },
+          "negated": true
+        }
+      ],
+      "conditions": [
+        "Small number of studies; unconfirmed potential trend"
+      ]
+    },
+    {
+      "key": "no_differences",
+      "units": [
+        62
+      ],
+      "en": "No consistent incidence differences were observed by country, education, response rate or follow-up duration across the reviewed studies.",
+      "ru": "Устойчивых различий заболеваемости по стране, образованию, отклику или длительности наблюдения не обнаружено.",
+      "predicate": "consistent_differences_observed",
+      "roles": {
+        "measure": "MCI incidence",
+        "factor": "Country, education, response rate or follow-up time"
+      },
+      "negated": true,
+      "conditions": [
+        "Qualitative between-study examination"
+      ]
+    },
+    {
+      "key": "multiprong",
+      "units": [
+        13,
+        67,
+        82,
+        87,
+        88
+      ],
+      "en": "The multiprong synthesis combined descriptive statistics, meta-analysis and qualitative review to triangulate contemporary age-specific estimates and ranges; narrow strata and clinical definitions were strengths, not a guarantee of uniformity.",
+      "ru": "Комплексный синтез сочетал описательную статистику, метаанализ и качественный обзор для возрастных оценок и диапазонов; узкие страты и клинические определения были достоинствами, но не гарантией однородности.",
+      "predicate": "multiprong_synthesis",
+      "roles": {
+        "subject": "2019 MCI incidence review",
+        "methods": "Descriptive statistics, meta-analysis and qualitative review"
+      },
+      "type": "conclusion",
+      "grounding": "source_argument",
+      "conditions": [
+        "Synthesis of harmonized population-based studies"
+      ]
+    },
+    {
+      "key": "rationale",
+      "units": [
+        68
+      ],
+      "en": "Age strongly affects MCI/dementia risk; subjective concern and diagnostic operationalization can explain apparent geographic differences. The review used both sexes because a cited meta-analysis found no significant incidence sex difference.",
+      "ru": "Возраст существенно влияет на риск MCI/деменции; субъективная жалоба и способы диагностики могут объяснять географические различия. Обзор использовал оба пола, поскольку цитируемый метаанализ не находил значимого полового различия заболеваемости.",
+      "predicate": "selection_rationale",
+      "roles": {
+        "subject": "Restrictive incidence-review criteria"
+      },
+      "logic": "argument",
+      "claims": [
+        {
+          "predicate": "increases_risk",
+          "roles": {
+            "factor": "Advancing age",
+            "outcome": "MCI and dementia"
+          }
+        },
+        {
+          "predicate": "may_explain",
+          "roles": {
+            "factor": "Diagnostic criteria and operationalization",
+            "outcome": "Apparent geographical variation"
+          },
+          "modality": "partly; may"
+        },
+        {
+          "predicate": "significant_sex_difference",
+          "roles": {
+            "measure": "MCI incidence"
+          },
+          "negated": true,
+          "conditions": [
+            "Cited meta-analysis, not an individual sex-specific cohort estimate"
+          ]
+        }
+      ],
+      "conditions": [
+        "Rationale for age strata and diagnostic comparability"
+      ]
+    },
+    {
+      "key": "meta_regression_limit",
+      "units": [
+        71,
+        81
+      ],
+      "en": "Restrictive selection did not remove heterogeneity; with too few studies per age stratum the review lacked power for multivariable meta-regression, so it used qualitative exploration instead.",
+      "ru": "Строгий отбор не устранил неоднородность; исследований в каждой возрастной страте было слишком мало для многомерной метарегрессии, поэтому использовано качественное исследование причин.",
+      "predicate": "meta_regression_feasible",
+      "roles": {
+        "subject": "2019 MCI incidence review"
+      },
+      "negated": true,
+      "type": "limitation",
+      "attrs": {
+        "reason": "small numbers of studies per age category; insufficient power"
+      },
+      "conditions": [
+        "No confirmatory quantitative identification of heterogeneity sources"
+      ]
+    },
+    {
+      "key": "heterogeneity_sources",
+      "units": [
+        72
+      ],
+      "en": "Potential heterogeneity sources include different diagnostic criteria/operationalization, response rates, follow-up, population-adjusted norms and baseline dementia/MCI exclusion; the small corpus did not permit quantitative confirmation.",
+      "ru": "Возможные причины неоднородности — диагностика, отклик, наблюдение, нормы и исключение исходной деменции/MCI; малый корпус не позволил количественно подтвердить их вклад.",
+      "predicate": "hypothesized_heterogeneity_sources",
+      "roles": {
+        "subject": "MCI incidence estimates"
+      },
+      "modality": "hypothesized; not quantitatively confirmed",
+      "attrs": {
+        "potential_sources": "diagnostic criteria and operationalization; response rates; follow-up duration; normal-reference cohort composition; baseline dementia/MCI exclusion",
+        "source_norms_description": "discussion says all studies used population-adjusted norms"
+      },
+      "conditions": [
+        "Qualitative hypotheses, not proved explanatory effects"
+      ]
+    },
+    {
+      "key": "mutable",
+      "units": [
+        73
+      ],
+      "en": "MCI can arise from AD, depression or other conditions and is not always stable: a person meeting criteria once may not meet them later; this changing expression/detection may contribute to rate variability.",
+      "ru": "MCI может быть связано с болезнью Альцгеймера, депрессией и другими состояниями и не всегда стабильно: соответствие критериям при одном обследовании может исчезнуть при следующем; это может увеличивать вариабельность оценок.",
+      "predicate": "variable_mci_course",
+      "roles": {
+        "subject": "Mild cognitive impairment"
+      },
+      "modality": "can; may",
+      "attrs": {
+        "etiology_examples": "Alzheimer disease; depression",
+        "diagnostic_stability": "criteria may be met at one assessment but not subsequent assessments"
+      },
+      "conditions": [
+        "Interpretation of changing MCI expression and detection"
+      ]
+    },
+    {
+      "key": "funnel",
+      "units": [
+        76,
+        77,
+        78,
+        85
+      ],
+      "en": "Population-based incidence includes cases regardless of clinical detection, help-seeking/access or etiology; only a fraction may enter health care or have AD pathology. A patient funnel applies identification correction and etiologic filtering before planning AD-related services, also for prevalent populations.",
+      "ru": "Популяционная заболеваемость учитывает случаи независимо от клинического выявления, обращения, доступа и этиологии; лишь часть попадает в систему или имеет патологию Альцгеймера. Воронка пациентов учитывает выявление и этиологию перед планированием услуг, также для распространённости.",
+      "predicate": "patient_funnel",
+      "roles": {
+        "population": "Population-based MCI cases",
+        "destination": "Health-service population with Alzheimer pathology"
+      },
+      "type": "conclusion",
+      "grounding": "source_argument",
+      "attrs": {
+        "barriers": "hesitation to admit impairment; inadequate understanding relative to normal aging",
+        "correction": "case identification correction factor accounts for patient journey",
+        "applicability": "incident and prevalent population considerations"
+      },
+      "conditions": [
+        "Illustrative planning model; no numerical conversion factor supplied"
+      ]
+    },
+    {
+      "key": "interpret",
+      "units": [
+        8,
+        44,
+        73,
+        81,
+        85,
+        89
+      ],
+      "en": "Interpret age-specific incidence point estimates together with their ranges and heterogeneous population/method context; a single pooled point can be misleading for a particular population.",
+      "ru": "Возрастную точечную оценку заболеваемости следует интерпретировать вместе с диапазоном и популяционно-методическим контекстом; единое среднее может вводить в заблуждение для отдельной популяции.",
+      "predicate": "interpret_estimates",
+      "roles": {
+        "subject": "Age-specific MCI incidence rates"
+      },
+      "kind": "action",
+      "status": "prescribed",
+      "type": "operation",
+      "conditions": [
+        "Clinical and public-health applications; point estimates plus ranges, not a universal rate"
+      ]
+    },
+    {
+      "key": "limitations",
+      "units": [
+        81,
+        82
+      ],
+      "en": "Restrictive age-band criteria excluded some otherwise sound epidemiologic studies; combined methods and broad qualitative extraction strengthen analysis, but few studies and persistent heterogeneity limit population-specific generalization.",
+      "ru": "Строгие возрастные группы исключили некоторые качественные исследования; комплекс методов и широкое извлечение признаков усиливают анализ, но малый корпус и неоднородность ограничивают переносимость.",
+      "predicate": "review_strengths_and_limits",
+      "roles": {
+        "subject": "2019 MCI incidence review"
+      },
+      "type": "limitation",
+      "logic": "contrast",
+      "claims": [
+        {
+          "predicate": "strengthened_by",
+          "roles": {
+            "subject": "2019 MCI incidence review",
+            "method": "Broad qualitative factors, clinical definitions, narrow age strata and multiple synthesis approaches"
+          }
+        },
+        {
+          "predicate": "limited_by",
+          "roles": {
+            "subject": "2019 MCI incidence review",
+            "limitation": "Small study count, exclusions by age bands and persistent heterogeneity"
+          }
+        }
+      ],
+      "attrs": {
+        "example_excluded_study": "Ganguli et al. excluded from quantitative analyses for broader age strata",
+        "sex_stratification_expectation": "authors did not expect dramatically different findings; visual data not shown"
+      },
+      "conditions": [
+        "Authors' appraisal, not expert validation"
+      ]
+    }
+  ],
+  "transitions": [
+    {
+      "sources": [
+        "descriptive"
+      ],
+      "target": "rate_MCI_0",
+      "units": [
+        39
+      ],
+      "reason": "Descriptive synthesis produces the available or explicitly absent youngest-stratum estimates.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "meta"
+      ],
+      "target": "rate_MCI_1",
+      "units": [
+        39
+      ],
+      "reason": "Age-stratified synthesis produces these source-reported quantitative summaries; absent pooled cells remain absent.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "meta"
+      ],
+      "target": "rate_MCI_2",
+      "units": [
+        39
+      ],
+      "reason": "Age-stratified synthesis produces these source-reported quantitative summaries; absent pooled cells remain absent.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "meta"
+      ],
+      "target": "rate_MCI_3",
+      "units": [
+        39
+      ],
+      "reason": "Age-stratified synthesis produces these source-reported quantitative summaries; absent pooled cells remain absent.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "meta"
+      ],
+      "target": "rate_MCI_4",
+      "units": [
+        39
+      ],
+      "reason": "Age-stratified synthesis produces these source-reported quantitative summaries; absent pooled cells remain absent.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "descriptive"
+      ],
+      "target": "rate_aMCI_0",
+      "units": [
+        39
+      ],
+      "reason": "Descriptive synthesis produces the available or explicitly absent youngest-stratum estimates.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "meta"
+      ],
+      "target": "rate_aMCI_1",
+      "units": [
+        39
+      ],
+      "reason": "Age-stratified synthesis produces these source-reported quantitative summaries; absent pooled cells remain absent.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "meta"
+      ],
+      "target": "rate_aMCI_2",
+      "units": [
+        39
+      ],
+      "reason": "Age-stratified synthesis produces these source-reported quantitative summaries; absent pooled cells remain absent.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "meta"
+      ],
+      "target": "rate_aMCI_3",
+      "units": [
+        39
+      ],
+      "reason": "Age-stratified synthesis produces these source-reported quantitative summaries; absent pooled cells remain absent.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "meta"
+      ],
+      "target": "rate_aMCI_4",
+      "units": [
+        39
+      ],
+      "reason": "Age-stratified synthesis produces these source-reported quantitative summaries; absent pooled cells remain absent.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "descriptive"
+      ],
+      "target": "rate_naMCI_0",
+      "units": [
+        39
+      ],
+      "reason": "Descriptive synthesis produces the available or explicitly absent youngest-stratum estimates.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "meta"
+      ],
+      "target": "rate_naMCI_1",
+      "units": [
+        39
+      ],
+      "reason": "Age-stratified synthesis produces these source-reported quantitative summaries; absent pooled cells remain absent.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "meta"
+      ],
+      "target": "rate_naMCI_2",
+      "units": [
+        39
+      ],
+      "reason": "Age-stratified synthesis produces these source-reported quantitative summaries; absent pooled cells remain absent.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "meta"
+      ],
+      "target": "rate_naMCI_3",
+      "units": [
+        39
+      ],
+      "reason": "Age-stratified synthesis produces these source-reported quantitative summaries; absent pooled cells remain absent.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "meta"
+      ],
+      "target": "rate_naMCI_4",
+      "units": [
+        39
+      ],
+      "reason": "Age-stratified synthesis produces these source-reported quantitative summaries; absent pooled cells remain absent.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "cohort_0",
+      "units": [
+        53
+      ],
+      "reason": "Extraction of study parameters yields this cohort-specific incidence and diagnostic record.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "cohort_1",
+      "units": [
+        53
+      ],
+      "reason": "Extraction of study parameters yields this cohort-specific incidence and diagnostic record.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "cohort_2",
+      "units": [
+        53
+      ],
+      "reason": "Extraction of study parameters yields this cohort-specific incidence and diagnostic record.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "cohort_3",
+      "units": [
+        53
+      ],
+      "reason": "Extraction of study parameters yields this cohort-specific incidence and diagnostic record.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "cohort_4",
+      "units": [
+        53
+      ],
+      "reason": "Extraction of study parameters yields this cohort-specific incidence and diagnostic record.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "cohort_5",
+      "units": [
+        53
+      ],
+      "reason": "Extraction of study parameters yields this cohort-specific incidence and diagnostic record.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "cohort_6",
+      "units": [
+        53
+      ],
+      "reason": "Extraction of study parameters yields this cohort-specific incidence and diagnostic record.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "cohort_7",
+      "units": [
+        53
+      ],
+      "reason": "Extraction of study parameters yields this cohort-specific incidence and diagnostic record.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "cohort_8",
+      "units": [
+        53
+      ],
+      "reason": "Extraction of study parameters yields this cohort-specific incidence and diagnostic record.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "cohort_9",
+      "units": [
+        53
+      ],
+      "reason": "Extraction of study parameters yields this cohort-specific incidence and diagnostic record.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "cohort_10",
+      "units": [
+        53
+      ],
+      "reason": "Extraction of study parameters yields this cohort-specific incidence and diagnostic record.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "cohort_11",
+      "units": [
+        53
+      ],
+      "reason": "Extraction of study parameters yields this cohort-specific incidence and diagnostic record.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "cohort_12",
+      "units": [
+        53
+      ],
+      "reason": "Extraction of study parameters yields this cohort-specific incidence and diagnostic record.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "background"
+      ],
+      "target": "review_aim",
+      "units": [
+        13
+      ],
+      "reason": "The explicitly identified synthesis gap motivates the completed review's stated objective.",
+      "usage": "prerequisite"
+    },
+    {
+      "sources": [
+        "eligibility"
+      ],
+      "target": "search",
+      "units": [
+        19
+      ],
+      "reason": "The review's eligibility scope determines its targeted literature search.",
+      "usage": "method"
+    },
+    {
+      "sources": [
+        "search",
+        "eligibility"
+      ],
+      "target": "screen",
+      "units": [
+        20
+      ],
+      "reason": "Retrieved records and eligibility criteria are jointly used for screening and full-text selection.",
+      "usage": "method"
+    },
+    {
+      "sources": [
+        "screen"
+      ],
+      "target": "selected",
+      "units": [
+        33
+      ],
+      "reason": "The completed selection yields the reported search/extraction/analysis counts.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "selected"
+      ],
+      "target": "exclusions",
+      "units": [
+        36
+      ],
+      "reason": "The selected-study inventory is immediately developed by the explicit reasons and numbers of exclusions.",
+      "usage": "development"
+    },
+    {
+      "sources": [
+        "selected"
+      ],
+      "target": "corpus",
+      "units": [
+        37
+      ],
+      "reason": "The final seven-study set is specified by geographic composition, sizes, follow-up and subtype availability.",
+      "usage": "development"
+    },
+    {
+      "sources": [
+        "screen"
+      ],
+      "target": "extract",
+      "units": [
+        23
+      ],
+      "reason": "The selected eligible publications are the immediate inputs of data extraction.",
+      "usage": "prerequisite"
+    },
+    {
+      "sources": [
+        "extract",
+        "eligibility"
+      ],
+      "target": "descriptive",
+      "units": [
+        27
+      ],
+      "reason": "Extracted age-specific values and diagnostic/attrition rules determine descriptive synthesis.",
+      "usage": "method"
+    },
+    {
+      "sources": [
+        "extract",
+        "eligibility",
+        "i2"
+      ],
+      "target": "meta",
+      "units": [
+        28
+      ],
+      "reason": "The age-specific eligible estimates and heterogeneity definition are used in the random-effects analysis.",
+      "usage": "method"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "qualitative",
+      "units": [
+        51
+      ],
+      "reason": "Reviewing extracted parameters yields the 82-variable inventory and 13 proposed contributors.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "rate_MCI_0",
+        "rate_MCI_1",
+        "rate_MCI_2",
+        "rate_MCI_3",
+        "rate_MCI_4",
+        "rate_aMCI_0",
+        "rate_aMCI_1",
+        "rate_aMCI_2",
+        "rate_aMCI_3",
+        "rate_aMCI_4",
+        "rate_naMCI_0",
+        "rate_naMCI_1",
+        "rate_naMCI_2",
+        "rate_naMCI_3",
+        "rate_naMCI_4"
+      ],
+      "target": "age_pattern",
+      "units": [
+        48
+      ],
+      "reason": "The source's age and heterogeneity pattern is derived from the age-stratified summaries.",
+      "usage": "data"
+    },
+    {
+      "sources": [
+        "rate_MCI_0",
+        "rate_MCI_1",
+        "rate_MCI_2",
+        "rate_MCI_3",
+        "rate_MCI_4",
+        "rate_aMCI_0",
+        "rate_aMCI_1",
+        "rate_aMCI_2",
+        "rate_aMCI_3",
+        "rate_aMCI_4",
+        "rate_naMCI_0",
+        "rate_naMCI_1",
+        "rate_naMCI_2",
+        "rate_naMCI_3",
+        "rate_naMCI_4"
+      ],
+      "target": "consistent",
+      "units": [
+        48
+      ],
+      "reason": "The source compares the descriptive intervals with the pooled confidence intervals across outcomes.",
+      "usage": "data"
+    },
+    {
+      "sources": [
+        "cohort_0",
+        "cohort_1",
+        "cohort_2",
+        "cohort_3",
+        "cohort_4",
+        "cohort_5",
+        "cohort_6",
+        "cohort_7",
+        "cohort_8",
+        "cohort_9",
+        "cohort_10",
+        "cohort_11",
+        "cohort_12"
+      ],
+      "target": "calendar",
+      "units": [
+        61
+      ],
+      "reason": "The qualitative table's cohort years and incidence values motivate the explicitly tentative calendar trend.",
+      "usage": "data"
+    },
+    {
+      "sources": [
+        "cohort_0",
+        "cohort_1",
+        "cohort_2",
+        "cohort_3",
+        "cohort_4",
+        "cohort_5",
+        "cohort_6",
+        "cohort_7",
+        "cohort_8",
+        "cohort_9",
+        "cohort_10",
+        "cohort_11",
+        "cohort_12"
+      ],
+      "target": "no_differences",
+      "units": [
+        62
+      ],
+      "reason": "The source's qualitative comparison across the reported cohort characteristics found no consistent differences.",
+      "usage": "data"
+    },
+    {
+      "sources": [
+        "selected",
+        "qualitative"
+      ],
+      "target": "meta_regression_limit",
+      "units": [
+        71
+      ],
+      "reason": "The small stratum counts constrain meta-regression and motivate qualitative examination.",
+      "usage": "premise"
+    },
+    {
+      "sources": [
+        "qualitative",
+        "meta_regression_limit"
+      ],
+      "target": "heterogeneity_sources",
+      "units": [
+        72
+      ],
+      "reason": "Qualitative parameter differences and insufficient power delimit the proposed, unconfirmed heterogeneity explanations.",
+      "usage": "premise"
+    },
+    {
+      "sources": [
+        "age_pattern",
+        "consistent",
+        "qualitative"
+      ],
+      "target": "multiprong",
+      "units": [
+        82
+      ],
+      "reason": "The source jointly evaluates the three analyses as a complementary synthesis.",
+      "usage": "premise"
+    },
+    {
+      "sources": [
+        "age_pattern",
+        "meta_regression_limit",
+        "heterogeneity_sources",
+        "mutable"
+      ],
+      "target": "interpret",
+      "units": [
+        73,
+        81,
+        85
+      ],
+      "reason": "Persistent variation, unconfirmed explanations and mutable MCI motivate the explicit prescription to use ranges with context.",
+      "usage": "premise"
+    },
+    {
+      "sources": [
+        "mci_definition"
+      ],
+      "target": "mutable",
+      "units": [
+        73
+      ],
+      "reason": "The source directly develops MCI's diagnostic state by explaining that meeting criteria need not persist at later assessments.",
+      "usage": "development"
+    },
+    {
+      "sources": [
+        "mci_definition",
+        "ad_pathology"
+      ],
+      "target": "funnel",
+      "units": [
+        76
+      ],
+      "reason": "The source uses the MCI case definition and the distinction between MCI and AD pathology to explain why population counts require detection and etiologic filtering.",
+      "usage": "premise"
+    },
+    {
+      "sources": [
+        "multiprong",
+        "meta_regression_limit",
+        "age_pattern"
+      ],
+      "target": "limitations",
+      "units": [
+        81,
+        82
+      ],
+      "reason": "The source's appraisal weighs synthesis strengths jointly with small-study and heterogeneity limitations.",
+      "usage": "premise"
+    }
+  ],
+  "excluded_units": {
+    "U1": "Document heading/section number retained outside the graph.",
+    "U2": "Publication identity metadata retained outside scientific knowledge.",
+    "U3": "Publication identity metadata retained outside scientific knowledge.",
+    "U4": "Document heading/section number retained outside the graph.",
+    "U9": "Indexing keywords; substantive knowledge represented separately.",
+    "U10": "Document heading/section number retained outside the graph.",
+    "U11": "Document heading/section number retained outside the graph.",
+    "U14": "Document heading/section number retained outside the graph.",
+    "U15": "Document heading/section number retained outside the graph.",
+    "U16": "Document heading/section number retained outside the graph.",
+    "U17": "Document heading/section number retained outside the graph.",
+    "U21": "Document heading/section number retained outside the graph.",
+    "U22": "Document heading/section number retained outside the graph.",
+    "U24": "Document heading/section number retained outside the graph.",
+    "U25": "Document heading/section number retained outside the graph.",
+    "U29": "Document heading/section number retained outside the graph.",
+    "U30": "Document heading/section number retained outside the graph.",
+    "U31": "Document heading/section number retained outside the graph.",
+    "U32": "Document heading/section number retained outside the graph.",
+    "U46": "Document heading/section number retained outside the graph.",
+    "U47": "Document heading/section number retained outside the graph.",
+    "U49": "Document heading/section number retained outside the graph.",
+    "U50": "Document heading/section number retained outside the graph.",
+    "U63": "Document heading/section number retained outside the graph.",
+    "U64": "Document heading/section number retained outside the graph.",
+    "U65": "Document heading/section number retained outside the graph.",
+    "U66": "Document heading/section number retained outside the graph.",
+    "U69": "Document heading/section number retained outside the graph.",
+    "U70": "Document heading/section number retained outside the graph.",
+    "U74": "Document heading/section number retained outside the graph.",
+    "U75": "Document heading/section number retained outside the graph.",
+    "U79": "Document heading/section number retained outside the graph.",
+    "U80": "Document heading/section number retained outside the graph.",
+    "U83": "Document heading/section number retained outside the graph.",
+    "U84": "Document heading/section number retained outside the graph.",
+    "U86": "Research-in-context label; the three scientific items are represented.",
+    "U90": "Document heading/section number retained outside the graph.",
+    "U91": "Acknowledgments, funding, conflicts of interest or document administration retained, excluded from scientific findings.",
+    "U92": "Acknowledgments, funding, conflicts of interest or document administration retained, excluded from scientific findings.",
+    "U93": "Document heading/section number retained outside the graph.",
+    "U94": "Acknowledgments, funding, conflicts of interest or document administration retained, excluded from scientific findings.",
+    "U95": "Supplementary material link retained; no contents inferred from an unavailable attachment.",
+    "U96": "Document heading/section number retained outside the graph.",
+    "U97": "Supplementary material link retained; no contents inferred from an unavailable attachment."
+  },
+  "concept_aliases": {
+    "Mild cognitive impairment": [
+      "MCI"
+    ],
+    "Amnestic mild cognitive impairment": [
+      "aMCI"
+    ],
+    "Nonamnestic mild cognitive impairment": [
+      "naMCI"
+    ]
+  },
+  "report_ru": "# PMC6416157: ручная карта схемы6\n\nПрочитаны полный текст, обе таблицы со всеми ячейками, примечания и дублированные подписи рисунков. Таблица1 сериализована по состоянию/возрасту, таблица2 — по исследованию/исходу. Исходные клетки, ДИ, пропуски, критерии, нормы и характеристики наблюдения сохранены в семантике; пропуски не приравнены к нулю. Ссылки на недоступное содержимое supplementary materials не заменены вымышленными данными.\n\nВсе показатели заболеваемости — на1000 человеко-лет; I² — проценты. Среднее3,4года не превращено в максимум. Группа85+ включает85–89/85–94/≥85. Первичные оценки, медианы, метааналитические оценки и исключённые альтернативы различаются. Находка22,5/40,9/60,1 сохраняет ДИ5,1–51,4/7,7–97,5/6,7–159,0.\n\nСсылка[6] в утверждённой PMC10000452 использует22,5%/60,1%, что отличается по размерности. Целевую карту не исправляем. В источнике имеются тонкости: описание методов говорит о возрастных/образовательных нормах во всех исследованиях кроме одного, а обсуждение говорит «во всех»; оба положения сохранены с контекстом. Статистическая неоднородность не устранена; гипотетические причины не представлены подтверждёнными."
+}

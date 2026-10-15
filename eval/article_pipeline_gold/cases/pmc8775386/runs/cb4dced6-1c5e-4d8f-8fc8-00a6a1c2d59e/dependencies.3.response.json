@@ -1,0 +1,597 @@
+{
+  "occurrences": [],
+  "transitions": [
+    {
+      "id": "T71",
+      "sources": [
+        "B23"
+      ],
+      "target": "B81",
+      "usage": "result",
+      "reason": "Table 3 presents the specified between-group comparison.",
+      "unit_ids": [
+        "U50",
+        "U51",
+        "U52"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T72",
+      "sources": [
+        "B23"
+      ],
+      "target": "B82",
+      "usage": "result",
+      "reason": "Table 3 presents the specified between-group comparison.",
+      "unit_ids": [
+        "U50",
+        "U51",
+        "U52"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T73",
+      "sources": [
+        "B23"
+      ],
+      "target": "B83",
+      "usage": "result",
+      "reason": "Table 3 presents the specified between-group comparison.",
+      "unit_ids": [
+        "U50",
+        "U51",
+        "U52"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T74",
+      "sources": [
+        "B23"
+      ],
+      "target": "B84",
+      "usage": "result",
+      "reason": "Table 3 presents the specified between-group comparison.",
+      "unit_ids": [
+        "U50",
+        "U51",
+        "U52"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T75",
+      "sources": [
+        "B23"
+      ],
+      "target": "B85",
+      "usage": "result",
+      "reason": "Table 3 presents the specified between-group comparison.",
+      "unit_ids": [
+        "U50",
+        "U51",
+        "U52"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T76",
+      "sources": [
+        "B23"
+      ],
+      "target": "B86",
+      "usage": "result",
+      "reason": "Table 3 presents the specified between-group comparison.",
+      "unit_ids": [
+        "U50",
+        "U51",
+        "U52"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T77",
+      "sources": [
+        "B23"
+      ],
+      "target": "B87",
+      "usage": "result",
+      "reason": "Table 3 presents the specified between-group comparison.",
+      "unit_ids": [
+        "U50",
+        "U51",
+        "U52"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T78",
+      "sources": [
+        "B23"
+      ],
+      "target": "B88",
+      "usage": "result",
+      "reason": "Table 3 presents the specified between-group comparison.",
+      "unit_ids": [
+        "U50",
+        "U51",
+        "U52"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T79",
+      "sources": [
+        "B23"
+      ],
+      "target": "B89",
+      "usage": "result",
+      "reason": "Table 3 presents the specified between-group comparison.",
+      "unit_ids": [
+        "U50",
+        "U51",
+        "U52"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T80",
+      "sources": [
+        "B23"
+      ],
+      "target": "B90",
+      "usage": "result",
+      "reason": "Table 3 presents the specified between-group comparison.",
+      "unit_ids": [
+        "U50",
+        "U51",
+        "U52"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T81",
+      "sources": [
+        "B23"
+      ],
+      "target": "B91",
+      "usage": "result",
+      "reason": "Table 3 presents the specified between-group comparison.",
+      "unit_ids": [
+        "U50",
+        "U51",
+        "U52"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T82",
+      "sources": [
+        "B23"
+      ],
+      "target": "B92",
+      "usage": "result",
+      "reason": "Table 3 presents the specified between-group comparison.",
+      "unit_ids": [
+        "U50",
+        "U51",
+        "U52"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T83",
+      "sources": [
+        "B23"
+      ],
+      "target": "B93",
+      "usage": "result",
+      "reason": "Table 3 presents the specified between-group comparison.",
+      "unit_ids": [
+        "U50",
+        "U51",
+        "U52"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T84",
+      "sources": [
+        "B23"
+      ],
+      "target": "B94",
+      "usage": "result",
+      "reason": "Table 3 presents the specified between-group comparison.",
+      "unit_ids": [
+        "U50",
+        "U51",
+        "U52"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T85",
+      "sources": [
+        "B23"
+      ],
+      "target": "B95",
+      "usage": "result",
+      "reason": "Table 3 presents the specified between-group comparison.",
+      "unit_ids": [
+        "U50",
+        "U51",
+        "U52"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T86",
+      "sources": [
+        "B23"
+      ],
+      "target": "B96",
+      "usage": "result",
+      "reason": "Table 3 presents the specified between-group comparison.",
+      "unit_ids": [
+        "U50",
+        "U51",
+        "U52"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T87",
+      "sources": [
+        "B23"
+      ],
+      "target": "B97",
+      "usage": "result",
+      "reason": "Table 3 presents the specified between-group comparison.",
+      "unit_ids": [
+        "U50",
+        "U51",
+        "U52"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T88",
+      "sources": [
+        "B23"
+      ],
+      "target": "B98",
+      "usage": "result",
+      "reason": "Table 3 presents the specified between-group comparison.",
+      "unit_ids": [
+        "U50",
+        "U51",
+        "U52"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T89",
+      "sources": [
+        "B23"
+      ],
+      "target": "B99",
+      "usage": "result",
+      "reason": "Table 3 presents the specified between-group comparison.",
+      "unit_ids": [
+        "U50",
+        "U51",
+        "U52"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T90",
+      "sources": [
+        "B23"
+      ],
+      "target": "B100",
+      "usage": "result",
+      "reason": "Table 3 presents the specified between-group comparison.",
+      "unit_ids": [
+        "U50",
+        "U51",
+        "U52"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T91",
+      "sources": [
+        "B23"
+      ],
+      "target": "B101",
+      "usage": "result",
+      "reason": "Table 3 presents the specified between-group comparison.",
+      "unit_ids": [
+        "U50",
+        "U51",
+        "U52"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T92",
+      "sources": [
+        "B23"
+      ],
+      "target": "B102",
+      "usage": "result",
+      "reason": "Table 3 presents the specified between-group comparison.",
+      "unit_ids": [
+        "U50",
+        "U51",
+        "U52"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T93",
+      "sources": [
+        "B23"
+      ],
+      "target": "B103",
+      "usage": "result",
+      "reason": "Table 3 presents the specified between-group comparison.",
+      "unit_ids": [
+        "U50",
+        "U51",
+        "U52"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T94",
+      "sources": [
+        "B23"
+      ],
+      "target": "B104",
+      "usage": "result",
+      "reason": "Table 3 presents the specified between-group comparison.",
+      "unit_ids": [
+        "U50",
+        "U51",
+        "U52"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T95",
+      "sources": [
+        "B23"
+      ],
+      "target": "B105",
+      "usage": "result",
+      "reason": "Table 3 presents the specified between-group comparison.",
+      "unit_ids": [
+        "U50",
+        "U51",
+        "U52"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T96",
+      "sources": [
+        "B23"
+      ],
+      "target": "B106",
+      "usage": "result",
+      "reason": "Table 3 presents the specified between-group comparison.",
+      "unit_ids": [
+        "U50",
+        "U51",
+        "U52"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T97",
+      "sources": [
+        "B23"
+      ],
+      "target": "B108",
+      "usage": "result",
+      "reason": "Table 4 reports the MCI-adjusted partial correlation under the stated selection procedure.",
+      "unit_ids": [
+        "U55",
+        "U56",
+        "U57"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T98",
+      "sources": [
+        "B23"
+      ],
+      "target": "B109",
+      "usage": "result",
+      "reason": "Table 4 reports the MCI-adjusted partial correlation under the stated selection procedure.",
+      "unit_ids": [
+        "U55",
+        "U56",
+        "U57"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T99",
+      "sources": [
+        "B23"
+      ],
+      "target": "B110",
+      "usage": "result",
+      "reason": "Table 4 reports the MCI-adjusted partial correlation under the stated selection procedure.",
+      "unit_ids": [
+        "U55",
+        "U56",
+        "U57"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T100",
+      "sources": [
+        "B23"
+      ],
+      "target": "B111",
+      "usage": "result",
+      "reason": "Table 4 reports the MCI-adjusted partial correlation under the stated selection procedure.",
+      "unit_ids": [
+        "U55",
+        "U56",
+        "U57"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T101",
+      "sources": [
+        "B23"
+      ],
+      "target": "B112",
+      "usage": "result",
+      "reason": "Table 4 reports the MCI-adjusted partial correlation under the stated selection procedure.",
+      "unit_ids": [
+        "U55",
+        "U56",
+        "U57"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T102",
+      "sources": [
+        "B23"
+      ],
+      "target": "B113",
+      "usage": "result",
+      "reason": "Table 4 reports the MCI-adjusted partial correlation under the stated selection procedure.",
+      "unit_ids": [
+        "U55",
+        "U56",
+        "U57"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T103",
+      "sources": [
+        "B23"
+      ],
+      "target": "B114",
+      "usage": "result",
+      "reason": "Table 4 reports the MCI-adjusted partial correlation under the stated selection procedure.",
+      "unit_ids": [
+        "U55",
+        "U56",
+        "U57"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T104",
+      "sources": [
+        "B23"
+      ],
+      "target": "B115",
+      "usage": "result",
+      "reason": "Table 4 reports the MCI-adjusted partial correlation under the stated selection procedure.",
+      "unit_ids": [
+        "U55",
+        "U56",
+        "U57"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T105",
+      "sources": [
+        "B23"
+      ],
+      "target": "B116",
+      "usage": "result",
+      "reason": "Table 4 reports the MCI-adjusted partial correlation under the stated selection procedure.",
+      "unit_ids": [
+        "U55",
+        "U56",
+        "U57"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T106",
+      "sources": [
+        "B23"
+      ],
+      "target": "B117",
+      "usage": "result",
+      "reason": "Table 4 reports the MCI-adjusted partial correlation under the stated selection procedure.",
+      "unit_ids": [
+        "U55",
+        "U56",
+        "U57"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T107",
+      "sources": [
+        "B23"
+      ],
+      "target": "B118",
+      "usage": "result",
+      "reason": "The table footnote reports correlations separately in the diagnosed groups.",
+      "unit_ids": [
+        "U57"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T108",
+      "sources": [
+        "B23"
+      ],
+      "target": "B119",
+      "usage": "result",
+      "reason": "The table footnote reports correlations separately in the diagnosed groups.",
+      "unit_ids": [
+        "U57"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T109",
+      "sources": [
+        "B23"
+      ],
+      "target": "B120",
+      "usage": "result",
+      "reason": "The table footnote reports correlations separately in the diagnosed groups.",
+      "unit_ids": [
+        "U57"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T125",
+      "sources": [
+        "B23"
+      ],
+      "target": "B107",
+      "usage": "result",
+      "reason": "The paragraph summarizes the MCI-adjusted correlations.",
+      "unit_ids": [
+        "U54"
+      ],
+      "conditions": []
+    }
+  ]
+}

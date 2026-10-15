@@ -195,6 +195,9 @@ app.include_router(goal_decomposition_router)
 # Редактор статей (article_editor)
 app.include_router(article_editor_router.router, prefix="/api")
 
+from web.routers import article_comparisons
+app.include_router(article_comparisons.router, prefix="/api")
+
 # Текущий пользователь (роль из ADMIN_UIDS)
 from src.routers import user as user_router
 app.include_router(user_router.router, prefix="/api")

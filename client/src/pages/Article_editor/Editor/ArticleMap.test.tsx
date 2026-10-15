@@ -40,7 +40,7 @@ describe('Independent article maps', () => {
         await screen.findByText('Structural map');
         fireEvent.change(screen.getByLabelText('Версия карты'), { target: { value: 'text_reified' } });
         await screen.findByText('English knowledge');
-        expect(api.getArticleMap).toHaveBeenLastCalledWith('article', 'text_reified', 'en', expect.any(AbortSignal));
+        expect(api.getArticleMap).toHaveBeenLastCalledWith('article', 'text_reified', 'en', expect.any(AbortSignal), 'text_reified');
         expect(sessionStorage.getItem('article-map.selection.article')).toBe('text_reified');
     });
 
@@ -117,5 +117,24 @@ describe('Independent article maps', () => {
         render(<ArticleMap docId="article" enabled />);
         expect(screen.getByRole('button', { name: 'Text → knowledge map' })).toBeInTheDocument();
         await screen.findByText('Structural map');
+    });
+
+    test('two runs of one pipeline remain selectable and translated runs do not call a translator', async () => {
+        const current = { ...newMap, run_id: 'run-new', is_current: true, generation: { kind: 'codex_manual' },
+            translated_locales: ['ru'], graph_schema_version: 6 };
+        vi.mocked(api.listArticleMaps).mockResolvedValue({ maps: [current, { ...newMap, run_id: 'run-old', is_current: false }, oldMap],
+            availability: { text_reified: true, structural_rows: true } });
+        vi.mocked(api.getArticleMap).mockImplementation(async (_doc, pipeline, locale, _signal, run) =>
+            pipeline === 'structural_rows' ? oldMap : { ...newMap, run_id: run || 'run-new', graph: { ...newMap.graph,
+                nodes: [{ ...newMap.graph.nodes[0], display_text: locale === 'ru' ? 'Готовая русская подпись' : run || 'run-new' }] } });
+        render(<ArticleMap docId="article" enabled />);
+        await screen.findByText('run-new');
+        expect(screen.getByLabelText('Версия карты').querySelectorAll('option')).toHaveLength(3);
+        fireEvent.change(screen.getByLabelText('Язык карты'), { target: { value: 'ru' } });
+        await screen.findByText('Готовая русская подпись');
+        expect(api.translateArticleMap).not.toHaveBeenCalled();
+        fireEvent.change(screen.getByLabelText('Версия карты'), { target: { value: 'run-old' } });
+        await screen.findByText('run-old');
+        expect(api.getArticleMap).toHaveBeenLastCalledWith('article', 'text_reified', 'en', expect.any(AbortSignal), 'run-old');
     });
 });

@@ -1,0 +1,19 @@
+{
+  "passed": true,
+  "browser": "Microsoft Edge headless",
+  "offline": true,
+  "network_requests": 0,
+  "model_calls": 0,
+  "checks": [
+    "render",
+    "selection and source",
+    "English/Russian",
+    "full source",
+    "zoom",
+    "pan"
+  ],
+  "screenshots": [
+    "map.preview.en.png",
+    "map.preview.ru.png"
+  ]
+}

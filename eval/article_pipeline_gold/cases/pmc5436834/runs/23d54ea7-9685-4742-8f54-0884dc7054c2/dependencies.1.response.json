@@ -1,0 +1,220 @@
+{
+  "occurrences": [],
+  "transitions": [
+    {
+      "id": "T1",
+      "sources": [
+        "B3"
+      ],
+      "target": "B4",
+      "usage": "development",
+      "reason": "The plaque hallmark is immediately developed by the source's account of APP cleavage and Aβ aggregation.",
+      "unit_ids": [
+        "U9"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T2",
+      "sources": [
+        "B11"
+      ],
+      "target": "B12",
+      "usage": "development",
+      "reason": "The two-receptor distinction is specified by the TNFR1 activation and signaling properties.",
+      "unit_ids": [
+        "U13"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T3",
+      "sources": [
+        "B11"
+      ],
+      "target": "B13",
+      "usage": "development",
+      "reason": "The two-receptor distinction is specified by the contrasting TNFR2 activation and signaling properties.",
+      "unit_ids": [
+        "U13"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T4",
+      "sources": [
+        "B12",
+        "B13"
+      ],
+      "target": "B14",
+      "usage": "premise",
+      "reason": "The receptor descriptions jointly ground the source's overall apoptosis-versus-survival contrast.",
+      "unit_ids": [
+        "U13"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T5",
+      "sources": [
+        "B15",
+        "B16",
+        "B17",
+        "B18",
+        "B19",
+        "B20",
+        "B21",
+        "B22"
+      ],
+      "target": "B23",
+      "usage": "evidence",
+      "reason": "The review jointly uses the reported clinical, genetic and mouse findings to conclude that TNF-driven processes participate at multiple AD stages.",
+      "unit_ids": [
+        "U15",
+        "U16",
+        "U17",
+        "U18"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T6",
+      "sources": [
+        "B24"
+      ],
+      "target": "B25",
+      "usage": "development",
+      "reason": "The named approved biologics are immediately specified by their binding and fusion-protein mechanisms.",
+      "unit_ids": [
+        "U20"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T7",
+      "sources": [
+        "B49"
+      ],
+      "target": "B28",
+      "usage": "result",
+      "reason": "The cognitive improvements are reported results of the six-month open-label administration and assessment.",
+      "unit_ids": [
+        "U21"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T8",
+      "sources": [
+        "B28"
+      ],
+      "target": "B29",
+      "usage": "development",
+      "reason": "The observed open-label improvement is immediately developed by the proposed delivery mechanism and conflicting distribution evidence.",
+      "unit_ids": [
+        "U21"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T9",
+      "sources": [
+        "B28",
+        "B30",
+        "B29"
+      ],
+      "target": "B31",
+      "usage": "prerequisite",
+      "reason": "The provisional human findings and uncertain delivery motivate the explicitly required larger controlled confirmation.",
+      "unit_ids": [
+        "U21",
+        "U29"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T10",
+      "sources": [
+        "B50"
+      ],
+      "target": "B33",
+      "usage": "result",
+      "reason": "The reported absence of human benefit is an outcome of the completed controlled trial; the mouse result remains contrasting context.",
+      "unit_ids": [
+        "U23"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T11",
+      "sources": [
+        "B33"
+      ],
+      "target": "B34",
+      "usage": "prerequisite",
+      "reason": "The failure to show clinical benefit motivates the explicit unresolved task of determining the clinical effect.",
+      "unit_ids": [
+        "U23",
+        "U29"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T12",
+      "sources": [
+        "B32",
+        "B35",
+        "B37"
+      ],
+      "target": "B36",
+      "usage": "prerequisite",
+      "reason": "The BBB transport strategy and explicitly stated human–mouse receptor-binding rationale are used in constructing the mouse fusion.",
+      "unit_ids": [
+        "U24"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T14",
+      "sources": [
+        "B47"
+      ],
+      "target": "B38",
+      "usage": "result",
+      "reason": "Testing the engineered construct yields its reported binding constants.",
+      "unit_ids": [
+        "U24"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T15",
+      "sources": [
+        "B35",
+        "B38"
+      ],
+      "target": "B39",
+      "usage": "premise",
+      "reason": "The source explicitly infers the two functions from receptor-mediated transport and high-affinity binding to both TfR and TNF-alpha.",
+      "unit_ids": [
+        "U24",
+        "U25",
+        "U26"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T16",
+      "sources": [
+        "B47"
+      ],
+      "target": "B40",
+      "usage": "result",
+      "reason": "The completed pharmacokinetic analysis yields the brain-to-pathological-TNF concentration ratio.",
+      "unit_ids": [
+        "U24"
+      ],
+      "conditions": []
+    }
+  ]
+}

@@ -121,6 +121,13 @@ async def test_invalid_translation_is_archived_and_never_reused(tmp_path, raw):
 async def test_dependency_prompt_change_reuses_extraction_and_translation_for_new_map(tmp_path, monkeypatch):
     from domain.article_maps import digest
     from infrastructure.reference_pilot_builder import ProductionPilotMapBuilder
+    from application.text_to_map import LegacyTextToMap, LEGACY_PROMPT_PATH, LEGACY_DEPENDENCY_PROMPT_PATH
+
+    # Регрессия кэша прежнего контракта проверяется явно; основной сценарий уже схемы 6.
+    monkeypatch.setattr(ProductionPilotMapBuilder, "contract_version", 5)
+    monkeypatch.setattr("infrastructure.reference_pilot_builder.TextToMap", LegacyTextToMap)
+    monkeypatch.setattr("infrastructure.reference_pilot_builder.PROMPT_PATH", LEGACY_PROMPT_PATH)
+    monkeypatch.setattr("infrastructure.reference_pilot_builder.DEPENDENCY_PROMPT_PATH", LEGACY_DEPENDENCY_PROMPT_PATH)
 
     counts = {"extraction": 0, "dependencies": 0, "translation_ru": 0}
 
@@ -177,11 +184,19 @@ async def test_dependency_prompt_change_reuses_extraction_and_translation_for_ne
     changed_prompt = tmp_path / "dependencies.en.md"
     changed_prompt.write_text("New dependency prompt version", encoding="utf-8")
     monkeypatch.setattr("infrastructure.reference_pilot_builder.DEPENDENCY_PROMPT_PATH", changed_prompt)
-    monkeypatch.setattr("application.text_to_map.DEPENDENCY_PROMPT_PATH", changed_prompt)
+    monkeypatch.setattr("application.text_to_map.LEGACY_DEPENDENCY_PROMPT_PATH", changed_prompt)
     second = await builder.build(source)
     assert first["run_id"] != second["run_id"]
     assert counts == {"extraction": 1, "dependencies": 2, "translation_ru": 1}
     assert store.read(f"translations/{second['run_id']}/ru.json")["run_id"] == second["run_id"]
+
+
+@pytest.mark.asyncio
+async def test_experiment_rejects_unadapted_schema_six_before_reading_source_or_calling_model(tmp_path):
+    from infrastructure.reference_pilot_builder import ProductionPilotMapBuilder
+    builder = ProductionPilotMapBuilder(None, None, "owner", PilotStore(tmp_path))
+    with pytest.raises(ArticleMapError, match="requires schema 5"):
+        await builder.build({})
 
 
 @pytest.mark.asyncio

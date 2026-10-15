@@ -1,0 +1,4655 @@
+{
+  "schema_version": 6,
+  "concepts": [
+    {
+      "id": "C1",
+      "display_text": "Alzheimer disease",
+      "aliases": [
+        "AD",
+        "Alzheimer’s disease"
+      ],
+      "provenance": {
+        "unit_ids": [
+          "U8",
+          "U9",
+          "U5",
+          "U10",
+          "U15",
+          "U16",
+          "U17",
+          "U18",
+          "U21",
+          "U29",
+          "U23",
+          "U24"
+        ]
+      }
+    },
+    {
+      "id": "C2",
+      "display_text": "United States population",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U8"
+        ]
+      }
+    },
+    {
+      "id": "C3",
+      "display_text": "Disease-modifying Alzheimer therapy",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U8"
+        ]
+      }
+    },
+    {
+      "id": "C4",
+      "display_text": "Extracellular amyloid beta plaques",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U9"
+        ]
+      }
+    },
+    {
+      "id": "C5",
+      "display_text": "Intracellular tau neurofibrillary tangles",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U9"
+        ]
+      }
+    },
+    {
+      "id": "C6",
+      "display_text": "Amyloid precursor protein",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U9"
+        ]
+      }
+    },
+    {
+      "id": "C7",
+      "display_text": "Beta-secretase and gamma-secretase",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U9"
+        ]
+      }
+    },
+    {
+      "id": "C8",
+      "display_text": "Amyloid beta",
+      "aliases": [
+        "Aβ"
+      ],
+      "provenance": {
+        "unit_ids": [
+          "U9"
+        ]
+      }
+    },
+    {
+      "id": "C9",
+      "display_text": "Amyloid beta pathology",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U9"
+        ]
+      }
+    },
+    {
+      "id": "C10",
+      "display_text": "Asymptomatic preclinical Alzheimer disease",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U9"
+        ]
+      }
+    },
+    {
+      "id": "C11",
+      "display_text": "Tau tangle accumulation",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U9"
+        ]
+      }
+    },
+    {
+      "id": "C12",
+      "display_text": "Onset of clinical Alzheimer symptoms",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U9"
+        ]
+      }
+    },
+    {
+      "id": "C13",
+      "display_text": "Gamma-secretase inhibition, active immunotherapy and anti-Aβ antibodies",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U9"
+        ]
+      }
+    },
+    {
+      "id": "C14",
+      "display_text": "Animal models of Alzheimer disease",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U9"
+        ]
+      }
+    },
+    {
+      "id": "C15",
+      "display_text": "Anti-amyloid approaches",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U9"
+        ]
+      }
+    },
+    {
+      "id": "C16",
+      "display_text": "Mid-to-late clinical development",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U9"
+        ]
+      }
+    },
+    {
+      "id": "C17",
+      "display_text": "Selective tau aggregation inhibitor",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U9"
+        ]
+      }
+    },
+    {
+      "id": "C18",
+      "display_text": "Patients with mild-to-moderate Alzheimer disease",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U9"
+        ]
+      }
+    },
+    {
+      "id": "C19",
+      "display_text": "Tumor necrosis factor alpha",
+      "aliases": [
+        "TNF-α",
+        "TNFa"
+      ],
+      "provenance": {
+        "unit_ids": [
+          "U5",
+          "U10",
+          "U12",
+          "U13",
+          "U15",
+          "U16",
+          "U24"
+        ]
+      }
+    },
+    {
+      "id": "C20",
+      "display_text": "Healthy adults",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U10"
+        ]
+      }
+    },
+    {
+      "id": "C21",
+      "display_text": "Peripheral and central nervous systems",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U10"
+        ]
+      }
+    },
+    {
+      "id": "C22",
+      "display_text": "Patients with Alzheimer disease",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U10",
+          "U15",
+          "U21",
+          "U22"
+        ]
+      }
+    },
+    {
+      "id": "C23",
+      "display_text": "Blood and central nervous system",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U10"
+        ]
+      }
+    },
+    {
+      "id": "C24",
+      "display_text": "Microglia, neurons and astrocytes",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U12"
+        ]
+      }
+    },
+    {
+      "id": "C25",
+      "display_text": "TNFR1",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U13"
+        ]
+      }
+    },
+    {
+      "id": "C26",
+      "display_text": "TNFR2",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U13"
+        ]
+      }
+    },
+    {
+      "id": "C27",
+      "display_text": "Soluble and membrane TNF-alpha",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U13",
+          "U20"
+        ]
+      }
+    },
+    {
+      "id": "C28",
+      "display_text": "Membrane TNF-alpha",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U13"
+        ]
+      }
+    },
+    {
+      "id": "C29",
+      "display_text": "TNFR1 and TNFR2",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U13"
+        ]
+      }
+    },
+    {
+      "id": "C30",
+      "display_text": "Apoptosis",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U13"
+        ]
+      }
+    },
+    {
+      "id": "C31",
+      "display_text": "Cell survival and proliferation",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U13"
+        ]
+      }
+    },
+    {
+      "id": "C32",
+      "display_text": "TNFR1-mediated cytotoxicity",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U13"
+        ]
+      }
+    },
+    {
+      "id": "C33",
+      "display_text": "Cytotoxicity",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U13"
+        ]
+      }
+    },
+    {
+      "id": "C34",
+      "display_text": "Amyloid beta plaques",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U15"
+        ]
+      }
+    },
+    {
+      "id": "C35",
+      "display_text": "Postmortem human Alzheimer brains",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U15"
+        ]
+      }
+    },
+    {
+      "id": "C36",
+      "display_text": "TNFR1 signaling",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U15"
+        ]
+      }
+    },
+    {
+      "id": "C37",
+      "display_text": "Amyloid-beta-induced neuronal death",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U15"
+        ]
+      }
+    },
+    {
+      "id": "C38",
+      "display_text": "Human Alzheimer brains",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U15"
+        ]
+      }
+    },
+    {
+      "id": "C39",
+      "display_text": "Nondemented human brains",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U15"
+        ]
+      }
+    },
+    {
+      "id": "C40",
+      "display_text": "TNFR1 protein and TNF-alpha binding affinity",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U15"
+        ]
+      }
+    },
+    {
+      "id": "C41",
+      "display_text": "TNFR2 protein and TNF-alpha binding affinity",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U15"
+        ]
+      }
+    },
+    {
+      "id": "C42",
+      "display_text": "Chromosome 12p TNFR1 and chromosome 1p TNFR2",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U15"
+        ]
+      }
+    },
+    {
+      "id": "C43",
+      "display_text": "Late-onset Alzheimer disease",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U15"
+        ]
+      }
+    },
+    {
+      "id": "C44",
+      "display_text": "Cerebrospinal fluid and serum",
+      "aliases": [
+        "CSF and serum"
+      ],
+      "provenance": {
+        "unit_ids": [
+          "U15"
+        ]
+      }
+    },
+    {
+      "id": "C45",
+      "display_text": "Elevated brain tumor necrosis factor alpha",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U16"
+        ]
+      }
+    },
+    {
+      "id": "C46",
+      "display_text": "Alzheimer transgenic mice",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U16",
+          "U21",
+          "U22",
+          "U23"
+        ]
+      }
+    },
+    {
+      "id": "C47",
+      "display_text": "Intraneuronal amyloid beta and cognitive deficits",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U16"
+        ]
+      }
+    },
+    {
+      "id": "C48",
+      "display_text": "TNFR1 deletion or signaling inactivation",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U16"
+        ]
+      }
+    },
+    {
+      "id": "C49",
+      "display_text": "TNFR2 deletion; combined TNFR1/TNFR2 ablation",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U16"
+        ]
+      }
+    },
+    {
+      "id": "C50",
+      "display_text": "Amyloid beta and tau pathology",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U16"
+        ]
+      }
+    },
+    {
+      "id": "C51",
+      "display_text": "Amyloid beta production",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U16"
+        ]
+      }
+    },
+    {
+      "id": "C52",
+      "display_text": "Chronic neuronal tumor necrosis factor alpha expression",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U16"
+        ]
+      }
+    },
+    {
+      "id": "C53",
+      "display_text": "Extensive neuronal cell death",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U16"
+        ]
+      }
+    },
+    {
+      "id": "C54",
+      "display_text": "Excess brain tumor necrosis factor alpha",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U16",
+          "U17",
+          "U18",
+          "U24",
+          "U25",
+          "U26"
+        ]
+      }
+    },
+    {
+      "id": "C55",
+      "display_text": "Biologic TNF-alpha inhibitors",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U20",
+          "U21",
+          "U29",
+          "U5",
+          "U23"
+        ]
+      }
+    },
+    {
+      "id": "C56",
+      "display_text": "Peripheral inflammatory diseases",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U20"
+        ]
+      }
+    },
+    {
+      "id": "C57",
+      "display_text": "TNF-specific monoclonal antibodies and etanercept",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U20"
+        ]
+      }
+    },
+    {
+      "id": "C58",
+      "display_text": "Recombinant dominant negative TNF inhibitor",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U21",
+          "U22"
+        ]
+      }
+    },
+    {
+      "id": "C59",
+      "display_text": "Preplaque amyloid beta pathology",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U21",
+          "U22"
+        ]
+      }
+    },
+    {
+      "id": "C60",
+      "display_text": "Intracerebroventricular infliximab",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U21",
+          "U22"
+        ]
+      }
+    },
+    {
+      "id": "C61",
+      "display_text": "Mouse models of Alzheimer disease",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U21",
+          "U22"
+        ]
+      }
+    },
+    {
+      "id": "C62",
+      "display_text": "TNF-alpha, amyloid plaques, tau phosphorylation and cognitive deficits",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U21",
+          "U22"
+        ]
+      }
+    },
+    {
+      "id": "C63",
+      "display_text": "Perispinal etanercept",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U21",
+          "U22"
+        ]
+      }
+    },
+    {
+      "id": "C64",
+      "display_text": "ADAS-Cog, Severe Impairment Battery and MMSE",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U21",
+          "U22"
+        ]
+      }
+    },
+    {
+      "id": "C65",
+      "display_text": "Reported cognitive improvement",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U21"
+        ]
+      }
+    },
+    {
+      "id": "C66",
+      "display_text": "Rapid CSF penetration and nonsynaptic signaling",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U21"
+        ]
+      }
+    },
+    {
+      "id": "C67",
+      "display_text": "Intracranial compartment",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U21"
+        ]
+      }
+    },
+    {
+      "id": "C68",
+      "display_text": "Intrathecal infliximab",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U21",
+          "U22"
+        ]
+      }
+    },
+    {
+      "id": "C69",
+      "display_text": "A female patient with Alzheimer disease",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U21",
+          "U22"
+        ]
+      }
+    },
+    {
+      "id": "C70",
+      "display_text": "Cognition",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U21",
+          "U22"
+        ]
+      }
+    },
+    {
+      "id": "C71",
+      "display_text": "Blood brain barrier",
+      "aliases": [
+        "BBB"
+      ],
+      "provenance": {
+        "unit_ids": [
+          "U5",
+          "U23",
+          "U29"
+        ]
+      }
+    },
+    {
+      "id": "C72",
+      "display_text": "Peripheral TNF-alpha modulation",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U23",
+          "U29"
+        ]
+      }
+    },
+    {
+      "id": "C73",
+      "display_text": "Weekly subcutaneous etanercept",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U23"
+        ]
+      }
+    },
+    {
+      "id": "C74",
+      "display_text": "Patients with mild-to-moderate Alzheimer dementia",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U23"
+        ]
+      }
+    },
+    {
+      "id": "C75",
+      "display_text": "Cognition, global function and behavior",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U23"
+        ]
+      }
+    },
+    {
+      "id": "C76",
+      "display_text": "Blood brain barrier molecular Trojan horse",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U24",
+          "U25",
+          "U26"
+        ]
+      }
+    },
+    {
+      "id": "C77",
+      "display_text": "Receptor-mediated transport",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U24",
+          "U25",
+          "U26"
+        ]
+      }
+    },
+    {
+      "id": "C78",
+      "display_text": "cTfRMAb-TNFR",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U24",
+          "U25",
+          "U26"
+        ]
+      }
+    },
+    {
+      "id": "C79",
+      "display_text": "Human TNFR2 extracellular domain and chimeric mouse transferrin receptor antibody",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U24",
+          "U25",
+          "U26"
+        ]
+      }
+    },
+    {
+      "id": "C80",
+      "display_text": "Human TNFR",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U24"
+        ]
+      }
+    },
+    {
+      "id": "C81",
+      "display_text": "Mouse tumor necrosis factor alpha",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U24"
+        ]
+      }
+    },
+    {
+      "id": "C82",
+      "display_text": "Mouse transferrin receptor",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U24"
+        ]
+      }
+    },
+    {
+      "id": "C83",
+      "display_text": "Transferrin-receptor-mediated BBB transcytosis",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U24",
+          "U25",
+          "U26"
+        ]
+      }
+    },
+    {
+      "id": "C84",
+      "display_text": "TNFR domain of cTfRMAb-TNFR",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U24",
+          "U25",
+          "U26"
+        ]
+      }
+    },
+    {
+      "id": "C85",
+      "display_text": "Pathological brain TNF-alpha concentration",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U24"
+        ]
+      }
+    },
+    {
+      "id": "C86",
+      "display_text": "Intravenous administration",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U24"
+        ]
+      }
+    },
+    {
+      "id": "C87",
+      "display_text": "Acute neurological conditions including ischemic stroke",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U24"
+        ]
+      }
+    },
+    {
+      "id": "C88",
+      "display_text": "Intraperitoneal or subcutaneous administration",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U24"
+        ]
+      }
+    },
+    {
+      "id": "C89",
+      "display_text": "Chronic neurological conditions including Alzheimer disease",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U24"
+        ]
+      }
+    },
+    {
+      "id": "C90",
+      "display_text": "Mouse ischemic stroke and Parkinson disease models",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U24"
+        ]
+      }
+    },
+    {
+      "id": "C91",
+      "display_text": "Mouse model of Alzheimer disease",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U24"
+        ]
+      }
+    },
+    {
+      "id": "C92",
+      "display_text": "HIRMAb-TNFR",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U27"
+        ]
+      }
+    },
+    {
+      "id": "C93",
+      "display_text": "TNFR2 extracellular domain and human insulin receptor antibody",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U27"
+        ]
+      }
+    },
+    {
+      "id": "C94",
+      "display_text": "Rhesus monkeys",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U27"
+        ]
+      }
+    },
+    {
+      "id": "C95",
+      "display_text": "TNFR:Fc",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U27"
+        ]
+      }
+    },
+    {
+      "id": "C96",
+      "display_text": "HIRMAb-based fusion protein",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U27"
+        ]
+      }
+    },
+    {
+      "id": "C97",
+      "display_text": "Biologic TNF-alpha inhibition with molecular Trojan horse delivery",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U5",
+          "U21",
+          "U23",
+          "U24",
+          "U29"
+        ]
+      }
+    },
+    {
+      "id": "C98",
+      "display_text": "Mouse neurological disease models",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U24"
+        ]
+      }
+    },
+    {
+      "id": "C99",
+      "display_text": "HIRMAb-based fusion proteins",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U27"
+        ]
+      }
+    }
+  ],
+  "knowledge": [
+    {
+      "knowledge_id": "K1",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "In the 2017 review, Alzheimer disease is the leading worldwide cause of dementia; an estimated 5.4 million Americans are affected, with a projected tripling by 2050 in the absence of breakthroughs.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K1S1",
+            "predicate": "estimated_dementia_burden",
+            "roles": [
+              {
+                "role": "condition",
+                "concept_id": "C1",
+                "knowledge_id": null
+              },
+              {
+                "role": "population",
+                "concept_id": "C2",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": "estimate; projection",
+            "negated": false,
+            "conditions": [],
+            "temporal_context": "2017 review; projection to 2050",
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "affected",
+                  "value": 5.4,
+                  "unit": "million people"
+                },
+                {
+                  "name": "projection_multiplier",
+                  "value": 3,
+                  "unit": "fold"
+                },
+                {
+                  "name": "projection_year",
+                  "value": 2050,
+                  "unit": "calendar year"
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U8"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U8"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K2",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "No disease-modifying therapy for Alzheimer disease had been clinically approved at the time of this 2017 review.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K2S1",
+            "predicate": "clinically_approved",
+            "roles": [
+              {
+                "role": "intervention",
+                "concept_id": "C3",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": true,
+            "conditions": [],
+            "temporal_context": "At publication in 2017",
+            "qualifiers": {
+              "attributes": []
+            },
+            "provenance": {
+              "unit_ids": [
+                "U8"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U8"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K3",
+      "kind": "state",
+      "knowledge_kind": "definition",
+      "display_text": "Alzheimer disease has extracellular amyloid-beta plaques and intracellular tau neurofibrillary tangles; plaques are relatively specific to AD, whereas tangles also occur in other disorders.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "contrast",
+        "statements": [
+          {
+            "statement_id": "K3S1",
+            "predicate": "has_hallmark",
+            "roles": [
+              {
+                "role": "condition",
+                "concept_id": "C1",
+                "knowledge_id": null
+              },
+              {
+                "role": "hallmark",
+                "concept_id": "C4",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "specificity",
+                  "value": "relatively specific to AD",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U9"
+              ]
+            }
+          },
+          {
+            "statement_id": "K3S2",
+            "predicate": "has_hallmark",
+            "roles": [
+              {
+                "role": "condition",
+                "concept_id": "C1",
+                "knowledge_id": null
+              },
+              {
+                "role": "hallmark",
+                "concept_id": "C5",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "specificity",
+                  "value": "also associated with other disorders",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U9"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U9"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K4",
+      "kind": "state",
+      "knowledge_kind": "assertion",
+      "display_text": "Sequential beta- and gamma-secretase cleavage of transmembrane APP releases extracellular Aβ peptides, usually 40–42 residues, which aggregate into oligomers, beta-sheet fibrils and plaques.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K4S1",
+            "predicate": "amyloid_processing",
+            "roles": [
+              {
+                "role": "substrate",
+                "concept_id": "C6",
+                "knowledge_id": null
+              },
+              {
+                "role": "enzyme",
+                "concept_id": "C7",
+                "knowledge_id": null
+              },
+              {
+                "role": "product",
+                "concept_id": "C8",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "peptide_length",
+                  "value": "40–42",
+                  "unit": "amino acid residues"
+                },
+                {
+                  "name": "aggregation_sequence",
+                  "value": "oligomers; beta-sheet fibrils; amyloid plaques",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U9"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U9"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K5",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "Some studies suggest amyloid pathology reflects asymptomatic preclinical AD more closely, whereas tau tangles track the onset of clinical symptoms more closely.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "contrast",
+        "statements": [
+          {
+            "statement_id": "K5S1",
+            "predicate": "reflects_disease_phase",
+            "roles": [
+              {
+                "role": "condition",
+                "concept_id": "C1",
+                "knowledge_id": null
+              },
+              {
+                "role": "marker",
+                "concept_id": "C9",
+                "knowledge_id": null
+              },
+              {
+                "role": "phase",
+                "concept_id": "C10",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": "some studies",
+            "modality": "suggest",
+            "negated": false,
+            "conditions": [],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": []
+            },
+            "provenance": {
+              "unit_ids": [
+                "U9"
+              ]
+            }
+          },
+          {
+            "statement_id": "K5S2",
+            "predicate": "reflects_disease_phase",
+            "roles": [
+              {
+                "role": "condition",
+                "concept_id": "C1",
+                "knowledge_id": null
+              },
+              {
+                "role": "marker",
+                "concept_id": "C11",
+                "knowledge_id": null
+              },
+              {
+                "role": "phase",
+                "concept_id": "C12",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": "some studies",
+            "modality": "suggest",
+            "negated": false,
+            "conditions": [],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": []
+            },
+            "provenance": {
+              "unit_ids": [
+                "U9"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U9"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K6",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "Anti-amyloid approaches (gamma-secretase inhibition, active immunotherapy and anti-Aβ antibodies) showed promise in animal models, but most mid-to-late clinical studies missed primary endpoints; a selective tau aggregation inhibitor also missed primary outcomes in mild-to-moderate AD.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "contrast",
+        "statements": [
+          {
+            "statement_id": "K6S1",
+            "predicate": "showed_promising_results",
+            "roles": [
+              {
+                "role": "condition",
+                "concept_id": "C1",
+                "knowledge_id": null
+              },
+              {
+                "role": "intervention",
+                "concept_id": "C13",
+                "knowledge_id": null
+              },
+              {
+                "role": "setting",
+                "concept_id": "C14",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [],
+            "temporal_context": "Studies available in the 2017 review",
+            "qualifiers": {
+              "attributes": []
+            },
+            "provenance": {
+              "unit_ids": [
+                "U9"
+              ]
+            }
+          },
+          {
+            "statement_id": "K6S2",
+            "predicate": "reached_primary_endpoints",
+            "roles": [
+              {
+                "role": "condition",
+                "concept_id": "C1",
+                "knowledge_id": null
+              },
+              {
+                "role": "intervention",
+                "concept_id": "C15",
+                "knowledge_id": null
+              },
+              {
+                "role": "setting",
+                "concept_id": "C16",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": "most studies",
+            "modality": null,
+            "negated": true,
+            "conditions": [],
+            "temporal_context": "Studies available in the 2017 review",
+            "qualifiers": {
+              "attributes": []
+            },
+            "provenance": {
+              "unit_ids": [
+                "U9"
+              ]
+            }
+          },
+          {
+            "statement_id": "K6S3",
+            "predicate": "reached_primary_outcomes",
+            "roles": [
+              {
+                "role": "condition",
+                "concept_id": "C1",
+                "knowledge_id": null
+              },
+              {
+                "role": "intervention",
+                "concept_id": "C17",
+                "knowledge_id": null
+              },
+              {
+                "role": "population",
+                "concept_id": "C18",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": true,
+            "conditions": [],
+            "temporal_context": "Studies available in the 2017 review",
+            "qualifiers": {
+              "attributes": []
+            },
+            "provenance": {
+              "unit_ids": [
+                "U9"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U9"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K7",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "Evidence reviewed in 2017 implicates cytokine-mediated neuroinflammation in AD development; TNF-α participates in the inflammatory cytokine cascade and may be a therapeutic target.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K7S1",
+            "predicate": "implicated_in",
+            "roles": [
+              {
+                "role": "factor",
+                "concept_id": "C19",
+                "knowledge_id": null
+              },
+              {
+                "role": "condition",
+                "concept_id": "C1",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": "evidence suggests; potential treatment",
+            "negated": false,
+            "conditions": [],
+            "temporal_context": "Evidence reviewed in 2017",
+            "qualifiers": {
+              "attributes": []
+            },
+            "provenance": {
+              "unit_ids": [
+                "U5",
+                "U10"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U5",
+          "U10"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K8",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "TNF-α levels are normally very low in healthy adult peripheral and central systems but are significantly elevated in blood and CNS in AD; clinical and animal studies link excess brain TNF-α to AD.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "contrast",
+        "statements": [
+          {
+            "statement_id": "K8S1",
+            "predicate": "has_low_level",
+            "roles": [
+              {
+                "role": "marker",
+                "concept_id": "C19",
+                "knowledge_id": null
+              },
+              {
+                "role": "condition",
+                "concept_id": "C1",
+                "knowledge_id": null
+              },
+              {
+                "role": "population",
+                "concept_id": "C20",
+                "knowledge_id": null
+              },
+              {
+                "role": "compartment",
+                "concept_id": "C21",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [],
+            "temporal_context": "Reviewed clinical and animal evidence",
+            "qualifiers": {
+              "attributes": []
+            },
+            "provenance": {
+              "unit_ids": [
+                "U10"
+              ]
+            }
+          },
+          {
+            "statement_id": "K8S2",
+            "predicate": "elevated_in",
+            "roles": [
+              {
+                "role": "marker",
+                "concept_id": "C19",
+                "knowledge_id": null
+              },
+              {
+                "role": "condition",
+                "concept_id": "C1",
+                "knowledge_id": null
+              },
+              {
+                "role": "population",
+                "concept_id": "C22",
+                "knowledge_id": null
+              },
+              {
+                "role": "compartment",
+                "concept_id": "C23",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [],
+            "temporal_context": "Reviewed clinical and animal evidence",
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "statistical_description",
+                  "value": "significantly elevated",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U10"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U10"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K9",
+      "kind": "state",
+      "knowledge_kind": "definition",
+      "display_text": "TNF-α is a nonglycosylated 17-kDa type-II transmembrane monomer in the TNF/TNFR superfamily; membrane homotrimers are cleaved by TNF-α-converting enzyme to soluble 51-kDa trimers.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K9S1",
+            "predicate": "characterized_by",
+            "roles": [
+              {
+                "role": "subject",
+                "concept_id": "C19",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "monomer_mass",
+                  "value": 17,
+                  "unit": "kDa"
+                },
+                {
+                  "name": "soluble_trimer_mass",
+                  "value": 51,
+                  "unit": "kDa"
+                },
+                {
+                  "name": "structure",
+                  "value": "type 2 transmembrane; nonglycosylated; TNF/TNFR superfamily",
+                  "unit": null
+                },
+                {
+                  "name": "cleavage_enzyme",
+                  "value": "TNF-alpha-converting enzyme",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U12"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U12"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K10",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "Brain microglia, neurons and astrocytes can synthesize TNF-α, a cytokine recognized initially for antitumor activity that initiates and propagates inflammation.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K10S1",
+            "predicate": "can_synthesize",
+            "roles": [
+              {
+                "role": "actor",
+                "concept_id": "C24",
+                "knowledge_id": null
+              },
+              {
+                "role": "product",
+                "concept_id": "C19",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": "can",
+            "negated": false,
+            "conditions": [
+              "In the central nervous system"
+            ],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "initially_recognized_activity",
+                  "value": "antitumor activity",
+                  "unit": null
+                },
+                {
+                  "name": "inflammatory_role",
+                  "value": "initiating and propagating inflammation",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U12"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U12"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K11",
+      "kind": "state",
+      "knowledge_kind": "definition",
+      "display_text": "TNF-α binds TNFR1 (p55-R) and TNFR2 (p75-R). TNFR1 contains an intracellular death domain, whereas TNFR2 lacks it.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "contrast",
+        "statements": [
+          {
+            "statement_id": "K11S1",
+            "predicate": "has_death_domain",
+            "roles": [
+              {
+                "role": "ligand",
+                "concept_id": "C19",
+                "knowledge_id": null
+              },
+              {
+                "role": "subject",
+                "concept_id": "C25",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "ligand",
+                  "value": "TNF-alpha",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U13"
+              ]
+            }
+          },
+          {
+            "statement_id": "K11S2",
+            "predicate": "has_death_domain",
+            "roles": [
+              {
+                "role": "ligand",
+                "concept_id": "C19",
+                "knowledge_id": null
+              },
+              {
+                "role": "subject",
+                "concept_id": "C26",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": true,
+            "conditions": [],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "ligand",
+                  "value": "TNF-alpha",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U13"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U13"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K12",
+      "kind": "state",
+      "knowledge_kind": "assertion",
+      "display_text": "Ubiquitously expressed TNFR1 is activated by soluble or membrane TNF-α; its effects include proliferation, activation, antiviral activity and especially apoptosis and cytotoxicity.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K12S1",
+            "predicate": "receptor_signaling",
+            "roles": [
+              {
+                "role": "receptor",
+                "concept_id": "C25",
+                "knowledge_id": null
+              },
+              {
+                "role": "ligand",
+                "concept_id": "C27",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "expression",
+                  "value": "ubiquitous in various cell types",
+                  "unit": null
+                },
+                {
+                  "name": "effects",
+                  "value": "cell proliferation; activation; antiviral activity; apoptosis; cytotoxicity",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U13"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U13"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K13",
+      "kind": "state",
+      "knowledge_kind": "assertion",
+      "display_text": "TNFR2 has higher TNF-α affinity, preferential membrane-TNF activation and low expression mainly in immune/endothelial cells; it can activate cIAP1/2, NF-κB and PI3K-dependent inflammatory and survival pathways.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K13S1",
+            "predicate": "receptor_signaling",
+            "roles": [
+              {
+                "role": "receptor",
+                "concept_id": "C26",
+                "knowledge_id": null
+              },
+              {
+                "role": "ligand",
+                "concept_id": "C28",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": "can",
+            "negated": false,
+            "conditions": [],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "affinity",
+                  "value": "higher TNF-alpha affinity",
+                  "unit": null
+                },
+                {
+                  "name": "expression",
+                  "value": "low; immune and endothelial cells",
+                  "unit": null
+                },
+                {
+                  "name": "pathways",
+                  "value": "cIAP1 and cIAP2; NF-kappaB; phosphatidylinositol 3-kinase",
+                  "unit": null
+                },
+                {
+                  "name": "effects",
+                  "value": "pro-inflammatory and pro-survival signaling",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U13"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U13"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K14",
+      "kind": "state",
+      "knowledge_kind": "conclusion",
+      "display_text": "TNFR2 may indirectly enhance TNFR1-mediated cytotoxicity but does not induce cytotoxicity alone; the general consensus contrasts pro-apoptotic TNFR1 with survival/proliferation-promoting TNFR2.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_argument",
+      "semantic_frame": {
+        "logic": "contrast",
+        "statements": [
+          {
+            "statement_id": "K14S1",
+            "predicate": "promotes",
+            "roles": [
+              {
+                "role": "receptor",
+                "concept_id": "C29",
+                "knowledge_id": null
+              },
+              {
+                "role": "subject",
+                "concept_id": "C25",
+                "knowledge_id": null
+              },
+              {
+                "role": "effect",
+                "concept_id": "C30",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": []
+            },
+            "provenance": {
+              "unit_ids": [
+                "U13"
+              ]
+            }
+          },
+          {
+            "statement_id": "K14S2",
+            "predicate": "promotes",
+            "roles": [
+              {
+                "role": "receptor",
+                "concept_id": "C29",
+                "knowledge_id": null
+              },
+              {
+                "role": "subject",
+                "concept_id": "C26",
+                "knowledge_id": null
+              },
+              {
+                "role": "effect",
+                "concept_id": "C31",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": []
+            },
+            "provenance": {
+              "unit_ids": [
+                "U13"
+              ]
+            }
+          },
+          {
+            "statement_id": "K14S3",
+            "predicate": "enhances",
+            "roles": [
+              {
+                "role": "receptor",
+                "concept_id": "C29",
+                "knowledge_id": null
+              },
+              {
+                "role": "subject",
+                "concept_id": "C26",
+                "knowledge_id": null
+              },
+              {
+                "role": "effect",
+                "concept_id": "C32",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": "some studies report",
+            "negated": false,
+            "conditions": [],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": []
+            },
+            "provenance": {
+              "unit_ids": [
+                "U13"
+              ]
+            }
+          },
+          {
+            "statement_id": "K14S4",
+            "predicate": "induces_alone",
+            "roles": [
+              {
+                "role": "receptor",
+                "concept_id": "C29",
+                "knowledge_id": null
+              },
+              {
+                "role": "subject",
+                "concept_id": "C26",
+                "knowledge_id": null
+              },
+              {
+                "role": "effect",
+                "concept_id": "C33",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": true,
+            "conditions": [],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": []
+            },
+            "provenance": {
+              "unit_ids": [
+                "U13"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U13"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K15",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "TNF-α was detected around Aβ plaques in postmortem human AD brains; TNFR1 signaling was required for Aβ-induced neuronal death in subsequent studies.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "conjunction",
+        "statements": [
+          {
+            "statement_id": "K15S1",
+            "predicate": "localized_around",
+            "roles": [
+              {
+                "role": "condition",
+                "concept_id": "C1",
+                "knowledge_id": null
+              },
+              {
+                "role": "marker",
+                "concept_id": "C19",
+                "knowledge_id": null
+              },
+              {
+                "role": "structure",
+                "concept_id": "C34",
+                "knowledge_id": null
+              },
+              {
+                "role": "sample",
+                "concept_id": "C35",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [
+              "Reported human AD brain studies"
+            ],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": []
+            },
+            "provenance": {
+              "unit_ids": [
+                "U15"
+              ]
+            }
+          },
+          {
+            "statement_id": "K15S2",
+            "predicate": "required_for",
+            "roles": [
+              {
+                "role": "condition",
+                "concept_id": "C1",
+                "knowledge_id": null
+              },
+              {
+                "role": "factor",
+                "concept_id": "C36",
+                "knowledge_id": null
+              },
+              {
+                "role": "effect",
+                "concept_id": "C37",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": "required",
+            "negated": false,
+            "conditions": [
+              "Reported human AD brain studies"
+            ],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": []
+            },
+            "provenance": {
+              "unit_ids": [
+                "U15"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U15"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K16",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "Compared with nondemented human brains, AD brains had higher TNFR1 and lower TNFR2 protein; TNF-α affinity increased for TNFR1 and decreased for TNFR2.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "contrast",
+        "statements": [
+          {
+            "statement_id": "K16S1",
+            "predicate": "increased",
+            "roles": [
+              {
+                "role": "population",
+                "concept_id": "C38",
+                "knowledge_id": null
+              },
+              {
+                "role": "reference",
+                "concept_id": "C39",
+                "knowledge_id": null
+              },
+              {
+                "role": "measure",
+                "concept_id": "C40",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [
+              "Human brain comparison"
+            ],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "TNFR1_protein_significance",
+                  "value": "significantly greater",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U15"
+              ]
+            }
+          },
+          {
+            "statement_id": "K16S2",
+            "predicate": "decreased",
+            "roles": [
+              {
+                "role": "population",
+                "concept_id": "C38",
+                "knowledge_id": null
+              },
+              {
+                "role": "reference",
+                "concept_id": "C39",
+                "knowledge_id": null
+              },
+              {
+                "role": "measure",
+                "concept_id": "C41",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [
+              "Human brain comparison"
+            ],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "TNFR1_protein_significance",
+                  "value": "significantly greater",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U15"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U15"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K17",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "Genetic association studies implicated chromosome 12p (TNFR1 gene) and chromosome 1p (TNFR2 gene) regions in late-onset Alzheimer disease.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K17S1",
+            "predicate": "associated_with",
+            "roles": [
+              {
+                "role": "locus",
+                "concept_id": "C42",
+                "knowledge_id": null
+              },
+              {
+                "role": "condition",
+                "concept_id": "C43",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [
+              "Reported genetic association studies"
+            ],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": []
+            },
+            "provenance": {
+              "unit_ids": [
+                "U15"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U15"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K18",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "Reported studies found significantly elevated TNF-α in CSF and serum of AD patients, with TNF-α elevation correlated with disease progression.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K18S1",
+            "predicate": "elevated_in",
+            "roles": [
+              {
+                "role": "marker",
+                "concept_id": "C19",
+                "knowledge_id": null
+              },
+              {
+                "role": "population",
+                "concept_id": "C22",
+                "knowledge_id": null
+              },
+              {
+                "role": "compartment",
+                "concept_id": "C44",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [
+              "Reported clinical studies; CSF and serum, not automatically plasma"
+            ],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "association",
+                  "value": "correlated with disease progression",
+                  "unit": null
+                },
+                {
+                  "name": "significance",
+                  "value": "significant elevation",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U15"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U15"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K19",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "AD transgenic mice had elevated brain TNF-α, associated with intraneuronal Aβ immunoreactivity in entorhinal cortex and correlated cognitive deficits.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K19S1",
+            "predicate": "associated_with",
+            "roles": [
+              {
+                "role": "marker",
+                "concept_id": "C45",
+                "knowledge_id": null
+              },
+              {
+                "role": "population",
+                "concept_id": "C46",
+                "knowledge_id": null
+              },
+              {
+                "role": "outcome",
+                "concept_id": "C47",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [
+              "Mouse Alzheimer models"
+            ],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "brain_region",
+                  "value": "entorhinal cortex",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U16"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U16"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K20",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "Deleting TNFR1 in AD transgenic mice reduced Aβ formation/plaque burden, BACE1 expression and cognitive deficits; genetic TNFR1 signaling inactivation prevented intraneuronal Aβ accumulation.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K20S1",
+            "predicate": "reduced_after_intervention",
+            "roles": [
+              {
+                "role": "intervention",
+                "concept_id": "C48",
+                "knowledge_id": null
+              },
+              {
+                "role": "population",
+                "concept_id": "C46",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [
+              "Mouse Alzheimer models"
+            ],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "outcomes",
+                  "value": "reduced Aβ formation; plaque burden; BACE1 expression; cognitive deficits; prevented intraneuronal Aβ accumulation",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U16"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U16"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K21",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "Deleting TNFR2 worsened pathology in an AD mouse model; deleting both TNFR1 and TNFR2 exacerbated Aβ/tau pathology, which the review attributes to losing TNFR2 protection.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K21S1",
+            "predicate": "exacerbated_after_intervention",
+            "roles": [
+              {
+                "role": "intervention",
+                "concept_id": "C49",
+                "knowledge_id": null
+              },
+              {
+                "role": "population",
+                "concept_id": "C46",
+                "knowledge_id": null
+              },
+              {
+                "role": "outcome",
+                "concept_id": "C50",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [
+              "Mouse Alzheimer models"
+            ],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "author_explanation",
+                  "value": "aggravation of TNFR1-mediated pathology resulting from silencing TNFR2",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U16"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U16"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K22",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "In mouse AD models TNF-α increased Aβ production through beta-secretase expression and gamma-secretase activity; chronic neuronal TNF-α expression caused extensive neuronal death.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "conjunction",
+        "statements": [
+          {
+            "statement_id": "K22S1",
+            "predicate": "increases",
+            "roles": [
+              {
+                "role": "factor",
+                "concept_id": "C19",
+                "knowledge_id": null
+              },
+              {
+                "role": "population",
+                "concept_id": "C46",
+                "knowledge_id": null
+              },
+              {
+                "role": "outcome",
+                "concept_id": "C51",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [
+              "Reported transgenic mouse evidence"
+            ],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "mechanism",
+                  "value": "upregulated beta-secretase expression and gamma-secretase activity",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U16"
+              ]
+            }
+          },
+          {
+            "statement_id": "K22S2",
+            "predicate": "causes",
+            "roles": [
+              {
+                "role": "factor",
+                "concept_id": "C52",
+                "knowledge_id": null
+              },
+              {
+                "role": "population",
+                "concept_id": "C46",
+                "knowledge_id": null
+              },
+              {
+                "role": "outcome",
+                "concept_id": "C53",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [
+              "Reported transgenic mouse evidence"
+            ],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": []
+            },
+            "provenance": {
+              "unit_ids": [
+                "U16"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U16"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K23",
+      "kind": "state",
+      "knowledge_kind": "conclusion",
+      "display_text": "Excess brain TNF-α may enhance Aβ production, inhibit microglial Aβ clearance, cause synaptic dysfunction and neuronal loss, and accelerate cognitive decline; these processes implicate TNF-α across AD stages.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_argument",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K23S1",
+            "predicate": "implicated_in",
+            "roles": [
+              {
+                "role": "factor",
+                "concept_id": "C54",
+                "knowledge_id": null
+              },
+              {
+                "role": "condition",
+                "concept_id": "C1",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": "may; reviewed evidence",
+            "negated": false,
+            "conditions": [
+              "Figure 1 and reviewed studies; not proof of human treatment efficacy"
+            ],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "processes",
+                  "value": "increased Aβ production; decreased microglial clearance; synaptic dysfunction; neuronal loss; cell death; accelerated progression and cognitive decline",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U16",
+                "U17",
+                "U18"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U16",
+          "U17",
+          "U18"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K24",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "FDA-approved biologic TNF inhibitors treat peripheral inflammatory diseases (Crohn disease, rheumatoid arthritis and psoriatic arthritis); examples are infliximab, adalimumab, golimumab, certolizumab and etanercept.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K24S1",
+            "predicate": "approved_for",
+            "roles": [
+              {
+                "role": "intervention",
+                "concept_id": "C55",
+                "knowledge_id": null
+              },
+              {
+                "role": "indication",
+                "concept_id": "C56",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [],
+            "temporal_context": "2017 review",
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "examples",
+                  "value": "infliximab; adalimumab; golimumab; certolizumab; etanercept",
+                  "unit": null
+                },
+                {
+                  "name": "indications",
+                  "value": "Crohn disease; rheumatoid arthritis; psoriatic arthritis",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U20"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U20"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K25",
+      "kind": "state",
+      "knowledge_kind": "definition",
+      "display_text": "TNF-specific antibodies and etanercept bind soluble and membrane TNF-α and prevent signaling through both receptors; etanercept fuses the TNFR2 extracellular domain to human IgG1 Fc.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K25S1",
+            "predicate": "inhibitor_mechanism",
+            "roles": [
+              {
+                "role": "intervention",
+                "concept_id": "C57",
+                "knowledge_id": null
+              },
+              {
+                "role": "target",
+                "concept_id": "C27",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "etanercept_structure",
+                  "value": "TNFR2 extracellular domain fused to the c-terminal of human IgG1 Fc",
+                  "unit": null
+                },
+                {
+                  "name": "effect",
+                  "value": "prevents TNFR1 and TNFR2 signaling",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U20"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U20"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K26",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "Intrahippocampal/intracerebral delivery of recombinant dominant-negative TNF inhibitor in AD transgenic mice inhibited soluble-TNF signaling and reduced preplaque Aβ pathology.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K26S1",
+            "predicate": "reduced_after_intervention",
+            "roles": [
+              {
+                "role": "intervention",
+                "concept_id": "C58",
+                "knowledge_id": null
+              },
+              {
+                "role": "population",
+                "concept_id": "C46",
+                "knowledge_id": null
+              },
+              {
+                "role": "outcome",
+                "concept_id": "C59",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [
+              "Mouse study; intracerebral delivery, Table 1 specifies intrahippocampal"
+            ],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "table_evidence",
+                  "value": "Table 1 raster transcription attached at U22",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U21",
+                "U22"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U21",
+          "U22"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K27",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "Intracerebroventricular infliximab in mouse AD models reduced TNF-α, amyloid plaques, tau phosphorylation and cognitive deficits.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K27S1",
+            "predicate": "reduced_after_intervention",
+            "roles": [
+              {
+                "role": "intervention",
+                "concept_id": "C60",
+                "knowledge_id": null
+              },
+              {
+                "role": "population",
+                "concept_id": "C61",
+                "knowledge_id": null
+              },
+              {
+                "role": "outcome",
+                "concept_id": "C62",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [
+              "Preclinical mouse studies"
+            ],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": []
+            },
+            "provenance": {
+              "unit_ids": [
+                "U21",
+                "U22"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U21",
+          "U22"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K28",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "A small open-label six-month study reported improved ADAS-Cog, Severe Impairment Battery and MMSE after perispinal etanercept 25–50 mg/week in AD patients.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K28S1",
+            "predicate": "improved_after_intervention",
+            "roles": [
+              {
+                "role": "intervention",
+                "concept_id": "C63",
+                "knowledge_id": null
+              },
+              {
+                "role": "population",
+                "concept_id": "C22",
+                "knowledge_id": null
+              },
+              {
+                "role": "outcome",
+                "concept_id": "C64",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [
+              "Small open-label human study; no controlled efficacy conclusion"
+            ],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "duration",
+                  "value": 6,
+                  "unit": "month"
+                },
+                {
+                  "name": "dose",
+                  "value": "25–50",
+                  "unit": "mg/week"
+                },
+                {
+                  "name": "significance",
+                  "value": "significant improvement",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U21",
+                "U22"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U21",
+          "U22"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K29",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "Rapid CSF penetration and nonsynaptic signaling were hypothesized explanations for perispinal etanercept improvement; another study found perispinal accumulation without consistent intracranial delivery.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "contrast",
+        "statements": [
+          {
+            "statement_id": "K29S1",
+            "predicate": "explained_by",
+            "roles": [
+              {
+                "role": "intervention",
+                "concept_id": "C63",
+                "knowledge_id": null
+              },
+              {
+                "role": "effect",
+                "concept_id": "C65",
+                "knowledge_id": null
+              },
+              {
+                "role": "mechanism",
+                "concept_id": "C66",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": "hypothesized",
+            "negated": false,
+            "conditions": [
+              "Separate studies; hypothesis is not established delivery"
+            ],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": []
+            },
+            "provenance": {
+              "unit_ids": [
+                "U21"
+              ]
+            }
+          },
+          {
+            "statement_id": "K29S2",
+            "predicate": "consistently_delivered_to",
+            "roles": [
+              {
+                "role": "intervention",
+                "concept_id": "C63",
+                "knowledge_id": null
+              },
+              {
+                "role": "destination",
+                "concept_id": "C67",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": true,
+            "conditions": [
+              "Separate studies; hypothesis is not established delivery"
+            ],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "observed_distribution",
+                  "value": "perispinal drug accumulation",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U21"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U21"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K30",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "A female AD case had rapid cognitive improvement after intrathecal infliximab; Table 1 also reports changes in blood/CSF Aβ and tau, without stating their direction.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K30S1",
+            "predicate": "improved_after_intervention",
+            "roles": [
+              {
+                "role": "intervention",
+                "concept_id": "C68",
+                "knowledge_id": null
+              },
+              {
+                "role": "population",
+                "concept_id": "C69",
+                "knowledge_id": null
+              },
+              {
+                "role": "outcome",
+                "concept_id": "C70",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [
+              "Single human case report; not controlled efficacy evidence"
+            ],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "table_biomarkers",
+                  "value": "change in blood and CSF Aβ and tau; direction unspecified",
+                  "unit": null
+                },
+                {
+                  "name": "table_evidence",
+                  "value": "Table 1 raster transcription attached at U22",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U21",
+                "U22"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U21",
+          "U22"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K31",
+      "kind": "action",
+      "knowledge_kind": "goal",
+      "display_text": "Larger controlled trials are needed to confirm the encouraging small perispinal/open-label and intrathecal case findings for biologic TNF inhibitors in AD.",
+      "aliases": [],
+      "action_status": "unresolved",
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K31S1",
+            "predicate": "confirm_efficacy",
+            "roles": [
+              {
+                "role": "intervention",
+                "concept_id": "C55",
+                "knowledge_id": null
+              },
+              {
+                "role": "condition",
+                "concept_id": "C1",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": "required",
+            "negated": false,
+            "conditions": [
+              "Larger controlled trials; current findings are not confirmation"
+            ],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": []
+            },
+            "provenance": {
+              "unit_ids": [
+                "U21",
+                "U29"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U21",
+          "U29"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K32",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "Approved biologic TNF inhibitors have limited BBB penetration, and invasive delivery may be unsafe or impractical for chronic AD dosing.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K32S1",
+            "predicate": "limited_by",
+            "roles": [
+              {
+                "role": "intervention",
+                "concept_id": "C55",
+                "knowledge_id": null
+              },
+              {
+                "role": "barrier",
+                "concept_id": "C71",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": "limited penetration; invasive routes may be unsafe or impractical",
+            "negated": false,
+            "conditions": [
+              "Chronic Alzheimer disease treatment"
+            ],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": []
+            },
+            "provenance": {
+              "unit_ids": [
+                "U5",
+                "U23",
+                "U29"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U5",
+          "U23",
+          "U29"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K33",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "Peripheral TNF modulation showed promise in transgenic mice, but a small randomized double-blind phase-II trial of weekly subcutaneous etanercept in mild-to-moderate AD found no improvement in cognition, global function or behavior.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "contrast",
+        "statements": [
+          {
+            "statement_id": "K33S1",
+            "predicate": "showed_promising_results",
+            "roles": [
+              {
+                "role": "intervention",
+                "concept_id": "C72",
+                "knowledge_id": null
+              },
+              {
+                "role": "population",
+                "concept_id": "C46",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [],
+            "temporal_context": "Evidence reviewed in 2017",
+            "qualifiers": {
+              "attributes": []
+            },
+            "provenance": {
+              "unit_ids": [
+                "U23"
+              ]
+            }
+          },
+          {
+            "statement_id": "K33S2",
+            "predicate": "improved",
+            "roles": [
+              {
+                "role": "intervention",
+                "concept_id": "C73",
+                "knowledge_id": null
+              },
+              {
+                "role": "population",
+                "concept_id": "C74",
+                "knowledge_id": null
+              },
+              {
+                "role": "outcome",
+                "concept_id": "C75",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": true,
+            "conditions": [],
+            "temporal_context": "Evidence reviewed in 2017",
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "design",
+                  "value": "small randomized double-blind phase 2 trial",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U23"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U23"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K34",
+      "kind": "action",
+      "knowledge_kind": "goal",
+      "display_text": "Further studies must determine whether modulating peripheral TNF-α improves clinical AD outcomes and how it affects AD pathology.",
+      "aliases": [],
+      "action_status": "unresolved",
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K34S1",
+            "predicate": "determine_clinical_effect",
+            "roles": [
+              {
+                "role": "intervention",
+                "concept_id": "C72",
+                "knowledge_id": null
+              },
+              {
+                "role": "condition",
+                "concept_id": "C1",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": []
+            },
+            "provenance": {
+              "unit_ids": [
+                "U23",
+                "U29"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U23",
+          "U29"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K35",
+      "kind": "state",
+      "knowledge_kind": "definition",
+      "display_text": "A BBB molecular Trojan horse is an endogenous peptide or peptidomimetic antibody transported through endogenous receptors such as transferrin or insulin receptors, ferrying an attached biologic into brain.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K35S1",
+            "predicate": "characterized_by",
+            "roles": [
+              {
+                "role": "subject",
+                "concept_id": "C76",
+                "knowledge_id": null
+              },
+              {
+                "role": "mechanism",
+                "concept_id": "C77",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "receptor_examples",
+                  "value": "transferrin receptor; insulin receptor",
+                  "unit": null
+                },
+                {
+                  "name": "cargo",
+                  "value": "attached biologic drug",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U24",
+                "U25",
+                "U26"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U24",
+          "U25",
+          "U26"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K36",
+      "kind": "action",
+      "knowledge_kind": "operation",
+      "display_text": "Engineer a mouse-targeted cTfRMAb-TNFR fusion by joining the TNFR2 extracellular-domain amino terminus to the chimeric transferrin-receptor antibody heavy-chain carboxyl terminus; this leaves the TfR-binding terminus free and TNFR dimeric.",
+      "aliases": [],
+      "action_status": "performed",
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K36S1",
+            "predicate": "engineer_fusion",
+            "roles": [
+              {
+                "role": "product",
+                "concept_id": "C78",
+                "knowledge_id": null
+              },
+              {
+                "role": "component",
+                "concept_id": "C79",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "orientation",
+                  "value": "TNFR2 ECD amino terminus to heavy-chain carboxyl terminus",
+                  "unit": null
+                },
+                {
+                  "name": "configuration",
+                  "value": "TNFR ECD dimer; cTfRMAb amino terminus available",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U24",
+                "U25",
+                "U26"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U24",
+          "U25",
+          "U26"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K37",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "Human and mouse monomeric TNF-α have high amino-acid identity; human TNFR binds mouse TNF-α with high affinity, supporting use of human TNFR in the mouse fusion.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K37S1",
+            "predicate": "binds_with_high_affinity",
+            "roles": [
+              {
+                "role": "receptor",
+                "concept_id": "C80",
+                "knowledge_id": null
+              },
+              {
+                "role": "ligand",
+                "concept_id": "C81",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [
+              "Rationale for mouse-targeted fusion design"
+            ],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "sequence_identity",
+                  "value": "high human–mouse monomeric TNF-alpha amino acid identity",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U24"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U24"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K38",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "The cTfRMAb-TNFR fusion binds mouse TfR with Kd 2.6±0.3 nM and TNF-α with Kd 96±34 pM.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "conjunction",
+        "statements": [
+          {
+            "statement_id": "K38S1",
+            "predicate": "binding_affinity",
+            "roles": [
+              {
+                "role": "intervention",
+                "concept_id": "C78",
+                "knowledge_id": null
+              },
+              {
+                "role": "receptor",
+                "concept_id": "C82",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [
+              "Binding assay of engineered fusion"
+            ],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "Kd",
+                  "value": 2.6,
+                  "unit": "nM"
+                },
+                {
+                  "name": "uncertainty",
+                  "value": 0.3,
+                  "unit": "nM"
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U24"
+              ]
+            }
+          },
+          {
+            "statement_id": "K38S2",
+            "predicate": "binding_affinity",
+            "roles": [
+              {
+                "role": "intervention",
+                "concept_id": "C78",
+                "knowledge_id": null
+              },
+              {
+                "role": "ligand",
+                "concept_id": "C19",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [
+              "Binding assay of engineered fusion"
+            ],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "Kd",
+                  "value": 96,
+                  "unit": "pM"
+                },
+                {
+                  "name": "uncertainty",
+                  "value": 34,
+                  "unit": "pM"
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U24"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U24"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K39",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "The bifunctional mouse fusion permits rapid noninvasive transvascular delivery through TfR-mediated transcytosis and, once in brain, sequestration of excess TNF-α.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "conjunction",
+        "statements": [
+          {
+            "statement_id": "K39S1",
+            "predicate": "transported_via",
+            "roles": [
+              {
+                "role": "intervention",
+                "concept_id": "C78",
+                "knowledge_id": null
+              },
+              {
+                "role": "mechanism",
+                "concept_id": "C83",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [
+              "Mouse-targeted molecular Trojan horse"
+            ],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": []
+            },
+            "provenance": {
+              "unit_ids": [
+                "U24",
+                "U25",
+                "U26"
+              ]
+            }
+          },
+          {
+            "statement_id": "K39S2",
+            "predicate": "sequesters",
+            "roles": [
+              {
+                "role": "intervention",
+                "concept_id": "C84",
+                "knowledge_id": null
+              },
+              {
+                "role": "target",
+                "concept_id": "C54",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [
+              "Mouse-targeted molecular Trojan horse"
+            ],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": []
+            },
+            "provenance": {
+              "unit_ids": [
+                "U24",
+                "U25",
+                "U26"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U24",
+          "U25",
+          "U26"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K40",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "Pharmacokinetic analysis found intraperitoneal, subcutaneous and intravenous cTfRMAb-TNFR delivery produced brain fusion concentrations 20–50 times pathological brain TNF-α concentrations.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K40S1",
+            "predicate": "pharmacokinetic_result",
+            "roles": [
+              {
+                "role": "intervention",
+                "concept_id": "C78",
+                "knowledge_id": null
+              },
+              {
+                "role": "reference",
+                "concept_id": "C85",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [
+              "Mouse-targeted BBB-penetrating fusion"
+            ],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "concentration_ratio",
+                  "value": "20–50",
+                  "unit": "fold"
+                },
+                {
+                  "name": "routes",
+                  "value": "intraperitoneal; subcutaneous; intravenous",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U24"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U24"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K41",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "Intravenous delivery is preferred for acute neurological conditions such as ischemic stroke; intraperitoneal/subcutaneous routes are considered more practical for chronic conditions including AD.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "contrast",
+        "statements": [
+          {
+            "statement_id": "K41S1",
+            "predicate": "route_suitability",
+            "roles": [
+              {
+                "role": "intervention",
+                "concept_id": "C78",
+                "knowledge_id": null
+              },
+              {
+                "role": "route",
+                "concept_id": "C86",
+                "knowledge_id": null
+              },
+              {
+                "role": "context",
+                "concept_id": "C87",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": "preferred",
+            "negated": false,
+            "conditions": [
+              "Preclinical fusion delivery discussion"
+            ],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": []
+            },
+            "provenance": {
+              "unit_ids": [
+                "U24"
+              ]
+            }
+          },
+          {
+            "statement_id": "K41S2",
+            "predicate": "route_suitability",
+            "roles": [
+              {
+                "role": "intervention",
+                "concept_id": "C78",
+                "knowledge_id": null
+              },
+              {
+                "role": "route",
+                "concept_id": "C88",
+                "knowledge_id": null
+              },
+              {
+                "role": "context",
+                "concept_id": "C89",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": "more practical",
+            "negated": false,
+            "conditions": [
+              "Preclinical fusion delivery discussion"
+            ],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": []
+            },
+            "provenance": {
+              "unit_ids": [
+                "U24"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U24"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K42",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "The cTfRMAb-TNFR fusion was protective in mouse ischemic-stroke and Parkinson-disease models; its evaluation in an AD mouse model was ongoing.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "contrast",
+        "statements": [
+          {
+            "statement_id": "K42S1",
+            "predicate": "protective_in",
+            "roles": [
+              {
+                "role": "intervention",
+                "concept_id": "C78",
+                "knowledge_id": null
+              },
+              {
+                "role": "population",
+                "concept_id": "C90",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [],
+            "temporal_context": "At publication in 2017",
+            "qualifiers": {
+              "attributes": []
+            },
+            "provenance": {
+              "unit_ids": [
+                "U24"
+              ]
+            }
+          },
+          {
+            "statement_id": "K42S2",
+            "predicate": "investigated_in",
+            "roles": [
+              {
+                "role": "intervention",
+                "concept_id": "C78",
+                "knowledge_id": null
+              },
+              {
+                "role": "population",
+                "concept_id": "C91",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": "ongoing; efficacy not yet established",
+            "negated": false,
+            "conditions": [],
+            "temporal_context": "At publication in 2017",
+            "qualifiers": {
+              "attributes": []
+            },
+            "provenance": {
+              "unit_ids": [
+                "U24"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U24"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K43",
+      "kind": "action",
+      "knowledge_kind": "operation",
+      "display_text": "For potential human use, investigators engineered HIRMAb-TNFR by fusing TNFR2 extracellular domain to a chimeric/humanized human-insulin-receptor antibody; HIRMAb cross-reacts with Old World primate insulin receptors.",
+      "aliases": [],
+      "action_status": "performed",
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K43S1",
+            "predicate": "engineer_fusion",
+            "roles": [
+              {
+                "role": "product",
+                "concept_id": "C92",
+                "knowledge_id": null
+              },
+              {
+                "role": "component",
+                "concept_id": "C93",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "cross_reactivity",
+                  "value": "Old World primate insulin receptor",
+                  "unit": null
+                },
+                {
+                  "name": "author_characterization",
+                  "value": "HIRMAb described as the most potent engineered molecular Trojan horse for human brain",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U27"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U27"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K44",
+      "kind": "state",
+      "knowledge_kind": "comparison",
+      "display_text": "In rhesus monkeys, an intravenous 0.2-mg/kg HIRMAb-TNFR dose yielded brain uptake 3±0.1% injected dose/100g brain versus 0.23±0.06% for TNFR:Fc.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "contrast",
+        "statements": [
+          {
+            "statement_id": "K44S1",
+            "predicate": "brain_uptake_comparison",
+            "roles": [
+              {
+                "role": "population",
+                "concept_id": "C94",
+                "knowledge_id": null
+              },
+              {
+                "role": "intervention",
+                "concept_id": "C92",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [
+              "Intravenous administration; rhesus monkey experiment"
+            ],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "HIRMAb_TNFR_dose",
+                  "value": 0.2,
+                  "unit": "mg/kg"
+                },
+                {
+                  "name": "uptake",
+                  "value": 3,
+                  "unit": "percent injected dose/100g brain"
+                },
+                {
+                  "name": "uncertainty",
+                  "value": 0.1,
+                  "unit": "percent injected dose/100g brain"
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U27"
+              ]
+            }
+          },
+          {
+            "statement_id": "K44S2",
+            "predicate": "brain_uptake_comparison",
+            "roles": [
+              {
+                "role": "population",
+                "concept_id": "C94",
+                "knowledge_id": null
+              },
+              {
+                "role": "intervention",
+                "concept_id": "C95",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [
+              "Intravenous administration; rhesus monkey experiment"
+            ],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "HIRMAb_TNFR_dose",
+                  "value": 0.2,
+                  "unit": "mg/kg"
+                },
+                {
+                  "name": "uptake",
+                  "value": 0.23,
+                  "unit": "percent injected dose/100g brain"
+                },
+                {
+                  "name": "uncertainty",
+                  "value": 0.06,
+                  "unit": "percent injected dose/100g brain"
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U27"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U27"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K45",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "Chronic high-dose administration of a HIRMAb-based fusion protein (20 mg/kg) was reported safe in rhesus monkeys; this is not established safety of AD treatment in humans.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K45S1",
+            "predicate": "reported_safe",
+            "roles": [
+              {
+                "role": "intervention",
+                "concept_id": "C96",
+                "knowledge_id": null
+              },
+              {
+                "role": "population",
+                "concept_id": "C94",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [
+              "Chronic primate administration; not a human AD clinical safety study"
+            ],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "dose",
+                  "value": 20,
+                  "unit": "mg/kg"
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U27"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U27"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K46",
+      "kind": "state",
+      "knowledge_kind": "conclusion",
+      "display_text": "TNF-α inhibition is a potential AD strategy: clinical and animal evidence motivates it, but BBB delivery and controlled human efficacy remain limitations; molecular Trojan horses may offer noninvasive peripheral-and-brain targeting.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_argument",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K46S1",
+            "predicate": "potential_treatment",
+            "roles": [
+              {
+                "role": "intervention",
+                "concept_id": "C97",
+                "knowledge_id": null
+              },
+              {
+                "role": "condition",
+                "concept_id": "C1",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": "potential; may be reasonable",
+            "negated": false,
+            "conditions": [
+              "Not established controlled clinical efficacy"
+            ],
+            "temporal_context": "2017 review conclusions",
+            "qualifiers": {
+              "attributes": []
+            },
+            "provenance": {
+              "unit_ids": [
+                "U5",
+                "U21",
+                "U23",
+                "U24",
+                "U29"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U5",
+          "U21",
+          "U23",
+          "U24",
+          "U29"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K47",
+      "kind": "action",
+      "knowledge_kind": "operation",
+      "display_text": "Investigators tested the engineered cTfRMAb-TNFR fusion in mouse neurological models and characterized systemic pharmacokinetics.",
+      "aliases": [],
+      "action_status": "performed",
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K47S1",
+            "predicate": "test_fusion",
+            "roles": [
+              {
+                "role": "intervention",
+                "concept_id": "C78",
+                "knowledge_id": null
+              },
+              {
+                "role": "population",
+                "concept_id": "C98",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [
+              "Reported completed preclinical tests; AD-model investigation still ongoing"
+            ],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": []
+            },
+            "provenance": {
+              "unit_ids": [
+                "U24"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U24"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K48",
+      "kind": "action",
+      "knowledge_kind": "operation",
+      "display_text": "Measure brain uptake after intravenous fusion-protein dosing in rhesus monkeys and evaluate chronic high-dose HIRMAb-based administration.",
+      "aliases": [],
+      "action_status": "performed",
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K48S1",
+            "predicate": "evaluate_fusion",
+            "roles": [
+              {
+                "role": "intervention",
+                "concept_id": "C99",
+                "knowledge_id": null
+              },
+              {
+                "role": "population",
+                "concept_id": "C94",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [
+              "Reported primate experiments, not human AD treatment"
+            ],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": []
+            },
+            "provenance": {
+              "unit_ids": [
+                "U27"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U27"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K49",
+      "kind": "action",
+      "knowledge_kind": "operation",
+      "display_text": "A reported open-label clinical study administered perispinal etanercept for six months and assessed cognition in AD patients.",
+      "aliases": [],
+      "action_status": "performed",
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K49S1",
+            "predicate": "administer_and_assess",
+            "roles": [
+              {
+                "role": "intervention",
+                "concept_id": "C63",
+                "knowledge_id": null
+              },
+              {
+                "role": "population",
+                "concept_id": "C22",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [
+              "Small open-label human study"
+            ],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "duration",
+                  "value": 6,
+                  "unit": "month"
+                },
+                {
+                  "name": "dose",
+                  "value": "25–50",
+                  "unit": "mg/week"
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U21"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U21"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K50",
+      "kind": "action",
+      "knowledge_kind": "operation",
+      "display_text": "A reported randomized double-blind phase-II human trial tested weekly subcutaneous etanercept for cognition, global function and behavior in mild-to-moderate AD.",
+      "aliases": [],
+      "action_status": "performed",
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K50S1",
+            "predicate": "test_clinical_treatment",
+            "roles": [
+              {
+                "role": "intervention",
+                "concept_id": "C73",
+                "knowledge_id": null
+              },
+              {
+                "role": "population",
+                "concept_id": "C74",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [
+              "Small randomized double-blind phase 2 trial"
+            ],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": []
+            },
+            "provenance": {
+              "unit_ids": [
+                "U23"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U23"
+        ]
+      }
+    }
+  ],
+  "nodes": [],
+  "edges": [],
+  "transitions": []
+}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { act, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, expect, test, vi } from 'vitest';
 import i18n from '../../../shared/i18n';
 import ArticleMapCanvas from './ArticleMapCanvas';
@@ -18,7 +18,7 @@ vi.mock('@pixi/react', async () => {
 });
 vi.mock('../../../widgets/KnowledgeMap', async () => {
     const R = await import('react');
-    return { Link: () => null, Viewport: R.forwardRef<ViewportRef, React.PropsWithChildren>(({ children }, ref) => {
+    return { Link: ({onClick}:{onClick:()=>void}) => <button onClick={onClick}>Select transition</button>, Viewport: R.forwardRef<ViewportRef, React.PropsWithChildren>(({ children }, ref) => {
         R.useImperativeHandle(ref, () => ({ focusOn: focus, containerRef: {},
             getScreenSize: () => ({ width: 800, height: 600 }) }) as unknown as ViewportRef);
         return <div>{children}</div>;
@@ -26,6 +26,8 @@ vi.mock('../../../widgets/KnowledgeMap', async () => {
 });
 vi.mock('./ArticleBlock', () => ({ ARTICLE_BLOCK_WIDTH: 200, getArticleBlockHeight: () => 100,
     ArticleBlock: ({ blockData }: { blockData: { label: string } }) => <div>{blockData.label}</div> }));
+vi.mock('./ArticleMapDetails',()=>({default:({result,selection}:{result:SavedArticleMap;selection:{transitionIds:string[]}})=>
+    <aside>{result.run_id} · {selection.transitionIds.join(',')}</aside>}));
 
 afterEach(() => { vi.useRealTimers(); vi.clearAllMocks(); });
 
@@ -42,4 +44,17 @@ test('centers after slow viewport initialization and preserves readable block te
     await act(async () => { await vi.advanceTimersByTimeAsync(400); });
     expect(focus).toHaveBeenCalledTimes(1);
     expect(screen.getByText('Readable English knowledge')).toBeInTheDocument();
+});
+
+test('comparison canvases retain transition provenance and clear it when the run changes',async()=>{
+    await i18n.changeLanguage('en');vi.useFakeTimers();
+    const result:SavedArticleMap={article_id:'article',pipeline_id:'text_reified',run_id:'run-old',updated_at:'date',input_fingerprint:'hash',builder_version:'1',graph_schema_version:4,
+        graph:{schema_version:4,nodes:[{id:'N1',display_text:'First',block_type:'concept',rank:0,order:0},{id:'N2',display_text:'Second',block_type:'assertion',rank:1,order:1}],
+            edges:[{source:'N1',target:'N2'}],transitions:[{id:'T1',sources:['N1'],target:'N2',usage:'direct',reason:'Source argument',unit_ids:['U1'],conditions:[]}]}};
+    const view=render(<ArticleMapCanvas result={result} hideDetails/>);
+    await act(async()=>{await vi.advanceTimersByTimeAsync(600);});
+    fireEvent.click(screen.getByRole('button',{name:'Select transition'}));
+    expect(screen.getByText('run-old · T1')).toBeInTheDocument();
+    view.rerender(<ArticleMapCanvas result={{...result,run_id:'run-new'}} hideDetails/>);
+    expect(screen.queryByRole('complementary')).not.toBeInTheDocument();
 });

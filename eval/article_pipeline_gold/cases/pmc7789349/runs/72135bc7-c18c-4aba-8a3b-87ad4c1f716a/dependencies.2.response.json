@@ -1,0 +1,525 @@
+{
+  "occurrences": [],
+  "transitions": [
+    {
+      "id": "T25",
+      "sources": [
+        "B12"
+      ],
+      "target": "B41",
+      "usage": "result",
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "unit_ids": [
+        "U37"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T26",
+      "sources": [
+        "B12"
+      ],
+      "target": "B42",
+      "usage": "result",
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "unit_ids": [
+        "U37"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T27",
+      "sources": [
+        "B12"
+      ],
+      "target": "B43",
+      "usage": "result",
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "unit_ids": [
+        "U37"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T28",
+      "sources": [
+        "B12"
+      ],
+      "target": "B44",
+      "usage": "result",
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "unit_ids": [
+        "U37"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T29",
+      "sources": [
+        "B12"
+      ],
+      "target": "B45",
+      "usage": "result",
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "unit_ids": [
+        "U37"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T30",
+      "sources": [
+        "B12"
+      ],
+      "target": "B46",
+      "usage": "result",
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "unit_ids": [
+        "U37"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T31",
+      "sources": [
+        "B12"
+      ],
+      "target": "B47",
+      "usage": "result",
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "unit_ids": [
+        "U37"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T32",
+      "sources": [
+        "B12"
+      ],
+      "target": "B48",
+      "usage": "result",
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "unit_ids": [
+        "U37"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T33",
+      "sources": [
+        "B12"
+      ],
+      "target": "B49",
+      "usage": "result",
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "unit_ids": [
+        "U37"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T34",
+      "sources": [
+        "B12"
+      ],
+      "target": "B50",
+      "usage": "result",
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "unit_ids": [
+        "U37"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T35",
+      "sources": [
+        "B12"
+      ],
+      "target": "B51",
+      "usage": "result",
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "unit_ids": [
+        "U37"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T36",
+      "sources": [
+        "B12"
+      ],
+      "target": "B52",
+      "usage": "result",
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "unit_ids": [
+        "U37"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T37",
+      "sources": [
+        "B12"
+      ],
+      "target": "B53",
+      "usage": "result",
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "unit_ids": [
+        "U37"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T38",
+      "sources": [
+        "B12"
+      ],
+      "target": "B54",
+      "usage": "result",
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "unit_ids": [
+        "U37"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T39",
+      "sources": [
+        "B12"
+      ],
+      "target": "B55",
+      "usage": "result",
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "unit_ids": [
+        "U37"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T40",
+      "sources": [
+        "B12"
+      ],
+      "target": "B56",
+      "usage": "result",
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "unit_ids": [
+        "U37"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T41",
+      "sources": [
+        "B12"
+      ],
+      "target": "B57",
+      "usage": "result",
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "unit_ids": [
+        "U37"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T42",
+      "sources": [
+        "B10"
+      ],
+      "target": "B58",
+      "usage": "result",
+      "reason": "The independent quality review yields the per-publication ratings and the explicit high-risk exclusions.",
+      "unit_ids": [
+        "U42"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T43",
+      "sources": [
+        "B14"
+      ],
+      "target": "B59",
+      "usage": "result",
+      "reason": "The meta-regression produces the reported coefficient and uncertainty for this predictor.",
+      "unit_ids": [
+        "U46"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T44",
+      "sources": [
+        "B14"
+      ],
+      "target": "B60",
+      "usage": "result",
+      "reason": "The meta-regression produces the reported coefficient and uncertainty for this predictor.",
+      "unit_ids": [
+        "U46"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T45",
+      "sources": [
+        "B14"
+      ],
+      "target": "B61",
+      "usage": "result",
+      "reason": "The meta-regression produces the reported coefficient and uncertainty for this predictor.",
+      "unit_ids": [
+        "U46"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T46",
+      "sources": [
+        "B14"
+      ],
+      "target": "B62",
+      "usage": "result",
+      "reason": "The meta-regression produces the reported coefficient and uncertainty for this predictor.",
+      "unit_ids": [
+        "U46"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T47",
+      "sources": [
+        "B14"
+      ],
+      "target": "B63",
+      "usage": "result",
+      "reason": "Subgroup synthesis yields the reported prevalence, confidence interval and heterogeneity metrics.",
+      "unit_ids": [
+        "U58"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T48",
+      "sources": [
+        "B14"
+      ],
+      "target": "B64",
+      "usage": "result",
+      "reason": "Subgroup synthesis yields the reported prevalence, confidence interval and heterogeneity metrics.",
+      "unit_ids": [
+        "U58"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T49",
+      "sources": [
+        "B14"
+      ],
+      "target": "B65",
+      "usage": "result",
+      "reason": "Subgroup synthesis yields the reported prevalence, confidence interval and heterogeneity metrics.",
+      "unit_ids": [
+        "U58"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T50",
+      "sources": [
+        "B14"
+      ],
+      "target": "B66",
+      "usage": "result",
+      "reason": "Subgroup synthesis yields the reported prevalence, confidence interval and heterogeneity metrics.",
+      "unit_ids": [
+        "U58"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T51",
+      "sources": [
+        "B14"
+      ],
+      "target": "B67",
+      "usage": "result",
+      "reason": "Subgroup synthesis yields the reported prevalence, confidence interval and heterogeneity metrics.",
+      "unit_ids": [
+        "U58"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T52",
+      "sources": [
+        "B14"
+      ],
+      "target": "B68",
+      "usage": "result",
+      "reason": "Subgroup synthesis yields the reported prevalence, confidence interval and heterogeneity metrics.",
+      "unit_ids": [
+        "U58"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T53",
+      "sources": [
+        "B14"
+      ],
+      "target": "B69",
+      "usage": "result",
+      "reason": "Subgroup synthesis yields the reported prevalence, confidence interval and heterogeneity metrics.",
+      "unit_ids": [
+        "U58"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T54",
+      "sources": [
+        "B14"
+      ],
+      "target": "B70",
+      "usage": "result",
+      "reason": "Subgroup synthesis yields the reported prevalence, confidence interval and heterogeneity metrics.",
+      "unit_ids": [
+        "U58"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T55",
+      "sources": [
+        "B14"
+      ],
+      "target": "B71",
+      "usage": "result",
+      "reason": "Subgroup synthesis yields the reported prevalence, confidence interval and heterogeneity metrics.",
+      "unit_ids": [
+        "U58"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T56",
+      "sources": [
+        "B14"
+      ],
+      "target": "B72",
+      "usage": "result",
+      "reason": "Subgroup synthesis yields the reported prevalence, confidence interval and heterogeneity metrics.",
+      "unit_ids": [
+        "U58"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T57",
+      "sources": [
+        "B14"
+      ],
+      "target": "B73",
+      "usage": "result",
+      "reason": "Subgroup synthesis yields the reported prevalence, confidence interval and heterogeneity metrics.",
+      "unit_ids": [
+        "U58"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T58",
+      "sources": [
+        "B14"
+      ],
+      "target": "B74",
+      "usage": "result",
+      "reason": "Subgroup synthesis yields the reported prevalence, confidence interval and heterogeneity metrics.",
+      "unit_ids": [
+        "U58"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T59",
+      "sources": [
+        "B14"
+      ],
+      "target": "B75",
+      "usage": "result",
+      "reason": "Subgroup synthesis yields the reported prevalence, confidence interval and heterogeneity metrics.",
+      "unit_ids": [
+        "U58"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T60",
+      "sources": [
+        "B14"
+      ],
+      "target": "B76",
+      "usage": "result",
+      "reason": "Subgroup synthesis yields the reported prevalence, confidence interval and heterogeneity metrics.",
+      "unit_ids": [
+        "U58"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T61",
+      "sources": [
+        "B14"
+      ],
+      "target": "B77",
+      "usage": "result",
+      "reason": "Subgroup synthesis yields the reported prevalence, confidence interval and heterogeneity metrics.",
+      "unit_ids": [
+        "U58"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T62",
+      "sources": [
+        "B14"
+      ],
+      "target": "B78",
+      "usage": "result",
+      "reason": "Subgroup synthesis yields the reported prevalence, confidence interval and heterogeneity metrics.",
+      "unit_ids": [
+        "U58"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T63",
+      "sources": [
+        "B14"
+      ],
+      "target": "B79",
+      "usage": "result",
+      "reason": "Subgroup synthesis yields the reported prevalence, confidence interval and heterogeneity metrics.",
+      "unit_ids": [
+        "U58"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T64",
+      "sources": [
+        "B14"
+      ],
+      "target": "B80",
+      "usage": "result",
+      "reason": "Subgroup synthesis yields the reported prevalence, confidence interval and heterogeneity metrics.",
+      "unit_ids": [
+        "U58"
+      ],
+      "conditions": []
+    }
+  ]
+}

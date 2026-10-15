@@ -1,0 +1,18 @@
+{
+  "passed": true,
+  "renderer": "JSDOM",
+  "visual_screenshot": false,
+  "checks": [
+    "97 blocks",
+    "104 selectable edges",
+    "block source",
+    "edge joint premises",
+    "Russian labels",
+    "search focus",
+    "zoom",
+    "pan",
+    "full source",
+    "zero network"
+  ],
+  "model_calls": 0
+}

@@ -1,0 +1,9 @@
+"""Порты явно зарегистрированных источников и неизменяемого аудита."""
+from typing import Protocol
+
+class ObservationInputs(Protocol):
+    def read_inputs(self)->dict: ...
+
+class ObservationAuditStore(Protocol):
+    def read(self,run_id:str)->dict|None: ...
+    def save(self,run_id:str,result:dict)->None: ...

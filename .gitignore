@@ -9,12 +9,20 @@ test_input/
 .cache/
 .mypy_cache
 .poetry-cache/
+.tmp
+eval/article_comparisons/
+eval/question_prediction/
+eval/schema6_prediction/
+eval/free_prediction/
+eval/whole_map_forecast/
+tmp/
 
 __pycache__/
 
 .env
 .env.development
 .env.local
+/minio.license
 api/.env
 auth/.env
 ai/.env

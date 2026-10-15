@@ -1,0 +1,27 @@
+// Автономный отчёт не должен выдавать технический прогон за научный успех.
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
+import { JSDOM } from 'jsdom';
+const path = process.argv[2];
+const dom = new JSDOM(fs.readFileSync(path, 'utf8'));
+const { document } = dom.window;
+let networkCalls = 0;
+const denied = () => { networkCalls++; throw new Error('Network forbidden'); };
+new Function('document', 'fetch', 'XMLHttpRequest', 'WebSocket', document.querySelector('script').textContent)(document, denied, denied, denied);
+assert.equal(document.documentElement.lang, 'ru');
+assert.match(document.getElementById('ru').textContent, /цель не достигнута/);
+document.getElementById('lang').click();
+assert.equal(document.documentElement.lang, 'en');
+assert.equal(document.getElementById('en').hidden, false);
+assert.match(document.getElementById('en').textContent, /No graph advantage/);
+document.getElementById('lang').click();
+assert.equal(document.getElementById('ru').hidden, false);
+assert.equal(document.querySelectorAll('script[src],link[rel="stylesheet"],iframe').length, 0);
+assert.equal(networkCalls, 0);
+const data = JSON.parse(fs.readFileSync(path.replace(/report.html$/, 'data.json'), 'utf8'));
+assert.equal(data.blocks, 419);
+assert.equal(data.eligible, 380);
+assert.equal(data.rules, 0);
+assert.equal(data.graph_advantage_demonstrated, false);
+assert.equal(data.learning.rejected_groups.length, Object.values(data.learning.rejected).reduce((a,b)=>a+b,0));
+process.stdout.write(JSON.stringify({languages: 2, blocks: 419, rejectedGroups: data.learning.rejected_groups.length, networkCalls, visualInspection: false})+'\n');

@@ -1,0 +1,114 @@
+{
+  "pmc_id": "PMC5436834",
+  "article_id": "pilot-pmc10000452-pmc5436834-10b9d676a760e5df",
+  "run_id": "23d54ea7-9685-4742-8f54-0884dc7054c2",
+  "source_sha256": "10b9d676a760e5dff9c20a7858f3f795e0fa60adf931a02b82a3b02089df905a",
+  "prompt_binding": {
+    "prompt": {
+      "id": "KM.TEXT_TO_MAP",
+      "version": "3",
+      "sha256": "71d626d5e892dfac0cef836170142e442928a9526982011c483f17ef94f90c1f"
+    },
+    "dependency_prompt": {
+      "id": "KM.TEXT_TO_MAP.DEPENDENCIES",
+      "version": "15",
+      "sha256": "21d56fba6683319b09e001faa3f91f637b1f28cecb6cadef9ef019b25d144915"
+    }
+  },
+  "generation": {
+    "kind": "codex_manual",
+    "author": "Codex",
+    "external_llm_calls": 0,
+    "local_llm_calls": 0,
+    "translation_llm_calls": 0,
+    "embedding_calls": 0,
+    "token_usage": null,
+    "token_usage_note": "Codex session usage is unavailable; no provider usage is fabricated."
+  },
+  "dependency_groups": [
+    {
+      "targets": [
+        "K1",
+        "K2",
+        "K3",
+        "K4",
+        "K5",
+        "K6",
+        "K7",
+        "K8",
+        "K9",
+        "K10",
+        "K11",
+        "K12",
+        "K13",
+        "K14",
+        "K15",
+        "K16",
+        "K17",
+        "K18",
+        "K19",
+        "K20",
+        "K21",
+        "K22",
+        "K23",
+        "K24",
+        "K25",
+        "K26",
+        "K27",
+        "K28",
+        "K29",
+        "K30",
+        "K31",
+        "K32",
+        "K33",
+        "K34",
+        "K35",
+        "K36",
+        "K37",
+        "K38",
+        "K39",
+        "K40"
+      ],
+      "request": "dependencies.1.request.json",
+      "response": "dependencies.1.response.json"
+    },
+    {
+      "targets": [
+        "K41",
+        "K42",
+        "K43",
+        "K44",
+        "K45",
+        "K46",
+        "K47",
+        "K48",
+        "K49",
+        "K50"
+      ],
+      "request": "dependencies.2.request.json",
+      "response": "dependencies.2.response.json"
+    }
+  ],
+  "files": {
+    "article.md": "10b9d676a760e5dff9c20a7858f3f795e0fa60adf931a02b82a3b02089df905a",
+    "article.xml": "cd35b4dc3172dce08eabbae6d4d5a694172bf546bb7ec52d084cb3f5d0b06c0c",
+    "authored.json": "0ffc51fd2856596560a1176cc7355ab651d7283dd1dbfb7a23e6922e81a86e46",
+    "coverage.json": "abb510ca92551b0dd98e878dcc486da40d0b3c233582dfca12e2ad1cee77b96f",
+    "dependencies.1.request.json": "28c120be5193831fff093ee5e8564d048b88734869f0599c2898aef0eaacbae7",
+    "dependencies.1.response.json": "8a53f37fa3ea60096cd8cbe7dc610253f0df02492563f13dc51a0297a3ad2dca",
+    "dependencies.2.request.json": "96d31e89c8d10dce134892238b32aeae1fdef305d108670b28969ffa8e5c9a82",
+    "dependencies.2.response.json": "8220153786f403889d04cc9440721157b9e698b64548b0f693e68366c52902ce",
+    "extraction.request.json": "fe3d425344e635876a09cd3e2873b7f8bd6f89456d95bdf9aef041551555186b",
+    "extraction.response.json": "98852d8bc45013cc940e58dc37d19a3bdccec6b77f0f07438ac74e5febbf74f3",
+    "map.html": "e4f8da810357c5e124afe4176c8740a3200060141a0d2cd426143f3a3b9ce9d2",
+    "map.json": "004bc62e6de2c90b781dcfcf94522b719d1e2256bb7715a6f724e8d96aa91752",
+    "prompt.dependencies.en.md": "21d56fba6683319b09e001faa3f91f637b1f28cecb6cadef9ef019b25d144915",
+    "prompt.extraction.en.md": "71d626d5e892dfac0cef836170142e442928a9526982011c483f17ef94f90c1f",
+    "report.ru.md": "07251a7f467af289aacdef24c4c0ffb41d9f439fa35e9251c99556691d3232bd",
+    "source.attachments.json": "2e752e6cd758bec4c0254f69462b4e9d338102497c0339bee9a8b1caa0f729d2",
+    "source.json": "481f3ddf463676205a22e431e4b2c8949b266500ca6b3115a95bf98d3f9ddd57",
+    "table1.browser.png": "018ab7359af8c3b3f2015af16c0cf46ca18e26df2ca65df1809a380966d26665",
+    "translation.ru.json": "6dec03ad56d583831944cc23c18bca1782ef2a72c2e0ee2bd3a13e77b039e9cc",
+    "validation.json": "b3b24c107cf53e3f66dc8a649bbb2d2a09084f762cdf380b1345e0553cfd43e7"
+  }
+}

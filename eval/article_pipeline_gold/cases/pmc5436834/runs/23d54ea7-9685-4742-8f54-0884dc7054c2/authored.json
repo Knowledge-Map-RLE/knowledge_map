@@ -1,0 +1,1612 @@
+{
+  "knowledge": [
+    {
+      "key": "burden",
+      "units": [
+        8
+      ],
+      "en": "In the 2017 review, Alzheimer disease is the leading worldwide cause of dementia; an estimated 5.4 million Americans are affected, with a projected tripling by 2050 in the absence of breakthroughs.",
+      "ru": "В обзоре 2017 года болезнь Альцгеймера названа ведущей причиной деменции; оценка для США — 5,4 млн человек, прогноз — утроение к 2050 году без прорыва в лечении.",
+      "predicate": "estimated_dementia_burden",
+      "roles": {
+        "condition": "Alzheimer disease",
+        "population": "United States population"
+      },
+      "time": "2017 review; projection to 2050",
+      "modality": "estimate; projection",
+      "attrs": {
+        "affected": {
+          "value": 5.4,
+          "unit": "million people"
+        },
+        "projection_multiplier": {
+          "value": 3,
+          "unit": "fold"
+        },
+        "projection_year": {
+          "value": 2050,
+          "unit": "calendar year"
+        }
+      }
+    },
+    {
+      "key": "no_therapy",
+      "units": [
+        8
+      ],
+      "en": "No disease-modifying therapy for Alzheimer disease had been clinically approved at the time of this 2017 review.",
+      "ru": "На момент обзора 2017 года клинически одобренной терапии, изменяющей течение болезни Альцгеймера, не было.",
+      "predicate": "clinically_approved",
+      "roles": {
+        "intervention": "Disease-modifying Alzheimer therapy"
+      },
+      "negated": true,
+      "time": "At publication in 2017"
+    },
+    {
+      "key": "hallmarks",
+      "units": [
+        9
+      ],
+      "en": "Alzheimer disease has extracellular amyloid-beta plaques and intracellular tau neurofibrillary tangles; plaques are relatively specific to AD, whereas tangles also occur in other disorders.",
+      "ru": "При болезни Альцгеймера наблюдаются внеклеточные бляшки Aβ и внутриклеточные нейрофибриллярные клубки тау; бляшки относительно специфичны, клубки встречаются и при других заболеваниях.",
+      "predicate": "neuropathological_hallmarks",
+      "roles": {
+        "condition": "Alzheimer disease"
+      },
+      "type": "definition",
+      "logic": "contrast",
+      "claims": [
+        {
+          "predicate": "has_hallmark",
+          "roles": {
+            "condition": "Alzheimer disease",
+            "hallmark": "Extracellular amyloid beta plaques"
+          },
+          "attrs": {
+            "specificity": "relatively specific to AD"
+          }
+        },
+        {
+          "predicate": "has_hallmark",
+          "roles": {
+            "condition": "Alzheimer disease",
+            "hallmark": "Intracellular tau neurofibrillary tangles"
+          },
+          "attrs": {
+            "specificity": "also associated with other disorders"
+          }
+        }
+      ]
+    },
+    {
+      "key": "app",
+      "units": [
+        9
+      ],
+      "en": "Sequential beta- and gamma-secretase cleavage of transmembrane APP releases extracellular Aβ peptides, usually 40–42 residues, which aggregate into oligomers, beta-sheet fibrils and plaques.",
+      "ru": "Последовательное расщепление трансмембранного APP β- и γ-секретазами высвобождает внеклеточные пептиды Aβ, обычно 40–42 остатка; далее образуются олигомеры, β-фибриллы и бляшки.",
+      "predicate": "amyloid_processing",
+      "roles": {
+        "substrate": "Amyloid precursor protein",
+        "enzyme": "Beta-secretase and gamma-secretase",
+        "product": "Amyloid beta"
+      },
+      "attrs": {
+        "peptide_length": {
+          "value": "40–42",
+          "unit": "amino acid residues"
+        },
+        "aggregation_sequence": "oligomers; beta-sheet fibrils; amyloid plaques"
+      },
+      "type": "assertion"
+    },
+    {
+      "key": "phases",
+      "units": [
+        9
+      ],
+      "en": "Some studies suggest amyloid pathology reflects asymptomatic preclinical AD more closely, whereas tau tangles track the onset of clinical symptoms more closely.",
+      "ru": "Некоторые исследования связывают амилоидную патологию преимущественно с доклинической бессимптомной стадией, а накопление тау-клубков — с появлением симптомов.",
+      "predicate": "reflects_disease_phase",
+      "roles": {
+        "condition": "Alzheimer disease"
+      },
+      "quantifier": "some studies",
+      "modality": "suggest",
+      "logic": "contrast",
+      "claims": [
+        {
+          "roles": {
+            "marker": "Amyloid beta pathology",
+            "phase": "Asymptomatic preclinical Alzheimer disease"
+          }
+        },
+        {
+          "roles": {
+            "marker": "Tau tangle accumulation",
+            "phase": "Onset of clinical Alzheimer symptoms"
+          }
+        }
+      ]
+    },
+    {
+      "key": "failed_trials",
+      "units": [
+        9
+      ],
+      "en": "Anti-amyloid approaches (gamma-secretase inhibition, active immunotherapy and anti-Aβ antibodies) showed promise in animal models, but most mid-to-late clinical studies missed primary endpoints; a selective tau aggregation inhibitor also missed primary outcomes in mild-to-moderate AD.",
+      "ru": "Антиамилоидные подходы были перспективны в животных моделях, но большинство клинических исследований не достигли первичных целей; ингибитор агрегации тау также не достиг первичных исходов при лёгкой и умеренной болезни.",
+      "predicate": "treatment_evidence",
+      "roles": {
+        "condition": "Alzheimer disease"
+      },
+      "logic": "contrast",
+      "claims": [
+        {
+          "predicate": "showed_promising_results",
+          "roles": {
+            "intervention": "Gamma-secretase inhibition, active immunotherapy and anti-Aβ antibodies",
+            "setting": "Animal models of Alzheimer disease"
+          }
+        },
+        {
+          "predicate": "reached_primary_endpoints",
+          "roles": {
+            "intervention": "Anti-amyloid approaches",
+            "setting": "Mid-to-late clinical development"
+          },
+          "negated": true,
+          "quantifier": "most studies"
+        },
+        {
+          "predicate": "reached_primary_outcomes",
+          "roles": {
+            "intervention": "Selective tau aggregation inhibitor",
+            "population": "Patients with mild-to-moderate Alzheimer disease"
+          },
+          "negated": true
+        }
+      ],
+      "time": "Studies available in the 2017 review"
+    },
+    {
+      "key": "inflammation",
+      "units": [
+        5,
+        10
+      ],
+      "en": "Evidence reviewed in 2017 implicates cytokine-mediated neuroinflammation in AD development; TNF-α participates in the inflammatory cytokine cascade and may be a therapeutic target.",
+      "ru": "Обзор связывает нейровоспаление с развитием болезни Альцгеймера; TNF-α участвует в каскаде цитокинов и рассматривается как возможная терапевтическая мишень.",
+      "predicate": "implicated_in",
+      "roles": {
+        "factor": "Tumor necrosis factor alpha",
+        "condition": "Alzheimer disease"
+      },
+      "modality": "evidence suggests; potential treatment",
+      "time": "Evidence reviewed in 2017"
+    },
+    {
+      "key": "tnf_levels",
+      "units": [
+        10
+      ],
+      "en": "TNF-α levels are normally very low in healthy adult peripheral and central systems but are significantly elevated in blood and CNS in AD; clinical and animal studies link excess brain TNF-α to AD.",
+      "ru": "У здоровых взрослых периферический и центральный TNF-α обычно очень низок; при болезни Альцгеймера уровни повышены в крови и ЦНС, избыток мозгового TNF-α связан с заболеванием.",
+      "predicate": "elevated_in",
+      "roles": {
+        "marker": "Tumor necrosis factor alpha",
+        "condition": "Alzheimer disease"
+      },
+      "logic": "contrast",
+      "claims": [
+        {
+          "predicate": "has_low_level",
+          "roles": {
+            "marker": "Tumor necrosis factor alpha",
+            "population": "Healthy adults",
+            "compartment": "Peripheral and central nervous systems"
+          }
+        },
+        {
+          "predicate": "elevated_in",
+          "roles": {
+            "marker": "Tumor necrosis factor alpha",
+            "population": "Patients with Alzheimer disease",
+            "compartment": "Blood and central nervous system"
+          },
+          "attrs": {
+            "statistical_description": "significantly elevated"
+          }
+        }
+      ],
+      "time": "Reviewed clinical and animal evidence"
+    },
+    {
+      "key": "tnf_structure",
+      "units": [
+        12
+      ],
+      "en": "TNF-α is a nonglycosylated 17-kDa type-II transmembrane monomer in the TNF/TNFR superfamily; membrane homotrimers are cleaved by TNF-α-converting enzyme to soluble 51-kDa trimers.",
+      "ru": "TNF-α — негликозилированный трансмембранный мономер типа II массой 17 кДа; фермент TACE высвобождает из мембранного гомотримера растворимый тример массой 51 кДа.",
+      "predicate": "characterized_by",
+      "roles": {
+        "subject": "Tumor necrosis factor alpha"
+      },
+      "type": "definition",
+      "attrs": {
+        "monomer_mass": {
+          "value": 17,
+          "unit": "kDa"
+        },
+        "soluble_trimer_mass": {
+          "value": 51,
+          "unit": "kDa"
+        },
+        "structure": "type 2 transmembrane; nonglycosylated; TNF/TNFR superfamily",
+        "cleavage_enzyme": "TNF-alpha-converting enzyme"
+      }
+    },
+    {
+      "key": "synthesis",
+      "units": [
+        12
+      ],
+      "en": "Brain microglia, neurons and astrocytes can synthesize TNF-α, a cytokine recognized initially for antitumor activity that initiates and propagates inflammation.",
+      "ru": "Микроглия, нейроны и астроциты способны синтезировать TNF-α; цитокин инициирует и распространяет воспалительный ответ и первоначально был известен противоопухолевой активностью.",
+      "predicate": "can_synthesize",
+      "roles": {
+        "actor": "Microglia, neurons and astrocytes",
+        "product": "Tumor necrosis factor alpha"
+      },
+      "modality": "can",
+      "conditions": [
+        "In the central nervous system"
+      ],
+      "attrs": {
+        "initially_recognized_activity": "antitumor activity",
+        "inflammatory_role": "initiating and propagating inflammation"
+      }
+    },
+    {
+      "key": "receptors",
+      "units": [
+        13
+      ],
+      "en": "TNF-α binds TNFR1 (p55-R) and TNFR2 (p75-R). TNFR1 contains an intracellular death domain, whereas TNFR2 lacks it.",
+      "ru": "TNF-α связывается с TNFR1 (p55-R) и TNFR2 (p75-R); внутриклеточный домен смерти есть у TNFR1 и отсутствует у TNFR2.",
+      "predicate": "has_death_domain",
+      "roles": {
+        "ligand": "Tumor necrosis factor alpha"
+      },
+      "type": "definition",
+      "logic": "contrast",
+      "claims": [
+        {
+          "roles": {
+            "subject": "TNFR1"
+          }
+        },
+        {
+          "roles": {
+            "subject": "TNFR2"
+          },
+          "negated": true
+        }
+      ],
+      "attrs": {
+        "ligand": "TNF-alpha"
+      }
+    },
+    {
+      "key": "tnfr1",
+      "units": [
+        13
+      ],
+      "en": "Ubiquitously expressed TNFR1 is activated by soluble or membrane TNF-α; its effects include proliferation, activation, antiviral activity and especially apoptosis and cytotoxicity.",
+      "ru": "TNFR1 широко экспрессируется и активируется растворимым и мембранным TNF-α; его эффекты включают пролиферацию, активацию, противовирусную активность, особенно апоптоз и цитотоксичность.",
+      "predicate": "receptor_signaling",
+      "roles": {
+        "receptor": "TNFR1",
+        "ligand": "Soluble and membrane TNF-alpha"
+      },
+      "attrs": {
+        "expression": "ubiquitous in various cell types",
+        "effects": "cell proliferation; activation; antiviral activity; apoptosis; cytotoxicity"
+      },
+      "type": "assertion"
+    },
+    {
+      "key": "tnfr2",
+      "units": [
+        13
+      ],
+      "en": "TNFR2 has higher TNF-α affinity, preferential membrane-TNF activation and low expression mainly in immune/endothelial cells; it can activate cIAP1/2, NF-κB and PI3K-dependent inflammatory and survival pathways.",
+      "ru": "TNFR2 имеет более высокое сродство к TNF-α, преимущественно активируется мембранной формой и экспрессируется главным образом в иммунных и эндотелиальных клетках; возможны пути cIAP1/2, NF-κB и PI3K.",
+      "predicate": "receptor_signaling",
+      "roles": {
+        "receptor": "TNFR2",
+        "ligand": "Membrane TNF-alpha"
+      },
+      "modality": "can",
+      "attrs": {
+        "affinity": "higher TNF-alpha affinity",
+        "expression": "low; immune and endothelial cells",
+        "pathways": "cIAP1 and cIAP2; NF-kappaB; phosphatidylinositol 3-kinase",
+        "effects": "pro-inflammatory and pro-survival signaling"
+      },
+      "type": "assertion"
+    },
+    {
+      "key": "receptor_contrast",
+      "units": [
+        13
+      ],
+      "en": "TNFR2 may indirectly enhance TNFR1-mediated cytotoxicity but does not induce cytotoxicity alone; the general consensus contrasts pro-apoptotic TNFR1 with survival/proliferation-promoting TNFR2.",
+      "ru": "TNFR2 может косвенно усиливать цитотоксичность TNFR1, но сам её не вызывает; в целом TNFR1 связывают с апоптозом, TNFR2 — с выживанием и пролиферацией.",
+      "predicate": "receptor_effect_contrast",
+      "roles": {
+        "receptor": "TNFR1 and TNFR2"
+      },
+      "logic": "contrast",
+      "claims": [
+        {
+          "predicate": "promotes",
+          "roles": {
+            "subject": "TNFR1",
+            "effect": "Apoptosis"
+          }
+        },
+        {
+          "predicate": "promotes",
+          "roles": {
+            "subject": "TNFR2",
+            "effect": "Cell survival and proliferation"
+          }
+        },
+        {
+          "predicate": "enhances",
+          "roles": {
+            "subject": "TNFR2",
+            "effect": "TNFR1-mediated cytotoxicity"
+          },
+          "modality": "some studies report"
+        },
+        {
+          "predicate": "induces_alone",
+          "roles": {
+            "subject": "TNFR2",
+            "effect": "Cytotoxicity"
+          },
+          "negated": true
+        }
+      ],
+      "type": "conclusion",
+      "grounding": "source_argument"
+    },
+    {
+      "key": "postmortem",
+      "units": [
+        15
+      ],
+      "en": "TNF-α was detected around Aβ plaques in postmortem human AD brains; TNFR1 signaling was required for Aβ-induced neuronal death in subsequent studies.",
+      "ru": "В посмертном мозге людей с болезнью Альцгеймера TNF-α находили вокруг бляшек Aβ; в последующих исследованиях сигнализация TNFR1 была необходима для гибели нейронов, индуцированной Aβ.",
+      "predicate": "ad_brain_findings",
+      "roles": {
+        "condition": "Alzheimer disease"
+      },
+      "logic": "conjunction",
+      "claims": [
+        {
+          "predicate": "localized_around",
+          "roles": {
+            "marker": "Tumor necrosis factor alpha",
+            "structure": "Amyloid beta plaques",
+            "sample": "Postmortem human Alzheimer brains"
+          }
+        },
+        {
+          "predicate": "required_for",
+          "roles": {
+            "factor": "TNFR1 signaling",
+            "effect": "Amyloid-beta-induced neuronal death"
+          },
+          "modality": "required"
+        }
+      ],
+      "conditions": [
+        "Reported human AD brain studies"
+      ]
+    },
+    {
+      "key": "brain_receptors",
+      "units": [
+        15
+      ],
+      "en": "Compared with nondemented human brains, AD brains had higher TNFR1 and lower TNFR2 protein; TNF-α affinity increased for TNFR1 and decreased for TNFR2.",
+      "ru": "В мозге при болезни Альцгеймера TNFR1 повышен, TNFR2 снижен относительно мозга без деменции; сродство TNF-α к TNFR1 увеличено, к TNFR2 уменьшено.",
+      "predicate": "compared_with",
+      "roles": {
+        "population": "Human Alzheimer brains",
+        "reference": "Nondemented human brains"
+      },
+      "logic": "contrast",
+      "claims": [
+        {
+          "predicate": "increased",
+          "roles": {
+            "measure": "TNFR1 protein and TNF-alpha binding affinity"
+          }
+        },
+        {
+          "predicate": "decreased",
+          "roles": {
+            "measure": "TNFR2 protein and TNF-alpha binding affinity"
+          }
+        }
+      ],
+      "conditions": [
+        "Human brain comparison"
+      ],
+      "attrs": {
+        "TNFR1_protein_significance": "significantly greater"
+      }
+    },
+    {
+      "key": "genetics",
+      "units": [
+        15
+      ],
+      "en": "Genetic association studies implicated chromosome 12p (TNFR1 gene) and chromosome 1p (TNFR2 gene) regions in late-onset Alzheimer disease.",
+      "ru": "Генетические ассоциации связывали области 12p (ген TNFR1) и 1p (ген TNFR2) с поздней болезнью Альцгеймера.",
+      "predicate": "associated_with",
+      "roles": {
+        "locus": "Chromosome 12p TNFR1 and chromosome 1p TNFR2",
+        "condition": "Late-onset Alzheimer disease"
+      },
+      "conditions": [
+        "Reported genetic association studies"
+      ]
+    },
+    {
+      "key": "csf_serum",
+      "units": [
+        15
+      ],
+      "en": "Reported studies found significantly elevated TNF-α in CSF and serum of AD patients, with TNF-α elevation correlated with disease progression.",
+      "ru": "Цитируемые исследования находили значимое повышение TNF-α в ликворе и сыворотке при болезни Альцгеймера и корреляцию повышения с прогрессированием.",
+      "predicate": "elevated_in",
+      "roles": {
+        "marker": "Tumor necrosis factor alpha",
+        "population": "Patients with Alzheimer disease",
+        "compartment": "Cerebrospinal fluid and serum"
+      },
+      "conditions": [
+        "Reported clinical studies; CSF and serum, not automatically plasma"
+      ],
+      "attrs": {
+        "association": "correlated with disease progression",
+        "significance": "significant elevation"
+      }
+    },
+    {
+      "key": "mouse_elevation",
+      "units": [
+        16
+      ],
+      "en": "AD transgenic mice had elevated brain TNF-α, associated with intraneuronal Aβ immunoreactivity in entorhinal cortex and correlated cognitive deficits.",
+      "ru": "У трансгенных мышей с моделью болезни Альцгеймера мозговой TNF-α был повышен, связан с внутринейронной иммунореактивностью Aβ в энторинальной коре и когнитивными дефицитами.",
+      "predicate": "associated_with",
+      "roles": {
+        "marker": "Elevated brain tumor necrosis factor alpha",
+        "population": "Alzheimer transgenic mice",
+        "outcome": "Intraneuronal amyloid beta and cognitive deficits"
+      },
+      "conditions": [
+        "Mouse Alzheimer models"
+      ],
+      "attrs": {
+        "brain_region": "entorhinal cortex"
+      }
+    },
+    {
+      "key": "tnfr1_deletion",
+      "units": [
+        16
+      ],
+      "en": "Deleting TNFR1 in AD transgenic mice reduced Aβ formation/plaque burden, BACE1 expression and cognitive deficits; genetic TNFR1 signaling inactivation prevented intraneuronal Aβ accumulation.",
+      "ru": "Удаление TNFR1 у трансгенных мышей уменьшало образование и бляшки Aβ, экспрессию BACE1 и когнитивный дефицит; инактивация сигнализации TNFR1 предотвращала внутринейронное накопление Aβ.",
+      "predicate": "reduced_after_intervention",
+      "roles": {
+        "intervention": "TNFR1 deletion or signaling inactivation",
+        "population": "Alzheimer transgenic mice"
+      },
+      "attrs": {
+        "outcomes": "reduced Aβ formation; plaque burden; BACE1 expression; cognitive deficits; prevented intraneuronal Aβ accumulation"
+      },
+      "conditions": [
+        "Mouse Alzheimer models"
+      ]
+    },
+    {
+      "key": "tnfr2_deletion",
+      "units": [
+        16
+      ],
+      "en": "Deleting TNFR2 worsened pathology in an AD mouse model; deleting both TNFR1 and TNFR2 exacerbated Aβ/tau pathology, which the review attributes to losing TNFR2 protection.",
+      "ru": "Удаление TNFR2 ухудшало патологию в модели болезни Альцгеймера; удаление обоих рецепторов усиливало Aβ- и тау-патологию, что обзор связывает с потерей защитного эффекта TNFR2.",
+      "predicate": "exacerbated_after_intervention",
+      "roles": {
+        "intervention": "TNFR2 deletion; combined TNFR1/TNFR2 ablation",
+        "population": "Alzheimer transgenic mice",
+        "outcome": "Amyloid beta and tau pathology"
+      },
+      "conditions": [
+        "Mouse Alzheimer models"
+      ],
+      "attrs": {
+        "author_explanation": "aggravation of TNFR1-mediated pathology resulting from silencing TNFR2"
+      }
+    },
+    {
+      "key": "tnf_processing",
+      "units": [
+        16
+      ],
+      "en": "In mouse AD models TNF-α increased Aβ production through beta-secretase expression and gamma-secretase activity; chronic neuronal TNF-α expression caused extensive neuronal death.",
+      "ru": "В мышиных моделях TNF-α усиливал образование Aβ через β-секретазу и активность γ-секретазы; хроническая нейрональная экспрессия TNF-α вызывала выраженную гибель нейронов.",
+      "predicate": "tnf_pathological_effect",
+      "roles": {
+        "factor": "Tumor necrosis factor alpha",
+        "population": "Alzheimer transgenic mice"
+      },
+      "logic": "conjunction",
+      "claims": [
+        {
+          "predicate": "increases",
+          "roles": {
+            "factor": "Tumor necrosis factor alpha",
+            "outcome": "Amyloid beta production"
+          },
+          "attrs": {
+            "mechanism": "upregulated beta-secretase expression and gamma-secretase activity"
+          }
+        },
+        {
+          "predicate": "causes",
+          "roles": {
+            "factor": "Chronic neuronal tumor necrosis factor alpha expression",
+            "outcome": "Extensive neuronal cell death"
+          }
+        }
+      ],
+      "conditions": [
+        "Reported transgenic mouse evidence"
+      ]
+    },
+    {
+      "key": "multistage",
+      "units": [
+        16,
+        17,
+        18
+      ],
+      "en": "Excess brain TNF-α may enhance Aβ production, inhibit microglial Aβ clearance, cause synaptic dysfunction and neuronal loss, and accelerate cognitive decline; these processes implicate TNF-α across AD stages.",
+      "ru": "Избыток мозгового TNF-α может усиливать продукцию Aβ, тормозить его микроглиальный клиренс, нарушать синапсы и повышать гибель нейронов; эти процессы связывают TNF-α с разными стадиями болезни.",
+      "predicate": "implicated_in",
+      "roles": {
+        "factor": "Excess brain tumor necrosis factor alpha",
+        "condition": "Alzheimer disease"
+      },
+      "modality": "may; reviewed evidence",
+      "type": "conclusion",
+      "grounding": "source_argument",
+      "attrs": {
+        "processes": "increased Aβ production; decreased microglial clearance; synaptic dysfunction; neuronal loss; cell death; accelerated progression and cognitive decline"
+      },
+      "conditions": [
+        "Figure 1 and reviewed studies; not proof of human treatment efficacy"
+      ]
+    },
+    {
+      "key": "approved",
+      "units": [
+        20
+      ],
+      "en": "FDA-approved biologic TNF inhibitors treat peripheral inflammatory diseases (Crohn disease, rheumatoid arthritis and psoriatic arthritis); examples are infliximab, adalimumab, golimumab, certolizumab and etanercept.",
+      "ru": "Биологические ингибиторы TNF одобрены FDA для периферических воспалительных болезней, включая болезнь Крона и ревматоидный/псориатический артрит; перечислены инфликсимаб, адалимумаб, голимумаб, цертолизумаб и этанерцепт.",
+      "predicate": "approved_for",
+      "roles": {
+        "intervention": "Biologic TNF-alpha inhibitors",
+        "indication": "Peripheral inflammatory diseases"
+      },
+      "time": "2017 review",
+      "attrs": {
+        "examples": "infliximab; adalimumab; golimumab; certolizumab; etanercept",
+        "indications": "Crohn disease; rheumatoid arthritis; psoriatic arthritis"
+      }
+    },
+    {
+      "key": "inhibitor_mechanism",
+      "units": [
+        20
+      ],
+      "en": "TNF-specific antibodies and etanercept bind soluble and membrane TNF-α and prevent signaling through both receptors; etanercept fuses the TNFR2 extracellular domain to human IgG1 Fc.",
+      "ru": "Антитела к TNF и этанерцепт связывают растворимую и мембранную формы и подавляют сигнализацию обоих рецепторов; этанерцепт объединяет внеклеточный домен TNFR2 с Fc IgG1 человека.",
+      "predicate": "inhibitor_mechanism",
+      "roles": {
+        "intervention": "TNF-specific monoclonal antibodies and etanercept",
+        "target": "Soluble and membrane TNF-alpha"
+      },
+      "type": "definition",
+      "attrs": {
+        "etanercept_structure": "TNFR2 extracellular domain fused to the c-terminal of human IgG1 Fc",
+        "effect": "prevents TNFR1 and TNFR2 signaling"
+      }
+    },
+    {
+      "key": "dominant_negative",
+      "units": [
+        21,
+        22
+      ],
+      "en": "Intrahippocampal/intracerebral delivery of recombinant dominant-negative TNF inhibitor in AD transgenic mice inhibited soluble-TNF signaling and reduced preplaque Aβ pathology.",
+      "ru": "Интрацеребральное введение доминантно-негативного ингибитора TNF (таблица: интрагиппокампальное) у трансгенных мышей подавляло растворимый TNF и уменьшало предбляшечную патологию Aβ.",
+      "predicate": "reduced_after_intervention",
+      "roles": {
+        "intervention": "Recombinant dominant negative TNF inhibitor",
+        "population": "Alzheimer transgenic mice",
+        "outcome": "Preplaque amyloid beta pathology"
+      },
+      "conditions": [
+        "Mouse study; intracerebral delivery, Table 1 specifies intrahippocampal"
+      ],
+      "attrs": {
+        "table_evidence": "Table 1 raster transcription attached at U22"
+      }
+    },
+    {
+      "key": "mouse_infliximab",
+      "units": [
+        21,
+        22
+      ],
+      "en": "Intracerebroventricular infliximab in mouse AD models reduced TNF-α, amyloid plaques, tau phosphorylation and cognitive deficits.",
+      "ru": "Внутрижелудочковый инфликсимаб в мышиных моделях уменьшал TNF-α, амилоидные бляшки, фосфорилирование тау и когнитивные дефициты.",
+      "predicate": "reduced_after_intervention",
+      "roles": {
+        "intervention": "Intracerebroventricular infliximab",
+        "population": "Mouse models of Alzheimer disease",
+        "outcome": "TNF-alpha, amyloid plaques, tau phosphorylation and cognitive deficits"
+      },
+      "conditions": [
+        "Preclinical mouse studies"
+      ]
+    },
+    {
+      "key": "etanercept_open",
+      "units": [
+        21,
+        22
+      ],
+      "en": "A small open-label six-month study reported improved ADAS-Cog, Severe Impairment Battery and MMSE after perispinal etanercept 25–50 mg/week in AD patients.",
+      "ru": "Небольшое открытое шестимесячное исследование сообщало улучшение ADAS-Cog, Severe Impairment Battery и MMSE после периспинального этанерцепта 25–50 мг в неделю.",
+      "predicate": "improved_after_intervention",
+      "roles": {
+        "intervention": "Perispinal etanercept",
+        "population": "Patients with Alzheimer disease",
+        "outcome": "ADAS-Cog, Severe Impairment Battery and MMSE"
+      },
+      "attrs": {
+        "duration": {
+          "value": 6,
+          "unit": "month"
+        },
+        "dose": {
+          "value": "25–50",
+          "unit": "mg/week"
+        },
+        "significance": "significant improvement"
+      },
+      "conditions": [
+        "Small open-label human study; no controlled efficacy conclusion"
+      ]
+    },
+    {
+      "key": "perispinal_uncertainty",
+      "units": [
+        21
+      ],
+      "en": "Rapid CSF penetration and nonsynaptic signaling were hypothesized explanations for perispinal etanercept improvement; another study found perispinal accumulation without consistent intracranial delivery.",
+      "ru": "Для улучшения после периспинального этанерцепта предложены гипотезы быстрого проникновения в ликвор и внесинаптической сигнализации; другое исследование не наблюдало стабильной внутричерепной доставки.",
+      "predicate": "perispinal_delivery_evidence",
+      "roles": {
+        "intervention": "Perispinal etanercept"
+      },
+      "logic": "contrast",
+      "claims": [
+        {
+          "predicate": "explained_by",
+          "roles": {
+            "effect": "Reported cognitive improvement",
+            "mechanism": "Rapid CSF penetration and nonsynaptic signaling"
+          },
+          "modality": "hypothesized"
+        },
+        {
+          "predicate": "consistently_delivered_to",
+          "roles": {
+            "intervention": "Perispinal etanercept",
+            "destination": "Intracranial compartment"
+          },
+          "negated": true,
+          "attrs": {
+            "observed_distribution": "perispinal drug accumulation"
+          }
+        }
+      ],
+      "conditions": [
+        "Separate studies; hypothesis is not established delivery"
+      ]
+    },
+    {
+      "key": "infliximab_case",
+      "units": [
+        21,
+        22
+      ],
+      "en": "A female AD case had rapid cognitive improvement after intrathecal infliximab; Table 1 also reports changes in blood/CSF Aβ and tau, without stating their direction.",
+      "ru": "После интратекального инфликсимаба у пациентки описано быстрое когнитивное улучшение; таблица также сообщает изменения Aβ и тау в крови/ликворе без направления изменений.",
+      "predicate": "improved_after_intervention",
+      "roles": {
+        "intervention": "Intrathecal infliximab",
+        "population": "A female patient with Alzheimer disease",
+        "outcome": "Cognition"
+      },
+      "conditions": [
+        "Single human case report; not controlled efficacy evidence"
+      ],
+      "attrs": {
+        "table_biomarkers": "change in blood and CSF Aβ and tau; direction unspecified",
+        "table_evidence": "Table 1 raster transcription attached at U22"
+      }
+    },
+    {
+      "key": "trials_needed",
+      "units": [
+        21,
+        29
+      ],
+      "en": "Larger controlled trials are needed to confirm the encouraging small perispinal/open-label and intrathecal case findings for biologic TNF inhibitors in AD.",
+      "ru": "Необходимы более крупные контролируемые исследования, чтобы подтвердить обнадёживающие открытые исследования и единичные случаи ингибирования TNF при болезни Альцгеймера.",
+      "predicate": "confirm_efficacy",
+      "roles": {
+        "intervention": "Biologic TNF-alpha inhibitors",
+        "condition": "Alzheimer disease"
+      },
+      "kind": "action",
+      "status": "unresolved",
+      "type": "goal",
+      "modality": "required",
+      "conditions": [
+        "Larger controlled trials; current findings are not confirmation"
+      ]
+    },
+    {
+      "key": "bbb_limit",
+      "units": [
+        5,
+        23,
+        29
+      ],
+      "en": "Approved biologic TNF inhibitors have limited BBB penetration, and invasive delivery may be unsafe or impractical for chronic AD dosing.",
+      "ru": "Одобренные биологические ингибиторы TNF плохо проникают через ГЭБ; инвазивная доставка может быть небезопасной или непрактичной для хронического лечения.",
+      "predicate": "limited_by",
+      "roles": {
+        "intervention": "Biologic TNF-alpha inhibitors",
+        "barrier": "Blood brain barrier"
+      },
+      "modality": "limited penetration; invasive routes may be unsafe or impractical",
+      "conditions": [
+        "Chronic Alzheimer disease treatment"
+      ]
+    },
+    {
+      "key": "peripheral_trial",
+      "units": [
+        23
+      ],
+      "en": "Peripheral TNF modulation showed promise in transgenic mice, but a small randomized double-blind phase-II trial of weekly subcutaneous etanercept in mild-to-moderate AD found no improvement in cognition, global function or behavior.",
+      "ru": "Периферическое подавление TNF было перспективно у мышей, но небольшое рандомизированное двойное слепое исследование фазы II подкожного этанерцепта не показало улучшения когнитивных, глобальных и поведенческих функций.",
+      "predicate": "peripheral_treatment_evidence",
+      "roles": {
+        "intervention": "Subcutaneous etanercept"
+      },
+      "logic": "contrast",
+      "claims": [
+        {
+          "predicate": "showed_promising_results",
+          "roles": {
+            "intervention": "Peripheral TNF-alpha modulation",
+            "population": "Alzheimer transgenic mice"
+          }
+        },
+        {
+          "predicate": "improved",
+          "roles": {
+            "intervention": "Weekly subcutaneous etanercept",
+            "population": "Patients with mild-to-moderate Alzheimer dementia",
+            "outcome": "Cognition, global function and behavior"
+          },
+          "negated": true,
+          "attrs": {
+            "design": "small randomized double-blind phase 2 trial"
+          }
+        }
+      ],
+      "time": "Evidence reviewed in 2017"
+    },
+    {
+      "key": "peripheral_task",
+      "units": [
+        23,
+        29
+      ],
+      "en": "Further studies must determine whether modulating peripheral TNF-α improves clinical AD outcomes and how it affects AD pathology.",
+      "ru": "Нужно выяснить, улучшает ли модуляция периферического TNF-α клинические исходы и как влияет на патологию болезни Альцгеймера.",
+      "predicate": "determine_clinical_effect",
+      "roles": {
+        "intervention": "Peripheral TNF-alpha modulation",
+        "condition": "Alzheimer disease"
+      },
+      "kind": "action",
+      "status": "unresolved",
+      "type": "goal"
+    },
+    {
+      "key": "mth_definition",
+      "units": [
+        24,
+        25,
+        26
+      ],
+      "en": "A BBB molecular Trojan horse is an endogenous peptide or peptidomimetic antibody transported through endogenous receptors such as transferrin or insulin receptors, ferrying an attached biologic into brain.",
+      "ru": "Молекулярный «троянский конь» для ГЭБ — эндогенный пептид или пептидомиметическое антитело, переносимое через рецепторы трансферрина или инсулина и доставляющее присоединённый препарат в мозг.",
+      "predicate": "characterized_by",
+      "roles": {
+        "subject": "Blood brain barrier molecular Trojan horse",
+        "mechanism": "Receptor-mediated transport"
+      },
+      "type": "definition",
+      "attrs": {
+        "receptor_examples": "transferrin receptor; insulin receptor",
+        "cargo": "attached biologic drug"
+      }
+    },
+    {
+      "key": "engineer_mouse",
+      "units": [
+        24,
+        25,
+        26
+      ],
+      "en": "Engineer a mouse-targeted cTfRMAb-TNFR fusion by joining the TNFR2 extracellular-domain amino terminus to the chimeric transferrin-receptor antibody heavy-chain carboxyl terminus; this leaves the TfR-binding terminus free and TNFR dimeric.",
+      "ru": "Создан мышиный cTfRMAb-TNFR: N-конец внеклеточного домена TNFR2 соединён с C-концом тяжёлой цепи антитела к TfR; участок связывания TfR свободен, TNFR располагается как димер.",
+      "predicate": "engineer_fusion",
+      "roles": {
+        "product": "cTfRMAb-TNFR",
+        "component": "Human TNFR2 extracellular domain and chimeric mouse transferrin receptor antibody"
+      },
+      "kind": "action",
+      "status": "performed",
+      "attrs": {
+        "orientation": "TNFR2 ECD amino terminus to heavy-chain carboxyl terminus",
+        "configuration": "TNFR ECD dimer; cTfRMAb amino terminus available"
+      }
+    },
+    {
+      "key": "human_mouse_binding",
+      "units": [
+        24
+      ],
+      "en": "Human and mouse monomeric TNF-α have high amino-acid identity; human TNFR binds mouse TNF-α with high affinity, supporting use of human TNFR in the mouse fusion.",
+      "ru": "Мономерные TNF-α человека и мыши имеют высокую идентичность; человеческий TNFR обладает высоким сродством к мышиному TNF, что обосновывает его использование в мышиной конструкции.",
+      "predicate": "binds_with_high_affinity",
+      "roles": {
+        "receptor": "Human TNFR",
+        "ligand": "Mouse tumor necrosis factor alpha"
+      },
+      "attrs": {
+        "sequence_identity": "high human–mouse monomeric TNF-alpha amino acid identity"
+      },
+      "conditions": [
+        "Rationale for mouse-targeted fusion design"
+      ]
+    },
+    {
+      "key": "affinity",
+      "units": [
+        24
+      ],
+      "en": "The cTfRMAb-TNFR fusion binds mouse TfR with Kd 2.6±0.3 nM and TNF-α with Kd 96±34 pM.",
+      "ru": "cTfRMAb-TNFR связывает мышиный TfR с Kd 2,6±0,3 нМ и TNF-α с Kd 96±34 пМ.",
+      "predicate": "binding_affinity",
+      "roles": {
+        "intervention": "cTfRMAb-TNFR"
+      },
+      "logic": "conjunction",
+      "claims": [
+        {
+          "roles": {
+            "receptor": "Mouse transferrin receptor"
+          },
+          "attrs": {
+            "Kd": {
+              "value": 2.6,
+              "unit": "nM"
+            },
+            "uncertainty": {
+              "value": 0.3,
+              "unit": "nM"
+            }
+          }
+        },
+        {
+          "roles": {
+            "ligand": "Tumor necrosis factor alpha"
+          },
+          "attrs": {
+            "Kd": {
+              "value": 96,
+              "unit": "pM"
+            },
+            "uncertainty": {
+              "value": 34,
+              "unit": "pM"
+            }
+          }
+        }
+      ],
+      "conditions": [
+        "Binding assay of engineered fusion"
+      ]
+    },
+    {
+      "key": "bifunctional",
+      "units": [
+        24,
+        25,
+        26
+      ],
+      "en": "The bifunctional mouse fusion permits rapid noninvasive transvascular delivery through TfR-mediated transcytosis and, once in brain, sequestration of excess TNF-α.",
+      "ru": "Двухфункциональная мышиная конструкция обеспечивает неинвазивный транспорт через TfR и связывает избыточный TNF-α после попадания в мозг.",
+      "predicate": "fusion_function",
+      "roles": {
+        "intervention": "cTfRMAb-TNFR"
+      },
+      "logic": "conjunction",
+      "claims": [
+        {
+          "predicate": "transported_via",
+          "roles": {
+            "intervention": "cTfRMAb-TNFR",
+            "mechanism": "Transferrin-receptor-mediated BBB transcytosis"
+          }
+        },
+        {
+          "predicate": "sequesters",
+          "roles": {
+            "intervention": "TNFR domain of cTfRMAb-TNFR",
+            "target": "Excess brain tumor necrosis factor alpha"
+          }
+        }
+      ],
+      "conditions": [
+        "Mouse-targeted molecular Trojan horse"
+      ]
+    },
+    {
+      "key": "brain_pk",
+      "units": [
+        24
+      ],
+      "en": "Pharmacokinetic analysis found intraperitoneal, subcutaneous and intravenous cTfRMAb-TNFR delivery produced brain fusion concentrations 20–50 times pathological brain TNF-α concentrations.",
+      "ru": "Фармакокинетический анализ показал, что внутрибрюшинное, подкожное и внутривенное введение создаёт мозговую концентрацию cTfRMAb-TNFR в 20–50 раз выше патологической концентрации TNF-α.",
+      "predicate": "pharmacokinetic_result",
+      "roles": {
+        "intervention": "cTfRMAb-TNFR",
+        "reference": "Pathological brain TNF-alpha concentration"
+      },
+      "attrs": {
+        "concentration_ratio": {
+          "value": "20–50",
+          "unit": "fold"
+        },
+        "routes": "intraperitoneal; subcutaneous; intravenous"
+      },
+      "conditions": [
+        "Mouse-targeted BBB-penetrating fusion"
+      ]
+    },
+    {
+      "key": "routes",
+      "units": [
+        24
+      ],
+      "en": "Intravenous delivery is preferred for acute neurological conditions such as ischemic stroke; intraperitoneal/subcutaneous routes are considered more practical for chronic conditions including AD.",
+      "ru": "Внутривенное введение предпочтительно при острых неврологических состояниях, например ишемическом инсульте; внутрибрюшинное/подкожное более практично для хронических состояний, включая болезнь Альцгеймера.",
+      "predicate": "route_suitability",
+      "roles": {
+        "intervention": "cTfRMAb-TNFR"
+      },
+      "logic": "contrast",
+      "claims": [
+        {
+          "roles": {
+            "route": "Intravenous administration",
+            "context": "Acute neurological conditions including ischemic stroke"
+          },
+          "modality": "preferred"
+        },
+        {
+          "roles": {
+            "route": "Intraperitoneal or subcutaneous administration",
+            "context": "Chronic neurological conditions including Alzheimer disease"
+          },
+          "modality": "more practical"
+        }
+      ],
+      "conditions": [
+        "Preclinical fusion delivery discussion"
+      ]
+    },
+    {
+      "key": "mouse_efficacy",
+      "units": [
+        24
+      ],
+      "en": "The cTfRMAb-TNFR fusion was protective in mouse ischemic-stroke and Parkinson-disease models; its evaluation in an AD mouse model was ongoing.",
+      "ru": "cTfRMAb-TNFR был защитным в мышиных моделях ишемического инсульта и болезни Паркинсона; исследование в модели болезни Альцгеймера продолжалось.",
+      "predicate": "preclinical_evidence",
+      "roles": {
+        "intervention": "cTfRMAb-TNFR"
+      },
+      "logic": "contrast",
+      "claims": [
+        {
+          "predicate": "protective_in",
+          "roles": {
+            "intervention": "cTfRMAb-TNFR",
+            "population": "Mouse ischemic stroke and Parkinson disease models"
+          }
+        },
+        {
+          "predicate": "investigated_in",
+          "roles": {
+            "intervention": "cTfRMAb-TNFR",
+            "population": "Mouse model of Alzheimer disease"
+          },
+          "modality": "ongoing; efficacy not yet established"
+        }
+      ],
+      "time": "At publication in 2017"
+    },
+    {
+      "key": "engineer_human",
+      "units": [
+        27
+      ],
+      "en": "For potential human use, investigators engineered HIRMAb-TNFR by fusing TNFR2 extracellular domain to a chimeric/humanized human-insulin-receptor antibody; HIRMAb cross-reacts with Old World primate insulin receptors.",
+      "ru": "Для потенциального применения у человека создан HIRMAb-TNFR с внеклеточным доменом TNFR2 и антителом к человеческому инсулиновому рецептору; антитело перекрёстно реагирует у обезьян Старого Света.",
+      "predicate": "engineer_fusion",
+      "roles": {
+        "product": "HIRMAb-TNFR",
+        "component": "TNFR2 extracellular domain and human insulin receptor antibody"
+      },
+      "kind": "action",
+      "status": "performed",
+      "attrs": {
+        "cross_reactivity": "Old World primate insulin receptor",
+        "author_characterization": "HIRMAb described as the most potent engineered molecular Trojan horse for human brain"
+      }
+    },
+    {
+      "key": "primate_uptake",
+      "units": [
+        27
+      ],
+      "en": "In rhesus monkeys, an intravenous 0.2-mg/kg HIRMAb-TNFR dose yielded brain uptake 3±0.1% injected dose/100g brain versus 0.23±0.06% for TNFR:Fc.",
+      "ru": "У макак-резусов после внутривенных 0,2 мг/кг HIRMAb-TNFR накопление в мозге составило 3±0,1% введённой дозы на 100 г против 0,23±0,06% для TNFR:Fc.",
+      "predicate": "brain_uptake_comparison",
+      "roles": {
+        "population": "Rhesus monkeys"
+      },
+      "type": "comparison",
+      "logic": "contrast",
+      "claims": [
+        {
+          "roles": {
+            "intervention": "HIRMAb-TNFR"
+          },
+          "attrs": {
+            "uptake": {
+              "value": 3,
+              "unit": "percent injected dose/100g brain"
+            },
+            "uncertainty": {
+              "value": 0.1,
+              "unit": "percent injected dose/100g brain"
+            }
+          }
+        },
+        {
+          "roles": {
+            "intervention": "TNFR:Fc"
+          },
+          "attrs": {
+            "uptake": {
+              "value": 0.23,
+              "unit": "percent injected dose/100g brain"
+            },
+            "uncertainty": {
+              "value": 0.06,
+              "unit": "percent injected dose/100g brain"
+            }
+          }
+        }
+      ],
+      "attrs": {
+        "HIRMAb_TNFR_dose": {
+          "value": 0.2,
+          "unit": "mg/kg"
+        }
+      },
+      "conditions": [
+        "Intravenous administration; rhesus monkey experiment"
+      ]
+    },
+    {
+      "key": "primate_safety",
+      "units": [
+        27
+      ],
+      "en": "Chronic high-dose administration of a HIRMAb-based fusion protein (20 mg/kg) was reported safe in rhesus monkeys; this is not established safety of AD treatment in humans.",
+      "ru": "Хроническое введение HIRMAb-конструкции в высокой дозе 20 мг/кг описано как безопасное у макак-резусов; это не установленная безопасность лечения людей с болезнью Альцгеймера.",
+      "predicate": "reported_safe",
+      "roles": {
+        "intervention": "HIRMAb-based fusion protein",
+        "population": "Rhesus monkeys"
+      },
+      "attrs": {
+        "dose": {
+          "value": 20,
+          "unit": "mg/kg"
+        }
+      },
+      "conditions": [
+        "Chronic primate administration; not a human AD clinical safety study"
+      ]
+    },
+    {
+      "key": "conclusion",
+      "units": [
+        5,
+        21,
+        23,
+        24,
+        29
+      ],
+      "en": "TNF-α inhibition is a potential AD strategy: clinical and animal evidence motivates it, but BBB delivery and controlled human efficacy remain limitations; molecular Trojan horses may offer noninvasive peripheral-and-brain targeting.",
+      "ru": "Ингибирование TNF-α — потенциальная стратегия для болезни Альцгеймера; её ограничивают доставка через ГЭБ и неподтверждённая эффективность у людей; молекулярные «троянские кони» могут позволить воздействие на периферию и мозг.",
+      "predicate": "potential_treatment",
+      "roles": {
+        "intervention": "Biologic TNF-alpha inhibition with molecular Trojan horse delivery",
+        "condition": "Alzheimer disease"
+      },
+      "type": "conclusion",
+      "grounding": "source_argument",
+      "modality": "potential; may be reasonable",
+      "conditions": [
+        "Not established controlled clinical efficacy"
+      ],
+      "time": "2017 review conclusions"
+    },
+    {
+      "key": "test_mouse",
+      "units": [
+        24
+      ],
+      "en": "Investigators tested the engineered cTfRMAb-TNFR fusion in mouse neurological models and characterized systemic pharmacokinetics.",
+      "ru": "Исследователи проверили cTfRMAb-TNFR в мышиных неврологических моделях и охарактеризовали системную фармакокинетику.",
+      "predicate": "test_fusion",
+      "roles": {
+        "intervention": "cTfRMAb-TNFR",
+        "population": "Mouse neurological disease models"
+      },
+      "kind": "action",
+      "status": "performed",
+      "conditions": [
+        "Reported completed preclinical tests; AD-model investigation still ongoing"
+      ]
+    },
+    {
+      "key": "test_primate",
+      "units": [
+        27
+      ],
+      "en": "Measure brain uptake after intravenous fusion-protein dosing in rhesus monkeys and evaluate chronic high-dose HIRMAb-based administration.",
+      "ru": "Измерить поступление конструкции в мозг макак-резусов после внутривенного введения и оценить хроническое введение высокой дозы HIRMAb-конструкции.",
+      "predicate": "evaluate_fusion",
+      "roles": {
+        "intervention": "HIRMAb-based fusion proteins",
+        "population": "Rhesus monkeys"
+      },
+      "kind": "action",
+      "status": "performed",
+      "conditions": [
+        "Reported primate experiments, not human AD treatment"
+      ]
+    },
+    {
+      "key": "open_trial_action",
+      "units": [
+        21
+      ],
+      "en": "A reported open-label clinical study administered perispinal etanercept for six months and assessed cognition in AD patients.",
+      "ru": "В цитируемом открытом исследовании пациентам вводили периспинальный этанерцепт в течение шести месяцев и оценивали когнитивные функции.",
+      "predicate": "administer_and_assess",
+      "roles": {
+        "intervention": "Perispinal etanercept",
+        "population": "Patients with Alzheimer disease"
+      },
+      "kind": "action",
+      "status": "performed",
+      "attrs": {
+        "duration": {
+          "value": 6,
+          "unit": "month"
+        },
+        "dose": {
+          "value": "25–50",
+          "unit": "mg/week"
+        }
+      },
+      "conditions": [
+        "Small open-label human study"
+      ]
+    },
+    {
+      "key": "controlled_trial_action",
+      "units": [
+        23
+      ],
+      "en": "A reported randomized double-blind phase-II human trial tested weekly subcutaneous etanercept for cognition, global function and behavior in mild-to-moderate AD.",
+      "ru": "В цитируемом рандомизированном двойном слепом исследовании фазы II проверяли еженедельный подкожный этанерцепт при лёгкой и умеренной болезни Альцгеймера.",
+      "predicate": "test_clinical_treatment",
+      "roles": {
+        "intervention": "Weekly subcutaneous etanercept",
+        "population": "Patients with mild-to-moderate Alzheimer dementia"
+      },
+      "kind": "action",
+      "status": "performed",
+      "conditions": [
+        "Small randomized double-blind phase 2 trial"
+      ]
+    }
+  ],
+  "transitions": [
+    {
+      "sources": [
+        "hallmarks"
+      ],
+      "target": "app",
+      "units": [
+        9
+      ],
+      "reason": "The plaque hallmark is immediately developed by the source's account of APP cleavage and Aβ aggregation.",
+      "usage": "development"
+    },
+    {
+      "sources": [
+        "receptors"
+      ],
+      "target": "tnfr1",
+      "units": [
+        13
+      ],
+      "reason": "The two-receptor distinction is specified by the TNFR1 activation and signaling properties.",
+      "usage": "development"
+    },
+    {
+      "sources": [
+        "receptors"
+      ],
+      "target": "tnfr2",
+      "units": [
+        13
+      ],
+      "reason": "The two-receptor distinction is specified by the contrasting TNFR2 activation and signaling properties.",
+      "usage": "development"
+    },
+    {
+      "sources": [
+        "tnfr1",
+        "tnfr2"
+      ],
+      "target": "receptor_contrast",
+      "units": [
+        13
+      ],
+      "reason": "The receptor descriptions jointly ground the source's overall apoptosis-versus-survival contrast.",
+      "usage": "premise"
+    },
+    {
+      "sources": [
+        "postmortem",
+        "brain_receptors",
+        "genetics",
+        "csf_serum",
+        "mouse_elevation",
+        "tnfr1_deletion",
+        "tnfr2_deletion",
+        "tnf_processing"
+      ],
+      "target": "multistage",
+      "units": [
+        15,
+        16,
+        17,
+        18
+      ],
+      "reason": "The review jointly uses the reported clinical, genetic and mouse findings to conclude that TNF-driven processes participate at multiple AD stages.",
+      "usage": "evidence"
+    },
+    {
+      "sources": [
+        "approved"
+      ],
+      "target": "inhibitor_mechanism",
+      "units": [
+        20
+      ],
+      "reason": "The named approved biologics are immediately specified by their binding and fusion-protein mechanisms.",
+      "usage": "development"
+    },
+    {
+      "sources": [
+        "open_trial_action"
+      ],
+      "target": "etanercept_open",
+      "units": [
+        21
+      ],
+      "reason": "The cognitive improvements are reported results of the six-month open-label administration and assessment.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "etanercept_open"
+      ],
+      "target": "perispinal_uncertainty",
+      "units": [
+        21
+      ],
+      "reason": "The observed open-label improvement is immediately developed by the proposed delivery mechanism and conflicting distribution evidence.",
+      "usage": "development"
+    },
+    {
+      "sources": [
+        "etanercept_open",
+        "infliximab_case",
+        "perispinal_uncertainty"
+      ],
+      "target": "trials_needed",
+      "units": [
+        21,
+        29
+      ],
+      "reason": "The provisional human findings and uncertain delivery motivate the explicitly required larger controlled confirmation.",
+      "usage": "prerequisite"
+    },
+    {
+      "sources": [
+        "controlled_trial_action"
+      ],
+      "target": "peripheral_trial",
+      "units": [
+        23
+      ],
+      "reason": "The reported absence of human benefit is an outcome of the completed controlled trial; the mouse result remains contrasting context.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "peripheral_trial"
+      ],
+      "target": "peripheral_task",
+      "units": [
+        23,
+        29
+      ],
+      "reason": "The failure to show clinical benefit motivates the explicit unresolved task of determining the clinical effect.",
+      "usage": "prerequisite"
+    },
+    {
+      "sources": [
+        "bbb_limit",
+        "mth_definition",
+        "human_mouse_binding"
+      ],
+      "target": "engineer_mouse",
+      "units": [
+        24
+      ],
+      "reason": "The BBB transport strategy and explicitly stated human–mouse receptor-binding rationale are used in constructing the mouse fusion.",
+      "usage": "prerequisite"
+    },
+    {
+      "sources": [
+        "engineer_mouse"
+      ],
+      "target": "test_mouse",
+      "units": [
+        24
+      ],
+      "reason": "The engineered fusion is the necessary immediate input to its reported tests and pharmacokinetic characterization.",
+      "usage": "prerequisite"
+    },
+    {
+      "sources": [
+        "test_mouse"
+      ],
+      "target": "affinity",
+      "units": [
+        24
+      ],
+      "reason": "Testing the engineered construct yields its reported binding constants.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "mth_definition",
+        "affinity"
+      ],
+      "target": "bifunctional",
+      "units": [
+        24,
+        25,
+        26
+      ],
+      "reason": "The source explicitly infers the two functions from receptor-mediated transport and high-affinity binding to both TfR and TNF-alpha.",
+      "usage": "premise"
+    },
+    {
+      "sources": [
+        "test_mouse"
+      ],
+      "target": "brain_pk",
+      "units": [
+        24
+      ],
+      "reason": "The completed pharmacokinetic analysis yields the brain-to-pathological-TNF concentration ratio.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "test_mouse"
+      ],
+      "target": "mouse_efficacy",
+      "units": [
+        24
+      ],
+      "reason": "Completed model tests supply the reported stroke/Parkinson protection; ongoing AD investigation is retained separately in the contrast frame.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "mth_definition"
+      ],
+      "target": "engineer_human",
+      "units": [
+        27
+      ],
+      "reason": "The receptor-mediated Trojan-horse design is applied to engineer the human-insulin-receptor fusion.",
+      "usage": "method"
+    },
+    {
+      "sources": [
+        "engineer_human"
+      ],
+      "target": "test_primate",
+      "units": [
+        27
+      ],
+      "reason": "The engineered primate-cross-reactive construct is the immediate prerequisite of its reported primate evaluation.",
+      "usage": "prerequisite"
+    },
+    {
+      "sources": [
+        "test_primate"
+      ],
+      "target": "primate_uptake",
+      "units": [
+        27
+      ],
+      "reason": "The primate dosing and uptake measurement yield the reported quantitative comparison.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "test_primate"
+      ],
+      "target": "primate_safety",
+      "units": [
+        27
+      ],
+      "reason": "The chronic high-dose primate evaluation yields the limited primate safety observation.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "multistage",
+        "bbb_limit",
+        "peripheral_trial",
+        "trials_needed",
+        "bifunctional"
+      ],
+      "target": "conclusion",
+      "units": [
+        29
+      ],
+      "reason": "The source's conclusion jointly weighs multifactorial TNF involvement, delivery barriers, unconfirmed clinical efficacy and the noninvasive transport strategy.",
+      "usage": "premise"
+    }
+  ],
+  "excluded_units": {
+    "U1": "Document heading retained outside the knowledge graph.",
+    "U2": "Publication metadata retained as document identity.",
+    "U3": "Publication metadata retained as document identity.",
+    "U4": "Document heading retained outside the knowledge graph.",
+    "U6": "Indexing keywords retained; substantive claims appear in the knowledge records.",
+    "U7": "Document heading retained outside the knowledge graph.",
+    "U11": "Document heading retained outside the knowledge graph.",
+    "U14": "Document heading retained outside the knowledge graph.",
+    "U19": "Document heading retained outside the knowledge graph.",
+    "U28": "Document heading retained outside the knowledge graph.",
+    "U30": "Document heading retained outside the knowledge graph.",
+    "U31": "Publication administration, peer review, funding, declarations or author credits retained in the complete source, excluded from scientific findings.",
+    "U32": "Publication administration, peer review, funding, declarations or author credits retained in the complete source, excluded from scientific findings.",
+    "U33": "Publication administration, peer review, funding, declarations or author credits retained in the complete source, excluded from scientific findings.",
+    "U34": "Publication administration, peer review, funding, declarations or author credits retained in the complete source, excluded from scientific findings.",
+    "U35": "Publication administration, peer review, funding, declarations or author credits retained in the complete source, excluded from scientific findings."
+  },
+  "concept_aliases": {
+    "Alzheimer disease": [
+      "AD",
+      "Alzheimer’s disease"
+    ],
+    "Tumor necrosis factor alpha": [
+      "TNF-α",
+      "TNFa"
+    ],
+    "Cerebrospinal fluid and serum": [
+      "CSF and serum"
+    ],
+    "Amyloid beta": [
+      "Aβ"
+    ],
+    "Blood brain barrier": [
+      "BBB"
+    ]
+  },
+  "source_attachments": [
+    {
+      "unit_id": "U22",
+      "xml_asset": "10.1177_1179573517709278-table1.jpg",
+      "text": "Table 1. Summary of studies focusing on neutralization of brain TNF-alpha with biologic TNF inhibitors in AD. Columns: biologic TNFI; species; route of administration; therapeutic effect. Row 1: Etanercept; Human; Perispinal; Cognitive improvement [45]. Row 2: Infliximab; Human; Intrathecal; Cognitive improvement, change in blood and CSF Aβ and tau [47]. Row 3 (Infliximab continued): Mouse; Intracerebroventricular; Reduction in Aβ pathology, tau phosphorylation, and cognitive deficits [42–44]. Row 4: Recombinant dominant negative TNFI; Mouse; Intrahippocampal; Reduction in Aβ pathology [35]. Abbreviations: Aβ amyloid beta; AD Alzheimer's disease; CSF cerebrospinal fluid; TNF-alpha tumor necrosis factor alpha; TNFI TNF-alpha inhibitor. Direction of biomarker change in row 2 is not specified.",
+      "author": "Codex",
+      "media_file": "table1.browser.png"
+    }
+  ],
+  "report_ru": "# PMC5436834: ручная карта схемы 6\n\nПолный текст обзора 2017 года прочитан непосредственно, включая обе подписи рисунков и таблицу 1. Растровая таблица прочитана по первоисточнику NCBI; снимок и точная транскрипция сохранены отдельным приложением к подготовленным входам. Координаты U22 указывают на подпись таблицы в неизменённом Markdown; табличные детали подтверждаются приложением, а не текстом подписи. Повторные подписи рисунков объединены в происхождении одинаковых знаний. References сохранены, но исключены из извлечения.\n\nРазделены клинические, мышиные и приматные данные, открытые исследования и контролируемые испытания, гипотезы механизма доставки и установленный транспорт. Сохранены размеры белка, дозы, сроки, Kd, концентрации и ограничения. Утверждения об одобрении и отсутствии терапии относятся к 2017 году. Иллюстрации не добавляют причинные стрелки автоматически.\n\nОбзор говорит о повышении TNF-α в CSF и serum; plasma и IL-6 не добавлены. Это существенное ограничение при проверке ссылки [17] из PMC10000452. В таблице не указано направление изменения Aβ/тау для клинического случая инфликсимаба; оно не выдумано."
+}

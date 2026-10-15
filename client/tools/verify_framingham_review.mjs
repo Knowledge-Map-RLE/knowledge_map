@@ -1,0 +1,23 @@
+// Проверяется работа автономного отчёта и честное указание ограничений.
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
+import { JSDOM } from 'jsdom';
+const html = fs.readFileSync(process.argv[2], 'utf8');
+const dom = new JSDOM(html);
+const { document } = dom.window;
+let networkCalls = 0;
+const forbidden = () => { networkCalls++; throw new Error('Network forbidden'); };
+new Function('document', 'fetch', 'XMLHttpRequest', 'WebSocket', document.querySelector('script').textContent)(document, forbidden, forbidden, forbidden);
+assert.equal(document.documentElement.lang, 'ru');
+document.getElementById('lang').click();
+assert.equal(document.documentElement.lang, 'en');
+assert.equal(document.getElementById('en').hidden, false);
+document.getElementById('lang').click();
+assert.equal(document.getElementById('ru').hidden, false);
+assert.equal(document.querySelectorAll('table tr').length, 4);
+for (const row of [...document.querySelectorAll('table tr')].slice(1)) assert.equal(row.cells[2].textContent, '1');
+assert.match(document.getElementById('ru').textContent, /отбор первого подходящего контроля не завершён/);
+assert.match(document.getElementById('en').textContent, /No incremental graph advantage/);
+assert.equal(document.querySelectorAll('script[src],link[rel="stylesheet"],iframe,img[src^="http"]').length, 0);
+assert.equal(networkCalls, 0);
+process.stdout.write(JSON.stringify({languages: 2, modes: 3, matchesPerMode: 1, networkCalls, visualInspection: false}) + '\n');

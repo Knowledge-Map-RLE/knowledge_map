@@ -1,4 +1,9 @@
+.test-artifacts/
+.pytest-categorical-check-v1/
+pytest-goal-whole-map-20261015/
+
 /models
+
 /tools/llm_extract/*.json
 
 # Byte-compiled / optimized / DLL files

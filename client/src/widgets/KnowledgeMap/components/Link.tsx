@@ -16,6 +16,7 @@ export interface LinkProps {
   color?: number;
   alpha?: number;
   blockWidth?: number;
+  zIndex?: number;
 }
 
 type LineDash = { dash: number; gap: number } | null;
@@ -80,7 +81,7 @@ function strokeDashed(g: Graphics, points: Array<{ x: number; y: number }>, widt
   }
 }
 
-export const Link = memo(function Link({ linkData, blocks, blockMap, isSelected, onClick, perfMode = false, color, alpha = 1, blockWidth = BLOCK_WIDTH }: LinkProps) {
+export const Link = memo(function Link({ linkData, blocks, blockMap, isSelected, onClick, perfMode = false, color, alpha = 1, blockWidth = BLOCK_WIDTH, zIndex = 10 }: LinkProps) {
   const source_block = (blockMap ? blockMap.get(linkData.source_id) : undefined) || (blocks || []).find(block => block.id === linkData.source_id);
   const target_block = (blockMap ? blockMap.get(linkData.target_id) : undefined) || (blocks || []).find(block => block.id === linkData.target_id);
 
@@ -158,7 +159,7 @@ export const Link = memo(function Link({ linkData, blocks, blockMap, isSelected,
       eventMode={perfMode ? 'none' : 'static'}
       cursor={perfMode ? undefined : 'pointer'}
       onClick={perfMode ? undefined : onClick}
-      zIndex={10}
+      zIndex={zIndex}
     />
   );
 });

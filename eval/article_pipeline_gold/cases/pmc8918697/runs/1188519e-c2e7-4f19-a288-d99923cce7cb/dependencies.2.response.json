@@ -1,0 +1,426 @@
+{
+  "occurrences": [],
+  "transitions": [
+    {
+      "id": "T11",
+      "sources": [
+        "B14"
+      ],
+      "target": "B62",
+      "usage": "result",
+      "reason": "The quality assessment yields the reported star profile.",
+      "unit_ids": [
+        "U68"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T12",
+      "sources": [
+        "B13",
+        "B15"
+      ],
+      "target": "B50",
+      "usage": "data",
+      "reason": "The narrative synthesis reports the heterogeneous conversion range using extracted cohort results.",
+      "unit_ids": [
+        "U40",
+        "U62"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T13",
+      "sources": [
+        "B13",
+        "B15"
+      ],
+      "target": "B51",
+      "usage": "data",
+      "reason": "The same synthesis reports endpoint-specific conversion ranges.",
+      "unit_ids": [
+        "U40",
+        "U62"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T14",
+      "sources": [
+        "B20",
+        "B50"
+      ],
+      "target": "B52",
+      "usage": "evidence",
+      "reason": "The authors compare conversion across broader and narrower impairment definitions.",
+      "unit_ids": [
+        "U62"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T34",
+      "sources": [
+        "B30"
+      ],
+      "target": "B41",
+      "usage": "data",
+      "reason": "The conversion value is reported for this specific cohort, diagnostic endpoint and follow-up.",
+      "unit_ids": [
+        "U54",
+        "U55",
+        "U56"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T35",
+      "sources": [
+        "B30"
+      ],
+      "target": "B42",
+      "usage": "data",
+      "reason": "The conversion value is reported for this specific cohort, diagnostic endpoint and follow-up.",
+      "unit_ids": [
+        "U54",
+        "U55",
+        "U56"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T36",
+      "sources": [
+        "B31"
+      ],
+      "target": "B43",
+      "usage": "data",
+      "reason": "The conversion value is reported for this specific cohort, diagnostic endpoint and follow-up.",
+      "unit_ids": [
+        "U54",
+        "U55",
+        "U56"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T37",
+      "sources": [
+        "B32"
+      ],
+      "target": "B44",
+      "usage": "data",
+      "reason": "The conversion value is reported for this specific cohort, diagnostic endpoint and follow-up.",
+      "unit_ids": [
+        "U54",
+        "U55",
+        "U56"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T38",
+      "sources": [
+        "B24"
+      ],
+      "target": "B45",
+      "usage": "data",
+      "reason": "The Shanghai cohort reports this subtype-specific person-time conversion rate.",
+      "unit_ids": [
+        "U54",
+        "U55",
+        "U56"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T39",
+      "sources": [
+        "B24"
+      ],
+      "target": "B46",
+      "usage": "data",
+      "reason": "The Shanghai cohort reports this subtype-specific person-time conversion rate.",
+      "unit_ids": [
+        "U54",
+        "U55",
+        "U56"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T40",
+      "sources": [
+        "B24"
+      ],
+      "target": "B47",
+      "usage": "data",
+      "reason": "The Shanghai cohort reports this subtype-specific person-time conversion rate.",
+      "unit_ids": [
+        "U54",
+        "U55",
+        "U56"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T41",
+      "sources": [
+        "B24"
+      ],
+      "target": "B48",
+      "usage": "data",
+      "reason": "The Shanghai cohort reports this subtype-specific person-time conversion rate.",
+      "unit_ids": [
+        "U54",
+        "U55",
+        "U56"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T42",
+      "sources": [
+        "B24"
+      ],
+      "target": "B49",
+      "usage": "data",
+      "reason": "The Shanghai cohort reports this subtype-specific person-time conversion rate.",
+      "unit_ids": [
+        "U54",
+        "U55",
+        "U56"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T43",
+      "sources": [
+        "B13"
+      ],
+      "target": "B53",
+      "usage": "result",
+      "reason": "The risk synthesis counts significant and assessed studies for the stated factor.",
+      "unit_ids": [
+        "U65"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T44",
+      "sources": [
+        "B13"
+      ],
+      "target": "B54",
+      "usage": "result",
+      "reason": "The risk synthesis counts significant and assessed studies for the stated factor.",
+      "unit_ids": [
+        "U65"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T45",
+      "sources": [
+        "B13"
+      ],
+      "target": "B55",
+      "usage": "result",
+      "reason": "The risk synthesis counts significant and assessed studies for the stated factor.",
+      "unit_ids": [
+        "U65"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T46",
+      "sources": [
+        "B13"
+      ],
+      "target": "B56",
+      "usage": "result",
+      "reason": "The risk synthesis counts significant and assessed studies for the stated factor.",
+      "unit_ids": [
+        "U65"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T47",
+      "sources": [
+        "B13"
+      ],
+      "target": "B57",
+      "usage": "result",
+      "reason": "The risk synthesis counts significant and assessed studies for the stated factor.",
+      "unit_ids": [
+        "U65"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T48",
+      "sources": [
+        "B13"
+      ],
+      "target": "B58",
+      "usage": "result",
+      "reason": "The risk synthesis counts significant and assessed studies for the stated factor.",
+      "unit_ids": [
+        "U65"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T49",
+      "sources": [
+        "B13"
+      ],
+      "target": "B59",
+      "usage": "result",
+      "reason": "The risk synthesis counts significant and assessed studies for the stated factor.",
+      "unit_ids": [
+        "U65"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T50",
+      "sources": [
+        "B13"
+      ],
+      "target": "B60",
+      "usage": "result",
+      "reason": "The risk synthesis counts significant and assessed studies for the stated factor.",
+      "unit_ids": [
+        "U65"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T51",
+      "sources": [
+        "B13"
+      ],
+      "target": "B61",
+      "usage": "result",
+      "reason": "The risk synthesis counts significant and assessed studies for the stated factor.",
+      "unit_ids": [
+        "U65"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T53",
+      "sources": [
+        "B16",
+        "B18",
+        "B19"
+      ],
+      "target": "B63",
+      "usage": "result",
+      "reason": "The specified compatible-study meta-analysis yields the pooled AD proportion and heterogeneity.",
+      "unit_ids": [
+        "U71",
+        "U72",
+        "U73"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T54",
+      "sources": [
+        "B50",
+        "B63"
+      ],
+      "target": "B64",
+      "usage": "evidence",
+      "reason": "The authors interpret the narrative range together with the pooled AD estimate.",
+      "unit_ids": [
+        "U76",
+        "U82"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T55",
+      "sources": [
+        "B18"
+      ],
+      "target": "B65",
+      "usage": "evidence",
+      "reason": "The discussion develops explanations of the geographic evidence gaps.",
+      "unit_ids": [
+        "U77"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T56",
+      "sources": [
+        "B53",
+        "B54",
+        "B55",
+        "B56",
+        "B57",
+        "B58",
+        "B59",
+        "B60",
+        "B61"
+      ],
+      "target": "B66",
+      "usage": "evidence",
+      "reason": "The discussion distinguishes modifiable risks and methodological limitations of the risk synthesis.",
+      "unit_ids": [
+        "U79"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T57",
+      "sources": [
+        "B66",
+        "B5"
+      ],
+      "target": "B67",
+      "usage": "premise",
+      "reason": "The risk interpretation and prior preventive potential motivate an unresolved feasibility question.",
+      "unit_ids": [
+        "U79"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T58",
+      "sources": [
+        "B63",
+        "B20",
+        "B19",
+        "B62"
+      ],
+      "target": "B68",
+      "usage": "evidence",
+      "reason": "The discussion identifies synthesis limitations from heterogeneity, sample coverage and study methods.",
+      "unit_ids": [
+        "U80"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T59",
+      "sources": [
+        "B64",
+        "B65",
+        "B68"
+      ],
+      "target": "B69",
+      "usage": "premise",
+      "reason": "High risk with sparse and heterogeneous data motivates representative harmonized research.",
+      "unit_ids": [
+        "U80",
+        "U81"
+      ],
+      "conditions": []
+    }
+  ]
+}

@@ -1,0 +1,232 @@
+{
+  "U1": {
+    "knowledge_ids": [],
+    "excluded_reason": "Document heading retained outside the knowledge graph."
+  },
+  "U2": {
+    "knowledge_ids": [],
+    "excluded_reason": "Publication metadata retained as document identity."
+  },
+  "U3": {
+    "knowledge_ids": [],
+    "excluded_reason": "Publication metadata retained as document identity."
+  },
+  "U4": {
+    "knowledge_ids": [],
+    "excluded_reason": "Document heading retained outside the knowledge graph."
+  },
+  "U5": {
+    "knowledge_ids": [
+      "K7",
+      "K32",
+      "K46"
+    ],
+    "excluded_reason": null
+  },
+  "U6": {
+    "knowledge_ids": [],
+    "excluded_reason": "Indexing keywords retained; substantive claims appear in the knowledge records."
+  },
+  "U7": {
+    "knowledge_ids": [],
+    "excluded_reason": "Document heading retained outside the knowledge graph."
+  },
+  "U8": {
+    "knowledge_ids": [
+      "K1",
+      "K2"
+    ],
+    "excluded_reason": null
+  },
+  "U9": {
+    "knowledge_ids": [
+      "K3",
+      "K4",
+      "K5",
+      "K6"
+    ],
+    "excluded_reason": null
+  },
+  "U10": {
+    "knowledge_ids": [
+      "K7",
+      "K8"
+    ],
+    "excluded_reason": null
+  },
+  "U11": {
+    "knowledge_ids": [],
+    "excluded_reason": "Document heading retained outside the knowledge graph."
+  },
+  "U12": {
+    "knowledge_ids": [
+      "K9",
+      "K10"
+    ],
+    "excluded_reason": null
+  },
+  "U13": {
+    "knowledge_ids": [
+      "K11",
+      "K12",
+      "K13",
+      "K14"
+    ],
+    "excluded_reason": null
+  },
+  "U14": {
+    "knowledge_ids": [],
+    "excluded_reason": "Document heading retained outside the knowledge graph."
+  },
+  "U15": {
+    "knowledge_ids": [
+      "K15",
+      "K16",
+      "K17",
+      "K18"
+    ],
+    "excluded_reason": null
+  },
+  "U16": {
+    "knowledge_ids": [
+      "K19",
+      "K20",
+      "K21",
+      "K22",
+      "K23"
+    ],
+    "excluded_reason": null
+  },
+  "U17": {
+    "knowledge_ids": [
+      "K23"
+    ],
+    "excluded_reason": null
+  },
+  "U18": {
+    "knowledge_ids": [
+      "K23"
+    ],
+    "excluded_reason": null
+  },
+  "U19": {
+    "knowledge_ids": [],
+    "excluded_reason": "Document heading retained outside the knowledge graph."
+  },
+  "U20": {
+    "knowledge_ids": [
+      "K24",
+      "K25"
+    ],
+    "excluded_reason": null
+  },
+  "U21": {
+    "knowledge_ids": [
+      "K26",
+      "K27",
+      "K28",
+      "K29",
+      "K30",
+      "K31",
+      "K46",
+      "K49"
+    ],
+    "excluded_reason": null
+  },
+  "U22": {
+    "knowledge_ids": [
+      "K26",
+      "K27",
+      "K28",
+      "K30"
+    ],
+    "excluded_reason": null
+  },
+  "U23": {
+    "knowledge_ids": [
+      "K32",
+      "K33",
+      "K34",
+      "K46",
+      "K50"
+    ],
+    "excluded_reason": null
+  },
+  "U24": {
+    "knowledge_ids": [
+      "K35",
+      "K36",
+      "K37",
+      "K38",
+      "K39",
+      "K40",
+      "K41",
+      "K42",
+      "K46",
+      "K47"
+    ],
+    "excluded_reason": null
+  },
+  "U25": {
+    "knowledge_ids": [
+      "K35",
+      "K36",
+      "K39"
+    ],
+    "excluded_reason": null
+  },
+  "U26": {
+    "knowledge_ids": [
+      "K35",
+      "K36",
+      "K39"
+    ],
+    "excluded_reason": null
+  },
+  "U27": {
+    "knowledge_ids": [
+      "K43",
+      "K44",
+      "K45",
+      "K48"
+    ],
+    "excluded_reason": null
+  },
+  "U28": {
+    "knowledge_ids": [],
+    "excluded_reason": "Document heading retained outside the knowledge graph."
+  },
+  "U29": {
+    "knowledge_ids": [
+      "K31",
+      "K32",
+      "K34",
+      "K46"
+    ],
+    "excluded_reason": null
+  },
+  "U30": {
+    "knowledge_ids": [],
+    "excluded_reason": "Document heading retained outside the knowledge graph."
+  },
+  "U31": {
+    "knowledge_ids": [],
+    "excluded_reason": "Publication administration, peer review, funding, declarations or author credits retained in the complete source, excluded from scientific findings."
+  },
+  "U32": {
+    "knowledge_ids": [],
+    "excluded_reason": "Publication administration, peer review, funding, declarations or author credits retained in the complete source, excluded from scientific findings."
+  },
+  "U33": {
+    "knowledge_ids": [],
+    "excluded_reason": "Publication administration, peer review, funding, declarations or author credits retained in the complete source, excluded from scientific findings."
+  },
+  "U34": {
+    "knowledge_ids": [],
+    "excluded_reason": "Publication administration, peer review, funding, declarations or author credits retained in the complete source, excluded from scientific findings."
+  },
+  "U35": {
+    "knowledge_ids": [],
+    "excluded_reason": "Publication administration, peer review, funding, declarations or author credits retained in the complete source, excluded from scientific findings."
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "passed": true,
+  "browser": "Microsoft Edge headless",
+  "client_port": 5555,
+  "api_port": 8000,
+  "run_id": "ef432af7-79ae-4632-bfc5-d7adc899cb24",
+  "fixture": "Published Neo4j graph and actual owner-checked route outputs; isolated test authentication. HTTP API writes and all external requests blocked.",
+  "model_calls": 0,
+  "map_generation_requests": 0,
+  "map_translation_requests": 0,
+  "checks": [
+    "neighbor build buttons",
+    "current schema 6 English",
+    "whole-map overview",
+    "knowledge selection and source",
+    "transition selection and grouped premises",
+    "saved Russian translation",
+    "historical schema 5",
+    "session run selection",
+    "English interface"
+  ],
+  "blocked_requests": [
+    "/api/analytics/page-view",
+    "/api/article_editor/parse_stream",
+    "/api/article_editor/parse"
+  ],
+  "unhandled_reads": [
+    "/api/article_editor/articles/pilot-pmc10000452-pmc10000452-f7df96ff746be4a6/localization",
+    "/api/article_editor/articles/pilot-pmc10000452-pmc10000452-f7df96ff746be4a6/localization",
+    "/api/article_editor/articles/pilot-pmc10000452-pmc10000452-f7df96ff746be4a6/maps/text_reified/transitions/T64",
+    "/api/article_editor/articles/pilot-pmc10000452-pmc10000452-f7df96ff746be4a6/maps/text_reified/transitions/T64"
+  ],
+  "client_errors": [],
+  "screenshots": [
+    "ui.initial.png",
+    "ui.overview.png",
+    "ui.english.png",
+    "ui.transition.png",
+    "ui.russian.png",
+    "ui.previous.png"
+  ]
+}

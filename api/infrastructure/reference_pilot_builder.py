@@ -16,12 +16,15 @@ log = logging.getLogger(__name__)
 
 
 class ProductionPilotMapBuilder:
+    contract_version = 6
     def __init__(self, repository, source_reader, owner, store, *, translate_ru: bool = True):
         self.repository, self.source_reader, self.owner, self.store = repository, source_reader, owner, store
         self.calls = []
         self.translate_ru = translate_ru
 
     async def build(self, source: dict) -> dict:
+        require(self.contract_version == 5,
+                "The reference experiment requires schema 5; schema 6 must be reviewed and adapted before rebuilding the corpus")
         article_id = source["article_id"]
         text = await self.source_reader.read_text(article_id, self.owner)
         require(digest(text) == source["source_sha256"], "Saved source revision differs from experiment manifest")

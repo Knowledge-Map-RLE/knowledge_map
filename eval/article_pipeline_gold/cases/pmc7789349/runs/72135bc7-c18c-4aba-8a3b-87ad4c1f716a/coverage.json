@@ -1,0 +1,765 @@
+{
+  "U1": {
+    "knowledge_ids": [],
+    "excluded_reason": "Document heading retained outside the scientific graph."
+  },
+  "U2": {
+    "knowledge_ids": [],
+    "excluded_reason": "Publication identity metadata retained."
+  },
+  "U3": {
+    "knowledge_ids": [],
+    "excluded_reason": "Publication identity metadata retained."
+  },
+  "U4": {
+    "knowledge_ids": [],
+    "excluded_reason": "Document heading retained outside the scientific graph."
+  },
+  "U5": {
+    "knowledge_ids": [
+      "K1",
+      "K6"
+    ],
+    "excluded_reason": null
+  },
+  "U6": {
+    "knowledge_ids": [
+      "K7",
+      "K8",
+      "K14"
+    ],
+    "excluded_reason": null
+  },
+  "U7": {
+    "knowledge_ids": [
+      "K15",
+      "K84",
+      "K85",
+      "K87"
+    ],
+    "excluded_reason": null
+  },
+  "U8": {
+    "knowledge_ids": [
+      "K86",
+      "K87"
+    ],
+    "excluded_reason": null
+  },
+  "U9": {
+    "knowledge_ids": [
+      "K7"
+    ],
+    "excluded_reason": null
+  },
+  "U10": {
+    "knowledge_ids": [],
+    "excluded_reason": "Supplementary-material pointer retained; unavailable contents are not invented."
+  },
+  "U11": {
+    "knowledge_ids": [],
+    "excluded_reason": "Index terms retained; substantive assertions are extracted."
+  },
+  "U12": {
+    "knowledge_ids": [],
+    "excluded_reason": "Document heading retained outside the scientific graph."
+  },
+  "U13": {
+    "knowledge_ids": [
+      "K4"
+    ],
+    "excluded_reason": null
+  },
+  "U14": {
+    "knowledge_ids": [
+      "K1",
+      "K2"
+    ],
+    "excluded_reason": null
+  },
+  "U15": {
+    "knowledge_ids": [
+      "K3"
+    ],
+    "excluded_reason": null
+  },
+  "U16": {
+    "knowledge_ids": [
+      "K5"
+    ],
+    "excluded_reason": null
+  },
+  "U17": {
+    "knowledge_ids": [
+      "K5",
+      "K6"
+    ],
+    "excluded_reason": null
+  },
+  "U18": {
+    "knowledge_ids": [],
+    "excluded_reason": "Document heading retained outside the scientific graph."
+  },
+  "U19": {
+    "knowledge_ids": [
+      "K7"
+    ],
+    "excluded_reason": null
+  },
+  "U20": {
+    "knowledge_ids": [],
+    "excluded_reason": "Document heading retained outside the scientific graph."
+  },
+  "U21": {
+    "knowledge_ids": [
+      "K8"
+    ],
+    "excluded_reason": null
+  },
+  "U22": {
+    "knowledge_ids": [],
+    "excluded_reason": "Document heading retained outside the scientific graph."
+  },
+  "U23": {
+    "knowledge_ids": [
+      "K9",
+      "K10"
+    ],
+    "excluded_reason": null
+  },
+  "U24": {
+    "knowledge_ids": [
+      "K10",
+      "K11",
+      "K58"
+    ],
+    "excluded_reason": null
+  },
+  "U25": {
+    "knowledge_ids": [
+      "K10"
+    ],
+    "excluded_reason": null
+  },
+  "U26": {
+    "knowledge_ids": [
+      "K10"
+    ],
+    "excluded_reason": null
+  },
+  "U27": {
+    "knowledge_ids": [
+      "K12"
+    ],
+    "excluded_reason": null
+  },
+  "U28": {
+    "knowledge_ids": [],
+    "excluded_reason": "Document heading retained outside the scientific graph."
+  },
+  "U29": {
+    "knowledge_ids": [
+      "K14"
+    ],
+    "excluded_reason": null
+  },
+  "U30": {
+    "knowledge_ids": [
+      "K13"
+    ],
+    "excluded_reason": null
+  },
+  "U31": {
+    "knowledge_ids": [
+      "K14"
+    ],
+    "excluded_reason": null
+  },
+  "U32": {
+    "knowledge_ids": [
+      "K14"
+    ],
+    "excluded_reason": null
+  },
+  "U33": {
+    "knowledge_ids": [],
+    "excluded_reason": "Document heading retained outside the scientific graph."
+  },
+  "U34": {
+    "knowledge_ids": [],
+    "excluded_reason": "Document heading retained outside the scientific graph."
+  },
+  "U35": {
+    "knowledge_ids": [
+      "K15",
+      "K16",
+      "K17",
+      "K18",
+      "K19",
+      "K20",
+      "K21",
+      "K22",
+      "K23",
+      "K24",
+      "K25",
+      "K26",
+      "K27",
+      "K28",
+      "K29",
+      "K30",
+      "K31",
+      "K32",
+      "K33",
+      "K34",
+      "K35",
+      "K36",
+      "K37",
+      "K38",
+      "K39",
+      "K40",
+      "K41",
+      "K42",
+      "K43",
+      "K44",
+      "K45",
+      "K46",
+      "K47",
+      "K48",
+      "K49",
+      "K50",
+      "K51",
+      "K52",
+      "K53",
+      "K54",
+      "K55",
+      "K56",
+      "K57"
+    ],
+    "excluded_reason": null
+  },
+  "U36": {
+    "knowledge_ids": [
+      "K17",
+      "K18",
+      "K19",
+      "K20",
+      "K21",
+      "K22",
+      "K23",
+      "K24",
+      "K25",
+      "K26",
+      "K27",
+      "K28",
+      "K29",
+      "K30",
+      "K31",
+      "K32",
+      "K33",
+      "K34",
+      "K35",
+      "K36",
+      "K37",
+      "K38",
+      "K39",
+      "K40",
+      "K41",
+      "K42",
+      "K43",
+      "K44",
+      "K45",
+      "K46",
+      "K47",
+      "K48",
+      "K49",
+      "K50",
+      "K51",
+      "K52",
+      "K53",
+      "K54",
+      "K55",
+      "K56",
+      "K57"
+    ],
+    "excluded_reason": null
+  },
+  "U37": {
+    "knowledge_ids": [
+      "K17",
+      "K18",
+      "K19",
+      "K20",
+      "K21",
+      "K22",
+      "K23",
+      "K24",
+      "K25",
+      "K26",
+      "K27",
+      "K28",
+      "K29",
+      "K30",
+      "K31",
+      "K32",
+      "K33",
+      "K34",
+      "K35",
+      "K36",
+      "K37",
+      "K38",
+      "K39",
+      "K40",
+      "K41",
+      "K42",
+      "K43",
+      "K44",
+      "K45",
+      "K46",
+      "K47",
+      "K48",
+      "K49",
+      "K50",
+      "K51",
+      "K52",
+      "K53",
+      "K54",
+      "K55",
+      "K56",
+      "K57"
+    ],
+    "excluded_reason": null
+  },
+  "U38": {
+    "knowledge_ids": [
+      "K17",
+      "K18",
+      "K19",
+      "K20",
+      "K21",
+      "K22",
+      "K23",
+      "K24",
+      "K25",
+      "K26",
+      "K27",
+      "K28",
+      "K29",
+      "K30",
+      "K31",
+      "K32",
+      "K33",
+      "K34",
+      "K35",
+      "K36",
+      "K37",
+      "K38",
+      "K39",
+      "K40",
+      "K41",
+      "K42",
+      "K43",
+      "K44",
+      "K45",
+      "K46",
+      "K47",
+      "K48",
+      "K49",
+      "K50",
+      "K51",
+      "K52",
+      "K53",
+      "K54",
+      "K55",
+      "K56",
+      "K57"
+    ],
+    "excluded_reason": null
+  },
+  "U39": {
+    "knowledge_ids": [],
+    "excluded_reason": "Document heading retained outside the scientific graph."
+  },
+  "U40": {
+    "knowledge_ids": [
+      "K58"
+    ],
+    "excluded_reason": null
+  },
+  "U41": {
+    "knowledge_ids": [
+      "K58"
+    ],
+    "excluded_reason": null
+  },
+  "U42": {
+    "knowledge_ids": [
+      "K58"
+    ],
+    "excluded_reason": null
+  },
+  "U43": {
+    "knowledge_ids": [],
+    "excluded_reason": "Document heading retained outside the scientific graph."
+  },
+  "U44": {
+    "knowledge_ids": [
+      "K59",
+      "K60",
+      "K61",
+      "K62",
+      "K82",
+      "K83"
+    ],
+    "excluded_reason": null
+  },
+  "U45": {
+    "knowledge_ids": [
+      "K59",
+      "K60",
+      "K61",
+      "K62"
+    ],
+    "excluded_reason": null
+  },
+  "U46": {
+    "knowledge_ids": [
+      "K59",
+      "K60",
+      "K61",
+      "K62",
+      "K83"
+    ],
+    "excluded_reason": null
+  },
+  "U47": {
+    "knowledge_ids": [
+      "K82"
+    ],
+    "excluded_reason": null
+  },
+  "U48": {
+    "knowledge_ids": [],
+    "excluded_reason": "Document heading retained outside the scientific graph."
+  },
+  "U49": {
+    "knowledge_ids": [
+      "K84"
+    ],
+    "excluded_reason": null
+  },
+  "U50": {
+    "knowledge_ids": [
+      "K84"
+    ],
+    "excluded_reason": null
+  },
+  "U51": {
+    "knowledge_ids": [
+      "K84"
+    ],
+    "excluded_reason": null
+  },
+  "U52": {
+    "knowledge_ids": [
+      "K85"
+    ],
+    "excluded_reason": null
+  },
+  "U53": {
+    "knowledge_ids": [
+      "K85"
+    ],
+    "excluded_reason": null
+  },
+  "U54": {
+    "knowledge_ids": [
+      "K85"
+    ],
+    "excluded_reason": null
+  },
+  "U55": {
+    "knowledge_ids": [],
+    "excluded_reason": "Document heading retained outside the scientific graph."
+  },
+  "U56": {
+    "knowledge_ids": [
+      "K63",
+      "K64",
+      "K65",
+      "K66",
+      "K67",
+      "K68",
+      "K69",
+      "K70",
+      "K71",
+      "K72",
+      "K73",
+      "K74",
+      "K75",
+      "K76",
+      "K77",
+      "K78",
+      "K79",
+      "K80",
+      "K81",
+      "K87"
+    ],
+    "excluded_reason": null
+  },
+  "U57": {
+    "knowledge_ids": [
+      "K63",
+      "K64",
+      "K65",
+      "K66",
+      "K67",
+      "K68",
+      "K69",
+      "K70",
+      "K71",
+      "K72",
+      "K73",
+      "K74",
+      "K75",
+      "K76",
+      "K77",
+      "K78",
+      "K79",
+      "K80",
+      "K81"
+    ],
+    "excluded_reason": null
+  },
+  "U58": {
+    "knowledge_ids": [
+      "K63",
+      "K64",
+      "K65",
+      "K66",
+      "K67",
+      "K68",
+      "K69",
+      "K70",
+      "K71",
+      "K72",
+      "K73",
+      "K74",
+      "K75",
+      "K76",
+      "K77",
+      "K78",
+      "K79",
+      "K80",
+      "K81"
+    ],
+    "excluded_reason": null
+  },
+  "U59": {
+    "knowledge_ids": [],
+    "excluded_reason": "Document heading retained outside the scientific graph."
+  },
+  "U60": {
+    "knowledge_ids": [],
+    "excluded_reason": "Document heading retained outside the scientific graph."
+  },
+  "U61": {
+    "knowledge_ids": [
+      "K84",
+      "K88"
+    ],
+    "excluded_reason": null
+  },
+  "U62": {
+    "knowledge_ids": [
+      "K89"
+    ],
+    "excluded_reason": null
+  },
+  "U63": {
+    "knowledge_ids": [
+      "K85",
+      "K86"
+    ],
+    "excluded_reason": null
+  },
+  "U64": {
+    "knowledge_ids": [],
+    "excluded_reason": "Document heading retained outside the scientific graph."
+  },
+  "U65": {
+    "knowledge_ids": [
+      "K90",
+      "K91"
+    ],
+    "excluded_reason": null
+  },
+  "U66": {
+    "knowledge_ids": [
+      "K92"
+    ],
+    "excluded_reason": null
+  },
+  "U67": {
+    "knowledge_ids": [
+      "K87"
+    ],
+    "excluded_reason": null
+  },
+  "U68": {
+    "knowledge_ids": [
+      "K87",
+      "K93"
+    ],
+    "excluded_reason": null
+  },
+  "U69": {
+    "knowledge_ids": [
+      "K87",
+      "K93"
+    ],
+    "excluded_reason": null
+  },
+  "U70": {
+    "knowledge_ids": [
+      "K87",
+      "K93"
+    ],
+    "excluded_reason": null
+  },
+  "U71": {
+    "knowledge_ids": [
+      "K83",
+      "K94",
+      "K95"
+    ],
+    "excluded_reason": null
+  },
+  "U72": {
+    "knowledge_ids": [],
+    "excluded_reason": "Document heading retained outside the scientific graph."
+  },
+  "U73": {
+    "knowledge_ids": [
+      "K96"
+    ],
+    "excluded_reason": null
+  },
+  "U74": {
+    "knowledge_ids": [
+      "K95",
+      "K96"
+    ],
+    "excluded_reason": null
+  },
+  "U75": {
+    "knowledge_ids": [],
+    "excluded_reason": "Document heading retained outside the scientific graph."
+  },
+  "U76": {
+    "knowledge_ids": [
+      "K84",
+      "K85",
+      "K87",
+      "K95"
+    ],
+    "excluded_reason": null
+  },
+  "U77": {
+    "knowledge_ids": [],
+    "excluded_reason": "Document heading retained outside the scientific graph."
+  },
+  "U78": {
+    "knowledge_ids": [],
+    "excluded_reason": "Supplementary-material pointer retained; unavailable contents are not invented."
+  },
+  "U79": {
+    "knowledge_ids": [],
+    "excluded_reason": "Supplementary-material pointer retained; unavailable contents are not invented."
+  },
+  "U80": {
+    "knowledge_ids": [],
+    "excluded_reason": "Document heading retained outside the scientific graph."
+  },
+  "U81": {
+    "knowledge_ids": [],
+    "excluded_reason": "Acknowledgment, administrative availability, funding, ethical declaration, contributor/contact information or publisher notice retained outside scientific claims."
+  },
+  "U82": {
+    "knowledge_ids": [],
+    "excluded_reason": "Document heading retained outside the scientific graph."
+  },
+  "U83": {
+    "knowledge_ids": [
+      "K16"
+    ],
+    "excluded_reason": null
+  },
+  "U84": {
+    "knowledge_ids": [],
+    "excluded_reason": "Document heading retained outside the scientific graph."
+  },
+  "U85": {
+    "knowledge_ids": [],
+    "excluded_reason": "Acknowledgment, administrative availability, funding, ethical declaration, contributor/contact information or publisher notice retained outside scientific claims."
+  },
+  "U86": {
+    "knowledge_ids": [],
+    "excluded_reason": "Document heading retained outside the scientific graph."
+  },
+  "U87": {
+    "knowledge_ids": [],
+    "excluded_reason": "Acknowledgment, administrative availability, funding, ethical declaration, contributor/contact information or publisher notice retained outside scientific claims."
+  },
+  "U88": {
+    "knowledge_ids": [],
+    "excluded_reason": "Document heading retained outside the scientific graph."
+  },
+  "U89": {
+    "knowledge_ids": [],
+    "excluded_reason": "Acknowledgment, administrative availability, funding, ethical declaration, contributor/contact information or publisher notice retained outside scientific claims."
+  },
+  "U90": {
+    "knowledge_ids": [],
+    "excluded_reason": "Document heading retained outside the scientific graph."
+  },
+  "U91": {
+    "knowledge_ids": [],
+    "excluded_reason": "Acknowledgment, administrative availability, funding, ethical declaration, contributor/contact information or publisher notice retained outside scientific claims."
+  },
+  "U92": {
+    "knowledge_ids": [],
+    "excluded_reason": "Document heading retained outside the scientific graph."
+  },
+  "U93": {
+    "knowledge_ids": [],
+    "excluded_reason": "Acknowledgment, administrative availability, funding, ethical declaration, contributor/contact information or publisher notice retained outside scientific claims."
+  },
+  "U94": {
+    "knowledge_ids": [],
+    "excluded_reason": "Document heading retained outside the scientific graph."
+  },
+  "U95": {
+    "knowledge_ids": [],
+    "excluded_reason": "Acknowledgment, administrative availability, funding, ethical declaration, contributor/contact information or publisher notice retained outside scientific claims."
+  },
+  "U96": {
+    "knowledge_ids": [],
+    "excluded_reason": "Document heading retained outside the scientific graph."
+  },
+  "U97": {
+    "knowledge_ids": [],
+    "excluded_reason": "Acknowledgment, administrative availability, funding, ethical declaration, contributor/contact information or publisher notice retained outside scientific claims."
+  },
+  "U98": {
+    "knowledge_ids": [],
+    "excluded_reason": "Document heading retained outside the scientific graph."
+  },
+  "U99": {
+    "knowledge_ids": [],
+    "excluded_reason": "Acknowledgment, administrative availability, funding, ethical declaration, contributor/contact information or publisher notice retained outside scientific claims."
+  },
+  "U100": {
+    "knowledge_ids": [],
+    "excluded_reason": "Acknowledgment, administrative availability, funding, ethical declaration, contributor/contact information or publisher notice retained outside scientific claims."
+  }
+}

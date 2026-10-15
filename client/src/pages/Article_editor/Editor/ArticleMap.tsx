@@ -15,7 +15,7 @@ const message = (error: unknown) => error instanceof Error ? error.message : Str
 export default function ArticleMap({ docId, enabled }: { docId: string; enabled: boolean }) {
     const { t, i18n } = useTranslation();
     const [inventory, setInventory] = useState<ArticleMapInventory | null>(null);
-    const [selected, setSelected] = useState<MapPipelineId | ''>('');
+    const [selected, setSelected] = useState('');
     const [detail, setDetail] = useState<SavedArticleMap | null>(null);
     const [locale, setLocale] = useState<'en' | 'ru'>('en');
     const [loading, setLoading] = useState(false);
@@ -26,6 +26,7 @@ export default function ArticleMap({ docId, enabled }: { docId: string; enabled:
     const operation = useRef<AbortController | null>(null);
     const owner = useRef(docId);
     owner.current = docId;
+    const selectedMap = inventory?.maps.find(map => map.run_id === selected);
 
     const refresh = useCallback(async (signal: AbortSignal) => {
         const result = await listArticleMaps(docId, signal);
@@ -43,8 +44,10 @@ export default function ArticleMap({ docId, enabled }: { docId: string; enabled:
             void refresh(controller.signal).then(result => {
                 if (controller.signal.aborted) return;
                 const saved = sessionStorage.getItem(selectionKey(docId));
-                const choice = result.maps.find(map => map.pipeline_id === saved) ?? result.maps[0];
-                setSelected(choice?.pipeline_id ?? '');
+                const choice = result.maps.find(map => map.run_id === saved)
+                    ?? result.maps.find(map => map.pipeline_id === saved && map.is_current !== false)
+                    ?? result.maps.find(map => map.is_current !== false) ?? result.maps[0];
+                setSelected(choice?.run_id ?? '');
             }).catch(cause => {
                 if (!controller.signal.aborted) setError(message(cause));
             }).finally(() => {
@@ -55,12 +58,12 @@ export default function ArticleMap({ docId, enabled }: { docId: string; enabled:
     }, [docId, enabled, refresh]);
 
     useEffect(() => {
-        if (!enabled || !selected) return;
+        if (!enabled || !selected || !selectedMap) return;
         const controller = new AbortController();
         const requestId = ++generation.current;
         setLoading(true); setDetail(null);
         sessionStorage.setItem(selectionKey(docId), selected);
-        void getArticleMap(docId, selected, locale, controller.signal).then(result => {
+        void getArticleMap(docId, selectedMap.pipeline_id, locale, controller.signal, selected).then(result => {
             if (!controller.signal.aborted && requestId === generation.current) setDetail(result);
         }).catch(cause => {
             if (!controller.signal.aborted && requestId === generation.current) setError(message(cause));
@@ -68,7 +71,7 @@ export default function ArticleMap({ docId, enabled }: { docId: string; enabled:
             if (!controller.signal.aborted && requestId === generation.current) setLoading(false);
         });
         return () => controller.abort();
-    }, [docId, enabled, selected, locale]);
+    }, [docId, enabled, selected, selectedMap?.pipeline_id, locale]);
 
     async function build(pipeline: MapPipelineId) {
         if (busy) return;
@@ -81,10 +84,10 @@ export default function ArticleMap({ docId, enabled }: { docId: string; enabled:
                     if (!controller.signal.aborted) setStage(next);
                 }) : await buildStructuralArticleMap(docId, controller.signal);
             if (controller.signal.aborted || owner.current !== docId) return;
-            setLocale('en'); setSelected(pipeline); setDetail(result);
-            sessionStorage.setItem(selectionKey(docId), pipeline);
+            setLocale('en'); setSelected(result.run_id); setDetail(result);
+            sessionStorage.setItem(selectionKey(docId), result.run_id);
             setInventory(current => current && ({ ...current,
-                maps: [...current.maps.filter(map => map.pipeline_id !== pipeline), result],
+                maps: [...current.maps.filter(map => map.run_id !== result.run_id), result],
             }));
             await refresh(controller.signal);
         } catch (cause) {
@@ -95,13 +98,18 @@ export default function ArticleMap({ docId, enabled }: { docId: string; enabled:
     }
 
     async function showRussian() {
-        if (!selected || busy) return;
+        if (!selectedMap || busy) return;
+        if (selectedMap.translated_locales?.includes('ru')) { setError(''); setLocale('ru'); return; }
         const controller = new AbortController();
         operation.current = controller;
         setBusy(true); setError(''); setStage('translation');
         try {
-            await translateArticleMap(docId, selected, controller.signal);
+            await translateArticleMap(docId, selectedMap.pipeline_id, controller.signal, selected);
             if (!controller.signal.aborted && owner.current === docId) setLocale('ru');
+            if (!controller.signal.aborted && owner.current === docId) {
+                setInventory(current => current && ({ ...current, maps: current.maps.map(map => map.run_id === selected
+                    ? { ...map, translated_locales: [...new Set([...(map.translated_locales ?? []), 'ru'])] } : map) }));
+            }
         } catch (cause) {
             if (!controller.signal.aborted && owner.current === docId) setError(message(cause));
         } finally {
@@ -110,7 +118,7 @@ export default function ArticleMap({ docId, enabled }: { docId: string; enabled:
     }
 
     const canBuild = (pipeline: MapPipelineId) => enabled && !loading && !busy && inventory?.availability[pipeline] === true;
-    const currentDetail = detail?.article_id === docId && detail.pipeline_id === selected ? detail : null;
+    const currentDetail = detail?.article_id === docId && detail.run_id === selected ? detail : null;
     return <section style={{ height: '100%', display: 'flex', flexDirection: 'column', minHeight: 0 }}>
         <div aria-label={t('articleEditor.map.controls')} className={styles.controls}>
             <div className={styles.actions}>
@@ -126,16 +134,16 @@ export default function ArticleMap({ docId, enabled }: { docId: string; enabled:
                 </button>
             </div>
             <label className={styles.field}>{t('articleEditor.map.version')}
-                <select className={styles.select} value={selected} disabled={!enabled || busy || loading || !inventory?.maps.length}
-                    onChange={event => { setError(''); setLocale('en'); setSelected(event.target.value as MapPipelineId); }}>
+                <select className={styles.select} aria-label={t('articleEditor.map.version')} value={selected} disabled={!enabled || busy || loading || !inventory?.maps.length}
+                    onChange={event => { setError(''); setLocale('en'); setSelected(event.target.value); }}>
                     {!inventory?.maps.length && <option value="">{t('articleEditor.map.noVersions')}</option>}
-                    {inventory?.maps.map(map => <option key={map.pipeline_id} value={map.pipeline_id}>
-                        {t(`articleEditor.map.pipeline.${map.pipeline_id === 'text_reified' && map.graph_schema_version === 5 ? 'text_knowledge' : map.pipeline_id}`)} · {new Date(map.updated_at).toLocaleString(i18n.resolvedLanguage)}
+                    {inventory?.maps.map(map => <option key={map.run_id} value={map.run_id}>
+                        {t(`articleEditor.map.pipeline.${map.pipeline_id === 'text_reified' && map.graph_schema_version >= 5 ? 'text_knowledge' : map.pipeline_id}`)} · v{map.graph_schema_version} · {new Date(map.updated_at).toLocaleString(i18n.resolvedLanguage)} · {map.run_id.slice(0, 8)}{map.generation?.kind === 'codex_manual' ? ' · Codex' : ''}
                     </option>)}
                 </select>
             </label>
             {selected && <label className={styles.field}>{t('articleEditor.map.language')}
-                <select className={styles.select} value={locale} disabled={busy || loading} onChange={event => {
+                <select className={styles.select} aria-label={t('articleEditor.map.language')} value={locale} disabled={busy || loading} onChange={event => {
                     if (event.target.value === 'ru') void showRussian(); else setLocale('en');
                 }}>
                     <option value="en">English</option><option value="ru">Русский</option>

@@ -1,0 +1,20 @@
+.root { flex:1; min-width:0; overflow:auto; padding:16px; background:#f8fafc; color:#172033; }
+.toolbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin-bottom:12px; }
+.root select { background:white; color:#172033; border:1px solid #94a3b8; border-radius:6px; padding:8px; max-width:100%; }
+.button { background:#2563eb; color:white; border:1px solid #1d4ed8; border-radius:7px; padding:9px 14px; cursor:pointer; font-weight:600; }
+.button:disabled { opacity:.5; cursor:default; }
+.sources { max-height:180px; overflow:auto; background:white; padding:8px; border:1px solid #cbd5e1; border-radius:8px; margin-bottom:12px; }
+.sources label { display:flex; gap:8px; padding:5px; align-items:flex-start; }
+.grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.map { height:360px; min-width:0; background:white; border:1px solid #cbd5e1; border-radius:8px; overflow:hidden; }
+.matches { max-height:350px; overflow:auto; margin:12px 0; border:1px solid #e2e8f0; }
+.table { width:100%; border-collapse:collapse; font-size:13px; background:white; }
+.table th { position:sticky; top:0; background:white; z-index:1; }
+.table td:first-child { width:70%; }
+.table td,.table th { padding:9px; text-align:left; border-bottom:1px solid #e2e8f0; vertical-align:top; }
+.table tr[data-selected=true] { background:#dbeafe; }
+.table tbody tr { cursor:pointer; }
+.fragment { white-space:pre-wrap; overflow-wrap:anywhere; max-height:300px; overflow:auto; background:white; padding:12px; border:1px solid #cbd5e1; font:12px/1.5 system-ui; }
+.note { font-size:13px; color:#475569; margin:8px 0; }
+.error { background:#fee2e2; color:#991b1b; padding:10px; border-radius:7px; }
+@media(max-width:1000px) { .grid { grid-template-columns:1fr; } }

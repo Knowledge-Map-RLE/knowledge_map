@@ -65,13 +65,27 @@ def test_independent_slots_locks_authorization_translation_and_migration():
                                       "concept_count": 0, "operation_count": 0}}
         updated = new_result(article, "text_reified", current_graph, "changed", builder_version="2")
         repo.save(updated, owner, "next")
-        assert len(repo.list_maps(article, owner)) == 2
+        assert len(repo.list_maps(article, owner)) == 3
+        historical = repo.get(article, "text_reified", owner, result["run_id"])
+        assert historical["graph"] == original and historical["translations"]["ru"]["run_id"] == result["run_id"]
+        inventory = repo.list_maps(article, owner)
+        assert next(item for item in inventory if item["run_id"] == updated["run_id"])["is_current"]
+        assert not next(item for item in inventory if item["run_id"] == result["run_id"])["is_current"]
+        with pytest.raises(ArticleMapAccessDenied):
+            repo.get(article, "text_reified", "intruder", result["run_id"])
+        changed_history = copy.deepcopy(result)
+        changed_history["graph"]["schema_version"] = 99
+        with pytest.raises(ArticleMapConflict):
+            repo.save(changed_history, owner, "next")
+        assert repo.get(article, "text_reified", owner)["run_id"] == updated["run_id"]
         assert repo.get(article, "text_reified", owner)["run_id"] == updated["run_id"]
         assert repo.get(article, "text_reified", owner)["graph"] == current_graph
         assert repo.get(article, "text_reified", owner)["translations"] == {}
         assert repo.get(article, "structural_rows", owner) == migrated
     finally:
         with repo.driver.session() as session:
+            session.run("MATCH (r:ArticleMapRun {article_id:$id}) DETACH DELETE r", id=article).consume()
+            session.run("MATCH (t:ArticleMapTranslation {article_id:$id}) DETACH DELETE t", id=article).consume()
             session.run("MATCH (m:ArticleMap {article_id:$id}) DETACH DELETE m", id=article).consume()
             session.run("MATCH (d:Document {uid:$id}) DETACH DELETE d", id=article).consume()
         repo.close()

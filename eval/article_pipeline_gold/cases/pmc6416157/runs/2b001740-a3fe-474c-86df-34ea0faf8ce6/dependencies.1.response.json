@@ -1,0 +1,438 @@
+{
+  "occurrences": [],
+  "transitions": [
+    {
+      "id": "T1",
+      "sources": [
+        "B10"
+      ],
+      "target": "B17",
+      "usage": "result",
+      "reason": "Descriptive synthesis produces the available or explicitly absent youngest-stratum estimates.",
+      "unit_ids": [
+        "U39"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T2",
+      "sources": [
+        "B11"
+      ],
+      "target": "B18",
+      "usage": "result",
+      "reason": "Age-stratified synthesis produces these source-reported quantitative summaries; absent pooled cells remain absent.",
+      "unit_ids": [
+        "U39"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T3",
+      "sources": [
+        "B11"
+      ],
+      "target": "B19",
+      "usage": "result",
+      "reason": "Age-stratified synthesis produces these source-reported quantitative summaries; absent pooled cells remain absent.",
+      "unit_ids": [
+        "U39"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T4",
+      "sources": [
+        "B11"
+      ],
+      "target": "B20",
+      "usage": "result",
+      "reason": "Age-stratified synthesis produces these source-reported quantitative summaries; absent pooled cells remain absent.",
+      "unit_ids": [
+        "U39"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T5",
+      "sources": [
+        "B11"
+      ],
+      "target": "B21",
+      "usage": "result",
+      "reason": "Age-stratified synthesis produces these source-reported quantitative summaries; absent pooled cells remain absent.",
+      "unit_ids": [
+        "U39"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T6",
+      "sources": [
+        "B10"
+      ],
+      "target": "B22",
+      "usage": "result",
+      "reason": "Descriptive synthesis produces the available or explicitly absent youngest-stratum estimates.",
+      "unit_ids": [
+        "U39"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T7",
+      "sources": [
+        "B11"
+      ],
+      "target": "B23",
+      "usage": "result",
+      "reason": "Age-stratified synthesis produces these source-reported quantitative summaries; absent pooled cells remain absent.",
+      "unit_ids": [
+        "U39"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T8",
+      "sources": [
+        "B11"
+      ],
+      "target": "B24",
+      "usage": "result",
+      "reason": "Age-stratified synthesis produces these source-reported quantitative summaries; absent pooled cells remain absent.",
+      "unit_ids": [
+        "U39"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T9",
+      "sources": [
+        "B11"
+      ],
+      "target": "B25",
+      "usage": "result",
+      "reason": "Age-stratified synthesis produces these source-reported quantitative summaries; absent pooled cells remain absent.",
+      "unit_ids": [
+        "U39"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T10",
+      "sources": [
+        "B11"
+      ],
+      "target": "B26",
+      "usage": "result",
+      "reason": "Age-stratified synthesis produces these source-reported quantitative summaries; absent pooled cells remain absent.",
+      "unit_ids": [
+        "U39"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T11",
+      "sources": [
+        "B10"
+      ],
+      "target": "B27",
+      "usage": "result",
+      "reason": "Descriptive synthesis produces the available or explicitly absent youngest-stratum estimates.",
+      "unit_ids": [
+        "U39"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T12",
+      "sources": [
+        "B11"
+      ],
+      "target": "B28",
+      "usage": "result",
+      "reason": "Age-stratified synthesis produces these source-reported quantitative summaries; absent pooled cells remain absent.",
+      "unit_ids": [
+        "U39"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T13",
+      "sources": [
+        "B11"
+      ],
+      "target": "B29",
+      "usage": "result",
+      "reason": "Age-stratified synthesis produces these source-reported quantitative summaries; absent pooled cells remain absent.",
+      "unit_ids": [
+        "U39"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T14",
+      "sources": [
+        "B11"
+      ],
+      "target": "B30",
+      "usage": "result",
+      "reason": "Age-stratified synthesis produces these source-reported quantitative summaries; absent pooled cells remain absent.",
+      "unit_ids": [
+        "U39"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T15",
+      "sources": [
+        "B11"
+      ],
+      "target": "B31",
+      "usage": "result",
+      "reason": "Age-stratified synthesis produces these source-reported quantitative summaries; absent pooled cells remain absent.",
+      "unit_ids": [
+        "U39"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T16",
+      "sources": [
+        "B8"
+      ],
+      "target": "B32",
+      "usage": "result",
+      "reason": "Extraction of study parameters yields this cohort-specific incidence and diagnostic record.",
+      "unit_ids": [
+        "U53"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T17",
+      "sources": [
+        "B8"
+      ],
+      "target": "B33",
+      "usage": "result",
+      "reason": "Extraction of study parameters yields this cohort-specific incidence and diagnostic record.",
+      "unit_ids": [
+        "U53"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T18",
+      "sources": [
+        "B8"
+      ],
+      "target": "B34",
+      "usage": "result",
+      "reason": "Extraction of study parameters yields this cohort-specific incidence and diagnostic record.",
+      "unit_ids": [
+        "U53"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T19",
+      "sources": [
+        "B8"
+      ],
+      "target": "B35",
+      "usage": "result",
+      "reason": "Extraction of study parameters yields this cohort-specific incidence and diagnostic record.",
+      "unit_ids": [
+        "U53"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T20",
+      "sources": [
+        "B8"
+      ],
+      "target": "B36",
+      "usage": "result",
+      "reason": "Extraction of study parameters yields this cohort-specific incidence and diagnostic record.",
+      "unit_ids": [
+        "U53"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T21",
+      "sources": [
+        "B8"
+      ],
+      "target": "B37",
+      "usage": "result",
+      "reason": "Extraction of study parameters yields this cohort-specific incidence and diagnostic record.",
+      "unit_ids": [
+        "U53"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T22",
+      "sources": [
+        "B8"
+      ],
+      "target": "B38",
+      "usage": "result",
+      "reason": "Extraction of study parameters yields this cohort-specific incidence and diagnostic record.",
+      "unit_ids": [
+        "U53"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T23",
+      "sources": [
+        "B8"
+      ],
+      "target": "B39",
+      "usage": "result",
+      "reason": "Extraction of study parameters yields this cohort-specific incidence and diagnostic record.",
+      "unit_ids": [
+        "U53"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T24",
+      "sources": [
+        "B8"
+      ],
+      "target": "B40",
+      "usage": "result",
+      "reason": "Extraction of study parameters yields this cohort-specific incidence and diagnostic record.",
+      "unit_ids": [
+        "U53"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T29",
+      "sources": [
+        "B3"
+      ],
+      "target": "B4",
+      "usage": "prerequisite",
+      "reason": "The explicitly identified synthesis gap motivates the completed review's stated objective.",
+      "unit_ids": [
+        "U13"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T30",
+      "sources": [
+        "B5"
+      ],
+      "target": "B6",
+      "usage": "method",
+      "reason": "The review's eligibility scope determines its targeted literature search.",
+      "unit_ids": [
+        "U19"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T31",
+      "sources": [
+        "B6",
+        "B5"
+      ],
+      "target": "B7",
+      "usage": "method",
+      "reason": "Retrieved records and eligibility criteria are jointly used for screening and full-text selection.",
+      "unit_ids": [
+        "U20"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T32",
+      "sources": [
+        "B7"
+      ],
+      "target": "B13",
+      "usage": "result",
+      "reason": "The completed selection yields the reported search/extraction/analysis counts.",
+      "unit_ids": [
+        "U33"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T33",
+      "sources": [
+        "B13"
+      ],
+      "target": "B14",
+      "usage": "development",
+      "reason": "The selected-study inventory is immediately developed by the explicit reasons and numbers of exclusions.",
+      "unit_ids": [
+        "U36"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T34",
+      "sources": [
+        "B13"
+      ],
+      "target": "B15",
+      "usage": "development",
+      "reason": "The final seven-study set is specified by geographic composition, sizes, follow-up and subtype availability.",
+      "unit_ids": [
+        "U37"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T35",
+      "sources": [
+        "B7"
+      ],
+      "target": "B8",
+      "usage": "prerequisite",
+      "reason": "The selected eligible publications are the immediate inputs of data extraction.",
+      "unit_ids": [
+        "U23"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T36",
+      "sources": [
+        "B8",
+        "B5"
+      ],
+      "target": "B10",
+      "usage": "method",
+      "reason": "Extracted age-specific values and diagnostic/attrition rules determine descriptive synthesis.",
+      "unit_ids": [
+        "U27"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T37",
+      "sources": [
+        "B8",
+        "B5",
+        "B12"
+      ],
+      "target": "B11",
+      "usage": "method",
+      "reason": "The age-specific eligible estimates and heterogeneity definition are used in the random-effects analysis.",
+      "unit_ids": [
+        "U28"
+      ],
+      "conditions": []
+    }
+  ]
+}

@@ -1,0 +1,278 @@
+{
+  "occurrences": [],
+  "transitions": [
+    {
+      "id": "T25",
+      "sources": [
+        "B8"
+      ],
+      "target": "B41",
+      "usage": "result",
+      "reason": "Extraction of study parameters yields this cohort-specific incidence and diagnostic record.",
+      "unit_ids": [
+        "U53"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T26",
+      "sources": [
+        "B8"
+      ],
+      "target": "B42",
+      "usage": "result",
+      "reason": "Extraction of study parameters yields this cohort-specific incidence and diagnostic record.",
+      "unit_ids": [
+        "U53"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T27",
+      "sources": [
+        "B8"
+      ],
+      "target": "B43",
+      "usage": "result",
+      "reason": "Extraction of study parameters yields this cohort-specific incidence and diagnostic record.",
+      "unit_ids": [
+        "U53"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T28",
+      "sources": [
+        "B8"
+      ],
+      "target": "B44",
+      "usage": "result",
+      "reason": "Extraction of study parameters yields this cohort-specific incidence and diagnostic record.",
+      "unit_ids": [
+        "U53"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T38",
+      "sources": [
+        "B8"
+      ],
+      "target": "B48",
+      "usage": "result",
+      "reason": "Reviewing extracted parameters yields the 82-variable inventory and 13 proposed contributors.",
+      "unit_ids": [
+        "U51"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T39",
+      "sources": [
+        "B17",
+        "B18",
+        "B19",
+        "B20",
+        "B21",
+        "B22",
+        "B23",
+        "B24",
+        "B25",
+        "B26",
+        "B27",
+        "B28",
+        "B29",
+        "B30",
+        "B31"
+      ],
+      "target": "B46",
+      "usage": "data",
+      "reason": "The source's age and heterogeneity pattern is derived from the age-stratified summaries.",
+      "unit_ids": [
+        "U48"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T40",
+      "sources": [
+        "B17",
+        "B18",
+        "B19",
+        "B20",
+        "B21",
+        "B22",
+        "B23",
+        "B24",
+        "B25",
+        "B26",
+        "B27",
+        "B28",
+        "B29",
+        "B30",
+        "B31"
+      ],
+      "target": "B47",
+      "usage": "data",
+      "reason": "The source compares the descriptive intervals with the pooled confidence intervals across outcomes.",
+      "unit_ids": [
+        "U48"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T41",
+      "sources": [
+        "B32",
+        "B33",
+        "B34",
+        "B35",
+        "B36",
+        "B37",
+        "B38",
+        "B39",
+        "B40",
+        "B41",
+        "B42",
+        "B43",
+        "B44"
+      ],
+      "target": "B49",
+      "usage": "data",
+      "reason": "The qualitative table's cohort years and incidence values motivate the explicitly tentative calendar trend.",
+      "unit_ids": [
+        "U61"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T42",
+      "sources": [
+        "B32",
+        "B33",
+        "B34",
+        "B35",
+        "B36",
+        "B37",
+        "B38",
+        "B39",
+        "B40",
+        "B41",
+        "B42",
+        "B43",
+        "B44"
+      ],
+      "target": "B50",
+      "usage": "data",
+      "reason": "The source's qualitative comparison across the reported cohort characteristics found no consistent differences.",
+      "unit_ids": [
+        "U62"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T43",
+      "sources": [
+        "B13",
+        "B48"
+      ],
+      "target": "B53",
+      "usage": "premise",
+      "reason": "The small stratum counts constrain meta-regression and motivate qualitative examination.",
+      "unit_ids": [
+        "U71"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T44",
+      "sources": [
+        "B48",
+        "B53"
+      ],
+      "target": "B54",
+      "usage": "premise",
+      "reason": "Qualitative parameter differences and insufficient power delimit the proposed, unconfirmed heterogeneity explanations.",
+      "unit_ids": [
+        "U72"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T45",
+      "sources": [
+        "B46",
+        "B47",
+        "B48"
+      ],
+      "target": "B51",
+      "usage": "premise",
+      "reason": "The source jointly evaluates the three analyses as a complementary synthesis.",
+      "unit_ids": [
+        "U82"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T46",
+      "sources": [
+        "B46",
+        "B53",
+        "B54",
+        "B55"
+      ],
+      "target": "B57",
+      "usage": "premise",
+      "reason": "Persistent variation, unconfirmed explanations and mutable MCI motivate the explicit prescription to use ranges with context.",
+      "unit_ids": [
+        "U73",
+        "U81",
+        "U85"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T47",
+      "sources": [
+        "B1"
+      ],
+      "target": "B55",
+      "usage": "development",
+      "reason": "The source directly develops MCI's diagnostic state by explaining that meeting criteria need not persist at later assessments.",
+      "unit_ids": [
+        "U73"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T48",
+      "sources": [
+        "B1",
+        "B2"
+      ],
+      "target": "B56",
+      "usage": "premise",
+      "reason": "The source uses the MCI case definition and the distinction between MCI and AD pathology to explain why population counts require detection and etiologic filtering.",
+      "unit_ids": [
+        "U76"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T49",
+      "sources": [
+        "B51",
+        "B53",
+        "B46"
+      ],
+      "target": "B58",
+      "usage": "premise",
+      "reason": "The source's appraisal weighs synthesis strengths jointly with small-study and heterogeneity limitations.",
+      "unit_ids": [
+        "U81",
+        "U82"
+      ],
+      "conditions": []
+    }
+  ]
+}

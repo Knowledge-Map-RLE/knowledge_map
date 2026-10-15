@@ -1,0 +1,787 @@
+{
+  "U1": {
+    "knowledge_ids": [],
+    "excluded_reason": "Section heading or bibliographic title: document structure retained outside the graph."
+  },
+  "U2": {
+    "knowledge_ids": [],
+    "excluded_reason": "Publication metadata, keywords, acknowledgements, contributions, funding, ethical/data-availability or publisher statement: retained as source, not extracted scientific knowledge."
+  },
+  "U3": {
+    "knowledge_ids": [],
+    "excluded_reason": "Publication metadata, keywords, acknowledgements, contributions, funding, ethical/data-availability or publisher statement: retained as source, not extracted scientific knowledge."
+  },
+  "U4": {
+    "knowledge_ids": [
+      "K6"
+    ],
+    "excluded_reason": null
+  },
+  "U5": {
+    "knowledge_ids": [
+      "K139"
+    ],
+    "excluded_reason": null
+  },
+  "U6": {
+    "knowledge_ids": [],
+    "excluded_reason": "Publication metadata, keywords, acknowledgements, contributions, funding, ethical/data-availability or publisher statement: retained as source, not extracted scientific knowledge."
+  },
+  "U7": {
+    "knowledge_ids": [],
+    "excluded_reason": "Section heading or bibliographic title: document structure retained outside the graph."
+  },
+  "U8": {
+    "knowledge_ids": [
+      "K1"
+    ],
+    "excluded_reason": null
+  },
+  "U9": {
+    "knowledge_ids": [
+      "K2"
+    ],
+    "excluded_reason": null
+  },
+  "U10": {
+    "knowledge_ids": [
+      "K3"
+    ],
+    "excluded_reason": null
+  },
+  "U11": {
+    "knowledge_ids": [
+      "K4"
+    ],
+    "excluded_reason": null
+  },
+  "U12": {
+    "knowledge_ids": [
+      "K4"
+    ],
+    "excluded_reason": null
+  },
+  "U13": {
+    "knowledge_ids": [
+      "K5"
+    ],
+    "excluded_reason": null
+  },
+  "U14": {
+    "knowledge_ids": [
+      "K6"
+    ],
+    "excluded_reason": null
+  },
+  "U15": {
+    "knowledge_ids": [],
+    "excluded_reason": "Section heading or bibliographic title: document structure retained outside the graph."
+  },
+  "U16": {
+    "knowledge_ids": [],
+    "excluded_reason": "Section heading or bibliographic title: document structure retained outside the graph."
+  },
+  "U17": {
+    "knowledge_ids": [
+      "K7"
+    ],
+    "excluded_reason": null
+  },
+  "U18": {
+    "knowledge_ids": [
+      "K8",
+      "K9"
+    ],
+    "excluded_reason": null
+  },
+  "U19": {
+    "knowledge_ids": [
+      "K10"
+    ],
+    "excluded_reason": null
+  },
+  "U20": {
+    "knowledge_ids": [
+      "K11",
+      "K12"
+    ],
+    "excluded_reason": null
+  },
+  "U21": {
+    "knowledge_ids": [
+      "K12"
+    ],
+    "excluded_reason": null
+  },
+  "U22": {
+    "knowledge_ids": [
+      "K12"
+    ],
+    "excluded_reason": null
+  },
+  "U23": {
+    "knowledge_ids": [],
+    "excluded_reason": "Section heading or bibliographic title: document structure retained outside the graph."
+  },
+  "U24": {
+    "knowledge_ids": [
+      "K13"
+    ],
+    "excluded_reason": null
+  },
+  "U25": {
+    "knowledge_ids": [],
+    "excluded_reason": "Section heading or bibliographic title: document structure retained outside the graph."
+  },
+  "U26": {
+    "knowledge_ids": [],
+    "excluded_reason": "Section heading or bibliographic title: document structure retained outside the graph."
+  },
+  "U27": {
+    "knowledge_ids": [
+      "K14",
+      "K15"
+    ],
+    "excluded_reason": null
+  },
+  "U28": {
+    "knowledge_ids": [],
+    "excluded_reason": "Section heading or bibliographic title: document structure retained outside the graph."
+  },
+  "U29": {
+    "knowledge_ids": [
+      "K16",
+      "K17"
+    ],
+    "excluded_reason": null
+  },
+  "U30": {
+    "knowledge_ids": [],
+    "excluded_reason": "Section heading or bibliographic title: document structure retained outside the graph."
+  },
+  "U31": {
+    "knowledge_ids": [
+      "K18"
+    ],
+    "excluded_reason": null
+  },
+  "U32": {
+    "knowledge_ids": [
+      "K19",
+      "K20"
+    ],
+    "excluded_reason": null
+  },
+  "U33": {
+    "knowledge_ids": [
+      "K20"
+    ],
+    "excluded_reason": null
+  },
+  "U34": {
+    "knowledge_ids": [],
+    "excluded_reason": "Section heading or bibliographic title: document structure retained outside the graph."
+  },
+  "U35": {
+    "knowledge_ids": [
+      "K21"
+    ],
+    "excluded_reason": null
+  },
+  "U36": {
+    "knowledge_ids": [],
+    "excluded_reason": "Section heading or bibliographic title: document structure retained outside the graph."
+  },
+  "U37": {
+    "knowledge_ids": [
+      "K22"
+    ],
+    "excluded_reason": null
+  },
+  "U38": {
+    "knowledge_ids": [],
+    "excluded_reason": "Section heading or bibliographic title: document structure retained outside the graph."
+  },
+  "U39": {
+    "knowledge_ids": [
+      "K23"
+    ],
+    "excluded_reason": null
+  },
+  "U40": {
+    "knowledge_ids": [
+      "K23"
+    ],
+    "excluded_reason": null
+  },
+  "U41": {
+    "knowledge_ids": [],
+    "excluded_reason": "Section heading or bibliographic title: document structure retained outside the graph."
+  },
+  "U42": {
+    "knowledge_ids": [],
+    "excluded_reason": "Section heading or bibliographic title: document structure retained outside the graph."
+  },
+  "U43": {
+    "knowledge_ids": [
+      "K24"
+    ],
+    "excluded_reason": null
+  },
+  "U44": {
+    "knowledge_ids": [
+      "K25",
+      "K26",
+      "K27",
+      "K28",
+      "K29",
+      "K30",
+      "K31",
+      "K32",
+      "K33",
+      "K34",
+      "K35",
+      "K36"
+    ],
+    "excluded_reason": null
+  },
+  "U45": {
+    "knowledge_ids": [
+      "K25",
+      "K26",
+      "K27",
+      "K28",
+      "K29",
+      "K30",
+      "K31",
+      "K32",
+      "K33",
+      "K34",
+      "K35",
+      "K36"
+    ],
+    "excluded_reason": null
+  },
+  "U46": {
+    "knowledge_ids": [
+      "K37"
+    ],
+    "excluded_reason": null
+  },
+  "U47": {
+    "knowledge_ids": [
+      "K38",
+      "K39",
+      "K40",
+      "K41",
+      "K42",
+      "K43",
+      "K44",
+      "K45",
+      "K46",
+      "K47",
+      "K48",
+      "K49",
+      "K50",
+      "K51",
+      "K52",
+      "K53",
+      "K54",
+      "K55",
+      "K56",
+      "K57",
+      "K58",
+      "K59",
+      "K60",
+      "K61",
+      "K62",
+      "K63",
+      "K64",
+      "K65",
+      "K66",
+      "K67",
+      "K68",
+      "K69",
+      "K70",
+      "K71"
+    ],
+    "excluded_reason": null
+  },
+  "U48": {
+    "knowledge_ids": [
+      "K38",
+      "K39",
+      "K40",
+      "K41",
+      "K42",
+      "K43",
+      "K44",
+      "K45",
+      "K46",
+      "K47",
+      "K48",
+      "K49",
+      "K50",
+      "K51",
+      "K52",
+      "K53",
+      "K54",
+      "K55",
+      "K56",
+      "K57",
+      "K58",
+      "K59",
+      "K60",
+      "K61",
+      "K62",
+      "K63",
+      "K64",
+      "K65",
+      "K66",
+      "K67",
+      "K68",
+      "K69",
+      "K70",
+      "K71"
+    ],
+    "excluded_reason": null
+  },
+  "U49": {
+    "knowledge_ids": [
+      "K38",
+      "K39",
+      "K40",
+      "K41",
+      "K42",
+      "K43",
+      "K44",
+      "K45",
+      "K46",
+      "K47",
+      "K48",
+      "K49",
+      "K50",
+      "K51",
+      "K52",
+      "K53",
+      "K54",
+      "K55",
+      "K56",
+      "K57",
+      "K58",
+      "K59",
+      "K60",
+      "K61",
+      "K62",
+      "K63",
+      "K64",
+      "K65",
+      "K66",
+      "K67",
+      "K68",
+      "K69",
+      "K70",
+      "K71",
+      "K72"
+    ],
+    "excluded_reason": null
+  },
+  "U50": {
+    "knowledge_ids": [
+      "K73",
+      "K74",
+      "K75",
+      "K76",
+      "K77",
+      "K78",
+      "K79",
+      "K80",
+      "K81",
+      "K82",
+      "K83",
+      "K84",
+      "K85",
+      "K86",
+      "K87",
+      "K88",
+      "K89",
+      "K90",
+      "K91",
+      "K92",
+      "K93",
+      "K94",
+      "K95",
+      "K96",
+      "K97",
+      "K98",
+      "K99",
+      "K100",
+      "K101",
+      "K102",
+      "K103",
+      "K104",
+      "K105",
+      "K106"
+    ],
+    "excluded_reason": null
+  },
+  "U51": {
+    "knowledge_ids": [
+      "K73",
+      "K74",
+      "K75",
+      "K76",
+      "K77",
+      "K78",
+      "K79",
+      "K80",
+      "K81",
+      "K82",
+      "K83",
+      "K84",
+      "K85",
+      "K86",
+      "K87",
+      "K88",
+      "K89",
+      "K90",
+      "K91",
+      "K92",
+      "K93",
+      "K94",
+      "K95",
+      "K96",
+      "K97",
+      "K98",
+      "K99",
+      "K100",
+      "K101",
+      "K102",
+      "K103",
+      "K104",
+      "K105",
+      "K106"
+    ],
+    "excluded_reason": null
+  },
+  "U52": {
+    "knowledge_ids": [
+      "K73",
+      "K74",
+      "K75",
+      "K76",
+      "K77",
+      "K78",
+      "K79",
+      "K80",
+      "K81",
+      "K82",
+      "K83",
+      "K84",
+      "K85",
+      "K86",
+      "K87",
+      "K88",
+      "K89",
+      "K90",
+      "K91",
+      "K92",
+      "K93",
+      "K94",
+      "K95",
+      "K96",
+      "K97",
+      "K98",
+      "K99",
+      "K100",
+      "K101",
+      "K102",
+      "K103",
+      "K104",
+      "K105",
+      "K106"
+    ],
+    "excluded_reason": null
+  },
+  "U53": {
+    "knowledge_ids": [],
+    "excluded_reason": "Section heading or bibliographic title: document structure retained outside the graph."
+  },
+  "U54": {
+    "knowledge_ids": [
+      "K107"
+    ],
+    "excluded_reason": null
+  },
+  "U55": {
+    "knowledge_ids": [
+      "K108",
+      "K109",
+      "K110",
+      "K111",
+      "K112",
+      "K113",
+      "K114",
+      "K115",
+      "K116",
+      "K117"
+    ],
+    "excluded_reason": null
+  },
+  "U56": {
+    "knowledge_ids": [
+      "K108",
+      "K109",
+      "K110",
+      "K111",
+      "K112",
+      "K113",
+      "K114",
+      "K115",
+      "K116",
+      "K117"
+    ],
+    "excluded_reason": null
+  },
+  "U57": {
+    "knowledge_ids": [
+      "K108",
+      "K109",
+      "K110",
+      "K111",
+      "K112",
+      "K113",
+      "K114",
+      "K115",
+      "K116",
+      "K117",
+      "K118",
+      "K119",
+      "K120",
+      "K121",
+      "K122",
+      "K123"
+    ],
+    "excluded_reason": null
+  },
+  "U58": {
+    "knowledge_ids": [
+      "K124"
+    ],
+    "excluded_reason": null
+  },
+  "U59": {
+    "knowledge_ids": [
+      "K125"
+    ],
+    "excluded_reason": null
+  },
+  "U60": {
+    "knowledge_ids": [
+      "K126",
+      "K127",
+      "K128",
+      "K129"
+    ],
+    "excluded_reason": null
+  },
+  "U61": {
+    "knowledge_ids": [
+      "K126",
+      "K127",
+      "K128",
+      "K129"
+    ],
+    "excluded_reason": null
+  },
+  "U62": {
+    "knowledge_ids": [
+      "K125",
+      "K126",
+      "K127",
+      "K128",
+      "K129",
+      "K130",
+      "K131"
+    ],
+    "excluded_reason": null
+  },
+  "U63": {
+    "knowledge_ids": [
+      "K132",
+      "K138"
+    ],
+    "excluded_reason": null
+  },
+  "U64": {
+    "knowledge_ids": [
+      "K133",
+      "K134",
+      "K135"
+    ],
+    "excluded_reason": null
+  },
+  "U65": {
+    "knowledge_ids": [
+      "K133",
+      "K134",
+      "K135"
+    ],
+    "excluded_reason": null
+  },
+  "U66": {
+    "knowledge_ids": [
+      "K132",
+      "K133",
+      "K134",
+      "K135",
+      "K136",
+      "K137"
+    ],
+    "excluded_reason": null
+  },
+  "U67": {
+    "knowledge_ids": [],
+    "excluded_reason": "Section heading or bibliographic title: document structure retained outside the graph."
+  },
+  "U68": {
+    "knowledge_ids": [
+      "K139"
+    ],
+    "excluded_reason": null
+  },
+  "U69": {
+    "knowledge_ids": [
+      "K139"
+    ],
+    "excluded_reason": null
+  },
+  "U70": {
+    "knowledge_ids": [
+      "K139",
+      "K145"
+    ],
+    "excluded_reason": null
+  },
+  "U71": {
+    "knowledge_ids": [
+      "K140"
+    ],
+    "excluded_reason": null
+  },
+  "U72": {
+    "knowledge_ids": [
+      "K141"
+    ],
+    "excluded_reason": null
+  },
+  "U73": {
+    "knowledge_ids": [
+      "K142"
+    ],
+    "excluded_reason": null
+  },
+  "U74": {
+    "knowledge_ids": [],
+    "excluded_reason": "Section heading or bibliographic title: document structure retained outside the graph."
+  },
+  "U75": {
+    "knowledge_ids": [
+      "K143"
+    ],
+    "excluded_reason": null
+  },
+  "U76": {
+    "knowledge_ids": [
+      "K144"
+    ],
+    "excluded_reason": null
+  },
+  "U77": {
+    "knowledge_ids": [],
+    "excluded_reason": "Section heading or bibliographic title: document structure retained outside the graph."
+  },
+  "U78": {
+    "knowledge_ids": [
+      "K145",
+      "K146"
+    ],
+    "excluded_reason": null
+  },
+  "U79": {
+    "knowledge_ids": [],
+    "excluded_reason": "Section heading or bibliographic title: document structure retained outside the graph."
+  },
+  "U80": {
+    "knowledge_ids": [],
+    "excluded_reason": "Publication metadata, keywords, acknowledgements, contributions, funding, ethical/data-availability or publisher statement: retained as source, not extracted scientific knowledge."
+  },
+  "U81": {
+    "knowledge_ids": [],
+    "excluded_reason": "Section heading or bibliographic title: document structure retained outside the graph."
+  },
+  "U82": {
+    "knowledge_ids": [],
+    "excluded_reason": "Supplementary resource link without the underlying supplementary table values in the supplied full text; no values invented."
+  },
+  "U83": {
+    "knowledge_ids": [],
+    "excluded_reason": "Supplementary resource link without the underlying supplementary table values in the supplied full text; no values invented."
+  },
+  "U84": {
+    "knowledge_ids": [],
+    "excluded_reason": "Section heading or bibliographic title: document structure retained outside the graph."
+  },
+  "U85": {
+    "knowledge_ids": [],
+    "excluded_reason": "Publication metadata, keywords, acknowledgements, contributions, funding, ethical/data-availability or publisher statement: retained as source, not extracted scientific knowledge."
+  },
+  "U86": {
+    "knowledge_ids": [],
+    "excluded_reason": "Section heading or bibliographic title: document structure retained outside the graph."
+  },
+  "U87": {
+    "knowledge_ids": [],
+    "excluded_reason": "Publication metadata, keywords, acknowledgements, contributions, funding, ethical/data-availability or publisher statement: retained as source, not extracted scientific knowledge."
+  },
+  "U88": {
+    "knowledge_ids": [],
+    "excluded_reason": "Section heading or bibliographic title: document structure retained outside the graph."
+  },
+  "U89": {
+    "knowledge_ids": [],
+    "excluded_reason": "Publication metadata, keywords, acknowledgements, contributions, funding, ethical/data-availability or publisher statement: retained as source, not extracted scientific knowledge."
+  },
+  "U90": {
+    "knowledge_ids": [],
+    "excluded_reason": "Section heading or bibliographic title: document structure retained outside the graph."
+  },
+  "U91": {
+    "knowledge_ids": [],
+    "excluded_reason": "Publication metadata, keywords, acknowledgements, contributions, funding, ethical/data-availability or publisher statement: retained as source, not extracted scientific knowledge."
+  },
+  "U92": {
+    "knowledge_ids": [],
+    "excluded_reason": "Section heading or bibliographic title: document structure retained outside the graph."
+  },
+  "U93": {
+    "knowledge_ids": [],
+    "excluded_reason": "Publication metadata, keywords, acknowledgements, contributions, funding, ethical/data-availability or publisher statement: retained as source, not extracted scientific knowledge."
+  },
+  "U94": {
+    "knowledge_ids": [],
+    "excluded_reason": "Section heading or bibliographic title: document structure retained outside the graph."
+  },
+  "U95": {
+    "knowledge_ids": [],
+    "excluded_reason": "Publication metadata, keywords, acknowledgements, contributions, funding, ethical/data-availability or publisher statement: retained as source, not extracted scientific knowledge."
+  },
+  "U96": {
+    "knowledge_ids": [],
+    "excluded_reason": "Section heading or bibliographic title: document structure retained outside the graph."
+  },
+  "U97": {
+    "knowledge_ids": [],
+    "excluded_reason": "Publication metadata, keywords, acknowledgements, contributions, funding, ethical/data-availability or publisher statement: retained as source, not extracted scientific knowledge."
+  }
+}

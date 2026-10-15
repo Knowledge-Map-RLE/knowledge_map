@@ -175,9 +175,13 @@ class ArticleMapDependencyModelGateway(ArticleMapModelGateway):
 
     async def __call__(self, system: str, user: str) -> str:
         request = json.loads(user)
-        schema = dependency_review_json_schema(request["knowledge_map"]["nodes"],
-                                              request.get("dependency_target_keys"),
-                                              request.get("accepted_dependencies"))
+        if request["knowledge_map"].get("schema_version") == 6:
+            from domain.knowledge_development_schema import development_review_json_schema
+            schema = development_review_json_schema([k["knowledge_id"] for k in request["knowledge_map"]["knowledge"]])
+        else:
+            schema = dependency_review_json_schema(request["knowledge_map"]["nodes"],
+                                                  request.get("dependency_target_keys"),
+                                                  request.get("accepted_dependencies"))
         self.output_schema = schema
         self.json_object = False
         self.strict_schema = True

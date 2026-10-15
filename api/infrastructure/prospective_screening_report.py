@@ -1,0 +1,70 @@
+"""Обзор пригодности первичных источников; исходный прогноз и его корпус не меняются."""
+import json
+from infrastructure.immutable_files import write_immutable
+from infrastructure.development_prediction_store import FilePredictionStore
+
+
+HTML = r'''<!doctype html><html lang="ru"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>IL-6: сопоставимый MMSE</title><style>
+body{margin:0;background:#f1f5fa;color:#192b43;font:16px/1.55 system-ui}main{max-width:1150px;margin:auto;padding:24px}h1{line-height:1.2;font-size:29px}button,select{font:inherit;border:1px solid #a6b6ca;border-radius:8px;padding:10px 14px;background:#fff;color:#192b43;cursor:pointer}button{background:#19569c;color:white}nav{display:flex;gap:12px;flex-wrap:wrap}.card,details{background:white;border:1px solid #d4deea;border-radius:10px;padding:16px;margin:14px 0}summary{cursor:pointer;font-weight:650}pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px}table{border-collapse:collapse;width:100%;font-size:14px}th,td{padding:10px;border-bottom:1px solid #d5dfeb;vertical-align:top;text-align:left}th{background:#e7eef7}.scroll{overflow:auto}.warn{background:#fff3d6}.muted{color:#52647a}blockquote{border-left:3px solid #19569c;padding-left:12px;margin-left:0}mark{background:#fff1a7}a{color:#174d88}.stat{font-size:22px;font-weight:700}</style>
+<main><nav><button id="language">English</button><select id="record"></select></nav><h1 id="title"></h1><div class="card warn" id="intro"></div>
+<div class="card" id="summary"></div><h2 id="tableTitle"></h2><div id="table" class="card scroll"></div><div id="detail"></div>
+<h2 id="evidenceTitle"></h2><select id="trait"></select><div id="evidence"></div><details><summary id="fullTitle"></summary><pre id="full"></pre></details>
+<h2 id="candidatesTitle"></h2><div id="candidates"></div><details><summary id="discoveryTitle"></summary><pre id="discovery"></pre></details>
+<h2 id="nextTitle"></h2><div id="next" class="card"></div><p id="footer" class="muted"></p></main>
+<script id="data" type="application/json">__DATA__</script><script>
+const D=JSON.parse(document.getElementById('data').textContent),el=id=>document.getElementById(id);let lang='ru';
+const t=(ru,en)=>lang==='ru'?ru:en,e=v=>String(v??'—').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fields={matrix:['Материал','Matrix'],processing:['Обработка и тип измерения','Processing and measurement'],exposure_visit:['Измерение IL-6','IL-6 visit'],outcome_start_visit:['Начало когнитивного исхода','Cognitive outcome start'],dementia_excluded:['Деменция исключена','Dementia excluded'],dementia_visit:['Когда исключена деменция','Dementia exclusion visit'],minimum_age_at_exposure:['Минимальный возраст при измерении','Minimum age at measurement'],outcome:['Когнитивный исход','Cognitive outcome'],followup_years:['Длительность наблюдения','Follow-up duration']};
+const reasons={not_established:['Не установлено по полному источнику','Not established by the full source'],not_plasma:['Материал не является плазмой','Matrix is not plasma'],not_direct_plasma_assay:['Это не прямое измерение в плазме','Not a direct plasma assay'],age_at_least_60_not_established:['Нижняя граница возраста ≥60 не установлена','Minimum age ≥60 not established'],common_baseline_not_established:['Общая исходная точка не подтверждена','Common baseline not established'],baseline_dementia_not_excluded:['Деменция не исключена','Dementia not excluded'],dementia_exclusion_at_exposure_not_established:['Нет подтверждения исключения деменции при этом измерении','Dementia exclusion at this measurement not established'],not_continuous_annual_mmse_change:['Не соответствует непрерывному годовому изменению MMSE','Not continuous annual MMSE change'],duration_below_two_years:['Наблюдение короче двух лет','Follow-up below two years']};
+const value=v=>v.status==='not_reported'?t('Не указано','Not reported'):JSON.stringify(v.value);
+const chosen=()=>D.result.results[Number(el('record').value)];
+function table(headers,rows){return '<table><thead><tr>'+headers.map(h=>'<th>'+e(h)+'</th>').join('')+'</tr></thead><tbody>'+rows.map(r=>'<tr>'+r.map(v=>'<td>'+e(v)+'</td>').join('')+'</tr>').join('')+'</tbody></table>'}
+function render(){document.documentElement.lang=lang;el('language').textContent=t('English','Русский');el('title').textContent=t('IL-6: проверка сопоставимого исхода MMSE','IL-6: checking a comparable MMSE outcome');
+el('intro').textContent=t('Исходный вопрос сохраняется. Непрерывное годовое изменение MMSE проверено как отдельная ветка реализуемости. Это не выбор удачного правила: знак и p не использованы для допуска. Новый прогноз не выдан, новая цель не выбрана.','The original question remains unchanged. Continuous annual MMSE change is a separate feasibility branch. Signs and p-values are not admission criteria. No new forecast was issued or target selected.');
+el('summary').innerHTML='<span class="stat">'+e(t('Подходящих независимых семейств: ','Eligible independent families: ')+D.result.eligible_families.length)+'</span><p>'+e(t('Добавлено обучающих источников: 0. Единственный прошедший отбор результат — ранее проверенный TOOTH. Новая авторская глава сохранена отдельно; её анализы не добавлены в обучение.','Training sources added: 0. The only admitted result is the previously verified TOOTH result. The new author chapter is preserved separately; its analyses were not added to training.'))+'</p>';
+el('tableTitle').textContent=t('Все проверенные анализы','All screened analyses');el('table').innerHTML=table([t('Анализ / семейство','Analysis / family'),t('Материал','Matrix'),t('Где начинается исход','Outcome start'),t('Допуск','Admission'),t('Причины','Reasons')],D.result.results.map(r=>[r.record_id+' / '+r.family,value(r.features.matrix),value(r.features.outcome_start_visit),r.eligible_for_subquestion?t('Пригоден по вопросу','Question-eligible'):t('Не подтверждён','Not established'),r.blockers.map(b=>reasons[b.reason][lang==='ru'?0:1]).join('; ')]));
+el('candidatesTitle').textContent=t('Пять исторических кандидатов','Five historical candidates');const status={17493190:['Полная авторская глава получена; три анализа проверены','Full author chapter obtained; three analyses screened'],25462389:['Полная первичная статья не получена','Full primary article not obtained'],17343293:['Полная первичная статья не получена','Full primary article not obtained'],17493189:['Полная первичная статья не получена; диссертация не принята за журнальную статью','Full primary article not obtained; thesis not substituted for journal paper'],12177370:['Полная первичная статья не получена; семья MacArthur уже есть','Full primary article not obtained; MacArthur family already present']};
+el('candidates').innerHTML=D.selection.sources.map(s=>'<div class="card"><strong>'+e(s.author_year)+'</strong><p>'+e(status[s.pmid][lang==='ru'?0:1])+'</p><p>DOI: '+e(s.doi)+'</p><a href="https://pubmed.ncbi.nlm.nih.gov/'+s.pmid+'/">'+e(t('Библиографическая запись','Bibliographic record'))+'</a></div>').join('');
+el('discoveryTitle').textContent=t('Аудит поиска и ограничения независимой проверки','Discovery audit and independent-validation limits');el('discovery').textContent=JSON.stringify(D.discovery,null,2);
+el('nextTitle').textContent=t('Что нужно для следующего прогноза','Requirements for the next forecast');el('next').textContent=t('Для шаблона нужны две независимые семьи исторических заключений с проверенными более ранними предпосылками. Сначала получить полный текст Matsushima и проверить определения исхода, поправки и исходное исключение деменции. Если сопоставимого корпуса нет, зафиксировать недостаточность данных для этой ветки; исходный вопрос автоматически не расширять. Переходы DAG добавлять только при непосредственном использовании знания, а не из-за наличия цитирования.','A template requires two independent historical conclusion families with verified earlier premises. First obtain the full Matsushima paper and check estimand, adjustments and baseline dementia exclusion. If comparable evidence remains unavailable, record insufficient data for this branch; do not automatically broaden the original question. DAG transitions require direct knowledge use, not merely a citation.');
+el('footer').textContent=t('Разметка Codex требует экспертной проверки. Старые 19 источников, GOLD, карты и прогнозы сохранены. Модели, эмбеддинги и переводчик не вызывались.','Codex annotation requires expert review. Earlier 19 sources, GOLD, maps and forecasts were preserved. No models, embeddings or translator were called.');renderRecord();}
+function renderRecord(){const r=chosen(),old=el('trait').value;el('detail').innerHTML='<div class="card"><strong>'+e(r.record_id)+'</strong><p>'+e(D.records.find(v=>v.id===r.record_id)['note_'+lang])+'</p><p class="muted">SHA-256 '+e(D.records.find(v=>v.id===r.record_id).source_sha256)+'</p></div>';el('trait').innerHTML=Object.keys(fields).map(k=>'<option value="'+k+'">'+e(fields[k][lang==='ru'?0:1])+'</option>').join('');el('trait').value=old||'matrix';el('evidenceTitle').textContent=t('Точные фрагменты с координатами Unicode','Exact fragments with Unicode coordinates');el('fullTitle').textContent=t('Полный сохранённый источник','Full preserved source');renderEvidence();}
+function renderEvidence(){const r=chosen(),record=D.records.find(v=>v.id===r.record_id),s=D.sources[record.source_sha256],f=r.features[el('trait').value],codepoints=Array.from(s.text);
+el('evidence').innerHTML='<div class="card"><strong>'+e(value(f))+'</strong>'+f.evidence.map(p=>'<p class="muted">Unicode ['+p.start+', '+p.end+')</p><blockquote>'+e(p.text)+'</blockquote>').join('')+'</div>';
+for(const p of f.evidence){if(codepoints.slice(p.start,p.end).join('')!==p.text)throw Error('Unicode source mismatch')}
+const p=f.evidence[0];el('full').innerHTML=e(codepoints.slice(0,p.start).join(''))+'<mark>'+e(codepoints.slice(p.start,p.end).join(''))+'</mark>'+e(codepoints.slice(p.end).join(''));}
+el('record').innerHTML=D.result.results.map((r,i)=>'<option value="'+i+'">'+e(r.record_id)+'</option>').join('');el('record').onchange=renderRecord;el('trait').onchange=renderEvidence;el('language').onclick=()=>{lang=lang==='ru'?'en':'ru';render()};render();
+</script></html>'''
+
+
+def save_prospective_review(folder, result, sources, records, selection, discovery):
+    data = {'version': 'prospective-screening-review-1', 'result': result, 'sources': sources,
+            'records': records, 'selection': selection, 'discovery': discovery}
+    encoded = json.dumps(data, ensure_ascii=False, allow_nan=False, separators=(',', ':')).replace('<', '\\u003c')
+    write_immutable(folder / 'review.json', FilePredictionStore.encode(data))
+    write_immutable(folder / 'report.html', HTML.replace('__DATA__', encoded).encode('utf-8'))
+    text = '''# IL-6: реализуемость сопоставимого исхода MMSE
+
+Исходный вопрос не заменён. Отдельно проверена ветка непрерывного годового изменения MMSE. Отбор не зависит от знака оценки или p. Новая будущая цель не выбрана; прогноз не выдан.
+
+Получена полная авторская глава Schram 2007 (контейнер 2008, PDF-страницы 72–88 с библиографией). Оглавление авторских публикаций связывает её с DOI 10.1111/j.1532-5415.2007.01159.x. Полное совпадение с журнальной редакцией и историческая дата открытого доступа не проверены. Исходный PDF, текст главы, хеши и изображения проверенных страниц сохранены.
+
+| Анализ | Решение | Причина |
+|---|---|---|
+| Rotterdam | Допуск не подтверждён | Нижняя граница возраста при заборе крови для аналитической выборки не установлена как ≥60. Возраст при наборе и средний возраст не заменяют этот критерий. |
+| Leiden, возраст 85 | Исключён из этой ветки | Основное измерение — IL-6 в супернатанте после инкубации цельной крови, даже когда она не стимулирована. Авторская интерпретация прокси не превращает измерение в прямую плазму. |
+| Leiden, возраст 86 | Допуск не подтверждён | Отдельное циркулирующее измерение не описывает явно материал, новую исходную когнитивную точку, длительность от измерения и исключение деменции при нём. Не наследуем данные из анализа в 85 лет. |
+| TOOTH, ранее сохранённый | Пригоден по вопросу | Один прежний собственный результат; исключение деменции по самоотчёту и лекарственному анамнезу, MCI не указан. Это не подтверждение эквивалентности контекстов. |
+
+В этой ветке подтверждено одно независимое семейство, новых обучающих источников — 0. Остальные четыре кандидата пока не имеют полученного полного первичного текста. Аннотации и чужие описания не заменяют полную статью. Weaver относится к уже известной семье MacArthur, а не к новой независимой выборке.
+
+Добавлена отдельная проверка материала после обработки и временных якорей: измерение IL-6, начало когнитивного изменения, исключение деменции, возраст при измерении. Неизвестное блокирует допуск и не становится отрицательным биологическим результатом. Библиография не может устанавливать методы собственного исследования. Прохождение скрининга не добавляет источник в обучение автоматически.
+
+Поиск исторических работ случайно вернул фрагменты более поздних публикаций. Они не открывались как цели и не используются в обучении, но перечислены в discovery-audit-v1.json как непригодные для будущей слепой номинации. Этот отбор не является систематическим обзором.
+
+Следующий конкретный шаг — получить полный первичный текст Matsushima 2014/2015 и проверить непрерывный исход MMSE, модель, поправки и исходное исключение деменции. Даже две пригодные статьи ещё не гарантируют правило: нужны две независимые семьи исторических заключений с подходящими более ранними предпосылками. Если данных нет, фиксируем ограничение корпуса, не ослабляя критерии ради прогноза.
+
+Старые результаты и корпус из 19 статей не изменены. GOLD и Neo4j не изменены. Модели, переводчик и эмбеддинги не вызывались; расход внутренних токенов Codex не измерен. Научная разметка требует экспертной проверки.
+'''
+    write_immutable(folder / 'report.ru.md', text.encode('utf-8'))
+    return data

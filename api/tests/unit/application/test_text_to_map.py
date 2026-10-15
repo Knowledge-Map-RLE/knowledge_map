@@ -7,7 +7,9 @@ import threading
 
 import pytest
 
-from application.text_to_map import DEPENDENCY_PROMPT_PATH, PROMPT_PATH, TextToMap, TranslateArticleMap
+from application.text_to_map import (LEGACY_DEPENDENCY_PROMPT_PATH as DEPENDENCY_PROMPT_PATH,
+                                     LEGACY_PROMPT_PATH as PROMPT_PATH, LegacyTextToMap as TextToMap,
+                                     TranslateArticleMap)
 from application.article_map_lock import acquire_map_lock
 from domain.article_maps import ArticleMapError, ArticleMapBusy, parse_model_map, prepare_source
 from domain.knowledge_map import knowledge_text_keys

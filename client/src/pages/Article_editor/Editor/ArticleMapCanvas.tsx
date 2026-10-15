@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback, useMemo } from 'react';
+import React, { useState, useRef, useCallback, useMemo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Container, Graphics, Text } from 'pixi.js';
 import { Application, extend } from '@pixi/react';
@@ -6,23 +6,32 @@ import { Viewport, Link } from '../../../widgets/KnowledgeMap';
 import type { ViewportRef } from '../../../widgets/KnowledgeMap';
 import type { SavedArticleMap } from '../../../services/api/article_maps';
 import { ArticleBlock } from './ArticleBlock';
+import ArticleMapDetails, { type MapSelection } from './ArticleMapDetails';
 import { adaptSavedArticleMap } from './articleMapAdapter';
 import { collectSubgraph } from './articleMapGraph';
 import type { ArticleMapLink, ArticleMapNode } from './articleMapGraph';
+import { initialMapFocus, mapOverview } from './articleMapViewport';
+import styles from './ArticleMap.module.css';
 
 extend({ Container, Graphics, Text });
 
 interface ArticleMapProps {
     result: SavedArticleMap;
+    selectedKnowledgeId?: string;
+    onKnowledgeSelect?: (id: string) => void;
+    hideDetails?: boolean;
 }
 
 const DPR = typeof window !== 'undefined' ? Math.max(1, window.devicePixelRatio || 1) : 1;
 
-const ArticleMapCanvas: React.FC<ArticleMapProps> = ({ result }) => {
+const ArticleMapCanvas: React.FC<ArticleMapProps> = ({ result, selectedKnowledgeId, onKnowledgeSelect, hideDetails = false }) => {
     const { t, i18n } = useTranslation();
     const [hoveredId, setHoveredId] = useState<string | null>(null);
+    const [selection, setSelection] = useState<MapSelection | null>(null);
     const [containerEl, setContainerEl] = useState<HTMLElement | null>(null);
     const centeredGraph = useRef<object | null>(null);
+    const viewportRef = useRef<ViewportRef | null>(null);
+    const [focusedId, setFocusedId] = useState('');
 
     const projection = useMemo(() => {
         try { return { graph: adaptSavedArticleMap(result, t), error: '' }; }
@@ -46,17 +55,52 @@ const ArticleMapCanvas: React.FC<ArticleMapProps> = ({ result }) => {
     }, [subgraph]);
 
     const viewportCbRef = useCallback((viewport: ViewportRef | null) => {
+        viewportRef.current = viewport;
         if (!viewport?.containerRef || nodes.length === 0 || centeredGraph.current === graph) return;
         const screen = viewport.getScreenSize?.();
         if (!screen || screen.width <= 0 || screen.height <= 0) return;
-        const minX = Math.min(...nodes.map(node => node.x));
-        const maxX = Math.max(...nodes.map(node => node.x));
-        const minY = Math.min(...nodes.map(node => node.y));
-        const maxY = Math.max(...nodes.map(node => node.y));
+        const selected = selectedKnowledgeId && result.graph.nodes.find(n => n.knowledge_id === selectedKnowledgeId);
+        const focus = (selected && nodes.find(n => n.id === selected.id)) || (graph && initialMapFocus(graph));
+        if (!focus) return;
+        if (selected) {
+            viewport.setScale?.(Math.min(1, screen.height / ((focus.height ?? 100) + 128)));
+            setFocusedId(selected.id);
+        }
         // Ref приходит после готовности Pixi, без гонки с фиксированным таймером.
-        viewport.focusOn((minX + maxX) / 2, (minY + maxY) / 2);
+        viewport.focusOn(focus.x, focus.y);
         centeredGraph.current = graph;
-    }, [graph, nodes]);
+    }, [graph, nodes, selectedKnowledgeId, result]);
+
+    function focusNode(id: string, notify = true) {
+        const node = nodes.find(item => item.id === id);
+        const viewport = viewportRef.current;
+        if (!node || !viewport) return;
+        const screen = viewport.getScreenSize?.();
+        viewport.setScale?.(screen ? Math.min(1, screen.height / ((node.height ?? 100) + 128)) : 1);
+        viewport.focusOn(node.x, node.y);
+        setFocusedId(id);
+        const knowledgeId = result.graph.nodes.find(n => n.id === id)?.knowledge_id;
+        if (knowledgeId && notify) onKnowledgeSelect?.(knowledgeId);
+        if (result.pipeline_id === 'text_reified') setSelection({ nodeId: id });
+    }
+
+    useEffect(() => {
+        const node = result.graph.nodes.find(n => n.knowledge_id === selectedKnowledgeId);
+        if (node) focusNode(node.id, false);
+    }, [selectedKnowledgeId, result]);
+
+    useEffect(() => { setSelection(null); }, [result.article_id, result.run_id]);
+
+    function showOverview() {
+        const viewport = viewportRef.current;
+        const screen = viewport?.getScreenSize?.();
+        const overview = screen && mapOverview(nodes, screen);
+        if (!viewport || !overview) return;
+        viewport.setScale?.(overview.scale);
+        viewport.focusOn(overview.x, overview.y);
+        setSelection(null);
+        setFocusedId('');
+    }
 
     const containerCbRef = useCallback((element: HTMLDivElement | null) => {
         setContainerEl(element);
@@ -84,7 +128,12 @@ const ArticleMapCanvas: React.FC<ArticleMapProps> = ({ result }) => {
                                     linkData={link}
                                     blocks={nodes}
                                     isSelected={false}
-                                    onClick={() => {}}
+                                    zIndex={0}
+                                    onClick={() => {
+                                        const transitions = result.graph.transitions?.filter(item =>
+                                            item.target === link.target_id && item.sources.includes(link.source_id));
+                                        if (transitions?.length) setSelection({ transitionIds: transitions.map(item => item.id) });
+                                    }}
                                     color={color}
                                     alpha={alpha}
                                 />
@@ -95,17 +144,30 @@ const ArticleMapCanvas: React.FC<ArticleMapProps> = ({ result }) => {
                                 key={node.id}
                                 blockData={node}
                                 hovered={node.id === hoveredId}
-                                highlighted={subgraph ? subgraph.nodes.has(node.id) : false}
+                                highlighted={result.graph.nodes.find(n => n.id === node.id)?.knowledge_id === selectedKnowledgeId || (subgraph ? subgraph.nodes.has(node.id) : false)}
                                 dimmed={hoveredId !== null && subgraph ? !subgraph.nodes.has(node.id) : false}
                                 onHover={setHoveredId}
+                                onSelect={result.pipeline_id === 'text_reified' ? id => focusNode(id) : undefined}
                             />
                         ))}
                     </Viewport>
                 </Application>
             )}
+            <div className={styles.navigation} aria-label={t('articleEditor.map.navigation.controls')}>
+                <button type="button" className={`${styles.buildButton} ${styles.secondaryButton}`} onClick={showOverview}>
+                    {t('articleEditor.map.navigation.overview')}
+                </button>
+                <select className={styles.select} aria-label={t('articleEditor.map.navigation.block')}
+                    value={focusedId} onChange={event => focusNode(event.target.value)}>
+                    <option value="">{t('articleEditor.map.navigation.block')}</option>
+                    {[...nodes].sort((a, b) => a.order - b.order).map(node => <option key={node.id} value={node.id}>
+                        {node.id} · {node.label}
+                    </option>)}
+                </select>
+            </div>
             <div
                 style={{
-                    position: 'absolute', top: 12, right: 12, zIndex: 10, pointerEvents: 'none',
+                    position: 'absolute', top: 12, right: 12, zIndex: 10, pointerEvents: 'none', display: hideDetails ? 'none' : undefined,
                     background: 'rgba(255,255,255,0.95)', border: '1px solid #e5e7eb',
                     borderRadius: 8, padding: '8px 12px', fontSize: 12, color: '#374151',
                     boxShadow: '0 1px 3px rgba(0,0,0,0.08)', maxWidth: 260,
@@ -126,6 +188,7 @@ const ArticleMapCanvas: React.FC<ArticleMapProps> = ({ result }) => {
                     <br />{t('articleEditor.map.hoverHint')}
                 </div>
             </div>
+            {selection && (!hideDetails || 'transitionIds' in selection) && <ArticleMapDetails result={result} selection={selection} onClose={() => setSelection(null)} />}
         </div>
     );
 };

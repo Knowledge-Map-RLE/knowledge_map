@@ -1,0 +1,6352 @@
+{
+  "schema_version": 6,
+  "concepts": [
+    {
+      "id": "C1",
+      "display_text": "Mild cognitive impairment",
+      "aliases": [
+        "MCI"
+      ],
+      "provenance": {
+        "unit_ids": [
+          "U12",
+          "U78",
+          "U5",
+          "U15",
+          "U24",
+          "U52",
+          "U53",
+          "U56",
+          "U54",
+          "U55",
+          "U7",
+          "U25",
+          "U62",
+          "U76",
+          "U8",
+          "U82"
+        ]
+      }
+    },
+    {
+      "id": "C2",
+      "display_text": "Normal cognitive aging",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U12"
+        ]
+      }
+    },
+    {
+      "id": "C3",
+      "display_text": "Dementia",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U12",
+          "U78",
+          "U13",
+          "U5",
+          "U15",
+          "U82",
+          "U24",
+          "U40",
+          "U59",
+          "U62",
+          "U8",
+          "U25",
+          "U76"
+        ]
+      }
+    },
+    {
+      "id": "C4",
+      "display_text": "MCI prevalence",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U12"
+        ]
+      }
+    },
+    {
+      "id": "C5",
+      "display_text": "High-income clinical samples",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U12",
+          "U78"
+        ]
+      }
+    },
+    {
+      "id": "C6",
+      "display_text": "High-income community samples",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U12",
+          "U78"
+        ]
+      }
+    },
+    {
+      "id": "C7",
+      "display_text": "Petersen-defined mild cognitive impairment",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U13"
+        ]
+      }
+    },
+    {
+      "id": "C8",
+      "display_text": "Subjective memory loss verified by neuropsychological testing",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U13"
+        ]
+      }
+    },
+    {
+      "id": "C9",
+      "display_text": "Other cognitive domains",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U13"
+        ]
+      }
+    },
+    {
+      "id": "C10",
+      "display_text": "Daily functioning",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U13"
+        ]
+      }
+    },
+    {
+      "id": "C11",
+      "display_text": "MCI and dementia conversion",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U14"
+        ]
+      }
+    },
+    {
+      "id": "C12",
+      "display_text": "Health and lifestyle risks",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U14"
+        ]
+      }
+    },
+    {
+      "id": "C13",
+      "display_text": "MCI-to-dementia progression",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U14",
+          "U79"
+        ]
+      }
+    },
+    {
+      "id": "C14",
+      "display_text": "Low- and middle-income countries",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U5",
+          "U15",
+          "U82"
+        ]
+      }
+    },
+    {
+      "id": "C15",
+      "display_text": "LMIC population-based cohorts",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U5",
+          "U15",
+          "U24"
+        ]
+      }
+    },
+    {
+      "id": "C16",
+      "display_text": "LMIC conversion review",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U6",
+          "U18",
+          "U7",
+          "U30",
+          "U31",
+          "U46",
+          "U26",
+          "U77",
+          "U80"
+        ]
+      }
+    },
+    {
+      "id": "C17",
+      "display_text": "MCI conversion studies",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U6",
+          "U21",
+          "U24"
+        ]
+      }
+    },
+    {
+      "id": "C18",
+      "display_text": "LMIC conversion cohorts",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U6",
+          "U22"
+        ]
+      }
+    },
+    {
+      "id": "C19",
+      "display_text": "Potentially eligible studies",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U29"
+        ]
+      }
+    },
+    {
+      "id": "C20",
+      "display_text": "Included LMIC cohorts",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U34",
+          "U37",
+          "U7",
+          "U49",
+          "U52",
+          "U53",
+          "U56",
+          "U59",
+          "U25",
+          "U62",
+          "U76",
+          "U78",
+          "U65",
+          "U68"
+        ]
+      }
+    },
+    {
+      "id": "C21",
+      "display_text": "Newcastle–Ottawa Scale",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U37",
+          "U68"
+        ]
+      }
+    },
+    {
+      "id": "C22",
+      "display_text": "Included MCI cases",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U40"
+        ]
+      }
+    },
+    {
+      "id": "C23",
+      "display_text": "Petersen-type mild cognitive impairment",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U41",
+          "U7",
+          "U25",
+          "U71",
+          "U72",
+          "U73",
+          "U76"
+        ]
+      }
+    },
+    {
+      "id": "C24",
+      "display_text": "Alzheimer disease",
+      "aliases": [
+        "AD"
+      ],
+      "provenance": {
+        "unit_ids": [
+          "U41",
+          "U54",
+          "U55",
+          "U56",
+          "U62",
+          "U7",
+          "U25",
+          "U71",
+          "U72",
+          "U73",
+          "U76"
+        ]
+      }
+    },
+    {
+      "id": "C25",
+      "display_text": "Study cohort Huang in China",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U54",
+          "U55",
+          "U56"
+        ]
+      }
+    },
+    {
+      "id": "C26",
+      "display_text": "Study cohort Li in China",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U54",
+          "U55",
+          "U56"
+        ]
+      }
+    },
+    {
+      "id": "C27",
+      "display_text": "Study cohort Ding in China",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U54",
+          "U55",
+          "U56"
+        ]
+      }
+    },
+    {
+      "id": "C28",
+      "display_text": "Study cohort Yang in China",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U54",
+          "U55",
+          "U56"
+        ]
+      }
+    },
+    {
+      "id": "C29",
+      "display_text": "Study cohort Yu_Taiyuan in China",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U54",
+          "U55",
+          "U56"
+        ]
+      }
+    },
+    {
+      "id": "C30",
+      "display_text": "Study cohort Baiyewu in Nigeria",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U54",
+          "U55",
+          "U56"
+        ]
+      }
+    },
+    {
+      "id": "C31",
+      "display_text": "Study cohort Montano in Brazil",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U54",
+          "U55",
+          "U56"
+        ]
+      }
+    },
+    {
+      "id": "C32",
+      "display_text": "Study cohort Paddick in Tanzania",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U54",
+          "U55",
+          "U56"
+        ]
+      }
+    },
+    {
+      "id": "C33",
+      "display_text": "Study cohort Yu_Sanatorium in China",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U54",
+          "U55",
+          "U56"
+        ]
+      }
+    },
+    {
+      "id": "C34",
+      "display_text": "Study cohort Wang in China",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U54",
+          "U55",
+          "U56"
+        ]
+      }
+    },
+    {
+      "id": "C35",
+      "display_text": "Study cohort Godhino in Brazil",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U54",
+          "U55",
+          "U56"
+        ]
+      }
+    },
+    {
+      "id": "C36",
+      "display_text": "All-cause dementia",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U54",
+          "U55",
+          "U56",
+          "U7",
+          "U25",
+          "U62",
+          "U76"
+        ]
+      }
+    },
+    {
+      "id": "C37",
+      "display_text": "Cognitive impairment no dementia",
+      "aliases": [
+        "CIND"
+      ],
+      "provenance": {
+        "unit_ids": [
+          "U54",
+          "U55",
+          "U56"
+        ]
+      }
+    },
+    {
+      "id": "C38",
+      "display_text": "Clinical Dementia Rating 0.5",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U54",
+          "U55",
+          "U56"
+        ]
+      }
+    },
+    {
+      "id": "C39",
+      "display_text": "Amnestic mild cognitive impairment",
+      "aliases": [
+        "aMCI"
+      ],
+      "provenance": {
+        "unit_ids": [
+          "U54",
+          "U55",
+          "U56",
+          "U62",
+          "U78"
+        ]
+      }
+    },
+    {
+      "id": "C40",
+      "display_text": "Amnestic MCI single domain",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U54",
+          "U55",
+          "U56"
+        ]
+      }
+    },
+    {
+      "id": "C41",
+      "display_text": "Amnestic MCI multiple domain",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U54",
+          "U55",
+          "U56"
+        ]
+      }
+    },
+    {
+      "id": "C42",
+      "display_text": "Nonamnestic MCI single domain",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U54",
+          "U55",
+          "U56"
+        ]
+      }
+    },
+    {
+      "id": "C43",
+      "display_text": "Nonamnestic MCI multiple domain",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U54",
+          "U55",
+          "U56"
+        ]
+      }
+    },
+    {
+      "id": "C44",
+      "display_text": "Vascular dementia",
+      "aliases": [
+        "VaD"
+      ],
+      "provenance": {
+        "unit_ids": [
+          "U62"
+        ]
+      }
+    },
+    {
+      "id": "C45",
+      "display_text": "Broad MCI/CIND/CDR impairment",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U62",
+          "U78"
+        ]
+      }
+    },
+    {
+      "id": "C46",
+      "display_text": "Older age",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U65"
+        ]
+      }
+    },
+    {
+      "id": "C47",
+      "display_text": "MCI-to-dementia conversion",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U65"
+        ]
+      }
+    },
+    {
+      "id": "C48",
+      "display_text": "Poor baseline cognitive test performance",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U65"
+        ]
+      }
+    },
+    {
+      "id": "C49",
+      "display_text": "Female gender",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U65"
+        ]
+      }
+    },
+    {
+      "id": "C50",
+      "display_text": "Hypertension",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U65"
+        ]
+      }
+    },
+    {
+      "id": "C51",
+      "display_text": "Low educational attainment",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U65"
+        ]
+      }
+    },
+    {
+      "id": "C52",
+      "display_text": "Anxiety and depression",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U65"
+        ]
+      }
+    },
+    {
+      "id": "C53",
+      "display_text": "History of stroke",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U65"
+        ]
+      }
+    },
+    {
+      "id": "C54",
+      "display_text": "Diabetes",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U65"
+        ]
+      }
+    },
+    {
+      "id": "C55",
+      "display_text": "APOE ε4 status",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U65"
+        ]
+      }
+    },
+    {
+      "id": "C56",
+      "display_text": "Six compatible LMIC cohorts",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U7",
+          "U25",
+          "U71",
+          "U72",
+          "U73",
+          "U76"
+        ]
+      }
+    },
+    {
+      "id": "C57",
+      "display_text": "Studied LMIC cohorts",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U8",
+          "U25",
+          "U76",
+          "U82"
+        ]
+      }
+    },
+    {
+      "id": "C58",
+      "display_text": "LMIC research settings",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U77",
+          "U8",
+          "U26",
+          "U80",
+          "U81"
+        ]
+      }
+    },
+    {
+      "id": "C59",
+      "display_text": "Lifestyle and cognitive risk-reduction strategies",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U79"
+        ]
+      }
+    },
+    {
+      "id": "C60",
+      "display_text": "MCI cases in LMICs",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U79"
+        ]
+      }
+    },
+    {
+      "id": "C61",
+      "display_text": "Age and follow-up duration",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U26",
+          "U77",
+          "U80"
+        ]
+      }
+    },
+    {
+      "id": "C62",
+      "display_text": "Population-representative longitudinal data and methodology harmonization",
+      "aliases": [],
+      "provenance": {
+        "unit_ids": [
+          "U8",
+          "U26",
+          "U77",
+          "U80",
+          "U81"
+        ]
+      }
+    }
+  ],
+  "knowledge": [
+    {
+      "knowledge_id": "K1",
+      "kind": "state",
+      "knowledge_kind": "definition",
+      "display_text": "MCI is an intermediate cognitive state between normal aging and dementia and a target for prevention/risk-reduction research.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K1S1",
+            "predicate": "intermediate_between",
+            "roles": [
+              {
+                "role": "subject",
+                "concept_id": "C1",
+                "knowledge_id": null
+              },
+              {
+                "role": "earlier_state",
+                "concept_id": "C2",
+                "knowledge_id": null
+              },
+              {
+                "role": "later_state",
+                "concept_id": "C3",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": []
+            },
+            "provenance": {
+              "unit_ids": [
+                "U12"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U12"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K2",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "MCI prevalence estimates range from <1% to >50% depending on sampled population, clinical/community setting, definition and operational criteria.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K2S1",
+            "predicate": "prevalence_heterogeneity",
+            "roles": [
+              {
+                "role": "measure",
+                "concept_id": "C4",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": "cited background estimates",
+            "negated": false,
+            "conditions": [],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "range",
+                  "value": "<1 to >50",
+                  "unit": "percent"
+                },
+                {
+                  "name": "determinants",
+                  "value": "age/sex distribution; clinical versus population sampling; definition; operationalization",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U12"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U12"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K3",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "Cited HIC annual MCI-to-dementia conversion is 10–15% generally/in clinical samples and 3–10% in community samples; clinic reversion to normal is 4–15% versus 29–55% in population samples.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "contrast",
+        "statements": [
+          {
+            "statement_id": "K3S1",
+            "predicate": "background_conversion",
+            "roles": [
+              {
+                "role": "condition",
+                "concept_id": "C1",
+                "knowledge_id": null
+              },
+              {
+                "role": "outcome",
+                "concept_id": "C3",
+                "knowledge_id": null
+              },
+              {
+                "role": "population",
+                "concept_id": "C5",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": "cited ranges; some cases remain stable",
+            "negated": false,
+            "conditions": [],
+            "temporal_context": "Cited background follow-up periods vary",
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "annual_conversion",
+                  "value": "10–15",
+                  "unit": "percent/year"
+                },
+                {
+                  "name": "reversion",
+                  "value": "4–15",
+                  "unit": "percent"
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U12",
+                "U78"
+              ]
+            }
+          },
+          {
+            "statement_id": "K3S2",
+            "predicate": "background_conversion",
+            "roles": [
+              {
+                "role": "condition",
+                "concept_id": "C1",
+                "knowledge_id": null
+              },
+              {
+                "role": "outcome",
+                "concept_id": "C3",
+                "knowledge_id": null
+              },
+              {
+                "role": "population",
+                "concept_id": "C6",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": "cited ranges; some cases remain stable",
+            "negated": false,
+            "conditions": [],
+            "temporal_context": "Cited background follow-up periods vary",
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "annual_conversion",
+                  "value": "3–10",
+                  "unit": "percent/year"
+                },
+                {
+                  "name": "reversion",
+                  "value": "29–55",
+                  "unit": "percent"
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U12",
+                "U78"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U12",
+          "U78"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K4",
+      "kind": "state",
+      "knowledge_kind": "definition",
+      "display_text": "Petersen MCI criteria specify subjective memory loss confirmed by neuropsychological testing, no significant other-domain impairment, no functional impairment and no dementia; IWG, NIA-AA and DSM-IV alternatives complicate comparisons.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "conjunction",
+        "statements": [
+          {
+            "statement_id": "K4S1",
+            "predicate": "diagnostic_criteria",
+            "roles": [
+              {
+                "role": "subject",
+                "concept_id": "C7",
+                "knowledge_id": null
+              },
+              {
+                "role": "feature",
+                "concept_id": "C8",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "alternatives",
+                  "value": "IWG; NIA-AA; DSM-IV",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U13"
+              ]
+            }
+          },
+          {
+            "statement_id": "K4S2",
+            "predicate": "has_significant_impairment",
+            "roles": [
+              {
+                "role": "subject",
+                "concept_id": "C7",
+                "knowledge_id": null
+              },
+              {
+                "role": "function",
+                "concept_id": "C9",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": true,
+            "conditions": [],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "alternatives",
+                  "value": "IWG; NIA-AA; DSM-IV",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U13"
+              ]
+            }
+          },
+          {
+            "statement_id": "K4S3",
+            "predicate": "has_functional_impairment",
+            "roles": [
+              {
+                "role": "subject",
+                "concept_id": "C7",
+                "knowledge_id": null
+              },
+              {
+                "role": "function",
+                "concept_id": "C10",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": true,
+            "conditions": [],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "alternatives",
+                  "value": "IWG; NIA-AA; DSM-IV",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U13"
+              ]
+            }
+          },
+          {
+            "statement_id": "K4S4",
+            "predicate": "has_dementia",
+            "roles": [
+              {
+                "role": "subject",
+                "concept_id": "C7",
+                "knowledge_id": null
+              },
+              {
+                "role": "condition",
+                "concept_id": "C3",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": true,
+            "conditions": [],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "alternatives",
+                  "value": "IWG; NIA-AA; DSM-IV",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U13"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U13"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K5",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "MCI’s pragmatic prevention value is debated; proposed modifiable risks include unhealthy diet, inactivity, smoking, cardiometabolic disease, obesity and hypertension, while inconsistent definitions limit comparison.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K5S1",
+            "predicate": "modifiable_risk_background",
+            "roles": [
+              {
+                "role": "outcome",
+                "concept_id": "C11",
+                "knowledge_id": null
+              },
+              {
+                "role": "exposure",
+                "concept_id": "C12",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": "cited potential for prevention/delay, not proven by this review",
+            "negated": false,
+            "conditions": [],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "risks",
+                  "value": "diet high in saturated fat/sugar/salt; inactivity; smoking; coronary heart disease; diabetes; obesity; hypertension",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U14"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U14"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K6",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "A cited report estimates 21.7% of MCI progression potentially preventable by targeting obesity-as-diet proxy (8.7%), diabetes (1.5%) and neuropsychiatric symptoms (11.5%).",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K6S1",
+            "predicate": "potential_preventable_fraction",
+            "roles": [
+              {
+                "role": "outcome",
+                "concept_id": "C13",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": "potential, cited report; not observed intervention benefit",
+            "negated": false,
+            "conditions": [],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "total",
+                  "value": 21.7,
+                  "unit": "percent"
+                },
+                {
+                  "name": "obesity_diet_proxy",
+                  "value": 8.7,
+                  "unit": "percent"
+                },
+                {
+                  "name": "diabetes",
+                  "value": 1.5,
+                  "unit": "percent"
+                },
+                {
+                  "name": "neuropsychiatric",
+                  "value": 11.5,
+                  "unit": "percent"
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U14"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U14"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K7",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "Nearly two thirds of people with dementia live in LMICs, with limited resources/services; the source describes dementia as incurable, motivating targeted risk reduction.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K7S1",
+            "predicate": "dementia_burden",
+            "roles": [
+              {
+                "role": "population",
+                "concept_id": "C14",
+                "knowledge_id": null
+              },
+              {
+                "role": "condition",
+                "concept_id": "C3",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [],
+            "temporal_context": "Background at 2022 publication",
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "share",
+                  "value": "nearly two thirds",
+                  "unit": null
+                },
+                {
+                  "name": "treatment_status",
+                  "value": "no cure; as described at publication",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U5",
+                "U15",
+                "U82"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U5",
+          "U15",
+          "U82"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K8",
+      "kind": "action",
+      "knowledge_kind": "operation",
+      "display_text": "Review longitudinal population-based LMIC studies of MCI conversion to dementia and associated risk factors to inform context-sensitive risk reduction.",
+      "aliases": [],
+      "action_status": "performed",
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K8S1",
+            "predicate": "conduct_review",
+            "roles": [
+              {
+                "role": "condition",
+                "concept_id": "C1",
+                "knowledge_id": null
+              },
+              {
+                "role": "outcome",
+                "concept_id": "C3",
+                "knowledge_id": null
+              },
+              {
+                "role": "population",
+                "concept_id": "C15",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": []
+            },
+            "provenance": {
+              "unit_ids": [
+                "U5",
+                "U15",
+                "U24"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U5",
+          "U15",
+          "U24"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K9",
+      "kind": "state",
+      "knowledge_kind": "method",
+      "display_text": "Follow PRISMA and preregister protocol CRD42019130958 in PROSPERO.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K9S1",
+            "predicate": "review_protocol",
+            "roles": [
+              {
+                "role": "subject",
+                "concept_id": "C16",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "registration",
+                  "value": "PROSPERO CRD42019130958",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U6",
+                "U18"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U6",
+          "U18"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K10",
+      "kind": "action",
+      "knowledge_kind": "operation",
+      "display_text": "Search Medline, Embase, PsycINFO via Ovid and Scopus from inception to 30 April 2019, then update 1 May 2019–30 June 2020 with dementia/MCI/incidence/conversion terms.",
+      "aliases": [],
+      "action_status": "performed",
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K10S1",
+            "predicate": "search_literature",
+            "roles": [
+              {
+                "role": "subject",
+                "concept_id": "C17",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [],
+            "temporal_context": "Inception–30 June 2020",
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "database_count",
+                  "value": 4,
+                  "unit": "databases"
+                },
+                {
+                  "name": "databases",
+                  "value": "Medline; Embase; PsycINFO; Scopus",
+                  "unit": null
+                },
+                {
+                  "name": "initial_end",
+                  "value": "30 April 2019",
+                  "unit": null
+                },
+                {
+                  "name": "update_start",
+                  "value": "1 May 2019",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U6",
+                "U21",
+                "U24"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U6",
+          "U21",
+          "U24"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K11",
+      "kind": "state",
+      "knowledge_kind": "method",
+      "display_text": "Include observational population-based LMIC cohorts with clearly defined validated MCI, ≥1 year follow-up and established dementia criteria; require separate baseline-MCI results, exclude memory complaints without MCI and disease-stratified samples lacking total-population conversion.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K11S1",
+            "predicate": "eligibility_criteria",
+            "roles": [
+              {
+                "role": "subject",
+                "concept_id": "C18",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "minimum_followup",
+                  "value": 1,
+                  "unit": "years"
+                },
+                {
+                  "name": "MCI",
+                  "value": "internationally accepted validated classification; any clearly defined MCI definition",
+                  "unit": null
+                },
+                {
+                  "name": "dementia",
+                  "value": "all-cause and subtypes; NINCDS-ADRDA; DSM-IV; NINDS-AIREN",
+                  "unit": null
+                },
+                {
+                  "name": "income",
+                  "value": "OECD/World Bank country income at study time",
+                  "unit": null
+                },
+                {
+                  "name": "exclusions",
+                  "value": "memory complaints without clear MCI; mixed baseline cognition without separate MCI data; disease-stratified rates without total-population estimate",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U6",
+                "U22"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U6",
+          "U22"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K12",
+      "kind": "action",
+      "knowledge_kind": "operation",
+      "display_text": "Two reviewers independently screen titles/abstracts and full texts; obtain uncertain full texts, resolve disagreements with a third reviewer and check included-study reference lists.",
+      "aliases": [],
+      "action_status": "performed",
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K12S1",
+            "predicate": "screen_studies",
+            "roles": [
+              {
+                "role": "subject",
+                "concept_id": "C19",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "reviewers",
+                  "value": 2,
+                  "unit": "reviewers"
+                },
+                {
+                  "name": "resolution",
+                  "value": "third reviewer",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U29"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U29"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K13",
+      "kind": "action",
+      "knowledge_kind": "operation",
+      "display_text": "Extract standardized study metadata, country, age/sample sizes, follow-up, diagnoses, conversion methods/attrition, conversion estimates and significant/nonsignificant risks; one extracts, a second checks and a third resolves discrepancies.",
+      "aliases": [],
+      "action_status": "performed",
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K13S1",
+            "predicate": "extract_study_data",
+            "roles": [
+              {
+                "role": "subject",
+                "concept_id": "C20",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "field_groups",
+                  "value": 9,
+                  "unit": "field groups"
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U34"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U34"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K14",
+      "kind": "action",
+      "knowledge_kind": "operation",
+      "display_text": "Independently assess selection, comparability and outcome using Newcastle–Ottawa; the source states maximum 8 stars but assigns 3+2+2 stars to categories. Keep the scoring statements distinct.",
+      "aliases": [],
+      "action_status": "performed",
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K14S1",
+            "predicate": "assess_bias",
+            "roles": [
+              {
+                "role": "method",
+                "concept_id": "C21",
+                "knowledge_id": null
+              },
+              {
+                "role": "subject",
+                "concept_id": "C20",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "declared_maximum",
+                  "value": 8,
+                  "unit": "stars"
+                },
+                {
+                  "name": "selection",
+                  "value": 3,
+                  "unit": "stars"
+                },
+                {
+                  "name": "comparability",
+                  "value": 2,
+                  "unit": "stars"
+                },
+                {
+                  "name": "outcome",
+                  "value": 2,
+                  "unit": "stars"
+                },
+                {
+                  "name": "assessors",
+                  "value": 2,
+                  "unit": "reviewers"
+                },
+                {
+                  "name": "resolution",
+                  "value": "discussion/third assessor",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U37"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U37"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K15",
+      "kind": "action",
+      "knowledge_kind": "operation",
+      "display_text": "Report converted-to-dementia cases divided by the total sample separately for each MCI definition, and summarize significant risk factors; all assessed risks are delegated to supplementary Table S2.",
+      "aliases": [],
+      "action_status": "performed",
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K15S1",
+            "predicate": "summarize_conversion",
+            "roles": [
+              {
+                "role": "subject",
+                "concept_id": "C22",
+                "knowledge_id": null
+              },
+              {
+                "role": "outcome",
+                "concept_id": "C3",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "formula",
+                  "value": "converted dementia cases / total sample size",
+                  "unit": null
+                },
+                {
+                  "name": "stratification",
+                  "value": "MCI definition",
+                  "unit": null
+                },
+                {
+                  "name": "supplement",
+                  "value": "Table S2, not present as full table values in supplied text",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U40"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U40"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K16",
+      "kind": "action",
+      "knowledge_kind": "operation",
+      "display_text": "Pool only compatible Petersen-type MCI→AD cohorts (six studies) in Stata Metaprop using random effects, Freeman–Tukey double-arcsine transformation, score/exact-binomial 95% CIs, binomial within-study variability and I² heterogeneity.",
+      "aliases": [],
+      "action_status": "performed",
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K16S1",
+            "predicate": "meta_analyze_proportions",
+            "roles": [
+              {
+                "role": "condition",
+                "concept_id": "C23",
+                "knowledge_id": null
+              },
+              {
+                "role": "outcome",
+                "concept_id": "C24",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [
+              "Only studies sharing MCI/dementia criteria; design/sampling differ"
+            ],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "studies",
+                  "value": 6,
+                  "unit": "studies"
+                },
+                {
+                  "name": "software",
+                  "value": "Stata Metaprop",
+                  "unit": null
+                },
+                {
+                  "name": "model",
+                  "value": "random effects",
+                  "unit": null
+                },
+                {
+                  "name": "transformation",
+                  "value": "Freeman–Tukey double arcsine",
+                  "unit": null
+                },
+                {
+                  "name": "CI",
+                  "value": "score statistic and exact binomial; 95%",
+                  "unit": null
+                },
+                {
+                  "name": "heterogeneity",
+                  "value": "I²",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U41"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U41"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K17",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "Screen 8977 initial records and 87 full texts, retaining nine; update adds 1670 records and two studies, for 10647 records and 11 included studies. Common exclusions: not LMIC, not population-based, no incident dementia.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K17S1",
+            "predicate": "selection_flow",
+            "roles": [
+              {
+                "role": "subject",
+                "concept_id": "C16",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "initial_records",
+                  "value": 8977,
+                  "unit": "records"
+                },
+                {
+                  "name": "full_texts",
+                  "value": 87,
+                  "unit": "articles"
+                },
+                {
+                  "name": "initial_included",
+                  "value": 9,
+                  "unit": "studies"
+                },
+                {
+                  "name": "update_records",
+                  "value": 1670,
+                  "unit": "records"
+                },
+                {
+                  "name": "update_included",
+                  "value": 2,
+                  "unit": "studies"
+                },
+                {
+                  "name": "total_records",
+                  "value": 10647,
+                  "unit": "records"
+                },
+                {
+                  "name": "included",
+                  "value": 11,
+                  "unit": "studies"
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U7",
+                "U30",
+                "U31",
+                "U46"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U7",
+          "U30",
+          "U31",
+          "U46"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K18",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "The 11 studies comprise seven China, two Brazil, one Nigeria and one Tanzania; at recruitment two were low-income and nine middle-income. Only one is described as nationally representative (Rio Grande do Sul census, Brazil).",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K18S1",
+            "predicate": "corpus_geography",
+            "roles": [
+              {
+                "role": "population",
+                "concept_id": "C20",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [
+              "Systematic review of 11 population/community observational cohorts in LMICs; country income classified at study time"
+            ],
+            "temporal_context": "Country income at recruitment",
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "China",
+                  "value": 7,
+                  "unit": "studies"
+                },
+                {
+                  "name": "Brazil",
+                  "value": 2,
+                  "unit": "studies"
+                },
+                {
+                  "name": "Nigeria",
+                  "value": 1,
+                  "unit": "studies"
+                },
+                {
+                  "name": "Tanzania",
+                  "value": 1,
+                  "unit": "studies"
+                },
+                {
+                  "name": "low_income",
+                  "value": 2,
+                  "unit": "studies"
+                },
+                {
+                  "name": "middle_income",
+                  "value": 9,
+                  "unit": "studies"
+                },
+                {
+                  "name": "nationally_representative",
+                  "value": 1,
+                  "unit": "studies"
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U7",
+                "U49"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U7",
+          "U49"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K19",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "Baseline MCI samples range 21–837 (mean 370, SD 295); follow-up samples 21–638 (298±238). Follow-up is 2–5.8 years, mean 3.7±1.1; most cohorts enroll >60 years (six), others >55 (two), >65 (one), >70 (two).",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K19S1",
+            "predicate": "corpus_profile",
+            "roles": [
+              {
+                "role": "population",
+                "concept_id": "C20",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [
+              "Systematic review of 11 population/community observational cohorts in LMICs; country income classified at study time"
+            ],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "baseline_n_range",
+                  "value": "21–837",
+                  "unit": "participants"
+                },
+                {
+                  "name": "baseline_n_mean",
+                  "value": 370,
+                  "unit": "participants"
+                },
+                {
+                  "name": "baseline_n_SD",
+                  "value": 295,
+                  "unit": "participants"
+                },
+                {
+                  "name": "followup_n_range",
+                  "value": "21–638",
+                  "unit": "participants"
+                },
+                {
+                  "name": "followup_n_mean",
+                  "value": 298,
+                  "unit": "participants"
+                },
+                {
+                  "name": "followup_n_SD",
+                  "value": 238,
+                  "unit": "participants"
+                },
+                {
+                  "name": "duration_range",
+                  "value": "2–5.8",
+                  "unit": "years"
+                },
+                {
+                  "name": "duration_mean",
+                  "value": 3.7,
+                  "unit": "years"
+                },
+                {
+                  "name": "duration_SD",
+                  "value": 1.1,
+                  "unit": "years"
+                },
+                {
+                  "name": "age_threshold_counts",
+                  "value": ">60:6; >55:2; >65:1; >70:2",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U49"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U49"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K20",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "MCI criteria vary: Petersen five studies, CDR .5 one, Dubois one, DSM-IV two, IWG one and CIND one. The review includes all 87 CIND participants, though 74 had MUML described as Petersen-comparable. Nine report MCI; two aMCI; one each single/multiple-domain amnestic/nonamnestic subtypes.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K20S1",
+            "predicate": "diagnostic_heterogeneity",
+            "roles": [
+              {
+                "role": "condition",
+                "concept_id": "C1",
+                "knowledge_id": null
+              },
+              {
+                "role": "population",
+                "concept_id": "C20",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [
+              "Systematic review of 11 population/community observational cohorts in LMICs; country income classified at study time"
+            ],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "Petersen",
+                  "value": 5,
+                  "unit": "studies"
+                },
+                {
+                  "name": "CDR",
+                  "value": 1,
+                  "unit": "studies"
+                },
+                {
+                  "name": "Dubois",
+                  "value": 1,
+                  "unit": "studies"
+                },
+                {
+                  "name": "DSM_IV",
+                  "value": 2,
+                  "unit": "studies"
+                },
+                {
+                  "name": "IWG",
+                  "value": 1,
+                  "unit": "studies"
+                },
+                {
+                  "name": "CIND",
+                  "value": 1,
+                  "unit": "studies"
+                },
+                {
+                  "name": "CIND_included",
+                  "value": 87,
+                  "unit": "participants"
+                },
+                {
+                  "name": "MUML",
+                  "value": 74,
+                  "unit": "participants"
+                },
+                {
+                  "name": "overall_MCI",
+                  "value": 9,
+                  "unit": "studies"
+                },
+                {
+                  "name": "aMCI",
+                  "value": 2,
+                  "unit": "studies"
+                },
+                {
+                  "name": "subtype_reporters",
+                  "value": 1,
+                  "unit": "study"
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U52",
+                "U53",
+                "U56"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U52",
+          "U53",
+          "U56"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K21",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "Dementia criteria overlap: DSM-IV seven studies, NINCDS-ADRDA five, NINDS-AIREN two, DSM-III-R one and ICD-10 mentioned once; seven evaluate all-cause dementia, eight AD and two VaD.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K21S1",
+            "predicate": "dementia_diagnostic_heterogeneity",
+            "roles": [
+              {
+                "role": "outcome",
+                "concept_id": "C3",
+                "knowledge_id": null
+              },
+              {
+                "role": "population",
+                "concept_id": "C20",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [
+              "Systematic review of 11 population/community observational cohorts in LMICs; country income classified at study time"
+            ],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "DSM_IV",
+                  "value": 7,
+                  "unit": "studies"
+                },
+                {
+                  "name": "NINCDS_ADRDA",
+                  "value": 5,
+                  "unit": "studies"
+                },
+                {
+                  "name": "NINDS_AIREN",
+                  "value": 2,
+                  "unit": "studies"
+                },
+                {
+                  "name": "DSM_III_R",
+                  "value": 1,
+                  "unit": "studies"
+                },
+                {
+                  "name": "ICD_10",
+                  "value": 1,
+                  "unit": "study"
+                },
+                {
+                  "name": "all_cause",
+                  "value": 7,
+                  "unit": "studies"
+                },
+                {
+                  "name": "AD",
+                  "value": 8,
+                  "unit": "studies"
+                },
+                {
+                  "name": "VaD",
+                  "value": 2,
+                  "unit": "studies"
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U59"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U59"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K22",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "Huang cohort (China): 29 geographically defined communities located within Greater Beijing, China (12 urban and 17 rural), age >55 years; total baseline 5743, MCI baseline 175, follow-up 121; mean follow-up 3 years. MCI Petersen: MCI; dementia DSM‐IV (all cause) NINCDS‐ADRDA (AD) NINDS‐AIREN (VaD).",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K22S1",
+            "predicate": "cohort_profile",
+            "roles": [
+              {
+                "role": "population",
+                "concept_id": "C25",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [
+              "Included cohort Huang; 29 geographically defined communities located within Greater Beijing, China (12 urban and 17 rural)"
+            ],
+            "temporal_context": "3 years follow-up",
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "country",
+                  "value": "China",
+                  "unit": null
+                },
+                {
+                  "name": "setting",
+                  "value": "29 geographically defined communities located within Greater Beijing, China (12 urban and 17 rural)",
+                  "unit": null
+                },
+                {
+                  "name": "age_threshold",
+                  "value": ">55",
+                  "unit": "years"
+                },
+                {
+                  "name": "total_baseline",
+                  "value": "5743",
+                  "unit": "participants"
+                },
+                {
+                  "name": "MCI_baseline",
+                  "value": "175",
+                  "unit": "participants"
+                },
+                {
+                  "name": "MCI_followup",
+                  "value": "121",
+                  "unit": "participants"
+                },
+                {
+                  "name": "followup",
+                  "value": "3",
+                  "unit": "years"
+                },
+                {
+                  "name": "MCI_definition",
+                  "value": "Petersen",
+                  "unit": null
+                },
+                {
+                  "name": "MCI_type",
+                  "value": "MCI",
+                  "unit": null
+                },
+                {
+                  "name": "dementia_criteria",
+                  "value": "DSM‐IV (all cause) NINCDS‐ADRDA (AD) NINDS‐AIREN (VaD)",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U54",
+                "U55",
+                "U56"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U54",
+          "U55",
+          "U56"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K23",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "Li cohort (China): 10 randomly selected communities in the city of Chongqing, age >55 years; total baseline 26,481 (18,683 screened), MCI baseline 837, follow-up 638; mean follow-up 5 years. MCI Petersen: MCI; dementia DSM‐IV (all cause) NINCDS/ADRDA (AD).",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K23S1",
+            "predicate": "cohort_profile",
+            "roles": [
+              {
+                "role": "population",
+                "concept_id": "C26",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [
+              "Included cohort Li; 10 randomly selected communities in the city of Chongqing"
+            ],
+            "temporal_context": "5 years follow-up",
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "country",
+                  "value": "China",
+                  "unit": null
+                },
+                {
+                  "name": "setting",
+                  "value": "10 randomly selected communities in the city of Chongqing",
+                  "unit": null
+                },
+                {
+                  "name": "age_threshold",
+                  "value": ">55",
+                  "unit": "years"
+                },
+                {
+                  "name": "total_baseline",
+                  "value": "26,481 (18,683 screened)",
+                  "unit": "participants"
+                },
+                {
+                  "name": "MCI_baseline",
+                  "value": "837",
+                  "unit": "participants"
+                },
+                {
+                  "name": "MCI_followup",
+                  "value": "638",
+                  "unit": "participants"
+                },
+                {
+                  "name": "followup",
+                  "value": "5",
+                  "unit": "years"
+                },
+                {
+                  "name": "MCI_definition",
+                  "value": "Petersen",
+                  "unit": null
+                },
+                {
+                  "name": "MCI_type",
+                  "value": "MCI",
+                  "unit": null
+                },
+                {
+                  "name": "dementia_criteria",
+                  "value": "DSM‐IV (all cause) NINCDS/ADRDA (AD)",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U54",
+                "U55",
+                "U56"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U54",
+          "U55",
+          "U56"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K24",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "Ding cohort (China): Jingansi community in downtown Shanghai, China, age >60 years; total baseline 3141, MCI baseline 655, follow-up 362; mean follow-up 4 years. MCI Petersen: MCI aMCI aMCI‐SD aMCI‐MD naMCI‐SD naMCI‐MD; dementia DSM‐IV (all cause).",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K24S1",
+            "predicate": "cohort_profile",
+            "roles": [
+              {
+                "role": "population",
+                "concept_id": "C27",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [
+              "Included cohort Ding; Jingansi community in downtown Shanghai, China"
+            ],
+            "temporal_context": "4 years follow-up",
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "country",
+                  "value": "China",
+                  "unit": null
+                },
+                {
+                  "name": "setting",
+                  "value": "Jingansi community in downtown Shanghai, China",
+                  "unit": null
+                },
+                {
+                  "name": "age_threshold",
+                  "value": ">60",
+                  "unit": "years"
+                },
+                {
+                  "name": "total_baseline",
+                  "value": "3141",
+                  "unit": "participants"
+                },
+                {
+                  "name": "MCI_baseline",
+                  "value": "655",
+                  "unit": "participants"
+                },
+                {
+                  "name": "MCI_followup",
+                  "value": "362",
+                  "unit": "participants"
+                },
+                {
+                  "name": "followup",
+                  "value": "4",
+                  "unit": "years"
+                },
+                {
+                  "name": "MCI_definition",
+                  "value": "Petersen",
+                  "unit": null
+                },
+                {
+                  "name": "MCI_type",
+                  "value": "MCI aMCI aMCI‐SD aMCI‐MD naMCI‐SD naMCI‐MD",
+                  "unit": null
+                },
+                {
+                  "name": "dementia_criteria",
+                  "value": "DSM‐IV (all cause)",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U54",
+                "U55",
+                "U56"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U54",
+          "U55",
+          "U56"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K25",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "Yang cohort (China): Chinese community dwelling elder people, age >60 years; total baseline 652, MCI baseline 465, follow-up 465; mean follow-up 3 years. MCI Petersen: MCI; dementia DSM‐ IV‐TR (AD).",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K25S1",
+            "predicate": "cohort_profile",
+            "roles": [
+              {
+                "role": "population",
+                "concept_id": "C28",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [
+              "Included cohort Yang; Chinese community dwelling elder people"
+            ],
+            "temporal_context": "3 years follow-up",
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "country",
+                  "value": "China",
+                  "unit": null
+                },
+                {
+                  "name": "setting",
+                  "value": "Chinese community dwelling elder people",
+                  "unit": null
+                },
+                {
+                  "name": "age_threshold",
+                  "value": ">60",
+                  "unit": "years"
+                },
+                {
+                  "name": "total_baseline",
+                  "value": "652",
+                  "unit": "participants"
+                },
+                {
+                  "name": "MCI_baseline",
+                  "value": "465",
+                  "unit": "participants"
+                },
+                {
+                  "name": "MCI_followup",
+                  "value": "465",
+                  "unit": "participants"
+                },
+                {
+                  "name": "followup",
+                  "value": "3",
+                  "unit": "years"
+                },
+                {
+                  "name": "MCI_definition",
+                  "value": "Petersen",
+                  "unit": null
+                },
+                {
+                  "name": "MCI_type",
+                  "value": "MCI",
+                  "unit": null
+                },
+                {
+                  "name": "dementia_criteria",
+                  "value": "DSM‐ IV‐TR (AD)",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U54",
+                "U55",
+                "U56"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U54",
+          "U55",
+          "U56"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K26",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "Yu_Taiyuan cohort (China): 8 geographically convenient communities in Taiyuan city, China, age >60 years; total baseline 6192, MCI baseline 600, follow-up 518; mean follow-up 5 years. MCI Petersen: MCI; dementia NINCDS‐ADRDA (AD).",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K26S1",
+            "predicate": "cohort_profile",
+            "roles": [
+              {
+                "role": "population",
+                "concept_id": "C29",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [
+              "Included cohort Yu_Taiyuan; 8 geographically convenient communities in Taiyuan city, China"
+            ],
+            "temporal_context": "5 years follow-up",
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "country",
+                  "value": "China",
+                  "unit": null
+                },
+                {
+                  "name": "setting",
+                  "value": "8 geographically convenient communities in Taiyuan city, China",
+                  "unit": null
+                },
+                {
+                  "name": "age_threshold",
+                  "value": ">60",
+                  "unit": "years"
+                },
+                {
+                  "name": "total_baseline",
+                  "value": "6192",
+                  "unit": "participants"
+                },
+                {
+                  "name": "MCI_baseline",
+                  "value": "600",
+                  "unit": "participants"
+                },
+                {
+                  "name": "MCI_followup",
+                  "value": "518",
+                  "unit": "participants"
+                },
+                {
+                  "name": "followup",
+                  "value": "5",
+                  "unit": "years"
+                },
+                {
+                  "name": "MCI_definition",
+                  "value": "Petersen",
+                  "unit": null
+                },
+                {
+                  "name": "MCI_type",
+                  "value": "MCI",
+                  "unit": null
+                },
+                {
+                  "name": "dementia_criteria",
+                  "value": "NINCDS‐ADRDA (AD)",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U54",
+                "U55",
+                "U56"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U54",
+          "U55",
+          "U56"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K27",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "Baiyewu cohort (Nigeria): Idikan community and adjacent wards of the city of Ibadan, Nigeria, age >65 years; total baseline 2487, MCI baseline 152, follow-up 87; mean follow-up 2 years. MCI CIND (Levy/International Psychogeriatric Association/WHO): CIND; dementia DSM III‐R ICD‐10 (all cause).",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K27S1",
+            "predicate": "cohort_profile",
+            "roles": [
+              {
+                "role": "population",
+                "concept_id": "C30",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [
+              "Included cohort Baiyewu; Idikan community and adjacent wards of the city of Ibadan, Nigeria"
+            ],
+            "temporal_context": "2 years follow-up",
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "country",
+                  "value": "Nigeria",
+                  "unit": null
+                },
+                {
+                  "name": "setting",
+                  "value": "Idikan community and adjacent wards of the city of Ibadan, Nigeria",
+                  "unit": null
+                },
+                {
+                  "name": "age_threshold",
+                  "value": ">65",
+                  "unit": "years"
+                },
+                {
+                  "name": "total_baseline",
+                  "value": "2487",
+                  "unit": "participants"
+                },
+                {
+                  "name": "MCI_baseline",
+                  "value": "152",
+                  "unit": "participants"
+                },
+                {
+                  "name": "MCI_followup",
+                  "value": "87",
+                  "unit": "participants"
+                },
+                {
+                  "name": "followup",
+                  "value": "2",
+                  "unit": "years"
+                },
+                {
+                  "name": "MCI_definition",
+                  "value": "CIND (Levy/International Psychogeriatric Association/WHO)",
+                  "unit": null
+                },
+                {
+                  "name": "MCI_type",
+                  "value": "CIND",
+                  "unit": null
+                },
+                {
+                  "name": "dementia_criteria",
+                  "value": "DSM III‐R ICD‐10 (all cause)",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U54",
+                "U55",
+                "U56"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U54",
+          "U55",
+          "U56"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K28",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "Montano cohort (Brazil): A community cohort living in an urban district, in São Paulo city, age >70 years; total baseline 1667, MCI baseline 80, follow-up 40; mean follow-up 2.6 years. MCI CDR 0.5: CDR 0.5; dementia NINCDS–ADRDA (all cause).",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K28S1",
+            "predicate": "cohort_profile",
+            "roles": [
+              {
+                "role": "population",
+                "concept_id": "C31",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [
+              "Included cohort Montano; A community cohort living in an urban district, in São Paulo city"
+            ],
+            "temporal_context": "2.6 years follow-up",
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "country",
+                  "value": "Brazil",
+                  "unit": null
+                },
+                {
+                  "name": "setting",
+                  "value": "A community cohort living in an urban district, in São Paulo city",
+                  "unit": null
+                },
+                {
+                  "name": "age_threshold",
+                  "value": ">70",
+                  "unit": "years"
+                },
+                {
+                  "name": "total_baseline",
+                  "value": "1667",
+                  "unit": "participants"
+                },
+                {
+                  "name": "MCI_baseline",
+                  "value": "80",
+                  "unit": "participants"
+                },
+                {
+                  "name": "MCI_followup",
+                  "value": "40",
+                  "unit": "participants"
+                },
+                {
+                  "name": "followup",
+                  "value": "2.6",
+                  "unit": "years"
+                },
+                {
+                  "name": "MCI_definition",
+                  "value": "CDR 0.5",
+                  "unit": null
+                },
+                {
+                  "name": "MCI_type",
+                  "value": "CDR 0.5",
+                  "unit": null
+                },
+                {
+                  "name": "dementia_criteria",
+                  "value": "NINCDS–ADRDA (all cause)",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U54",
+                "U55",
+                "U56"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U54",
+          "U55",
+          "U56"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K29",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "Paddick cohort (Tanzania): 6 randomly selected villages from the Hai District in Northern Tanzania., age >70 years; total baseline 296, MCI baseline 46, follow-up 46; mean follow-up 4 years. MCI IWG: MCI; dementia DSM‐IV (all cause) NINCDS‐ADRDA (AD) NINDS‐ AIREN (VaD).",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K29S1",
+            "predicate": "cohort_profile",
+            "roles": [
+              {
+                "role": "population",
+                "concept_id": "C32",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [
+              "Included cohort Paddick; 6 randomly selected villages from the Hai District in Northern Tanzania."
+            ],
+            "temporal_context": "4 years follow-up",
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "country",
+                  "value": "Tanzania",
+                  "unit": null
+                },
+                {
+                  "name": "setting",
+                  "value": "6 randomly selected villages from the Hai District in Northern Tanzania.",
+                  "unit": null
+                },
+                {
+                  "name": "age_threshold",
+                  "value": ">70",
+                  "unit": "years"
+                },
+                {
+                  "name": "total_baseline",
+                  "value": "296",
+                  "unit": "participants"
+                },
+                {
+                  "name": "MCI_baseline",
+                  "value": "46",
+                  "unit": "participants"
+                },
+                {
+                  "name": "MCI_followup",
+                  "value": "46",
+                  "unit": "participants"
+                },
+                {
+                  "name": "followup",
+                  "value": "4",
+                  "unit": "years"
+                },
+                {
+                  "name": "MCI_definition",
+                  "value": "IWG",
+                  "unit": null
+                },
+                {
+                  "name": "MCI_type",
+                  "value": "MCI",
+                  "unit": null
+                },
+                {
+                  "name": "dementia_criteria",
+                  "value": "DSM‐IV (all cause) NINCDS‐ADRDA (AD) NINDS‐ AIREN (VaD)",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U54",
+                "U55",
+                "U56"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U54",
+          "U55",
+          "U56"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K30",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "Yu_Sanatorium cohort (China): 26 military cadres’ sanatoriums of Shijiazhuang city, age >60 years; total baseline 2674, MCI baseline 216, follow-up 209; mean follow-up 3 years. MCI DSM-IV: MCI; dementia DSM‐IV (all cause) NINCDS‐ADRDA (AD).",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K30S1",
+            "predicate": "cohort_profile",
+            "roles": [
+              {
+                "role": "population",
+                "concept_id": "C33",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [
+              "Included cohort Yu_Sanatorium; 26 military cadres’ sanatoriums of Shijiazhuang city"
+            ],
+            "temporal_context": "3 years follow-up",
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "country",
+                  "value": "China",
+                  "unit": null
+                },
+                {
+                  "name": "setting",
+                  "value": "26 military cadres’ sanatoriums of Shijiazhuang city",
+                  "unit": null
+                },
+                {
+                  "name": "age_threshold",
+                  "value": ">60",
+                  "unit": "years"
+                },
+                {
+                  "name": "total_baseline",
+                  "value": "2674",
+                  "unit": "participants"
+                },
+                {
+                  "name": "MCI_baseline",
+                  "value": "216",
+                  "unit": "participants"
+                },
+                {
+                  "name": "MCI_followup",
+                  "value": "209",
+                  "unit": "participants"
+                },
+                {
+                  "name": "followup",
+                  "value": "3",
+                  "unit": "years"
+                },
+                {
+                  "name": "MCI_definition",
+                  "value": "DSM-IV",
+                  "unit": null
+                },
+                {
+                  "name": "MCI_type",
+                  "value": "MCI",
+                  "unit": null
+                },
+                {
+                  "name": "dementia_criteria",
+                  "value": "DSM‐IV (all cause) NINCDS‐ADRDA (AD)",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U54",
+                "U55",
+                "U56"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U54",
+          "U55",
+          "U56"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K31",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "Wang cohort (China): 9 densely distributed elderly communities in Taiyuan, age >65 years; total baseline 6152, MCI baseline 600, follow-up 557; mean follow-up 3 years. MCI DSM-IV: aMCI; dementia NINCDS‐ADRDA (AD).",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K31S1",
+            "predicate": "cohort_profile",
+            "roles": [
+              {
+                "role": "population",
+                "concept_id": "C34",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [
+              "Included cohort Wang; 9 densely distributed elderly communities in Taiyuan"
+            ],
+            "temporal_context": "3 years follow-up",
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "country",
+                  "value": "China",
+                  "unit": null
+                },
+                {
+                  "name": "setting",
+                  "value": "9 densely distributed elderly communities in Taiyuan",
+                  "unit": null
+                },
+                {
+                  "name": "age_threshold",
+                  "value": ">65",
+                  "unit": "years"
+                },
+                {
+                  "name": "total_baseline",
+                  "value": "6152",
+                  "unit": "participants"
+                },
+                {
+                  "name": "MCI_baseline",
+                  "value": "600",
+                  "unit": "participants"
+                },
+                {
+                  "name": "MCI_followup",
+                  "value": "557",
+                  "unit": "participants"
+                },
+                {
+                  "name": "followup",
+                  "value": "3",
+                  "unit": "years"
+                },
+                {
+                  "name": "MCI_definition",
+                  "value": "DSM-IV",
+                  "unit": null
+                },
+                {
+                  "name": "MCI_type",
+                  "value": "aMCI",
+                  "unit": null
+                },
+                {
+                  "name": "dementia_criteria",
+                  "value": "NINCDS‐ADRDA (AD)",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U54",
+                "U55",
+                "U56"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U54",
+          "U55",
+          "U56"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K32",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "Godhino cohort (Brazil): Older community dwelling residents in the catchment area of the Hospital de Clinicas de Porto Alegre, Rio Grande do Sul, Brazil, age >60 years; total baseline 245, MCI baseline 21, follow-up 21; mean follow-up 5.8 years. MCI Dubois and Albert 2004: MCI; dementia DSM‐IV & NINCDS‐ADRDA (AD).",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K32S1",
+            "predicate": "cohort_profile",
+            "roles": [
+              {
+                "role": "population",
+                "concept_id": "C35",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [
+              "Included cohort Godhino; Older community dwelling residents in the catchment area of the Hospital de Clinicas de Porto Alegre, Rio Grande do Sul, Brazil"
+            ],
+            "temporal_context": "5.8 years follow-up",
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "country",
+                  "value": "Brazil",
+                  "unit": null
+                },
+                {
+                  "name": "setting",
+                  "value": "Older community dwelling residents in the catchment area of the Hospital de Clinicas de Porto Alegre, Rio Grande do Sul, Brazil",
+                  "unit": null
+                },
+                {
+                  "name": "age_threshold",
+                  "value": ">60",
+                  "unit": "years"
+                },
+                {
+                  "name": "total_baseline",
+                  "value": "245",
+                  "unit": "participants"
+                },
+                {
+                  "name": "MCI_baseline",
+                  "value": "21",
+                  "unit": "participants"
+                },
+                {
+                  "name": "MCI_followup",
+                  "value": "21",
+                  "unit": "participants"
+                },
+                {
+                  "name": "followup",
+                  "value": "5.8",
+                  "unit": "years"
+                },
+                {
+                  "name": "MCI_definition",
+                  "value": "Dubois and Albert 2004",
+                  "unit": null
+                },
+                {
+                  "name": "MCI_type",
+                  "value": "MCI",
+                  "unit": null
+                },
+                {
+                  "name": "dementia_criteria",
+                  "value": "DSM‐IV & NINCDS‐ADRDA (AD)",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U54",
+                "U55",
+                "U56"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U54",
+          "U55",
+          "U56"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K33",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "Huang: MCI→All-cause dementia 42% (51/121): AD 29, VaD 18, other 4; after 3 years.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K33S1",
+            "predicate": "conversion_estimate",
+            "roles": [
+              {
+                "role": "population",
+                "concept_id": "C25",
+                "knowledge_id": null
+              },
+              {
+                "role": "condition",
+                "concept_id": "C1",
+                "knowledge_id": null
+              },
+              {
+                "role": "outcome",
+                "concept_id": "C36",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [
+              "Table 1 cohort-specific estimate; Huang"
+            ],
+            "temporal_context": "after 3 years",
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "rate",
+                  "value": "42",
+                  "unit": "percent"
+                },
+                {
+                  "name": "fraction",
+                  "value": "51/121",
+                  "unit": null
+                },
+                {
+                  "name": "AD_cases",
+                  "value": 29,
+                  "unit": "cases"
+                },
+                {
+                  "name": "VaD_cases",
+                  "value": 18,
+                  "unit": "cases"
+                },
+                {
+                  "name": "other_cases",
+                  "value": 4,
+                  "unit": "cases"
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U54",
+                "U55",
+                "U56"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U54",
+          "U55",
+          "U56"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K34",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "Li: MCI→Alzheimer disease 44.8% (298/638), all classified as AD; after 5 years.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K34S1",
+            "predicate": "conversion_estimate",
+            "roles": [
+              {
+                "role": "population",
+                "concept_id": "C26",
+                "knowledge_id": null
+              },
+              {
+                "role": "condition",
+                "concept_id": "C1",
+                "knowledge_id": null
+              },
+              {
+                "role": "outcome",
+                "concept_id": "C24",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [
+              "Table 1 cohort-specific estimate; Li"
+            ],
+            "temporal_context": "after 5 years",
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "rate",
+                  "value": "44.8",
+                  "unit": "percent"
+                },
+                {
+                  "name": "fraction",
+                  "value": "298/638",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U54",
+                "U55",
+                "U56"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U54",
+          "U55",
+          "U56"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K35",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "Ding: MCI→All-cause dementia 6.0 per 100 person-years (95% CI 4.7–7.3; 79/362); after 4 years.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K35S1",
+            "predicate": "conversion_estimate",
+            "roles": [
+              {
+                "role": "population",
+                "concept_id": "C27",
+                "knowledge_id": null
+              },
+              {
+                "role": "condition",
+                "concept_id": "C1",
+                "knowledge_id": null
+              },
+              {
+                "role": "outcome",
+                "concept_id": "C36",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [
+              "Table 1 cohort-specific estimate; Ding"
+            ],
+            "temporal_context": "after 4 years",
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "rate",
+                  "value": "6.0",
+                  "unit": "per 100 person-years"
+                },
+                {
+                  "name": "fraction",
+                  "value": "79/362",
+                  "unit": null
+                },
+                {
+                  "name": "CI95",
+                  "value": "4.7–7.3",
+                  "unit": "per 100 person-years"
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U54",
+                "U55",
+                "U56"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U54",
+          "U55",
+          "U56"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K36",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "Yang: MCI→Alzheimer disease 16.8% (78/465); after 3 years.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K36S1",
+            "predicate": "conversion_estimate",
+            "roles": [
+              {
+                "role": "population",
+                "concept_id": "C28",
+                "knowledge_id": null
+              },
+              {
+                "role": "condition",
+                "concept_id": "C1",
+                "knowledge_id": null
+              },
+              {
+                "role": "outcome",
+                "concept_id": "C24",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [
+              "Table 1 cohort-specific estimate; Yang"
+            ],
+            "temporal_context": "after 3 years",
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "rate",
+                  "value": "16.8",
+                  "unit": "percent"
+                },
+                {
+                  "name": "fraction",
+                  "value": "78/465",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U54",
+                "U55",
+                "U56"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U54",
+          "U55",
+          "U56"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K37",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "Yu_Taiyuan: MCI→Alzheimer disease 17.0% (89/518); after 5 years.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K37S1",
+            "predicate": "conversion_estimate",
+            "roles": [
+              {
+                "role": "population",
+                "concept_id": "C29",
+                "knowledge_id": null
+              },
+              {
+                "role": "condition",
+                "concept_id": "C1",
+                "knowledge_id": null
+              },
+              {
+                "role": "outcome",
+                "concept_id": "C24",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [
+              "Table 1 cohort-specific estimate; Yu_Taiyuan"
+            ],
+            "temporal_context": "after 5 years",
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "rate",
+                  "value": "17.0",
+                  "unit": "percent"
+                },
+                {
+                  "name": "fraction",
+                  "value": "89/518",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U54",
+                "U55",
+                "U56"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U54",
+          "U55",
+          "U56"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K38",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "Baiyewu: MCI→All-cause dementia 16.1% (14/87); after 2 years.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K38S1",
+            "predicate": "conversion_estimate",
+            "roles": [
+              {
+                "role": "population",
+                "concept_id": "C30",
+                "knowledge_id": null
+              },
+              {
+                "role": "condition",
+                "concept_id": "C37",
+                "knowledge_id": null
+              },
+              {
+                "role": "outcome",
+                "concept_id": "C36",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [
+              "Table 1 cohort-specific estimate; Baiyewu"
+            ],
+            "temporal_context": "after 2 years",
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "rate",
+                  "value": "16.1",
+                  "unit": "percent"
+                },
+                {
+                  "name": "fraction",
+                  "value": "14/87",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U54",
+                "U55",
+                "U56"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U54",
+          "U55",
+          "U56"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K39",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "Montano: MCI→All-cause dementia 37.5% (15/40), also 145.4 per 1000 person-years; after 2.6 years.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K39S1",
+            "predicate": "conversion_estimate",
+            "roles": [
+              {
+                "role": "population",
+                "concept_id": "C31",
+                "knowledge_id": null
+              },
+              {
+                "role": "condition",
+                "concept_id": "C38",
+                "knowledge_id": null
+              },
+              {
+                "role": "outcome",
+                "concept_id": "C36",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [
+              "Table 1 cohort-specific estimate; Montano"
+            ],
+            "temporal_context": "after 2.6 years",
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "rate",
+                  "value": "37.5",
+                  "unit": "percent"
+                },
+                {
+                  "name": "fraction",
+                  "value": "15/40",
+                  "unit": null
+                },
+                {
+                  "name": "incidence_rate",
+                  "value": 145.4,
+                  "unit": "per 1000 person-years"
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U54",
+                "U55",
+                "U56"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U54",
+          "U55",
+          "U56"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K40",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "Paddick: MCI→All-cause dementia 37.0% (17/46): AD 9, VaD 4, Parkinson dementia 2, mixed 2; after 4 years.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K40S1",
+            "predicate": "conversion_estimate",
+            "roles": [
+              {
+                "role": "population",
+                "concept_id": "C32",
+                "knowledge_id": null
+              },
+              {
+                "role": "condition",
+                "concept_id": "C1",
+                "knowledge_id": null
+              },
+              {
+                "role": "outcome",
+                "concept_id": "C36",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [
+              "Table 1 cohort-specific estimate; Paddick"
+            ],
+            "temporal_context": "after 4 years",
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "rate",
+                  "value": "37.0",
+                  "unit": "percent"
+                },
+                {
+                  "name": "fraction",
+                  "value": "17/46",
+                  "unit": null
+                },
+                {
+                  "name": "AD_cases",
+                  "value": 9,
+                  "unit": "cases"
+                },
+                {
+                  "name": "VaD_cases",
+                  "value": 4,
+                  "unit": "cases"
+                },
+                {
+                  "name": "Parkinson_dementia_cases",
+                  "value": 2,
+                  "unit": "cases"
+                },
+                {
+                  "name": "mixed_cases",
+                  "value": 2,
+                  "unit": "cases"
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U54",
+                "U55",
+                "U56"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U54",
+          "U55",
+          "U56"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K41",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "Yu_Sanatorium: MCI→All-cause dementia 24.4% (51/209), labelled per year in the table; Table says per year; study mean follow-up 3 years.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K41S1",
+            "predicate": "conversion_estimate",
+            "roles": [
+              {
+                "role": "population",
+                "concept_id": "C33",
+                "knowledge_id": null
+              },
+              {
+                "role": "condition",
+                "concept_id": "C1",
+                "knowledge_id": null
+              },
+              {
+                "role": "outcome",
+                "concept_id": "C36",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [
+              "Table 1 cohort-specific estimate; Yu_Sanatorium"
+            ],
+            "temporal_context": "Table says per year; study mean follow-up 3 years",
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "rate",
+                  "value": "24.4",
+                  "unit": "percent"
+                },
+                {
+                  "name": "fraction",
+                  "value": "51/209",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U54",
+                "U55",
+                "U56"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U54",
+          "U55",
+          "U56"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K42",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "Yu_Sanatorium: MCI→Alzheimer disease 15.7% (35/209), labelled per year; percentage and fraction are not reconciled; Table says per year; study mean follow-up 3 years.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K42S1",
+            "predicate": "conversion_estimate",
+            "roles": [
+              {
+                "role": "population",
+                "concept_id": "C33",
+                "knowledge_id": null
+              },
+              {
+                "role": "condition",
+                "concept_id": "C1",
+                "knowledge_id": null
+              },
+              {
+                "role": "outcome",
+                "concept_id": "C24",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [
+              "Table 1 cohort-specific estimate; Yu_Sanatorium"
+            ],
+            "temporal_context": "Table says per year; study mean follow-up 3 years",
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "rate",
+                  "value": "15.7",
+                  "unit": "percent/year"
+                },
+                {
+                  "name": "fraction",
+                  "value": "35/209",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U54",
+                "U55",
+                "U56"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U54",
+          "U55",
+          "U56"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K43",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "Wang: MCI→Alzheimer disease 6% (34/557 per year); Table says per year; study mean follow-up 3 years.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K43S1",
+            "predicate": "conversion_estimate",
+            "roles": [
+              {
+                "role": "population",
+                "concept_id": "C34",
+                "knowledge_id": null
+              },
+              {
+                "role": "condition",
+                "concept_id": "C39",
+                "knowledge_id": null
+              },
+              {
+                "role": "outcome",
+                "concept_id": "C24",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [
+              "Table 1 cohort-specific estimate; Wang"
+            ],
+            "temporal_context": "Table says per year; study mean follow-up 3 years",
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "rate",
+                  "value": "6",
+                  "unit": "percent/year"
+                },
+                {
+                  "name": "fraction",
+                  "value": "34/557",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U54",
+                "U55",
+                "U56"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U54",
+          "U55",
+          "U56"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K44",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "Godhino: MCI→Alzheimer disease 38.1% (8/21); after 5.8 years.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K44S1",
+            "predicate": "conversion_estimate",
+            "roles": [
+              {
+                "role": "population",
+                "concept_id": "C35",
+                "knowledge_id": null
+              },
+              {
+                "role": "condition",
+                "concept_id": "C1",
+                "knowledge_id": null
+              },
+              {
+                "role": "outcome",
+                "concept_id": "C24",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [
+              "Table 1 cohort-specific estimate; Godhino"
+            ],
+            "temporal_context": "after 5.8 years",
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "rate",
+                  "value": "38.1",
+                  "unit": "percent"
+                },
+                {
+                  "name": "fraction",
+                  "value": "8/21",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U54",
+                "U55",
+                "U56"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U54",
+          "U55",
+          "U56"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K45",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "Ding subtype Amnestic mild cognitive impairment: dementia conversion 6.9 per 100 person-years, 95% CI 5.2–8.6, 59/238 after four years.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K45S1",
+            "predicate": "conversion_estimate",
+            "roles": [
+              {
+                "role": "population",
+                "concept_id": "C27",
+                "knowledge_id": null
+              },
+              {
+                "role": "condition",
+                "concept_id": "C39",
+                "knowledge_id": null
+              },
+              {
+                "role": "outcome",
+                "concept_id": "C36",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [
+              "Ding Shanghai cohort; Table 1 subtype-specific rate"
+            ],
+            "temporal_context": "4 years follow-up",
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "rate",
+                  "value": "6.9",
+                  "unit": "per 100 person-years"
+                },
+                {
+                  "name": "CI95",
+                  "value": "5.2–8.6",
+                  "unit": "per 100 person-years"
+                },
+                {
+                  "name": "fraction",
+                  "value": "59/238",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U54",
+                "U55",
+                "U56"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U54",
+          "U55",
+          "U56"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K46",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "Ding subtype Amnestic MCI single domain: dementia conversion 3.0 per 100 person-years, 95% CI 1.6–4.4, 17/156 after four years.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K46S1",
+            "predicate": "conversion_estimate",
+            "roles": [
+              {
+                "role": "population",
+                "concept_id": "C27",
+                "knowledge_id": null
+              },
+              {
+                "role": "condition",
+                "concept_id": "C40",
+                "knowledge_id": null
+              },
+              {
+                "role": "outcome",
+                "concept_id": "C36",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [
+              "Ding Shanghai cohort; Table 1 subtype-specific rate"
+            ],
+            "temporal_context": "4 years follow-up",
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "rate",
+                  "value": "3.0",
+                  "unit": "per 100 person-years"
+                },
+                {
+                  "name": "CI95",
+                  "value": "1.6–4.4",
+                  "unit": "per 100 person-years"
+                },
+                {
+                  "name": "fraction",
+                  "value": "17/156",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U54",
+                "U55",
+                "U56"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U54",
+          "U55",
+          "U56"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K47",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "Ding subtype Amnestic MCI multiple domain: dementia conversion 14.2 per 100 person-years, 95% CI 10.2–18.2, 42/82 after four years.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K47S1",
+            "predicate": "conversion_estimate",
+            "roles": [
+              {
+                "role": "population",
+                "concept_id": "C27",
+                "knowledge_id": null
+              },
+              {
+                "role": "condition",
+                "concept_id": "C41",
+                "knowledge_id": null
+              },
+              {
+                "role": "outcome",
+                "concept_id": "C36",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [
+              "Ding Shanghai cohort; Table 1 subtype-specific rate"
+            ],
+            "temporal_context": "4 years follow-up",
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "rate",
+                  "value": "14.2",
+                  "unit": "per 100 person-years"
+                },
+                {
+                  "name": "CI95",
+                  "value": "10.2–18.2",
+                  "unit": "per 100 person-years"
+                },
+                {
+                  "name": "fraction",
+                  "value": "42/82",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U54",
+                "U55",
+                "U56"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U54",
+          "U55",
+          "U56"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K48",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "Ding subtype Nonamnestic MCI single domain: dementia conversion 2.7 per 100 person-years, 95% CI 1.0–4.5, 9/91 after four years.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K48S1",
+            "predicate": "conversion_estimate",
+            "roles": [
+              {
+                "role": "population",
+                "concept_id": "C27",
+                "knowledge_id": null
+              },
+              {
+                "role": "condition",
+                "concept_id": "C42",
+                "knowledge_id": null
+              },
+              {
+                "role": "outcome",
+                "concept_id": "C36",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [
+              "Ding Shanghai cohort; Table 1 subtype-specific rate"
+            ],
+            "temporal_context": "4 years follow-up",
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "rate",
+                  "value": "2.7",
+                  "unit": "per 100 person-years"
+                },
+                {
+                  "name": "CI95",
+                  "value": "1.0–4.5",
+                  "unit": "per 100 person-years"
+                },
+                {
+                  "name": "fraction",
+                  "value": "9/91",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U54",
+                "U55",
+                "U56"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U54",
+          "U55",
+          "U56"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K49",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "Ding subtype Nonamnestic MCI multiple domain: dementia conversion 8.7 per 100 person-years, 95% CI 3.8–13.7, 11/33 after four years.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K49S1",
+            "predicate": "conversion_estimate",
+            "roles": [
+              {
+                "role": "population",
+                "concept_id": "C27",
+                "knowledge_id": null
+              },
+              {
+                "role": "condition",
+                "concept_id": "C43",
+                "knowledge_id": null
+              },
+              {
+                "role": "outcome",
+                "concept_id": "C36",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [
+              "Ding Shanghai cohort; Table 1 subtype-specific rate"
+            ],
+            "temporal_context": "4 years follow-up",
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "rate",
+                  "value": "8.7",
+                  "unit": "per 100 person-years"
+                },
+                {
+                  "name": "CI95",
+                  "value": "3.8–13.7",
+                  "unit": "per 100 person-years"
+                },
+                {
+                  "name": "fraction",
+                  "value": "11/33",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U54",
+                "U55",
+                "U56"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U54",
+          "U55",
+          "U56"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K50",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "Across 11 LMIC studies, prose reports MCI-to-all-cause-dementia conversion 6.0–44.8% over mean 3.7±1.2 years; this range combines heterogeneous definitions and reporting periods rather than a uniform annual risk.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K50S1",
+            "predicate": "conversion_range",
+            "roles": [
+              {
+                "role": "condition",
+                "concept_id": "C1",
+                "knowledge_id": null
+              },
+              {
+                "role": "outcome",
+                "concept_id": "C36",
+                "knowledge_id": null
+              },
+              {
+                "role": "population",
+                "concept_id": "C20",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [
+              "Systematic review of 11 population/community observational cohorts in LMICs; country income classified at study time"
+            ],
+            "temporal_context": "Average 3.7 years; variable follow-up",
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "range",
+                  "value": "6.0–44.8",
+                  "unit": "percent"
+                },
+                {
+                  "name": "studies",
+                  "value": 11,
+                  "unit": "studies"
+                },
+                {
+                  "name": "followup_mean",
+                  "value": 3.7,
+                  "unit": "years"
+                },
+                {
+                  "name": "followup_SD",
+                  "value": 1.2,
+                  "unit": "years"
+                },
+                {
+                  "name": "reporting",
+                  "value": "prose range; Table 1 also includes person-time rates",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U7",
+                "U25",
+                "U62",
+                "U76"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U7",
+          "U25",
+          "U62",
+          "U76"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K51",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "AD conversion prose spans 6.0–46.7% in eight studies over 4.0±1.1 years; VaD 8.7–14.9% in two over 3.5±0.7 years.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "contrast",
+        "statements": [
+          {
+            "statement_id": "K51S1",
+            "predicate": "conversion_range",
+            "roles": [
+              {
+                "role": "condition",
+                "concept_id": "C1",
+                "knowledge_id": null
+              },
+              {
+                "role": "population",
+                "concept_id": "C20",
+                "knowledge_id": null
+              },
+              {
+                "role": "outcome",
+                "concept_id": "C24",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [
+              "Systematic review of 11 population/community observational cohorts in LMICs; country income classified at study time"
+            ],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "range",
+                  "value": "6.0–46.7",
+                  "unit": "percent"
+                },
+                {
+                  "name": "studies",
+                  "value": 8,
+                  "unit": "studies"
+                },
+                {
+                  "name": "duration",
+                  "value": 4,
+                  "unit": "years"
+                },
+                {
+                  "name": "duration_SD",
+                  "value": 1.1,
+                  "unit": "years"
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U62"
+              ]
+            }
+          },
+          {
+            "statement_id": "K51S2",
+            "predicate": "conversion_range",
+            "roles": [
+              {
+                "role": "condition",
+                "concept_id": "C1",
+                "knowledge_id": null
+              },
+              {
+                "role": "population",
+                "concept_id": "C20",
+                "knowledge_id": null
+              },
+              {
+                "role": "outcome",
+                "concept_id": "C44",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [
+              "Systematic review of 11 population/community observational cohorts in LMICs; country income classified at study time"
+            ],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "range",
+                  "value": "8.7–14.9",
+                  "unit": "percent"
+                },
+                {
+                  "name": "studies",
+                  "value": 2,
+                  "unit": "studies"
+                },
+                {
+                  "name": "duration",
+                  "value": 3.5,
+                  "unit": "years"
+                },
+                {
+                  "name": "duration_SD",
+                  "value": 0.7,
+                  "unit": "years"
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U62"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U62"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K52",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "Broader MCI/CIND/CDR definitions show conversion 16.8–44.8% over 2–5.8 years versus restricted aMCI 6.0–6.9% over mean 3.5 years (two studies); the source interprets broader impairment as higher risk.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "contrast",
+        "statements": [
+          {
+            "statement_id": "K52S1",
+            "predicate": "definition_conversion_comparison",
+            "roles": [
+              {
+                "role": "outcome",
+                "concept_id": "C3",
+                "knowledge_id": null
+              },
+              {
+                "role": "population",
+                "concept_id": "C20",
+                "knowledge_id": null
+              },
+              {
+                "role": "condition",
+                "concept_id": "C45",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": "author comparison; heterogeneous measures",
+            "negated": false,
+            "conditions": [
+              "Systematic review of 11 population/community observational cohorts in LMICs; country income classified at study time"
+            ],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "range",
+                  "value": "16.8–44.8",
+                  "unit": "percent"
+                },
+                {
+                  "name": "followup",
+                  "value": "2–5.8",
+                  "unit": "years"
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U62",
+                "U78"
+              ]
+            }
+          },
+          {
+            "statement_id": "K52S2",
+            "predicate": "definition_conversion_comparison",
+            "roles": [
+              {
+                "role": "outcome",
+                "concept_id": "C3",
+                "knowledge_id": null
+              },
+              {
+                "role": "population",
+                "concept_id": "C20",
+                "knowledge_id": null
+              },
+              {
+                "role": "condition",
+                "concept_id": "C39",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": "author comparison; heterogeneous measures",
+            "negated": false,
+            "conditions": [
+              "Systematic review of 11 population/community observational cohorts in LMICs; country income classified at study time"
+            ],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "range",
+                  "value": "6.0–6.9",
+                  "unit": "percent"
+                },
+                {
+                  "name": "followup_mean",
+                  "value": 3.5,
+                  "unit": "years"
+                },
+                {
+                  "name": "studies",
+                  "value": 2,
+                  "unit": "studies"
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U62",
+                "U78"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U62",
+          "U78"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K53",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "Older age significantly associates with MCI-to-dementia conversion in 6/10 studies assessing it; risks examined in 10/11 studies overall.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K53S1",
+            "predicate": "risk_factor_association",
+            "roles": [
+              {
+                "role": "exposure",
+                "concept_id": "C46",
+                "knowledge_id": null
+              },
+              {
+                "role": "outcome",
+                "concept_id": "C47",
+                "knowledge_id": null
+              },
+              {
+                "role": "population",
+                "concept_id": "C20",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": "observational significant associations; not causal estimates",
+            "negated": false,
+            "conditions": [
+              "Systematic review of 11 population/community observational cohorts in LMICs; country income classified at study time"
+            ],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "significant_studies",
+                  "value": 6,
+                  "unit": "studies"
+                },
+                {
+                  "name": "assessed_studies",
+                  "value": 10,
+                  "unit": "studies"
+                },
+                {
+                  "name": "risk_investigation",
+                  "value": "10/11",
+                  "unit": "studies"
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U65"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U65"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K54",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "Poor baseline cognitive test performance significantly associates with MCI-to-dementia conversion in 5/7 studies assessing it; risks examined in 10/11 studies overall.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K54S1",
+            "predicate": "risk_factor_association",
+            "roles": [
+              {
+                "role": "exposure",
+                "concept_id": "C48",
+                "knowledge_id": null
+              },
+              {
+                "role": "outcome",
+                "concept_id": "C47",
+                "knowledge_id": null
+              },
+              {
+                "role": "population",
+                "concept_id": "C20",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": "observational significant associations; not causal estimates",
+            "negated": false,
+            "conditions": [
+              "Systematic review of 11 population/community observational cohorts in LMICs; country income classified at study time"
+            ],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "significant_studies",
+                  "value": 5,
+                  "unit": "studies"
+                },
+                {
+                  "name": "assessed_studies",
+                  "value": 7,
+                  "unit": "studies"
+                },
+                {
+                  "name": "risk_investigation",
+                  "value": "10/11",
+                  "unit": "studies"
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U65"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U65"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K55",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "Female gender significantly associates with MCI-to-dementia conversion in 3/10 studies assessing it; risks examined in 10/11 studies overall.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K55S1",
+            "predicate": "risk_factor_association",
+            "roles": [
+              {
+                "role": "exposure",
+                "concept_id": "C49",
+                "knowledge_id": null
+              },
+              {
+                "role": "outcome",
+                "concept_id": "C47",
+                "knowledge_id": null
+              },
+              {
+                "role": "population",
+                "concept_id": "C20",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": "observational significant associations; not causal estimates",
+            "negated": false,
+            "conditions": [
+              "Systematic review of 11 population/community observational cohorts in LMICs; country income classified at study time"
+            ],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "significant_studies",
+                  "value": 3,
+                  "unit": "studies"
+                },
+                {
+                  "name": "assessed_studies",
+                  "value": 10,
+                  "unit": "studies"
+                },
+                {
+                  "name": "risk_investigation",
+                  "value": "10/11",
+                  "unit": "studies"
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U65"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U65"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K56",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "Hypertension significantly associates with MCI-to-dementia conversion in 3/6 studies assessing it; risks examined in 10/11 studies overall.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K56S1",
+            "predicate": "risk_factor_association",
+            "roles": [
+              {
+                "role": "exposure",
+                "concept_id": "C50",
+                "knowledge_id": null
+              },
+              {
+                "role": "outcome",
+                "concept_id": "C47",
+                "knowledge_id": null
+              },
+              {
+                "role": "population",
+                "concept_id": "C20",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": "observational significant associations; not causal estimates",
+            "negated": false,
+            "conditions": [
+              "Systematic review of 11 population/community observational cohorts in LMICs; country income classified at study time"
+            ],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "significant_studies",
+                  "value": 3,
+                  "unit": "studies"
+                },
+                {
+                  "name": "assessed_studies",
+                  "value": 6,
+                  "unit": "studies"
+                },
+                {
+                  "name": "risk_investigation",
+                  "value": "10/11",
+                  "unit": "studies"
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U65"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U65"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K57",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "Low educational attainment significantly associates with MCI-to-dementia conversion in 2/10 studies assessing it; risks examined in 10/11 studies overall.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K57S1",
+            "predicate": "risk_factor_association",
+            "roles": [
+              {
+                "role": "exposure",
+                "concept_id": "C51",
+                "knowledge_id": null
+              },
+              {
+                "role": "outcome",
+                "concept_id": "C47",
+                "knowledge_id": null
+              },
+              {
+                "role": "population",
+                "concept_id": "C20",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": "observational significant associations; not causal estimates",
+            "negated": false,
+            "conditions": [
+              "Systematic review of 11 population/community observational cohorts in LMICs; country income classified at study time"
+            ],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "significant_studies",
+                  "value": 2,
+                  "unit": "studies"
+                },
+                {
+                  "name": "assessed_studies",
+                  "value": 10,
+                  "unit": "studies"
+                },
+                {
+                  "name": "risk_investigation",
+                  "value": "10/11",
+                  "unit": "studies"
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U65"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U65"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K58",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "Anxiety and depression significantly associates with MCI-to-dementia conversion in 2/5 studies assessing it; risks examined in 10/11 studies overall.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K58S1",
+            "predicate": "risk_factor_association",
+            "roles": [
+              {
+                "role": "exposure",
+                "concept_id": "C52",
+                "knowledge_id": null
+              },
+              {
+                "role": "outcome",
+                "concept_id": "C47",
+                "knowledge_id": null
+              },
+              {
+                "role": "population",
+                "concept_id": "C20",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": "observational significant associations; not causal estimates",
+            "negated": false,
+            "conditions": [
+              "Systematic review of 11 population/community observational cohorts in LMICs; country income classified at study time"
+            ],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "significant_studies",
+                  "value": 2,
+                  "unit": "studies"
+                },
+                {
+                  "name": "assessed_studies",
+                  "value": 5,
+                  "unit": "studies"
+                },
+                {
+                  "name": "risk_investigation",
+                  "value": "10/11",
+                  "unit": "studies"
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U65"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U65"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K59",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "History of stroke significantly associates with MCI-to-dementia conversion in 1/4 studies assessing it; risks examined in 10/11 studies overall.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K59S1",
+            "predicate": "risk_factor_association",
+            "roles": [
+              {
+                "role": "exposure",
+                "concept_id": "C53",
+                "knowledge_id": null
+              },
+              {
+                "role": "outcome",
+                "concept_id": "C47",
+                "knowledge_id": null
+              },
+              {
+                "role": "population",
+                "concept_id": "C20",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": "observational significant associations; not causal estimates",
+            "negated": false,
+            "conditions": [
+              "Systematic review of 11 population/community observational cohorts in LMICs; country income classified at study time"
+            ],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "significant_studies",
+                  "value": 1,
+                  "unit": "studies"
+                },
+                {
+                  "name": "assessed_studies",
+                  "value": 4,
+                  "unit": "studies"
+                },
+                {
+                  "name": "risk_investigation",
+                  "value": "10/11",
+                  "unit": "studies"
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U65"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U65"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K60",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "Diabetes significantly associates with MCI-to-dementia conversion in 2/4 studies assessing it; risks examined in 10/11 studies overall.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K60S1",
+            "predicate": "risk_factor_association",
+            "roles": [
+              {
+                "role": "exposure",
+                "concept_id": "C54",
+                "knowledge_id": null
+              },
+              {
+                "role": "outcome",
+                "concept_id": "C47",
+                "knowledge_id": null
+              },
+              {
+                "role": "population",
+                "concept_id": "C20",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": "observational significant associations; not causal estimates",
+            "negated": false,
+            "conditions": [
+              "Systematic review of 11 population/community observational cohorts in LMICs; country income classified at study time"
+            ],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "significant_studies",
+                  "value": 2,
+                  "unit": "studies"
+                },
+                {
+                  "name": "assessed_studies",
+                  "value": 4,
+                  "unit": "studies"
+                },
+                {
+                  "name": "risk_investigation",
+                  "value": "10/11",
+                  "unit": "studies"
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U65"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U65"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K61",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "APOE ε4 status significantly associates with MCI-to-dementia conversion in 2/4 studies assessing it; risks examined in 10/11 studies overall.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K61S1",
+            "predicate": "risk_factor_association",
+            "roles": [
+              {
+                "role": "exposure",
+                "concept_id": "C55",
+                "knowledge_id": null
+              },
+              {
+                "role": "outcome",
+                "concept_id": "C47",
+                "knowledge_id": null
+              },
+              {
+                "role": "population",
+                "concept_id": "C20",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": "observational significant associations; not causal estimates",
+            "negated": false,
+            "conditions": [
+              "Systematic review of 11 population/community observational cohorts in LMICs; country income classified at study time"
+            ],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "significant_studies",
+                  "value": 2,
+                  "unit": "studies"
+                },
+                {
+                  "name": "assessed_studies",
+                  "value": 4,
+                  "unit": "studies"
+                },
+                {
+                  "name": "risk_investigation",
+                  "value": "10/11",
+                  "unit": "studies"
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U65"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U65"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K62",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "Bias results report mean 7.3 stars out of 10 (range 5–8) while eight of 11 studies reach a stated maximum of eight; retain the differing scale statements.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K62S1",
+            "predicate": "bias_assessment_results",
+            "roles": [
+              {
+                "role": "population",
+                "concept_id": "C20",
+                "knowledge_id": null
+              },
+              {
+                "role": "method",
+                "concept_id": "C21",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [
+              "Systematic review of 11 population/community observational cohorts in LMICs; country income classified at study time"
+            ],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "mean",
+                  "value": 7.3,
+                  "unit": "stars"
+                },
+                {
+                  "name": "reported_denominator",
+                  "value": 10,
+                  "unit": "stars"
+                },
+                {
+                  "name": "range",
+                  "value": "5–8",
+                  "unit": "stars"
+                },
+                {
+                  "name": "maximum_scoring_studies",
+                  "value": 8,
+                  "unit": "studies"
+                },
+                {
+                  "name": "stated_maximum",
+                  "value": 8,
+                  "unit": "stars"
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U68"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U68"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K63",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "Six Petersen-type MCI→AD studies (four China, one Tanzania, one Brazil) yield 23.8% pooled AD conversion (95% CI 15.4–33.4%) over 3.0–5.8 years; China heterogeneity I²=96.54%, p<.0001.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K63S1",
+            "predicate": "pooled_conversion",
+            "roles": [
+              {
+                "role": "condition",
+                "concept_id": "C23",
+                "knowledge_id": null
+              },
+              {
+                "role": "outcome",
+                "concept_id": "C24",
+                "knowledge_id": null
+              },
+              {
+                "role": "population",
+                "concept_id": "C56",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": "pooled estimate, high heterogeneity",
+            "negated": false,
+            "conditions": [
+              "Petersen-type MCI with AD endpoint; six-study meta-analysis"
+            ],
+            "temporal_context": "3.0–5.8 years follow-up",
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "studies",
+                  "value": 6,
+                  "unit": "studies"
+                },
+                {
+                  "name": "China",
+                  "value": 4,
+                  "unit": "studies"
+                },
+                {
+                  "name": "Tanzania",
+                  "value": 1,
+                  "unit": "study"
+                },
+                {
+                  "name": "Brazil",
+                  "value": 1,
+                  "unit": "study"
+                },
+                {
+                  "name": "conversion",
+                  "value": 23.8,
+                  "unit": "percent"
+                },
+                {
+                  "name": "CI95",
+                  "value": "15.4–33.4",
+                  "unit": "percent"
+                },
+                {
+                  "name": "followup",
+                  "value": "3.0–5.8",
+                  "unit": "years"
+                },
+                {
+                  "name": "China_I2",
+                  "value": 96.54,
+                  "unit": "percent"
+                },
+                {
+                  "name": "China_heterogeneity_p",
+                  "value": "<.0001",
+                  "unit": null
+                },
+                {
+                  "name": "sample_range",
+                  "value": "21–837",
+                  "unit": "participants"
+                },
+                {
+                  "name": "age_thresholds",
+                  "value": ">55 to >70",
+                  "unit": "years"
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U7",
+                "U25",
+                "U71",
+                "U72",
+                "U73",
+                "U76"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U7",
+          "U25",
+          "U71",
+          "U72",
+          "U73",
+          "U76"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K64",
+      "kind": "state",
+      "knowledge_kind": "conclusion",
+      "display_text": "MCI is associated with high but variable dementia conversion in LMICs; approximately one in four Petersen-type cases develop AD over the studied 3.0–5.8 years. Demographic/health influences are possible and limited data prevent generalization to all LMICs.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K64S1",
+            "predicate": "interpret_conversion",
+            "roles": [
+              {
+                "role": "condition",
+                "concept_id": "C1",
+                "knowledge_id": null
+              },
+              {
+                "role": "outcome",
+                "concept_id": "C3",
+                "knowledge_id": null
+              },
+              {
+                "role": "population",
+                "concept_id": "C57",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": "associated; may be influenced; not universal individual prognosis",
+            "negated": false,
+            "conditions": [],
+            "temporal_context": "Studied 3.0–5.8-year AD follow-up",
+            "qualifiers": {
+              "attributes": []
+            },
+            "provenance": {
+              "unit_ids": [
+                "U8",
+                "U25",
+                "U76",
+                "U82"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U8",
+          "U25",
+          "U76",
+          "U82"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K65",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "Discussion labels Brazil upper-middle, Nigeria lower-middle and Tanzania low-income, while recruitment-time results classify two low-income studies. Resource/funding/diagnostic gaps are suggested explanations for sparse, China-dominated evidence.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K65S1",
+            "predicate": "research_gap_interpretation",
+            "roles": [
+              {
+                "role": "population",
+                "concept_id": "C58",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": "possible explanations",
+            "negated": false,
+            "conditions": [],
+            "temporal_context": "Discussion income labels versus recruitment-time classification",
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "Brazil",
+                  "value": "upper middle",
+                  "unit": null
+                },
+                {
+                  "name": "Nigeria",
+                  "value": "lower middle",
+                  "unit": null
+                },
+                {
+                  "name": "Tanzania",
+                  "value": "low",
+                  "unit": null
+                },
+                {
+                  "name": "possible_causes",
+                  "value": "limited funding and diagnostic infrastructure",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U77"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U77"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K66",
+      "kind": "state",
+      "knowledge_kind": "observation",
+      "display_text": "Discussion reports female conversion risk in only 2/10 studies versus 3/10 in Results; age/APOE ε4 are nonmodifiable, vascular/cardiometabolic and neuropsychiatric risks potentially modifiable. Sex/education evidence has methodological/reverse-causality limits.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K66S1",
+            "predicate": "risk_interpretation",
+            "roles": [
+              {
+                "role": "outcome",
+                "concept_id": "C13",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": "interpretation; associations not causal",
+            "negated": false,
+            "conditions": [
+              "Systematic review of 11 population/community observational cohorts in LMICs; country income classified at study time"
+            ],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "discussion_female_significance",
+                  "value": "2/10",
+                  "unit": "studies"
+                },
+                {
+                  "name": "nonmodifiable",
+                  "value": "age; APOE ε4",
+                  "unit": null
+                },
+                {
+                  "name": "modifiable",
+                  "value": "cardiometabolic disease; vascular risks; depression",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U79"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U79"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K67",
+      "kind": "action",
+      "knowledge_kind": "operation",
+      "display_text": "A cited estimate suggests up to 40% of dementia cases preventable through 12 modifiable risks; cognitive training may reduce risk, but applicability to MCI and feasibility in LMICs need testing.",
+      "aliases": [],
+      "action_status": "unresolved",
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K67S1",
+            "predicate": "test_prevention_feasibility",
+            "roles": [
+              {
+                "role": "action",
+                "concept_id": "C59",
+                "knowledge_id": null
+              },
+              {
+                "role": "population",
+                "concept_id": "C60",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": "cited potential; further work required",
+            "negated": false,
+            "conditions": [],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "potential_preventable",
+                  "value": "up to 40",
+                  "unit": "percent"
+                },
+                {
+                  "name": "modifiable_factors",
+                  "value": 12,
+                  "unit": "factors"
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U79"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U79"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K68",
+      "kind": "state",
+      "knowledge_kind": "limitation",
+      "display_text": "Generalization is limited by English-only searches, no gray literature, only one nationally representative cohort, variable diagnosis/follow-up/reporting, few countries, high heterogeneity and inability to stratify by age/duration. Findings require caution.",
+      "aliases": [],
+      "action_status": null,
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "conjunction",
+        "statements": [
+          {
+            "statement_id": "K68S1",
+            "predicate": "review_limitations",
+            "roles": [
+              {
+                "role": "subject",
+                "concept_id": "C16",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": false,
+            "conditions": [
+              "Systematic review of 11 population/community observational cohorts in LMICs; country income classified at study time"
+            ],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "DSM_IV_share",
+                  "value": 63.6,
+                  "unit": "percent"
+                },
+                {
+                  "name": "search",
+                  "value": "English electronic search; no gray literature",
+                  "unit": null
+                },
+                {
+                  "name": "possibly_missed_languages",
+                  "value": "Spanish; Portuguese; French",
+                  "unit": null
+                },
+                {
+                  "name": "representative_studies",
+                  "value": 1,
+                  "unit": "study"
+                },
+                {
+                  "name": "unrepresented",
+                  "value": "Eastern Europe; Middle East; Global South settings as described by authors",
+                  "unit": null
+                },
+                {
+                  "name": "outcomes",
+                  "value": "AD and VaD only among subtypes",
+                  "unit": null
+                },
+                {
+                  "name": "heterogeneity",
+                  "value": "definitions; operational criteria; testing; recruitment; sample age/sex; follow-up; annual versus cumulative reporting",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U26",
+                "U77",
+                "U80"
+              ]
+            }
+          },
+          {
+            "statement_id": "K68S2",
+            "predicate": "allows_stratified_meta_analysis",
+            "roles": [
+              {
+                "role": "subject",
+                "concept_id": "C16",
+                "knowledge_id": null
+              },
+              {
+                "role": "strata",
+                "concept_id": "C61",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": null,
+            "negated": true,
+            "conditions": [
+              "Systematic review of 11 population/community observational cohorts in LMICs; country income classified at study time"
+            ],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "DSM_IV_share",
+                  "value": 63.6,
+                  "unit": "percent"
+                },
+                {
+                  "name": "reason",
+                  "value": "too few studies",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U26",
+                "U77",
+                "U80"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U26",
+          "U77",
+          "U80"
+        ]
+      }
+    },
+    {
+      "knowledge_id": "K69",
+      "kind": "action",
+      "knowledge_kind": "operation",
+      "display_text": "Invest in harmonized, population-representative longitudinal MCI/dementia research in LMICs, especially low-income settings; consider 10/66 and HCAP guidance to improve comparison and identify high-risk people for contextual risk-reduction plans.",
+      "aliases": [],
+      "action_status": "unresolved",
+      "grounding": "source_explicit",
+      "semantic_frame": {
+        "logic": "single",
+        "statements": [
+          {
+            "statement_id": "K69S1",
+            "predicate": "harmonize_research",
+            "roles": [
+              {
+                "role": "action",
+                "concept_id": "C62",
+                "knowledge_id": null
+              },
+              {
+                "role": "population",
+                "concept_id": "C58",
+                "knowledge_id": null
+              }
+            ],
+            "quantifier": null,
+            "modality": "urgent author recommendation; not implemented",
+            "negated": false,
+            "conditions": [],
+            "temporal_context": null,
+            "qualifiers": {
+              "attributes": [
+                {
+                  "name": "guidance",
+                  "value": "10/66 Study protocol; Harmonized Cognitive Assessment Protocol (HCAP)",
+                  "unit": null
+                },
+                {
+                  "name": "implementation",
+                  "value": "research investment; screening funding; education; diagnostic and risk-management infrastructure",
+                  "unit": null
+                }
+              ]
+            },
+            "provenance": {
+              "unit_ids": [
+                "U8",
+                "U26",
+                "U77",
+                "U80",
+                "U81"
+              ]
+            }
+          }
+        ]
+      },
+      "provenance": {
+        "unit_ids": [
+          "U8",
+          "U26",
+          "U77",
+          "U80",
+          "U81"
+        ]
+      }
+    }
+  ],
+  "nodes": [],
+  "edges": [],
+  "transitions": []
+}

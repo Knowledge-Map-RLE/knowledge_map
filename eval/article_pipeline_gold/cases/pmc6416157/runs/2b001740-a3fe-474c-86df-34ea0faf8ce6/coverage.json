@@ -1,0 +1,734 @@
+{
+  "U1": {
+    "knowledge_ids": [],
+    "excluded_reason": "Document heading/section number retained outside the graph."
+  },
+  "U2": {
+    "knowledge_ids": [],
+    "excluded_reason": "Publication identity metadata retained outside scientific knowledge."
+  },
+  "U3": {
+    "knowledge_ids": [],
+    "excluded_reason": "Publication identity metadata retained outside scientific knowledge."
+  },
+  "U4": {
+    "knowledge_ids": [],
+    "excluded_reason": "Document heading/section number retained outside the graph."
+  },
+  "U5": {
+    "knowledge_ids": [
+      "K3",
+      "K4"
+    ],
+    "excluded_reason": null
+  },
+  "U6": {
+    "knowledge_ids": [
+      "K5"
+    ],
+    "excluded_reason": null
+  },
+  "U7": {
+    "knowledge_ids": [
+      "K19",
+      "K20",
+      "K21"
+    ],
+    "excluded_reason": null
+  },
+  "U8": {
+    "knowledge_ids": [
+      "K46",
+      "K57"
+    ],
+    "excluded_reason": null
+  },
+  "U9": {
+    "knowledge_ids": [],
+    "excluded_reason": "Indexing keywords; substantive knowledge represented separately."
+  },
+  "U10": {
+    "knowledge_ids": [],
+    "excluded_reason": "Document heading/section number retained outside the graph."
+  },
+  "U11": {
+    "knowledge_ids": [],
+    "excluded_reason": "Document heading/section number retained outside the graph."
+  },
+  "U12": {
+    "knowledge_ids": [
+      "K1",
+      "K2",
+      "K3"
+    ],
+    "excluded_reason": null
+  },
+  "U13": {
+    "knowledge_ids": [
+      "K4",
+      "K5",
+      "K9",
+      "K51"
+    ],
+    "excluded_reason": null
+  },
+  "U14": {
+    "knowledge_ids": [],
+    "excluded_reason": "Document heading/section number retained outside the graph."
+  },
+  "U15": {
+    "knowledge_ids": [],
+    "excluded_reason": "Document heading/section number retained outside the graph."
+  },
+  "U16": {
+    "knowledge_ids": [],
+    "excluded_reason": "Document heading/section number retained outside the graph."
+  },
+  "U17": {
+    "knowledge_ids": [],
+    "excluded_reason": "Document heading/section number retained outside the graph."
+  },
+  "U18": {
+    "knowledge_ids": [
+      "K5",
+      "K7"
+    ],
+    "excluded_reason": null
+  },
+  "U19": {
+    "knowledge_ids": [
+      "K6"
+    ],
+    "excluded_reason": null
+  },
+  "U20": {
+    "knowledge_ids": [
+      "K5",
+      "K7"
+    ],
+    "excluded_reason": null
+  },
+  "U21": {
+    "knowledge_ids": [],
+    "excluded_reason": "Document heading/section number retained outside the graph."
+  },
+  "U22": {
+    "knowledge_ids": [],
+    "excluded_reason": "Document heading/section number retained outside the graph."
+  },
+  "U23": {
+    "knowledge_ids": [
+      "K8"
+    ],
+    "excluded_reason": null
+  },
+  "U24": {
+    "knowledge_ids": [],
+    "excluded_reason": "Document heading/section number retained outside the graph."
+  },
+  "U25": {
+    "knowledge_ids": [],
+    "excluded_reason": "Document heading/section number retained outside the graph."
+  },
+  "U26": {
+    "knowledge_ids": [
+      "K5",
+      "K9"
+    ],
+    "excluded_reason": null
+  },
+  "U27": {
+    "knowledge_ids": [
+      "K10"
+    ],
+    "excluded_reason": null
+  },
+  "U28": {
+    "knowledge_ids": [
+      "K11",
+      "K12"
+    ],
+    "excluded_reason": null
+  },
+  "U29": {
+    "knowledge_ids": [],
+    "excluded_reason": "Document heading/section number retained outside the graph."
+  },
+  "U30": {
+    "knowledge_ids": [],
+    "excluded_reason": "Document heading/section number retained outside the graph."
+  },
+  "U31": {
+    "knowledge_ids": [],
+    "excluded_reason": "Document heading/section number retained outside the graph."
+  },
+  "U32": {
+    "knowledge_ids": [],
+    "excluded_reason": "Document heading/section number retained outside the graph."
+  },
+  "U33": {
+    "knowledge_ids": [
+      "K13"
+    ],
+    "excluded_reason": null
+  },
+  "U34": {
+    "knowledge_ids": [
+      "K5",
+      "K13"
+    ],
+    "excluded_reason": null
+  },
+  "U35": {
+    "knowledge_ids": [
+      "K5",
+      "K13"
+    ],
+    "excluded_reason": null
+  },
+  "U36": {
+    "knowledge_ids": [
+      "K13",
+      "K14"
+    ],
+    "excluded_reason": null
+  },
+  "U37": {
+    "knowledge_ids": [
+      "K15"
+    ],
+    "excluded_reason": null
+  },
+  "U38": {
+    "knowledge_ids": [
+      "K17",
+      "K18",
+      "K19",
+      "K20",
+      "K21",
+      "K22",
+      "K23",
+      "K24",
+      "K25",
+      "K26",
+      "K27",
+      "K28",
+      "K29",
+      "K30",
+      "K31"
+    ],
+    "excluded_reason": null
+  },
+  "U39": {
+    "knowledge_ids": [
+      "K17",
+      "K18",
+      "K19",
+      "K20",
+      "K21",
+      "K22",
+      "K23",
+      "K24",
+      "K25",
+      "K26",
+      "K27",
+      "K28",
+      "K29",
+      "K30",
+      "K31"
+    ],
+    "excluded_reason": null
+  },
+  "U40": {
+    "knowledge_ids": [
+      "K17",
+      "K18",
+      "K19",
+      "K20",
+      "K21",
+      "K22",
+      "K23",
+      "K24",
+      "K25",
+      "K26",
+      "K27",
+      "K28",
+      "K29",
+      "K30",
+      "K31"
+    ],
+    "excluded_reason": null
+  },
+  "U41": {
+    "knowledge_ids": [
+      "K5",
+      "K17",
+      "K18",
+      "K19",
+      "K20",
+      "K21",
+      "K22",
+      "K23",
+      "K24",
+      "K25",
+      "K26",
+      "K27",
+      "K28",
+      "K29",
+      "K30",
+      "K31"
+    ],
+    "excluded_reason": null
+  },
+  "U42": {
+    "knowledge_ids": [
+      "K16",
+      "K17",
+      "K18",
+      "K19",
+      "K20",
+      "K21",
+      "K22",
+      "K23",
+      "K24",
+      "K25",
+      "K26",
+      "K27",
+      "K28",
+      "K29",
+      "K30",
+      "K31"
+    ],
+    "excluded_reason": null
+  },
+  "U43": {
+    "knowledge_ids": [
+      "K16",
+      "K17",
+      "K18",
+      "K19",
+      "K20",
+      "K21",
+      "K22",
+      "K23",
+      "K24",
+      "K25",
+      "K26",
+      "K27",
+      "K28",
+      "K29",
+      "K30",
+      "K31"
+    ],
+    "excluded_reason": null
+  },
+  "U44": {
+    "knowledge_ids": [
+      "K11",
+      "K17",
+      "K18",
+      "K19",
+      "K20",
+      "K21",
+      "K22",
+      "K23",
+      "K24",
+      "K25",
+      "K26",
+      "K27",
+      "K28",
+      "K29",
+      "K30",
+      "K31",
+      "K57"
+    ],
+    "excluded_reason": null
+  },
+  "U45": {
+    "knowledge_ids": [
+      "K12",
+      "K17",
+      "K18",
+      "K19",
+      "K20",
+      "K21",
+      "K22",
+      "K23",
+      "K24",
+      "K25",
+      "K26",
+      "K27",
+      "K28",
+      "K29",
+      "K30",
+      "K31"
+    ],
+    "excluded_reason": null
+  },
+  "U46": {
+    "knowledge_ids": [],
+    "excluded_reason": "Document heading/section number retained outside the graph."
+  },
+  "U47": {
+    "knowledge_ids": [],
+    "excluded_reason": "Document heading/section number retained outside the graph."
+  },
+  "U48": {
+    "knowledge_ids": [
+      "K18",
+      "K19",
+      "K20",
+      "K21",
+      "K23",
+      "K24",
+      "K25",
+      "K26",
+      "K28",
+      "K29",
+      "K30",
+      "K31",
+      "K46",
+      "K47"
+    ],
+    "excluded_reason": null
+  },
+  "U49": {
+    "knowledge_ids": [],
+    "excluded_reason": "Document heading/section number retained outside the graph."
+  },
+  "U50": {
+    "knowledge_ids": [],
+    "excluded_reason": "Document heading/section number retained outside the graph."
+  },
+  "U51": {
+    "knowledge_ids": [
+      "K48"
+    ],
+    "excluded_reason": null
+  },
+  "U52": {
+    "knowledge_ids": [
+      "K32",
+      "K33",
+      "K34",
+      "K35",
+      "K36",
+      "K37",
+      "K38",
+      "K39",
+      "K40",
+      "K41",
+      "K42",
+      "K43",
+      "K44"
+    ],
+    "excluded_reason": null
+  },
+  "U53": {
+    "knowledge_ids": [
+      "K32",
+      "K33",
+      "K34",
+      "K35",
+      "K36",
+      "K37",
+      "K38",
+      "K39",
+      "K40",
+      "K41",
+      "K42",
+      "K43",
+      "K44"
+    ],
+    "excluded_reason": null
+  },
+  "U54": {
+    "knowledge_ids": [
+      "K32",
+      "K33",
+      "K34",
+      "K35",
+      "K36",
+      "K37",
+      "K38",
+      "K39",
+      "K40",
+      "K41",
+      "K42",
+      "K43",
+      "K44"
+    ],
+    "excluded_reason": null
+  },
+  "U55": {
+    "knowledge_ids": [
+      "K32",
+      "K33",
+      "K34",
+      "K35",
+      "K36",
+      "K37",
+      "K38",
+      "K39",
+      "K40",
+      "K41",
+      "K42",
+      "K43",
+      "K44"
+    ],
+    "excluded_reason": null
+  },
+  "U56": {
+    "knowledge_ids": [
+      "K32",
+      "K33",
+      "K34",
+      "K35",
+      "K36",
+      "K37",
+      "K38",
+      "K39",
+      "K40",
+      "K41",
+      "K42",
+      "K43",
+      "K44"
+    ],
+    "excluded_reason": null
+  },
+  "U57": {
+    "knowledge_ids": [
+      "K33",
+      "K45"
+    ],
+    "excluded_reason": null
+  },
+  "U58": {
+    "knowledge_ids": [
+      "K36",
+      "K45"
+    ],
+    "excluded_reason": null
+  },
+  "U59": {
+    "knowledge_ids": [
+      "K32",
+      "K33",
+      "K34",
+      "K35",
+      "K36",
+      "K37",
+      "K38",
+      "K39",
+      "K40",
+      "K41",
+      "K42",
+      "K43",
+      "K44"
+    ],
+    "excluded_reason": null
+  },
+  "U60": {
+    "knowledge_ids": [
+      "K32",
+      "K33",
+      "K34",
+      "K35",
+      "K36",
+      "K37",
+      "K38",
+      "K39",
+      "K40",
+      "K41",
+      "K42",
+      "K43",
+      "K44"
+    ],
+    "excluded_reason": null
+  },
+  "U61": {
+    "knowledge_ids": [
+      "K49"
+    ],
+    "excluded_reason": null
+  },
+  "U62": {
+    "knowledge_ids": [
+      "K50"
+    ],
+    "excluded_reason": null
+  },
+  "U63": {
+    "knowledge_ids": [],
+    "excluded_reason": "Document heading/section number retained outside the graph."
+  },
+  "U64": {
+    "knowledge_ids": [],
+    "excluded_reason": "Document heading/section number retained outside the graph."
+  },
+  "U65": {
+    "knowledge_ids": [],
+    "excluded_reason": "Document heading/section number retained outside the graph."
+  },
+  "U66": {
+    "knowledge_ids": [],
+    "excluded_reason": "Document heading/section number retained outside the graph."
+  },
+  "U67": {
+    "knowledge_ids": [
+      "K51"
+    ],
+    "excluded_reason": null
+  },
+  "U68": {
+    "knowledge_ids": [
+      "K52"
+    ],
+    "excluded_reason": null
+  },
+  "U69": {
+    "knowledge_ids": [],
+    "excluded_reason": "Document heading/section number retained outside the graph."
+  },
+  "U70": {
+    "knowledge_ids": [],
+    "excluded_reason": "Document heading/section number retained outside the graph."
+  },
+  "U71": {
+    "knowledge_ids": [
+      "K53"
+    ],
+    "excluded_reason": null
+  },
+  "U72": {
+    "knowledge_ids": [
+      "K54"
+    ],
+    "excluded_reason": null
+  },
+  "U73": {
+    "knowledge_ids": [
+      "K55",
+      "K57"
+    ],
+    "excluded_reason": null
+  },
+  "U74": {
+    "knowledge_ids": [],
+    "excluded_reason": "Document heading/section number retained outside the graph."
+  },
+  "U75": {
+    "knowledge_ids": [],
+    "excluded_reason": "Document heading/section number retained outside the graph."
+  },
+  "U76": {
+    "knowledge_ids": [
+      "K56"
+    ],
+    "excluded_reason": null
+  },
+  "U77": {
+    "knowledge_ids": [
+      "K56"
+    ],
+    "excluded_reason": null
+  },
+  "U78": {
+    "knowledge_ids": [
+      "K56"
+    ],
+    "excluded_reason": null
+  },
+  "U79": {
+    "knowledge_ids": [],
+    "excluded_reason": "Document heading/section number retained outside the graph."
+  },
+  "U80": {
+    "knowledge_ids": [],
+    "excluded_reason": "Document heading/section number retained outside the graph."
+  },
+  "U81": {
+    "knowledge_ids": [
+      "K53",
+      "K57",
+      "K58"
+    ],
+    "excluded_reason": null
+  },
+  "U82": {
+    "knowledge_ids": [
+      "K51",
+      "K58"
+    ],
+    "excluded_reason": null
+  },
+  "U83": {
+    "knowledge_ids": [],
+    "excluded_reason": "Document heading/section number retained outside the graph."
+  },
+  "U84": {
+    "knowledge_ids": [],
+    "excluded_reason": "Document heading/section number retained outside the graph."
+  },
+  "U85": {
+    "knowledge_ids": [
+      "K56",
+      "K57"
+    ],
+    "excluded_reason": null
+  },
+  "U86": {
+    "knowledge_ids": [],
+    "excluded_reason": "Research-in-context label; the three scientific items are represented."
+  },
+  "U87": {
+    "knowledge_ids": [
+      "K51"
+    ],
+    "excluded_reason": null
+  },
+  "U88": {
+    "knowledge_ids": [
+      "K51"
+    ],
+    "excluded_reason": null
+  },
+  "U89": {
+    "knowledge_ids": [
+      "K57"
+    ],
+    "excluded_reason": null
+  },
+  "U90": {
+    "knowledge_ids": [],
+    "excluded_reason": "Document heading/section number retained outside the graph."
+  },
+  "U91": {
+    "knowledge_ids": [],
+    "excluded_reason": "Acknowledgments, funding, conflicts of interest or document administration retained, excluded from scientific findings."
+  },
+  "U92": {
+    "knowledge_ids": [],
+    "excluded_reason": "Acknowledgments, funding, conflicts of interest or document administration retained, excluded from scientific findings."
+  },
+  "U93": {
+    "knowledge_ids": [],
+    "excluded_reason": "Document heading/section number retained outside the graph."
+  },
+  "U94": {
+    "knowledge_ids": [],
+    "excluded_reason": "Acknowledgments, funding, conflicts of interest or document administration retained, excluded from scientific findings."
+  },
+  "U95": {
+    "knowledge_ids": [],
+    "excluded_reason": "Supplementary material link retained; no contents inferred from an unavailable attachment."
+  },
+  "U96": {
+    "knowledge_ids": [],
+    "excluded_reason": "Document heading/section number retained outside the graph."
+  },
+  "U97": {
+    "knowledge_ids": [],
+    "excluded_reason": "Supplementary material link retained; no contents inferred from an unavailable attachment."
+  }
+}

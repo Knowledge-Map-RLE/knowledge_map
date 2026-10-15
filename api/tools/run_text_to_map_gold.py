@@ -19,8 +19,8 @@ sys.path.insert(0, str(ROOT / "shared" / "model_registry"))
 
 from application.text_to_map import TextToMap
 from domain.article_maps import digest, prepare_source, require
-from domain.knowledge_map import model_contract, validate_knowledge_map
-from domain.knowledge_map_schema import extraction_map_json_schema
+from domain.knowledge_development import model_contract, validate_development_map
+from domain.knowledge_development_schema import development_map_json_schema
 from infrastructure.article_map_checkpoint import ExtractionCheckpointModel, write_checkpoint
 from infrastructure.article_map_model import ArticleMapDependencyModelGateway, ArticleMapModelGateway
 from infrastructure.article_map_source import StoredArticleMapSource
@@ -71,7 +71,7 @@ async def run(article_id: str, response_artifact: Path | None = None,
         structural_before = repo.get(article_id, "structural_rows", owner)
         async def emit(event):
             print(json.dumps(event, ensure_ascii=False), flush=True)
-        model = ArticleMapModelGateway(output_schema=extraction_map_json_schema(), strict_schema=True)
+        model = ArticleMapModelGateway(output_schema=development_map_json_schema(extraction=True), strict_schema=True)
         dependencies = ArticleMapDependencyModelGateway()
         if extraction_checkpoint is not None:
             model = ExtractionCheckpointModel(extraction_checkpoint, digest(text))
@@ -85,14 +85,14 @@ async def run(article_id: str, response_artifact: Path | None = None,
         stored_source = prepare_source(article_id, saved["source"]["text"])
         require(stored_source == saved["source"], "Saved source coordinates or fingerprint changed")
         # Повторно проверяем именно сохранённый граф, не только флаги в метаданных.
-        require(validate_knowledge_map(model_contract(saved["graph"]), stored_source) == saved["graph"],
+        require(validate_development_map(model_contract(saved["graph"]), stored_source) == saved["graph"],
                 "Saved graph does not pass independent contract, provenance and DAG validation")
         require(repo.get(article_id, "structural_rows", owner) == structural_before,
                 "Structural map changed during text conversion")
         print(json.dumps({"success": True, "article_id": article_id, "pmc_id": "PMC10000452",
                           "pipeline_id": "text_reified", "run_id": result["run_id"],
                           "nodes": len(result["graph"]["nodes"]), "edges": len(result["graph"]["edges"]),
-                          "assertions": sum(n["kind"] == "assertion" for n in result["graph"]["nodes"]),
+                          "canonical_knowledge": len(result["graph"]["knowledge"]),
                           "graph_schema_version": result["graph_schema_version"],
                           "analysis": result["graph"]["analysis"],
                           "source_sha256": stored_source["sha256"],
@@ -102,7 +102,7 @@ async def run(article_id: str, response_artifact: Path | None = None,
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Build the first GOLD article map through KM.TEXT_TO_MAP v2")
+    parser = argparse.ArgumentParser(description="Build the first GOLD article map through KM.TEXT_TO_MAP v3")
     parser.add_argument("--article-id", default="PMC10000452")
     parser.add_argument("--response-artifact", type=Path, help="Optional private JSON response artifact for diagnostics")
     parser.add_argument("--extraction-checkpoint", type=Path,

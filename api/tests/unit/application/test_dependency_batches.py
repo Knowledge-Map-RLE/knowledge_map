@@ -5,7 +5,7 @@ import json
 
 import pytest
 
-from application.text_to_map import TextToMap
+from application.text_to_map import LegacyTextToMap as TextToMap
 from domain.article_maps import ArticleMapError, prepare_source
 from domain.knowledge_map import dependency_review_view, knowledge_text_keys, parse_knowledge_map
 from infrastructure.reference_pilot_store import CachedStageModel, PilotStore

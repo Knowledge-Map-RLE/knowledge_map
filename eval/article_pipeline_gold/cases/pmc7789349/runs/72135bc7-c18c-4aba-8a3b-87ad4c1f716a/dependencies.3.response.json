@@ -1,0 +1,215 @@
+{
+  "occurrences": [],
+  "transitions": [
+    {
+      "id": "T65",
+      "sources": [
+        "B14"
+      ],
+      "target": "B81",
+      "usage": "result",
+      "reason": "Subgroup synthesis yields the reported prevalence, confidence interval and heterogeneity metrics.",
+      "unit_ids": [
+        "U58"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T73",
+      "sources": [
+        "B14"
+      ],
+      "target": "B82",
+      "usage": "result",
+      "reason": "Sensitivity, heterogeneity and publication-bias analyses yield the contrasting MCI/aMCI robustness findings.",
+      "unit_ids": [
+        "U44",
+        "U47"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T74",
+      "sources": [
+        "B59",
+        "B60",
+        "B61"
+      ],
+      "target": "B83",
+      "usage": "data",
+      "reason": "The reported regression coefficients jointly ground the qualified finding about period/cohort and nonsignificant other predictors.",
+      "unit_ids": [
+        "U44"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T75",
+      "sources": [
+        "B14"
+      ],
+      "target": "B84",
+      "usage": "result",
+      "reason": "The random-effects MCI synthesis yields the pooled prevalence and confidence interval.",
+      "unit_ids": [
+        "U49"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T76",
+      "sources": [
+        "B14"
+      ],
+      "target": "B85",
+      "usage": "result",
+      "reason": "The separate aMCI synthesis yields its pooled estimate and distinct denominator.",
+      "unit_ids": [
+        "U52"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T77",
+      "sources": [
+        "B63",
+        "B64",
+        "B65",
+        "B66",
+        "B67",
+        "B68",
+        "B69",
+        "B70",
+        "B71",
+        "B72",
+        "B73",
+        "B74",
+        "B75",
+        "B76",
+        "B77",
+        "B78",
+        "B79",
+        "B80",
+        "B81"
+      ],
+      "target": "B87",
+      "usage": "data",
+      "reason": "The source compares all subgroup summaries to describe the age, sex, socioeconomic and diagnostic patterns.",
+      "unit_ids": [
+        "U56"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T78",
+      "sources": [
+        "B84"
+      ],
+      "target": "B88",
+      "usage": "premise",
+      "reason": "The Chinese pooled estimate is compared with explicitly contextualized cited country estimates.",
+      "unit_ids": [
+        "U61"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T79",
+      "sources": [
+        "B63"
+      ],
+      "target": "B89",
+      "usage": "premise",
+      "reason": "The observed55–59 prevalence motivates the explicitly unresolved cost-benefit evaluation before screening policy.",
+      "unit_ids": [
+        "U62"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T80",
+      "sources": [
+        "B3"
+      ],
+      "target": "B92",
+      "usage": "development",
+      "reason": "The subtype distinction is directly developed by the source's appraisal of limited subtype detection and reporting.",
+      "unit_ids": [
+        "U66"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T81",
+      "sources": [
+        "B87",
+        "B16"
+      ],
+      "target": "B90",
+      "usage": "premise",
+      "reason": "The diagnostic prevalence contrast and reviewed tools motivate the authors' explanation in terms of criteria and optional biomarkers.",
+      "unit_ids": [
+        "U65"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T82",
+      "sources": [
+        "B87"
+      ],
+      "target": "B93",
+      "usage": "development",
+      "reason": "The source's association findings are developed by explicitly tentative mechanistic explanations; this is not a causal inference claim.",
+      "unit_ids": [
+        "U68",
+        "U69",
+        "U70"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T83",
+      "sources": [
+        "B83",
+        "B82"
+      ],
+      "target": "B94",
+      "usage": "premise",
+      "reason": "The limited period/cohort association and persistent heterogeneity jointly limit interpretation of the temporal trend.",
+      "unit_ids": [
+        "U71"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T84",
+      "sources": [
+        "B94",
+        "B96"
+      ],
+      "target": "B95",
+      "usage": "prerequisite",
+      "reason": "Confounded temporal effects and missing national/subtype/minority data motivate the explicit future research tasks.",
+      "unit_ids": [
+        "U74"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T85",
+      "sources": [
+        "B15",
+        "B82"
+      ],
+      "target": "B96",
+      "usage": "evidence",
+      "reason": "The source appraises community coverage and analytic robustness as strengths and limitations.",
+      "unit_ids": [
+        "U73",
+        "U74"
+      ],
+      "conditions": []
+    }
+  ]
+}

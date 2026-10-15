@@ -1,0 +1,149 @@
+{
+  "occurrences": [],
+  "transitions": [
+    {
+      "id": "T61",
+      "sources": [
+        "B75"
+      ],
+      "target": "B81",
+      "usage": "evidence",
+      "reason": "The longitudinal inference immediately interprets the tabulated within-group psychotropic changes, with separate time-comparison p-values.",
+      "unit_ids": [
+        "U58"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T62",
+      "sources": [
+        "B72",
+        "B73",
+        "B81"
+      ],
+      "target": "B82",
+      "usage": "evidence",
+      "reason": "The author uses stable symptom scores, increased diagnoses and greater medication use jointly to formulate the explicit contrast and tentative explanation.",
+      "unit_ids": [
+        "U62"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T63",
+      "sources": [
+        "B64",
+        "B61",
+        "B62"
+      ],
+      "target": "B83",
+      "usage": "evidence",
+      "reason": "The author directly summarizes longitudinal alcohol, living-alone and morbidity changes from the reported measurements.",
+      "unit_ids": [
+        "U58"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T64",
+      "sources": [
+        "B80",
+        "B81"
+      ],
+      "target": "B84",
+      "usage": "evidence",
+      "reason": "The author proposes an aging/crisis explanation specifically for the observed anxiety and medication increases; this is a hypothesis, not a proven causal arrow.",
+      "unit_ids": [
+        "U62"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T65",
+      "sources": [
+        "B62",
+        "B77"
+      ],
+      "target": "B86",
+      "usage": "evidence",
+      "reason": "The discussion combines morbidity increase and reported stressful events as joint observations.",
+      "unit_ids": [
+        "U62"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T66",
+      "sources": [
+        "B58",
+        "B87",
+        "B29"
+      ],
+      "target": "B88",
+      "usage": "premise",
+      "reason": "The response appraisal explicitly takes account of sample demographics, implementation obstacles and attained participation.",
+      "unit_ids": [
+        "U63"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T67",
+      "sources": [
+        "B30"
+      ],
+      "target": "B89",
+      "usage": "development",
+      "reason": "The limitation directly qualifies the performed home assessment with uncontrolled distractions, fatigue and compliance.",
+      "unit_ids": [
+        "U64"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T68",
+      "sources": [
+        "B31"
+      ],
+      "target": "B90",
+      "usage": "development",
+      "reason": "The limitation directly qualifies the home PSG procedure with absent continuous technical monitoring and resulting vulnerability.",
+      "unit_ids": [
+        "U64"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T69",
+      "sources": [
+        "B32",
+        "B34",
+        "B36",
+        "B51"
+      ],
+      "target": "B91",
+      "usage": "premise",
+      "reason": "The author synthesizes objective sleep, biomarkers and integrated cognitive assessment into the stated multimodal longitudinal design; these are joint methodological components.",
+      "unit_ids": [
+        "U60",
+        "U61"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T70",
+      "sources": [
+        "B91",
+        "B29",
+        "B24"
+      ],
+      "target": "B92",
+      "usage": "premise",
+      "reason": "The conclusion expressly bases expected future utility on longitudinal multimodal design, MCI-inclusive follow-up and a control-group methodology; expectation remains modal.",
+      "unit_ids": [
+        "U66"
+      ],
+      "conditions": []
+    }
+  ]
+}

@@ -1,0 +1,3212 @@
+{
+  "knowledge": [
+    {
+      "key": "mci",
+      "units": [
+        12
+      ],
+      "en": "MCI is an intermediate cognitive state between normal aging and dementia and a target for prevention/risk-reduction research.",
+      "ru": "MCI — промежуточное когнитивное состояние между нормальным старением и деменцией, цель исследований профилактики/снижения риска.",
+      "predicate": "intermediate_between",
+      "roles": {
+        "subject": "Mild cognitive impairment",
+        "earlier_state": "Normal cognitive aging",
+        "later_state": "Dementia"
+      },
+      "type": "definition"
+    },
+    {
+      "key": "prevalence",
+      "units": [
+        12
+      ],
+      "en": "MCI prevalence estimates range from <1% to >50% depending on sampled population, clinical/community setting, definition and operational criteria.",
+      "ru": "Оценки распространённости MCI от <1% до >50% зависят от популяции, клинической/общинной выборки, определения и операциональных критериев.",
+      "predicate": "prevalence_heterogeneity",
+      "roles": {
+        "measure": "MCI prevalence"
+      },
+      "attrs": {
+        "range": {
+          "value": "<1 to >50",
+          "unit": "percent"
+        },
+        "determinants": "age/sex distribution; clinical versus population sampling; definition; operationalization"
+      },
+      "modality": "cited background estimates"
+    },
+    {
+      "key": "hic",
+      "units": [
+        12,
+        78
+      ],
+      "en": "Cited HIC annual MCI-to-dementia conversion is 10–15% generally/in clinical samples and 3–10% in community samples; clinic reversion to normal is 4–15% versus 29–55% in population samples.",
+      "ru": "Цитируемый годовой переход MCI в деменцию в странах высокого дохода: 10–15% в общем/клиническом описании и 3–10% в общинных выборках; возврат к норме 4–15% в клинике против 29–55% в популяциях.",
+      "predicate": "background_conversion",
+      "roles": {
+        "condition": "Mild cognitive impairment",
+        "outcome": "Dementia"
+      },
+      "logic": "contrast",
+      "claims": [
+        {
+          "roles": {
+            "population": "High-income clinical samples"
+          },
+          "attrs": {
+            "annual_conversion": {
+              "value": "10–15",
+              "unit": "percent/year"
+            },
+            "reversion": {
+              "value": "4–15",
+              "unit": "percent"
+            }
+          }
+        },
+        {
+          "roles": {
+            "population": "High-income community samples"
+          },
+          "attrs": {
+            "annual_conversion": {
+              "value": "3–10",
+              "unit": "percent/year"
+            },
+            "reversion": {
+              "value": "29–55",
+              "unit": "percent"
+            }
+          }
+        }
+      ],
+      "modality": "cited ranges; some cases remain stable",
+      "time": "Cited background follow-up periods vary"
+    },
+    {
+      "key": "petersen",
+      "units": [
+        13
+      ],
+      "en": "Petersen MCI criteria specify subjective memory loss confirmed by neuropsychological testing, no significant other-domain impairment, no functional impairment and no dementia; IWG, NIA-AA and DSM-IV alternatives complicate comparisons.",
+      "ru": "Критерии Petersen: субъективная потеря памяти, подтверждённая тестами, без значимых нарушений других доменов, функций и без деменции; альтернативы IWG, NIA-AA и DSM-IV затрудняют сравнение.",
+      "predicate": "diagnostic_criteria",
+      "roles": {
+        "subject": "Petersen-defined mild cognitive impairment"
+      },
+      "type": "definition",
+      "logic": "conjunction",
+      "claims": [
+        {
+          "roles": {
+            "feature": "Subjective memory loss verified by neuropsychological testing"
+          }
+        },
+        {
+          "predicate": "has_significant_impairment",
+          "roles": {
+            "function": "Other cognitive domains"
+          },
+          "negated": true
+        },
+        {
+          "predicate": "has_functional_impairment",
+          "roles": {
+            "function": "Daily functioning"
+          },
+          "negated": true
+        },
+        {
+          "predicate": "has_dementia",
+          "roles": {
+            "condition": "Dementia"
+          },
+          "negated": true
+        }
+      ],
+      "attrs": {
+        "alternatives": "IWG; NIA-AA; DSM-IV"
+      }
+    },
+    {
+      "key": "modifiable",
+      "units": [
+        14
+      ],
+      "en": "MCI’s pragmatic prevention value is debated; proposed modifiable risks include unhealthy diet, inactivity, smoking, cardiometabolic disease, obesity and hypertension, while inconsistent definitions limit comparison.",
+      "ru": "Практическая профилактическая ценность MCI обсуждается; предполагаемые изменяемые риски включают нездоровое питание, неактивность, курение, кардиометаболические болезни, ожирение и гипертензию, при несогласованных определениях.",
+      "predicate": "modifiable_risk_background",
+      "roles": {
+        "outcome": "MCI and dementia conversion",
+        "exposure": "Health and lifestyle risks"
+      },
+      "modality": "cited potential for prevention/delay, not proven by this review",
+      "attrs": {
+        "risks": "diet high in saturated fat/sugar/salt; inactivity; smoking; coronary heart disease; diabetes; obesity; hypertension"
+      }
+    },
+    {
+      "key": "prevention_estimate",
+      "units": [
+        14
+      ],
+      "en": "A cited report estimates 21.7% of MCI progression potentially preventable by targeting obesity-as-diet proxy (8.7%), diabetes (1.5%) and neuropsychiatric symptoms (11.5%).",
+      "ru": "Цитируемая работа оценивает потенциально предотвращаемое прогрессирование MCI в 21,7%: ожирение как прокси питания 8,7%, диабет 1,5%, нейропсихиатрические симптомы 11,5%.",
+      "predicate": "potential_preventable_fraction",
+      "roles": {
+        "outcome": "MCI-to-dementia progression"
+      },
+      "attrs": {
+        "total": {
+          "value": 21.7,
+          "unit": "percent"
+        },
+        "obesity_diet_proxy": {
+          "value": 8.7,
+          "unit": "percent"
+        },
+        "diabetes": {
+          "value": 1.5,
+          "unit": "percent"
+        },
+        "neuropsychiatric": {
+          "value": 11.5,
+          "unit": "percent"
+        }
+      },
+      "modality": "potential, cited report; not observed intervention benefit"
+    },
+    {
+      "key": "burden",
+      "units": [
+        5,
+        15,
+        82
+      ],
+      "en": "Nearly two thirds of people with dementia live in LMICs, with limited resources/services; the source describes dementia as incurable, motivating targeted risk reduction.",
+      "ru": "Почти две трети людей с деменцией живут в странах низкого/среднего дохода с ограниченными ресурсами и услугами; источник описывает деменцию как неизлечимую, мотивируя снижение риска.",
+      "predicate": "dementia_burden",
+      "roles": {
+        "population": "Low- and middle-income countries",
+        "condition": "Dementia"
+      },
+      "time": "Background at 2022 publication",
+      "attrs": {
+        "share": "nearly two thirds",
+        "treatment_status": "no cure; as described at publication"
+      }
+    },
+    {
+      "key": "review",
+      "units": [
+        5,
+        15,
+        24
+      ],
+      "en": "Review longitudinal population-based LMIC studies of MCI conversion to dementia and associated risk factors to inform context-sensitive risk reduction.",
+      "ru": "Обобщить продольные популяционные исследования LMIC о переходе MCI в деменцию и факторах риска для контекстно пригодной профилактики.",
+      "predicate": "conduct_review",
+      "roles": {
+        "condition": "Mild cognitive impairment",
+        "outcome": "Dementia",
+        "population": "LMIC population-based cohorts"
+      },
+      "kind": "action",
+      "status": "performed"
+    },
+    {
+      "key": "protocol",
+      "units": [
+        6,
+        18
+      ],
+      "en": "Follow PRISMA and preregister protocol CRD42019130958 in PROSPERO.",
+      "ru": "Следовать PRISMA и зарегистрировать протокол CRD42019130958 в PROSPERO.",
+      "predicate": "review_protocol",
+      "roles": {
+        "subject": "LMIC conversion review"
+      },
+      "type": "method",
+      "attrs": {
+        "registration": "PROSPERO CRD42019130958"
+      }
+    },
+    {
+      "key": "search",
+      "units": [
+        6,
+        21,
+        24
+      ],
+      "en": "Search Medline, Embase, PsycINFO via Ovid and Scopus from inception to 30 April 2019, then update 1 May 2019–30 June 2020 with dementia/MCI/incidence/conversion terms.",
+      "ru": "Искать в Medline, Embase, PsycINFO через Ovid и Scopus от начала до 30 апреля 2019, затем обновить 1 мая 2019 — 30 июня 2020 по терминам деменции/MCI/инцидентности/перехода.",
+      "predicate": "search_literature",
+      "roles": {
+        "subject": "MCI conversion studies"
+      },
+      "kind": "action",
+      "time": "Inception–30 June 2020",
+      "attrs": {
+        "database_count": {
+          "value": 4,
+          "unit": "databases"
+        },
+        "databases": "Medline; Embase; PsycINFO; Scopus",
+        "initial_end": "30 April 2019",
+        "update_start": "1 May 2019"
+      }
+    },
+    {
+      "key": "eligibility",
+      "units": [
+        6,
+        22
+      ],
+      "en": "Include observational population-based LMIC cohorts with clearly defined validated MCI, ≥1 year follow-up and established dementia criteria; require separate baseline-MCI results, exclude memory complaints without MCI and disease-stratified samples lacking total-population conversion.",
+      "ru": "Включить наблюдательные популяционные когорты LMIC с ясным валидированным MCI, ≥1 года наблюдения и установленными критериями деменции; требовать отдельные исходные MCI-результаты, исключать жалобы без диагноза и стратифицированные болезни без общего перехода.",
+      "predicate": "eligibility_criteria",
+      "roles": {
+        "subject": "LMIC conversion cohorts"
+      },
+      "type": "method",
+      "attrs": {
+        "minimum_followup": {
+          "value": 1,
+          "unit": "years"
+        },
+        "MCI": "internationally accepted validated classification; any clearly defined MCI definition",
+        "dementia": "all-cause and subtypes; NINCDS-ADRDA; DSM-IV; NINDS-AIREN",
+        "income": "OECD/World Bank country income at study time",
+        "exclusions": "memory complaints without clear MCI; mixed baseline cognition without separate MCI data; disease-stratified rates without total-population estimate"
+      }
+    },
+    {
+      "key": "screen",
+      "units": [
+        29
+      ],
+      "en": "Two reviewers independently screen titles/abstracts and full texts; obtain uncertain full texts, resolve disagreements with a third reviewer and check included-study reference lists.",
+      "ru": "Два рецензента независимо проверяют заголовки/аннотации и полные тексты; неопределённые тексты получают полностью, разногласия решает третий, проверяют библиографии.",
+      "predicate": "screen_studies",
+      "roles": {
+        "subject": "Potentially eligible studies"
+      },
+      "kind": "action",
+      "attrs": {
+        "reviewers": {
+          "value": 2,
+          "unit": "reviewers"
+        },
+        "resolution": "third reviewer"
+      }
+    },
+    {
+      "key": "extract",
+      "units": [
+        34
+      ],
+      "en": "Extract standardized study metadata, country, age/sample sizes, follow-up, diagnoses, conversion methods/attrition, conversion estimates and significant/nonsignificant risks; one extracts, a second checks and a third resolves discrepancies.",
+      "ru": "Извлечь стандартизированные метаданные, страну, возраст/размеры выборок, сроки, диагнозы, методы/потери наблюдения, переходы и значимые/незначимые риски; один извлекает, второй проверяет, третий решает расхождения.",
+      "predicate": "extract_study_data",
+      "roles": {
+        "subject": "Included LMIC cohorts"
+      },
+      "kind": "action",
+      "attrs": {
+        "field_groups": {
+          "value": 9,
+          "unit": "field groups"
+        }
+      }
+    },
+    {
+      "key": "bias_method",
+      "units": [
+        37
+      ],
+      "en": "Independently assess selection, comparability and outcome using Newcastle–Ottawa; the source states maximum 8 stars but assigns 3+2+2 stars to categories. Keep the scoring statements distinct.",
+      "ru": "Независимо оценить отбор, сопоставимость и исходы по Newcastle–Ottawa; источник заявляет максимум 8 звёзд, но распределяет 3+2+2 по категориям. Формулировки сохранены раздельно.",
+      "predicate": "assess_bias",
+      "roles": {
+        "method": "Newcastle–Ottawa Scale",
+        "subject": "Included LMIC cohorts"
+      },
+      "kind": "action",
+      "attrs": {
+        "declared_maximum": {
+          "value": 8,
+          "unit": "stars"
+        },
+        "selection": {
+          "value": 3,
+          "unit": "stars"
+        },
+        "comparability": {
+          "value": 2,
+          "unit": "stars"
+        },
+        "outcome": {
+          "value": 2,
+          "unit": "stars"
+        },
+        "assessors": {
+          "value": 2,
+          "unit": "reviewers"
+        },
+        "resolution": "discussion/third assessor"
+      }
+    },
+    {
+      "key": "proportion_method",
+      "units": [
+        40
+      ],
+      "en": "Report converted-to-dementia cases divided by the total sample separately for each MCI definition, and summarize significant risk factors; all assessed risks are delegated to supplementary Table S2.",
+      "ru": "Сообщать число переходов в деменцию, делённое на полную выборку, отдельно по определению MCI и обобщать значимые риски; все оценённые риски отнесены к дополнительной таблице S2.",
+      "predicate": "summarize_conversion",
+      "roles": {
+        "subject": "Included MCI cases",
+        "outcome": "Dementia"
+      },
+      "kind": "action",
+      "attrs": {
+        "formula": "converted dementia cases / total sample size",
+        "stratification": "MCI definition",
+        "supplement": "Table S2, not present as full table values in supplied text"
+      }
+    },
+    {
+      "key": "meta_method",
+      "units": [
+        41
+      ],
+      "en": "Pool only compatible Petersen-type MCI→AD cohorts (six studies) in Stata Metaprop using random effects, Freeman–Tukey double-arcsine transformation, score/exact-binomial 95% CIs, binomial within-study variability and I² heterogeneity.",
+      "ru": "Объединить только совместимые Petersen-подобные MCI→AD когорты (шесть) в Stata Metaprop: случайные эффекты, двойное арксинусное преобразование Freeman–Tukey, score/точные биномиальные 95% ДИ, биномиальная вариация внутри исследований и I².",
+      "predicate": "meta_analyze_proportions",
+      "roles": {
+        "condition": "Petersen-type mild cognitive impairment",
+        "outcome": "Alzheimer disease"
+      },
+      "kind": "action",
+      "attrs": {
+        "studies": {
+          "value": 6,
+          "unit": "studies"
+        },
+        "software": "Stata Metaprop",
+        "model": "random effects",
+        "transformation": "Freeman–Tukey double arcsine",
+        "CI": "score statistic and exact binomial; 95%",
+        "heterogeneity": "I²"
+      },
+      "conditions": [
+        "Only studies sharing MCI/dementia criteria; design/sampling differ"
+      ]
+    },
+    {
+      "key": "flow",
+      "units": [
+        7,
+        30,
+        31,
+        46
+      ],
+      "en": "Screen 8977 initial records and 87 full texts, retaining nine; update adds 1670 records and two studies, for 10647 records and 11 included studies. Common exclusions: not LMIC, not population-based, no incident dementia.",
+      "ru": "Проверить 8977 первых записей и 87 полных текстов, сохранить девять; обновление добавило 1670 записей и две работы: всего 10647 записей и 11 работ. Частые исключения: не LMIC, не популяция, нет инцидентной деменции.",
+      "predicate": "selection_flow",
+      "roles": {
+        "subject": "LMIC conversion review"
+      },
+      "attrs": {
+        "initial_records": {
+          "value": 8977,
+          "unit": "records"
+        },
+        "full_texts": {
+          "value": 87,
+          "unit": "articles"
+        },
+        "initial_included": {
+          "value": 9,
+          "unit": "studies"
+        },
+        "update_records": {
+          "value": 1670,
+          "unit": "records"
+        },
+        "update_included": {
+          "value": 2,
+          "unit": "studies"
+        },
+        "total_records": {
+          "value": 10647,
+          "unit": "records"
+        },
+        "included": {
+          "value": 11,
+          "unit": "studies"
+        }
+      }
+    },
+    {
+      "key": "geography",
+      "units": [
+        7,
+        49
+      ],
+      "en": "The 11 studies comprise seven China, two Brazil, one Nigeria and one Tanzania; at recruitment two were low-income and nine middle-income. Only one is described as nationally representative (Rio Grande do Sul census, Brazil).",
+      "ru": "Из 11 исследований: семь Китай, два Бразилия, по одному Нигерия/Танзания; при наборе два низкого дохода и девять среднего. Лишь одно описано как национально представительное (перепись Rio Grande do Sul, Бразилия).",
+      "predicate": "corpus_geography",
+      "roles": {
+        "population": "Included LMIC cohorts"
+      },
+      "attrs": {
+        "China": {
+          "value": 7,
+          "unit": "studies"
+        },
+        "Brazil": {
+          "value": 2,
+          "unit": "studies"
+        },
+        "Nigeria": {
+          "value": 1,
+          "unit": "studies"
+        },
+        "Tanzania": {
+          "value": 1,
+          "unit": "studies"
+        },
+        "low_income": {
+          "value": 2,
+          "unit": "studies"
+        },
+        "middle_income": {
+          "value": 9,
+          "unit": "studies"
+        },
+        "nationally_representative": {
+          "value": 1,
+          "unit": "studies"
+        }
+      },
+      "conditions": [
+        "Systematic review of 11 population/community observational cohorts in LMICs; country income classified at study time"
+      ],
+      "time": "Country income at recruitment"
+    },
+    {
+      "key": "corpus_profile",
+      "units": [
+        49
+      ],
+      "en": "Baseline MCI samples range 21–837 (mean 370, SD 295); follow-up samples 21–638 (298±238). Follow-up is 2–5.8 years, mean 3.7±1.1; most cohorts enroll >60 years (six), others >55 (two), >65 (one), >70 (two).",
+      "ru": "Исходные MCI-выборки 21–837 (370±295), при наблюдении 21–638 (298±238). Срок 2–5,8 года, средний 3,7±1,1; возрастные пороги >60 (шесть), >55 (два), >65 (один), >70 (два).",
+      "predicate": "corpus_profile",
+      "roles": {
+        "population": "Included LMIC cohorts"
+      },
+      "attrs": {
+        "baseline_n_range": {
+          "value": "21–837",
+          "unit": "participants"
+        },
+        "baseline_n_mean": {
+          "value": 370,
+          "unit": "participants"
+        },
+        "baseline_n_SD": {
+          "value": 295,
+          "unit": "participants"
+        },
+        "followup_n_range": {
+          "value": "21–638",
+          "unit": "participants"
+        },
+        "followup_n_mean": {
+          "value": 298,
+          "unit": "participants"
+        },
+        "followup_n_SD": {
+          "value": 238,
+          "unit": "participants"
+        },
+        "duration_range": {
+          "value": "2–5.8",
+          "unit": "years"
+        },
+        "duration_mean": {
+          "value": 3.7,
+          "unit": "years"
+        },
+        "duration_SD": {
+          "value": 1.1,
+          "unit": "years"
+        },
+        "age_threshold_counts": ">60:6; >55:2; >65:1; >70:2"
+      },
+      "conditions": [
+        "Systematic review of 11 population/community observational cohorts in LMICs; country income classified at study time"
+      ]
+    },
+    {
+      "key": "diagnoses",
+      "units": [
+        52,
+        53,
+        56
+      ],
+      "en": "MCI criteria vary: Petersen five studies, CDR .5 one, Dubois one, DSM-IV two, IWG one and CIND one. The review includes all 87 CIND participants, though 74 had MUML described as Petersen-comparable. Nine report MCI; two aMCI; one each single/multiple-domain amnestic/nonamnestic subtypes.",
+      "ru": "Критерии: Petersen пять работ, CDR 0,5 одна, Dubois одна, DSM-IV две, IWG одна, CIND одна. Включены все 87 CIND, хотя 74 с MUML описаны как сопоставимые с Petersen. Девять сообщают MCI, две aMCI, одна — каждый амнестический/неамнестический одно-/многодоменный подтип.",
+      "predicate": "diagnostic_heterogeneity",
+      "roles": {
+        "condition": "Mild cognitive impairment",
+        "population": "Included LMIC cohorts"
+      },
+      "attrs": {
+        "Petersen": {
+          "value": 5,
+          "unit": "studies"
+        },
+        "CDR": {
+          "value": 1,
+          "unit": "studies"
+        },
+        "Dubois": {
+          "value": 1,
+          "unit": "studies"
+        },
+        "DSM_IV": {
+          "value": 2,
+          "unit": "studies"
+        },
+        "IWG": {
+          "value": 1,
+          "unit": "studies"
+        },
+        "CIND": {
+          "value": 1,
+          "unit": "studies"
+        },
+        "CIND_included": {
+          "value": 87,
+          "unit": "participants"
+        },
+        "MUML": {
+          "value": 74,
+          "unit": "participants"
+        },
+        "overall_MCI": {
+          "value": 9,
+          "unit": "studies"
+        },
+        "aMCI": {
+          "value": 2,
+          "unit": "studies"
+        },
+        "subtype_reporters": {
+          "value": 1,
+          "unit": "study"
+        }
+      },
+      "conditions": [
+        "Systematic review of 11 population/community observational cohorts in LMICs; country income classified at study time"
+      ]
+    },
+    {
+      "key": "dementia_diagnoses",
+      "units": [
+        59
+      ],
+      "en": "Dementia criteria overlap: DSM-IV seven studies, NINCDS-ADRDA five, NINDS-AIREN two, DSM-III-R one and ICD-10 mentioned once; seven evaluate all-cause dementia, eight AD and two VaD.",
+      "ru": "Критерии деменции перекрываются: DSM-IV семь, NINCDS-ADRDA пять, NINDS-AIREN два, DSM-III-R один, ICD-10 упомянут один раз; семь работ оценивают всю деменцию, восемь AD, две VaD.",
+      "predicate": "dementia_diagnostic_heterogeneity",
+      "roles": {
+        "outcome": "Dementia",
+        "population": "Included LMIC cohorts"
+      },
+      "attrs": {
+        "DSM_IV": {
+          "value": 7,
+          "unit": "studies"
+        },
+        "NINCDS_ADRDA": {
+          "value": 5,
+          "unit": "studies"
+        },
+        "NINDS_AIREN": {
+          "value": 2,
+          "unit": "studies"
+        },
+        "DSM_III_R": {
+          "value": 1,
+          "unit": "studies"
+        },
+        "ICD_10": {
+          "value": 1,
+          "unit": "study"
+        },
+        "all_cause": {
+          "value": 7,
+          "unit": "studies"
+        },
+        "AD": {
+          "value": 8,
+          "unit": "studies"
+        },
+        "VaD": {
+          "value": 2,
+          "unit": "studies"
+        }
+      },
+      "conditions": [
+        "Systematic review of 11 population/community observational cohorts in LMICs; country income classified at study time"
+      ]
+    },
+    {
+      "key": "study_Huang",
+      "units": [
+        54,
+        55,
+        56
+      ],
+      "en": "Huang cohort (China): 29 geographically defined communities located within Greater Beijing, China (12 urban and 17 rural), age >55 years; total baseline 5743, MCI baseline 175, follow-up 121; mean follow-up 3 years. MCI Petersen: MCI; dementia DSM‐IV (all cause) NINCDS‐ADRDA (AD) NINDS‐AIREN (VaD).",
+      "ru": "Хуан: Пекин, 29 общин (12 городских, 17 сельских); возраст >55 лет; общая исходная выборка 5743, MCI 175, при наблюдении 121; срок 3 года. Критерии MCI Petersen, тип MCI; деменция DSM‐IV (all cause) NINCDS‐ADRDA (AD) NINDS‐AIREN (VaD).",
+      "predicate": "cohort_profile",
+      "roles": {
+        "population": "Study cohort Huang in China"
+      },
+      "attrs": {
+        "country": "China",
+        "setting": "29 geographically defined communities located within Greater Beijing, China (12 urban and 17 rural)",
+        "age_threshold": {
+          "value": ">55",
+          "unit": "years"
+        },
+        "total_baseline": {
+          "value": "5743",
+          "unit": "participants"
+        },
+        "MCI_baseline": {
+          "value": "175",
+          "unit": "participants"
+        },
+        "MCI_followup": {
+          "value": "121",
+          "unit": "participants"
+        },
+        "followup": {
+          "value": "3",
+          "unit": "years"
+        },
+        "MCI_definition": "Petersen",
+        "MCI_type": "MCI",
+        "dementia_criteria": "DSM‐IV (all cause) NINCDS‐ADRDA (AD) NINDS‐AIREN (VaD)"
+      },
+      "conditions": [
+        "Included cohort Huang; 29 geographically defined communities located within Greater Beijing, China (12 urban and 17 rural)"
+      ],
+      "time": "3 years follow-up"
+    },
+    {
+      "key": "study_Li",
+      "units": [
+        54,
+        55,
+        56
+      ],
+      "en": "Li cohort (China): 10 randomly selected communities in the city of Chongqing, age >55 years; total baseline 26,481 (18,683 screened), MCI baseline 837, follow-up 638; mean follow-up 5 years. MCI Petersen: MCI; dementia DSM‐IV (all cause) NINCDS/ADRDA (AD).",
+      "ru": "Ли: Чунцин, 10 случайных общин; возраст >55 лет; общая исходная выборка 26,481 (18,683 screened), MCI 837, при наблюдении 638; срок 5 года. Критерии MCI Petersen, тип MCI; деменция DSM‐IV (all cause) NINCDS/ADRDA (AD).",
+      "predicate": "cohort_profile",
+      "roles": {
+        "population": "Study cohort Li in China"
+      },
+      "attrs": {
+        "country": "China",
+        "setting": "10 randomly selected communities in the city of Chongqing",
+        "age_threshold": {
+          "value": ">55",
+          "unit": "years"
+        },
+        "total_baseline": {
+          "value": "26,481 (18,683 screened)",
+          "unit": "participants"
+        },
+        "MCI_baseline": {
+          "value": "837",
+          "unit": "participants"
+        },
+        "MCI_followup": {
+          "value": "638",
+          "unit": "participants"
+        },
+        "followup": {
+          "value": "5",
+          "unit": "years"
+        },
+        "MCI_definition": "Petersen",
+        "MCI_type": "MCI",
+        "dementia_criteria": "DSM‐IV (all cause) NINCDS/ADRDA (AD)"
+      },
+      "conditions": [
+        "Included cohort Li; 10 randomly selected communities in the city of Chongqing"
+      ],
+      "time": "5 years follow-up"
+    },
+    {
+      "key": "study_Ding",
+      "units": [
+        54,
+        55,
+        56
+      ],
+      "en": "Ding cohort (China): Jingansi community in downtown Shanghai, China, age >60 years; total baseline 3141, MCI baseline 655, follow-up 362; mean follow-up 4 years. MCI Petersen: MCI aMCI aMCI‐SD aMCI‐MD naMCI‐SD naMCI‐MD; dementia DSM‐IV (all cause).",
+      "ru": "Дин: община Jingansi в Шанхае; возраст >60 лет; общая исходная выборка 3141, MCI 655, при наблюдении 362; срок 4 года. Критерии MCI Petersen, тип MCI aMCI aMCI‐SD aMCI‐MD naMCI‐SD naMCI‐MD; деменция DSM‐IV (all cause).",
+      "predicate": "cohort_profile",
+      "roles": {
+        "population": "Study cohort Ding in China"
+      },
+      "attrs": {
+        "country": "China",
+        "setting": "Jingansi community in downtown Shanghai, China",
+        "age_threshold": {
+          "value": ">60",
+          "unit": "years"
+        },
+        "total_baseline": {
+          "value": "3141",
+          "unit": "participants"
+        },
+        "MCI_baseline": {
+          "value": "655",
+          "unit": "participants"
+        },
+        "MCI_followup": {
+          "value": "362",
+          "unit": "participants"
+        },
+        "followup": {
+          "value": "4",
+          "unit": "years"
+        },
+        "MCI_definition": "Petersen",
+        "MCI_type": "MCI aMCI aMCI‐SD aMCI‐MD naMCI‐SD naMCI‐MD",
+        "dementia_criteria": "DSM‐IV (all cause)"
+      },
+      "conditions": [
+        "Included cohort Ding; Jingansi community in downtown Shanghai, China"
+      ],
+      "time": "4 years follow-up"
+    },
+    {
+      "key": "study_Yang",
+      "units": [
+        54,
+        55,
+        56
+      ],
+      "en": "Yang cohort (China): Chinese community dwelling elder people, age >60 years; total baseline 652, MCI baseline 465, follow-up 465; mean follow-up 3 years. MCI Petersen: MCI; dementia DSM‐ IV‐TR (AD).",
+      "ru": "Ян: пожилые общинные жители Китая; возраст >60 лет; общая исходная выборка 652, MCI 465, при наблюдении 465; срок 3 года. Критерии MCI Petersen, тип MCI; деменция DSM‐ IV‐TR (AD).",
+      "predicate": "cohort_profile",
+      "roles": {
+        "population": "Study cohort Yang in China"
+      },
+      "attrs": {
+        "country": "China",
+        "setting": "Chinese community dwelling elder people",
+        "age_threshold": {
+          "value": ">60",
+          "unit": "years"
+        },
+        "total_baseline": {
+          "value": "652",
+          "unit": "participants"
+        },
+        "MCI_baseline": {
+          "value": "465",
+          "unit": "participants"
+        },
+        "MCI_followup": {
+          "value": "465",
+          "unit": "participants"
+        },
+        "followup": {
+          "value": "3",
+          "unit": "years"
+        },
+        "MCI_definition": "Petersen",
+        "MCI_type": "MCI",
+        "dementia_criteria": "DSM‐ IV‐TR (AD)"
+      },
+      "conditions": [
+        "Included cohort Yang; Chinese community dwelling elder people"
+      ],
+      "time": "3 years follow-up"
+    },
+    {
+      "key": "study_Yu_Taiyuan",
+      "units": [
+        54,
+        55,
+        56
+      ],
+      "en": "Yu_Taiyuan cohort (China): 8 geographically convenient communities in Taiyuan city, China, age >60 years; total baseline 6192, MCI baseline 600, follow-up 518; mean follow-up 5 years. MCI Petersen: MCI; dementia NINCDS‐ADRDA (AD).",
+      "ru": "Ю: восемь удобных общин Тайюаня; возраст >60 лет; общая исходная выборка 6192, MCI 600, при наблюдении 518; срок 5 года. Критерии MCI Petersen, тип MCI; деменция NINCDS‐ADRDA (AD).",
+      "predicate": "cohort_profile",
+      "roles": {
+        "population": "Study cohort Yu_Taiyuan in China"
+      },
+      "attrs": {
+        "country": "China",
+        "setting": "8 geographically convenient communities in Taiyuan city, China",
+        "age_threshold": {
+          "value": ">60",
+          "unit": "years"
+        },
+        "total_baseline": {
+          "value": "6192",
+          "unit": "participants"
+        },
+        "MCI_baseline": {
+          "value": "600",
+          "unit": "participants"
+        },
+        "MCI_followup": {
+          "value": "518",
+          "unit": "participants"
+        },
+        "followup": {
+          "value": "5",
+          "unit": "years"
+        },
+        "MCI_definition": "Petersen",
+        "MCI_type": "MCI",
+        "dementia_criteria": "NINCDS‐ADRDA (AD)"
+      },
+      "conditions": [
+        "Included cohort Yu_Taiyuan; 8 geographically convenient communities in Taiyuan city, China"
+      ],
+      "time": "5 years follow-up"
+    },
+    {
+      "key": "study_Baiyewu",
+      "units": [
+        54,
+        55,
+        56
+      ],
+      "en": "Baiyewu cohort (Nigeria): Idikan community and adjacent wards of the city of Ibadan, Nigeria, age >65 years; total baseline 2487, MCI baseline 152, follow-up 87; mean follow-up 2 years. MCI CIND (Levy/International Psychogeriatric Association/WHO): CIND; dementia DSM III‐R ICD‐10 (all cause).",
+      "ru": "Байеву: Idikan и соседние кварталы Ибадана, Нигерия; возраст >65 лет; общая исходная выборка 2487, MCI 152, при наблюдении 87; срок 2 года. Критерии MCI CIND (Levy/International Psychogeriatric Association/WHO), тип CIND; деменция DSM III‐R ICD‐10 (all cause).",
+      "predicate": "cohort_profile",
+      "roles": {
+        "population": "Study cohort Baiyewu in Nigeria"
+      },
+      "attrs": {
+        "country": "Nigeria",
+        "setting": "Idikan community and adjacent wards of the city of Ibadan, Nigeria",
+        "age_threshold": {
+          "value": ">65",
+          "unit": "years"
+        },
+        "total_baseline": {
+          "value": "2487",
+          "unit": "participants"
+        },
+        "MCI_baseline": {
+          "value": "152",
+          "unit": "participants"
+        },
+        "MCI_followup": {
+          "value": "87",
+          "unit": "participants"
+        },
+        "followup": {
+          "value": "2",
+          "unit": "years"
+        },
+        "MCI_definition": "CIND (Levy/International Psychogeriatric Association/WHO)",
+        "MCI_type": "CIND",
+        "dementia_criteria": "DSM III‐R ICD‐10 (all cause)"
+      },
+      "conditions": [
+        "Included cohort Baiyewu; Idikan community and adjacent wards of the city of Ibadan, Nigeria"
+      ],
+      "time": "2 years follow-up"
+    },
+    {
+      "key": "study_Montano",
+      "units": [
+        54,
+        55,
+        56
+      ],
+      "en": "Montano cohort (Brazil): A community cohort living in an urban district, in São Paulo city, age >70 years; total baseline 1667, MCI baseline 80, follow-up 40; mean follow-up 2.6 years. MCI CDR 0.5: CDR 0.5; dementia NINCDS–ADRDA (all cause).",
+      "ru": "Монтано: городской район Сан-Паулу, Бразилия; возраст >70 лет; общая исходная выборка 1667, MCI 80, при наблюдении 40; срок 2.6 года. Критерии MCI CDR 0.5, тип CDR 0.5; деменция NINCDS–ADRDA (all cause).",
+      "predicate": "cohort_profile",
+      "roles": {
+        "population": "Study cohort Montano in Brazil"
+      },
+      "attrs": {
+        "country": "Brazil",
+        "setting": "A community cohort living in an urban district, in São Paulo city",
+        "age_threshold": {
+          "value": ">70",
+          "unit": "years"
+        },
+        "total_baseline": {
+          "value": "1667",
+          "unit": "participants"
+        },
+        "MCI_baseline": {
+          "value": "80",
+          "unit": "participants"
+        },
+        "MCI_followup": {
+          "value": "40",
+          "unit": "participants"
+        },
+        "followup": {
+          "value": "2.6",
+          "unit": "years"
+        },
+        "MCI_definition": "CDR 0.5",
+        "MCI_type": "CDR 0.5",
+        "dementia_criteria": "NINCDS–ADRDA (all cause)"
+      },
+      "conditions": [
+        "Included cohort Montano; A community cohort living in an urban district, in São Paulo city"
+      ],
+      "time": "2.6 years follow-up"
+    },
+    {
+      "key": "study_Paddick",
+      "units": [
+        54,
+        55,
+        56
+      ],
+      "en": "Paddick cohort (Tanzania): 6 randomly selected villages from the Hai District in Northern Tanzania., age >70 years; total baseline 296, MCI baseline 46, follow-up 46; mean follow-up 4 years. MCI IWG: MCI; dementia DSM‐IV (all cause) NINCDS‐ADRDA (AD) NINDS‐ AIREN (VaD).",
+      "ru": "Паддик: шесть случайных деревень Hai, Танзания; возраст >70 лет; общая исходная выборка 296, MCI 46, при наблюдении 46; срок 4 года. Критерии MCI IWG, тип MCI; деменция DSM‐IV (all cause) NINCDS‐ADRDA (AD) NINDS‐ AIREN (VaD).",
+      "predicate": "cohort_profile",
+      "roles": {
+        "population": "Study cohort Paddick in Tanzania"
+      },
+      "attrs": {
+        "country": "Tanzania",
+        "setting": "6 randomly selected villages from the Hai District in Northern Tanzania.",
+        "age_threshold": {
+          "value": ">70",
+          "unit": "years"
+        },
+        "total_baseline": {
+          "value": "296",
+          "unit": "participants"
+        },
+        "MCI_baseline": {
+          "value": "46",
+          "unit": "participants"
+        },
+        "MCI_followup": {
+          "value": "46",
+          "unit": "participants"
+        },
+        "followup": {
+          "value": "4",
+          "unit": "years"
+        },
+        "MCI_definition": "IWG",
+        "MCI_type": "MCI",
+        "dementia_criteria": "DSM‐IV (all cause) NINCDS‐ADRDA (AD) NINDS‐ AIREN (VaD)"
+      },
+      "conditions": [
+        "Included cohort Paddick; 6 randomly selected villages from the Hai District in Northern Tanzania."
+      ],
+      "time": "4 years follow-up"
+    },
+    {
+      "key": "study_Yu_Sanatorium",
+      "units": [
+        54,
+        55,
+        56
+      ],
+      "en": "Yu_Sanatorium cohort (China): 26 military cadres’ sanatoriums of Shijiazhuang city, age >60 years; total baseline 2674, MCI baseline 216, follow-up 209; mean follow-up 3 years. MCI DSM-IV: MCI; dementia DSM‐IV (all cause) NINCDS‐ADRDA (AD).",
+      "ru": "Ю: 26 военных санаториев Шицзячжуана; возраст >60 лет; общая исходная выборка 2674, MCI 216, при наблюдении 209; срок 3 года. Критерии MCI DSM-IV, тип MCI; деменция DSM‐IV (all cause) NINCDS‐ADRDA (AD).",
+      "predicate": "cohort_profile",
+      "roles": {
+        "population": "Study cohort Yu_Sanatorium in China"
+      },
+      "attrs": {
+        "country": "China",
+        "setting": "26 military cadres’ sanatoriums of Shijiazhuang city",
+        "age_threshold": {
+          "value": ">60",
+          "unit": "years"
+        },
+        "total_baseline": {
+          "value": "2674",
+          "unit": "participants"
+        },
+        "MCI_baseline": {
+          "value": "216",
+          "unit": "participants"
+        },
+        "MCI_followup": {
+          "value": "209",
+          "unit": "participants"
+        },
+        "followup": {
+          "value": "3",
+          "unit": "years"
+        },
+        "MCI_definition": "DSM-IV",
+        "MCI_type": "MCI",
+        "dementia_criteria": "DSM‐IV (all cause) NINCDS‐ADRDA (AD)"
+      },
+      "conditions": [
+        "Included cohort Yu_Sanatorium; 26 military cadres’ sanatoriums of Shijiazhuang city"
+      ],
+      "time": "3 years follow-up"
+    },
+    {
+      "key": "study_Wang",
+      "units": [
+        54,
+        55,
+        56
+      ],
+      "en": "Wang cohort (China): 9 densely distributed elderly communities in Taiyuan, age >65 years; total baseline 6152, MCI baseline 600, follow-up 557; mean follow-up 3 years. MCI DSM-IV: aMCI; dementia NINCDS‐ADRDA (AD).",
+      "ru": "Ван: девять плотных пожилых общин Тайюаня; возраст >65 лет; общая исходная выборка 6152, MCI 600, при наблюдении 557; срок 3 года. Критерии MCI DSM-IV, тип aMCI; деменция NINCDS‐ADRDA (AD).",
+      "predicate": "cohort_profile",
+      "roles": {
+        "population": "Study cohort Wang in China"
+      },
+      "attrs": {
+        "country": "China",
+        "setting": "9 densely distributed elderly communities in Taiyuan",
+        "age_threshold": {
+          "value": ">65",
+          "unit": "years"
+        },
+        "total_baseline": {
+          "value": "6152",
+          "unit": "participants"
+        },
+        "MCI_baseline": {
+          "value": "600",
+          "unit": "participants"
+        },
+        "MCI_followup": {
+          "value": "557",
+          "unit": "participants"
+        },
+        "followup": {
+          "value": "3",
+          "unit": "years"
+        },
+        "MCI_definition": "DSM-IV",
+        "MCI_type": "aMCI",
+        "dementia_criteria": "NINCDS‐ADRDA (AD)"
+      },
+      "conditions": [
+        "Included cohort Wang; 9 densely distributed elderly communities in Taiyuan"
+      ],
+      "time": "3 years follow-up"
+    },
+    {
+      "key": "study_Godhino",
+      "units": [
+        54,
+        55,
+        56
+      ],
+      "en": "Godhino cohort (Brazil): Older community dwelling residents in the catchment area of the Hospital de Clinicas de Porto Alegre, Rio Grande do Sul, Brazil, age >60 years; total baseline 245, MCI baseline 21, follow-up 21; mean follow-up 5.8 years. MCI Dubois and Albert 2004: MCI; dementia DSM‐IV & NINCDS‐ADRDA (AD).",
+      "ru": "Годино: район Hospital de Clinicas Porto Alegre, Бразилия; возраст >60 лет; общая исходная выборка 245, MCI 21, при наблюдении 21; срок 5.8 года. Критерии MCI Dubois and Albert 2004, тип MCI; деменция DSM‐IV & NINCDS‐ADRDA (AD).",
+      "predicate": "cohort_profile",
+      "roles": {
+        "population": "Study cohort Godhino in Brazil"
+      },
+      "attrs": {
+        "country": "Brazil",
+        "setting": "Older community dwelling residents in the catchment area of the Hospital de Clinicas de Porto Alegre, Rio Grande do Sul, Brazil",
+        "age_threshold": {
+          "value": ">60",
+          "unit": "years"
+        },
+        "total_baseline": {
+          "value": "245",
+          "unit": "participants"
+        },
+        "MCI_baseline": {
+          "value": "21",
+          "unit": "participants"
+        },
+        "MCI_followup": {
+          "value": "21",
+          "unit": "participants"
+        },
+        "followup": {
+          "value": "5.8",
+          "unit": "years"
+        },
+        "MCI_definition": "Dubois and Albert 2004",
+        "MCI_type": "MCI",
+        "dementia_criteria": "DSM‐IV & NINCDS‐ADRDA (AD)"
+      },
+      "conditions": [
+        "Included cohort Godhino; Older community dwelling residents in the catchment area of the Hospital de Clinicas de Porto Alegre, Rio Grande do Sul, Brazil"
+      ],
+      "time": "5.8 years follow-up"
+    },
+    {
+      "key": "conversion_32",
+      "units": [
+        54,
+        55,
+        56
+      ],
+      "en": "Huang: MCI→All-cause dementia 42% (51/121): AD 29, VaD 18, other 4; after 3 years.",
+      "ru": "Huang: переход MCI в деменцию всех причин: 42% (51/121): AD 29, VaD 18, другие 4; за 3 года.",
+      "predicate": "conversion_estimate",
+      "roles": {
+        "population": "Study cohort Huang in China",
+        "condition": "Mild cognitive impairment",
+        "outcome": "All-cause dementia"
+      },
+      "attrs": {
+        "rate": {
+          "value": "42",
+          "unit": "percent"
+        },
+        "fraction": "51/121",
+        "AD_cases": {
+          "value": 29,
+          "unit": "cases"
+        },
+        "VaD_cases": {
+          "value": 18,
+          "unit": "cases"
+        },
+        "other_cases": {
+          "value": 4,
+          "unit": "cases"
+        }
+      },
+      "time": "after 3 years",
+      "conditions": [
+        "Table 1 cohort-specific estimate; Huang"
+      ]
+    },
+    {
+      "key": "conversion_33",
+      "units": [
+        54,
+        55,
+        56
+      ],
+      "en": "Li: MCI→Alzheimer disease 44.8% (298/638), all classified as AD; after 5 years.",
+      "ru": "Li: переход MCI в болезнь Альцгеймера: 44,8% (298/638), все классифицированы как AD; за 5 года.",
+      "predicate": "conversion_estimate",
+      "roles": {
+        "population": "Study cohort Li in China",
+        "condition": "Mild cognitive impairment",
+        "outcome": "Alzheimer disease"
+      },
+      "attrs": {
+        "rate": {
+          "value": "44.8",
+          "unit": "percent"
+        },
+        "fraction": "298/638"
+      },
+      "time": "after 5 years",
+      "conditions": [
+        "Table 1 cohort-specific estimate; Li"
+      ]
+    },
+    {
+      "key": "conversion_34",
+      "units": [
+        54,
+        55,
+        56
+      ],
+      "en": "Ding: MCI→All-cause dementia 6.0 per 100 person-years (95% CI 4.7–7.3; 79/362); after 4 years.",
+      "ru": "Ding: переход MCI в деменцию всех причин: 6,0 на 100 человеко-лет (95% ДИ 4,7–7,3; 79/362); за 4 года.",
+      "predicate": "conversion_estimate",
+      "roles": {
+        "population": "Study cohort Ding in China",
+        "condition": "Mild cognitive impairment",
+        "outcome": "All-cause dementia"
+      },
+      "attrs": {
+        "rate": {
+          "value": "6.0",
+          "unit": "per 100 person-years"
+        },
+        "fraction": "79/362",
+        "CI95": {
+          "value": "4.7–7.3",
+          "unit": "per 100 person-years"
+        }
+      },
+      "time": "after 4 years",
+      "conditions": [
+        "Table 1 cohort-specific estimate; Ding"
+      ]
+    },
+    {
+      "key": "conversion_35",
+      "units": [
+        54,
+        55,
+        56
+      ],
+      "en": "Yang: MCI→Alzheimer disease 16.8% (78/465); after 3 years.",
+      "ru": "Yang: переход MCI в болезнь Альцгеймера: 16,8% (78/465); за 3 года.",
+      "predicate": "conversion_estimate",
+      "roles": {
+        "population": "Study cohort Yang in China",
+        "condition": "Mild cognitive impairment",
+        "outcome": "Alzheimer disease"
+      },
+      "attrs": {
+        "rate": {
+          "value": "16.8",
+          "unit": "percent"
+        },
+        "fraction": "78/465"
+      },
+      "time": "after 3 years",
+      "conditions": [
+        "Table 1 cohort-specific estimate; Yang"
+      ]
+    },
+    {
+      "key": "conversion_36",
+      "units": [
+        54,
+        55,
+        56
+      ],
+      "en": "Yu_Taiyuan: MCI→Alzheimer disease 17.0% (89/518); after 5 years.",
+      "ru": "Yu_Taiyuan: переход MCI в болезнь Альцгеймера: 17,0% (89/518); за 5 года.",
+      "predicate": "conversion_estimate",
+      "roles": {
+        "population": "Study cohort Yu_Taiyuan in China",
+        "condition": "Mild cognitive impairment",
+        "outcome": "Alzheimer disease"
+      },
+      "attrs": {
+        "rate": {
+          "value": "17.0",
+          "unit": "percent"
+        },
+        "fraction": "89/518"
+      },
+      "time": "after 5 years",
+      "conditions": [
+        "Table 1 cohort-specific estimate; Yu_Taiyuan"
+      ]
+    },
+    {
+      "key": "conversion_37",
+      "units": [
+        54,
+        55,
+        56
+      ],
+      "en": "Baiyewu: MCI→All-cause dementia 16.1% (14/87); after 2 years.",
+      "ru": "Baiyewu: переход MCI в деменцию всех причин: 16,1% (14/87); за 2 года.",
+      "predicate": "conversion_estimate",
+      "roles": {
+        "population": "Study cohort Baiyewu in Nigeria",
+        "condition": "Cognitive impairment no dementia",
+        "outcome": "All-cause dementia"
+      },
+      "attrs": {
+        "rate": {
+          "value": "16.1",
+          "unit": "percent"
+        },
+        "fraction": "14/87"
+      },
+      "time": "after 2 years",
+      "conditions": [
+        "Table 1 cohort-specific estimate; Baiyewu"
+      ]
+    },
+    {
+      "key": "conversion_38",
+      "units": [
+        54,
+        55,
+        56
+      ],
+      "en": "Montano: MCI→All-cause dementia 37.5% (15/40), also 145.4 per 1000 person-years; after 2.6 years.",
+      "ru": "Montano: переход MCI в деменцию всех причин: 37,5% (15/40), также 145,4 на 1000 человеко-лет; за 2.6 года.",
+      "predicate": "conversion_estimate",
+      "roles": {
+        "population": "Study cohort Montano in Brazil",
+        "condition": "Clinical Dementia Rating 0.5",
+        "outcome": "All-cause dementia"
+      },
+      "attrs": {
+        "rate": {
+          "value": "37.5",
+          "unit": "percent"
+        },
+        "fraction": "15/40",
+        "incidence_rate": {
+          "value": 145.4,
+          "unit": "per 1000 person-years"
+        }
+      },
+      "time": "after 2.6 years",
+      "conditions": [
+        "Table 1 cohort-specific estimate; Montano"
+      ]
+    },
+    {
+      "key": "conversion_39",
+      "units": [
+        54,
+        55,
+        56
+      ],
+      "en": "Paddick: MCI→All-cause dementia 37.0% (17/46): AD 9, VaD 4, Parkinson dementia 2, mixed 2; after 4 years.",
+      "ru": "Paddick: переход MCI в деменцию всех причин: 37,0% (17/46): AD 9, VaD 4, Паркинсон 2, смешанные 2; за 4 года.",
+      "predicate": "conversion_estimate",
+      "roles": {
+        "population": "Study cohort Paddick in Tanzania",
+        "condition": "Mild cognitive impairment",
+        "outcome": "All-cause dementia"
+      },
+      "attrs": {
+        "rate": {
+          "value": "37.0",
+          "unit": "percent"
+        },
+        "fraction": "17/46",
+        "AD_cases": {
+          "value": 9,
+          "unit": "cases"
+        },
+        "VaD_cases": {
+          "value": 4,
+          "unit": "cases"
+        },
+        "Parkinson_dementia_cases": {
+          "value": 2,
+          "unit": "cases"
+        },
+        "mixed_cases": {
+          "value": 2,
+          "unit": "cases"
+        }
+      },
+      "time": "after 4 years",
+      "conditions": [
+        "Table 1 cohort-specific estimate; Paddick"
+      ]
+    },
+    {
+      "key": "conversion_40",
+      "units": [
+        54,
+        55,
+        56
+      ],
+      "en": "Yu_Sanatorium: MCI→All-cause dementia 24.4% (51/209), labelled per year in the table; Table says per year; study mean follow-up 3 years.",
+      "ru": "Yu_Sanatorium: переход MCI в деменцию всех причин: 24,4% (51/209), в таблице обозначено за год; Table says per year; study mean follow-up 3 года.",
+      "predicate": "conversion_estimate",
+      "roles": {
+        "population": "Study cohort Yu_Sanatorium in China",
+        "condition": "Mild cognitive impairment",
+        "outcome": "All-cause dementia"
+      },
+      "attrs": {
+        "rate": {
+          "value": "24.4",
+          "unit": "percent"
+        },
+        "fraction": "51/209"
+      },
+      "time": "Table says per year; study mean follow-up 3 years",
+      "conditions": [
+        "Table 1 cohort-specific estimate; Yu_Sanatorium"
+      ]
+    },
+    {
+      "key": "conversion_41",
+      "units": [
+        54,
+        55,
+        56
+      ],
+      "en": "Yu_Sanatorium: MCI→Alzheimer disease 15.7% (35/209), labelled per year; percentage and fraction are not reconciled; Table says per year; study mean follow-up 3 years.",
+      "ru": "Yu_Sanatorium: переход MCI в болезнь Альцгеймера: 15,7% (35/209), обозначено за год; доля и дробь не согласовывались; Table says per year; study mean follow-up 3 года.",
+      "predicate": "conversion_estimate",
+      "roles": {
+        "population": "Study cohort Yu_Sanatorium in China",
+        "condition": "Mild cognitive impairment",
+        "outcome": "Alzheimer disease"
+      },
+      "attrs": {
+        "rate": {
+          "value": "15.7",
+          "unit": "percent/year"
+        },
+        "fraction": "35/209"
+      },
+      "time": "Table says per year; study mean follow-up 3 years",
+      "conditions": [
+        "Table 1 cohort-specific estimate; Yu_Sanatorium"
+      ]
+    },
+    {
+      "key": "conversion_42",
+      "units": [
+        54,
+        55,
+        56
+      ],
+      "en": "Wang: MCI→Alzheimer disease 6% (34/557 per year); Table says per year; study mean follow-up 3 years.",
+      "ru": "Wang: переход MCI в болезнь Альцгеймера: 6% (34/557 за год); Table says per year; study mean follow-up 3 года.",
+      "predicate": "conversion_estimate",
+      "roles": {
+        "population": "Study cohort Wang in China",
+        "condition": "Amnestic mild cognitive impairment",
+        "outcome": "Alzheimer disease"
+      },
+      "attrs": {
+        "rate": {
+          "value": "6",
+          "unit": "percent/year"
+        },
+        "fraction": "34/557"
+      },
+      "time": "Table says per year; study mean follow-up 3 years",
+      "conditions": [
+        "Table 1 cohort-specific estimate; Wang"
+      ]
+    },
+    {
+      "key": "conversion_43",
+      "units": [
+        54,
+        55,
+        56
+      ],
+      "en": "Godhino: MCI→Alzheimer disease 38.1% (8/21); after 5.8 years.",
+      "ru": "Godhino: переход MCI в болезнь Альцгеймера: 38,1% (8/21); за 5.8 года.",
+      "predicate": "conversion_estimate",
+      "roles": {
+        "population": "Study cohort Godhino in Brazil",
+        "condition": "Mild cognitive impairment",
+        "outcome": "Alzheimer disease"
+      },
+      "attrs": {
+        "rate": {
+          "value": "38.1",
+          "unit": "percent"
+        },
+        "fraction": "8/21"
+      },
+      "time": "after 5.8 years",
+      "conditions": [
+        "Table 1 cohort-specific estimate; Godhino"
+      ]
+    },
+    {
+      "key": "ding_44",
+      "units": [
+        54,
+        55,
+        56
+      ],
+      "en": "Ding subtype Amnestic mild cognitive impairment: dementia conversion 6.9 per 100 person-years, 95% CI 5.2–8.6, 59/238 after four years.",
+      "ru": "Подтип Дин aMCI: переход 6.9 на 100 человеко-лет, 95% ДИ 5.2–8.6, 59/238 за четыре года.",
+      "predicate": "conversion_estimate",
+      "roles": {
+        "population": "Study cohort Ding in China",
+        "condition": "Amnestic mild cognitive impairment",
+        "outcome": "All-cause dementia"
+      },
+      "attrs": {
+        "rate": {
+          "value": "6.9",
+          "unit": "per 100 person-years"
+        },
+        "CI95": {
+          "value": "5.2–8.6",
+          "unit": "per 100 person-years"
+        },
+        "fraction": "59/238"
+      },
+      "time": "4 years follow-up",
+      "conditions": [
+        "Ding Shanghai cohort; Table 1 subtype-specific rate"
+      ]
+    },
+    {
+      "key": "ding_45",
+      "units": [
+        54,
+        55,
+        56
+      ],
+      "en": "Ding subtype Amnestic MCI single domain: dementia conversion 3.0 per 100 person-years, 95% CI 1.6–4.4, 17/156 after four years.",
+      "ru": "Подтип Дин aMCI одного домена: переход 3.0 на 100 человеко-лет, 95% ДИ 1.6–4.4, 17/156 за четыре года.",
+      "predicate": "conversion_estimate",
+      "roles": {
+        "population": "Study cohort Ding in China",
+        "condition": "Amnestic MCI single domain",
+        "outcome": "All-cause dementia"
+      },
+      "attrs": {
+        "rate": {
+          "value": "3.0",
+          "unit": "per 100 person-years"
+        },
+        "CI95": {
+          "value": "1.6–4.4",
+          "unit": "per 100 person-years"
+        },
+        "fraction": "17/156"
+      },
+      "time": "4 years follow-up",
+      "conditions": [
+        "Ding Shanghai cohort; Table 1 subtype-specific rate"
+      ]
+    },
+    {
+      "key": "ding_46",
+      "units": [
+        54,
+        55,
+        56
+      ],
+      "en": "Ding subtype Amnestic MCI multiple domain: dementia conversion 14.2 per 100 person-years, 95% CI 10.2–18.2, 42/82 after four years.",
+      "ru": "Подтип Дин aMCI нескольких доменов: переход 14.2 на 100 человеко-лет, 95% ДИ 10.2–18.2, 42/82 за четыре года.",
+      "predicate": "conversion_estimate",
+      "roles": {
+        "population": "Study cohort Ding in China",
+        "condition": "Amnestic MCI multiple domain",
+        "outcome": "All-cause dementia"
+      },
+      "attrs": {
+        "rate": {
+          "value": "14.2",
+          "unit": "per 100 person-years"
+        },
+        "CI95": {
+          "value": "10.2–18.2",
+          "unit": "per 100 person-years"
+        },
+        "fraction": "42/82"
+      },
+      "time": "4 years follow-up",
+      "conditions": [
+        "Ding Shanghai cohort; Table 1 subtype-specific rate"
+      ]
+    },
+    {
+      "key": "ding_47",
+      "units": [
+        54,
+        55,
+        56
+      ],
+      "en": "Ding subtype Nonamnestic MCI single domain: dementia conversion 2.7 per 100 person-years, 95% CI 1.0–4.5, 9/91 after four years.",
+      "ru": "Подтип Дин неамнестический MCI одного домена: переход 2.7 на 100 человеко-лет, 95% ДИ 1.0–4.5, 9/91 за четыре года.",
+      "predicate": "conversion_estimate",
+      "roles": {
+        "population": "Study cohort Ding in China",
+        "condition": "Nonamnestic MCI single domain",
+        "outcome": "All-cause dementia"
+      },
+      "attrs": {
+        "rate": {
+          "value": "2.7",
+          "unit": "per 100 person-years"
+        },
+        "CI95": {
+          "value": "1.0–4.5",
+          "unit": "per 100 person-years"
+        },
+        "fraction": "9/91"
+      },
+      "time": "4 years follow-up",
+      "conditions": [
+        "Ding Shanghai cohort; Table 1 subtype-specific rate"
+      ]
+    },
+    {
+      "key": "ding_48",
+      "units": [
+        54,
+        55,
+        56
+      ],
+      "en": "Ding subtype Nonamnestic MCI multiple domain: dementia conversion 8.7 per 100 person-years, 95% CI 3.8–13.7, 11/33 after four years.",
+      "ru": "Подтип Дин неамнестический MCI нескольких доменов: переход 8.7 на 100 человеко-лет, 95% ДИ 3.8–13.7, 11/33 за четыре года.",
+      "predicate": "conversion_estimate",
+      "roles": {
+        "population": "Study cohort Ding in China",
+        "condition": "Nonamnestic MCI multiple domain",
+        "outcome": "All-cause dementia"
+      },
+      "attrs": {
+        "rate": {
+          "value": "8.7",
+          "unit": "per 100 person-years"
+        },
+        "CI95": {
+          "value": "3.8–13.7",
+          "unit": "per 100 person-years"
+        },
+        "fraction": "11/33"
+      },
+      "time": "4 years follow-up",
+      "conditions": [
+        "Ding Shanghai cohort; Table 1 subtype-specific rate"
+      ]
+    },
+    {
+      "key": "conversion_range",
+      "units": [
+        7,
+        25,
+        62,
+        76
+      ],
+      "en": "Across 11 LMIC studies, prose reports MCI-to-all-cause-dementia conversion 6.0–44.8% over mean 3.7±1.2 years; this range combines heterogeneous definitions and reporting periods rather than a uniform annual risk.",
+      "ru": "В тексте 11 исследований LMIC: переход MCI в деменцию всех причин 6,0–44,8% за средние 3,7±1,2 года; диапазон объединяет разные определения и периоды, а не единый годовой риск.",
+      "predicate": "conversion_range",
+      "roles": {
+        "condition": "Mild cognitive impairment",
+        "outcome": "All-cause dementia",
+        "population": "Included LMIC cohorts"
+      },
+      "attrs": {
+        "range": {
+          "value": "6.0–44.8",
+          "unit": "percent"
+        },
+        "studies": {
+          "value": 11,
+          "unit": "studies"
+        },
+        "followup_mean": {
+          "value": 3.7,
+          "unit": "years"
+        },
+        "followup_SD": {
+          "value": 1.2,
+          "unit": "years"
+        },
+        "reporting": "prose range; Table 1 also includes person-time rates"
+      },
+      "time": "Average 3.7 years; variable follow-up",
+      "conditions": [
+        "Systematic review of 11 population/community observational cohorts in LMICs; country income classified at study time"
+      ]
+    },
+    {
+      "key": "subtype_range",
+      "units": [
+        62
+      ],
+      "en": "AD conversion prose spans 6.0–46.7% in eight studies over 4.0±1.1 years; VaD 8.7–14.9% in two over 3.5±0.7 years.",
+      "ru": "Текст: переход в AD 6,0–46,7% в восьми работах за 4,0±1,1 года; VaD 8,7–14,9% в двух за 3,5±0,7 года.",
+      "predicate": "conversion_range",
+      "roles": {
+        "condition": "Mild cognitive impairment",
+        "population": "Included LMIC cohorts"
+      },
+      "logic": "contrast",
+      "claims": [
+        {
+          "roles": {
+            "outcome": "Alzheimer disease"
+          },
+          "attrs": {
+            "range": {
+              "value": "6.0–46.7",
+              "unit": "percent"
+            },
+            "studies": {
+              "value": 8,
+              "unit": "studies"
+            },
+            "duration": {
+              "value": 4,
+              "unit": "years"
+            },
+            "duration_SD": {
+              "value": 1.1,
+              "unit": "years"
+            }
+          }
+        },
+        {
+          "roles": {
+            "outcome": "Vascular dementia"
+          },
+          "attrs": {
+            "range": {
+              "value": "8.7–14.9",
+              "unit": "percent"
+            },
+            "studies": {
+              "value": 2,
+              "unit": "studies"
+            },
+            "duration": {
+              "value": 3.5,
+              "unit": "years"
+            },
+            "duration_SD": {
+              "value": 0.7,
+              "unit": "years"
+            }
+          }
+        }
+      ],
+      "conditions": [
+        "Systematic review of 11 population/community observational cohorts in LMICs; country income classified at study time"
+      ]
+    },
+    {
+      "key": "breadth",
+      "units": [
+        62,
+        78
+      ],
+      "en": "Broader MCI/CIND/CDR definitions show conversion 16.8–44.8% over 2–5.8 years versus restricted aMCI 6.0–6.9% over mean 3.5 years (two studies); the source interprets broader impairment as higher risk.",
+      "ru": "Широкие определения MCI/CIND/CDR: переход 16,8–44,8% за 2–5,8 года против ограниченного aMCI 6,0–6,9% за средние 3,5 года (две работы); авторы трактуют широкие нарушения как больший риск.",
+      "predicate": "definition_conversion_comparison",
+      "roles": {
+        "outcome": "Dementia",
+        "population": "Included LMIC cohorts"
+      },
+      "logic": "contrast",
+      "claims": [
+        {
+          "roles": {
+            "condition": "Broad MCI/CIND/CDR impairment"
+          },
+          "attrs": {
+            "range": {
+              "value": "16.8–44.8",
+              "unit": "percent"
+            },
+            "followup": {
+              "value": "2–5.8",
+              "unit": "years"
+            }
+          }
+        },
+        {
+          "roles": {
+            "condition": "Amnestic mild cognitive impairment"
+          },
+          "attrs": {
+            "range": {
+              "value": "6.0–6.9",
+              "unit": "percent"
+            },
+            "followup_mean": {
+              "value": 3.5,
+              "unit": "years"
+            },
+            "studies": {
+              "value": 2,
+              "unit": "studies"
+            }
+          }
+        }
+      ],
+      "conditions": [
+        "Systematic review of 11 population/community observational cohorts in LMICs; country income classified at study time"
+      ],
+      "modality": "author comparison; heterogeneous measures"
+    },
+    {
+      "key": "risk_52",
+      "units": [
+        65
+      ],
+      "en": "Older age significantly associates with MCI-to-dementia conversion in 6/10 studies assessing it; risks examined in 10/11 studies overall.",
+      "ru": "Пожилой возраст значимо связан с переходом MCI в деменцию в 6/10 оценивших работ; риски изучены в 10/11 работах.",
+      "predicate": "risk_factor_association",
+      "roles": {
+        "exposure": "Older age",
+        "outcome": "MCI-to-dementia conversion",
+        "population": "Included LMIC cohorts"
+      },
+      "attrs": {
+        "significant_studies": {
+          "value": 6,
+          "unit": "studies"
+        },
+        "assessed_studies": {
+          "value": 10,
+          "unit": "studies"
+        },
+        "risk_investigation": {
+          "value": "10/11",
+          "unit": "studies"
+        }
+      },
+      "conditions": [
+        "Systematic review of 11 population/community observational cohorts in LMICs; country income classified at study time"
+      ],
+      "modality": "observational significant associations; not causal estimates"
+    },
+    {
+      "key": "risk_53",
+      "units": [
+        65
+      ],
+      "en": "Poor baseline cognitive test performance significantly associates with MCI-to-dementia conversion in 5/7 studies assessing it; risks examined in 10/11 studies overall.",
+      "ru": "Плохое исходное выполнение когнитивных тестов значимо связан с переходом MCI в деменцию в 5/7 оценивших работ; риски изучены в 10/11 работах.",
+      "predicate": "risk_factor_association",
+      "roles": {
+        "exposure": "Poor baseline cognitive test performance",
+        "outcome": "MCI-to-dementia conversion",
+        "population": "Included LMIC cohorts"
+      },
+      "attrs": {
+        "significant_studies": {
+          "value": 5,
+          "unit": "studies"
+        },
+        "assessed_studies": {
+          "value": 7,
+          "unit": "studies"
+        },
+        "risk_investigation": {
+          "value": "10/11",
+          "unit": "studies"
+        }
+      },
+      "conditions": [
+        "Systematic review of 11 population/community observational cohorts in LMICs; country income classified at study time"
+      ],
+      "modality": "observational significant associations; not causal estimates"
+    },
+    {
+      "key": "risk_54",
+      "units": [
+        65
+      ],
+      "en": "Female gender significantly associates with MCI-to-dementia conversion in 3/10 studies assessing it; risks examined in 10/11 studies overall.",
+      "ru": "Женский пол значимо связан с переходом MCI в деменцию в 3/10 оценивших работ; риски изучены в 10/11 работах.",
+      "predicate": "risk_factor_association",
+      "roles": {
+        "exposure": "Female gender",
+        "outcome": "MCI-to-dementia conversion",
+        "population": "Included LMIC cohorts"
+      },
+      "attrs": {
+        "significant_studies": {
+          "value": 3,
+          "unit": "studies"
+        },
+        "assessed_studies": {
+          "value": 10,
+          "unit": "studies"
+        },
+        "risk_investigation": {
+          "value": "10/11",
+          "unit": "studies"
+        }
+      },
+      "conditions": [
+        "Systematic review of 11 population/community observational cohorts in LMICs; country income classified at study time"
+      ],
+      "modality": "observational significant associations; not causal estimates"
+    },
+    {
+      "key": "risk_55",
+      "units": [
+        65
+      ],
+      "en": "Hypertension significantly associates with MCI-to-dementia conversion in 3/6 studies assessing it; risks examined in 10/11 studies overall.",
+      "ru": "Гипертензия значимо связан с переходом MCI в деменцию в 3/6 оценивших работ; риски изучены в 10/11 работах.",
+      "predicate": "risk_factor_association",
+      "roles": {
+        "exposure": "Hypertension",
+        "outcome": "MCI-to-dementia conversion",
+        "population": "Included LMIC cohorts"
+      },
+      "attrs": {
+        "significant_studies": {
+          "value": 3,
+          "unit": "studies"
+        },
+        "assessed_studies": {
+          "value": 6,
+          "unit": "studies"
+        },
+        "risk_investigation": {
+          "value": "10/11",
+          "unit": "studies"
+        }
+      },
+      "conditions": [
+        "Systematic review of 11 population/community observational cohorts in LMICs; country income classified at study time"
+      ],
+      "modality": "observational significant associations; not causal estimates"
+    },
+    {
+      "key": "risk_56",
+      "units": [
+        65
+      ],
+      "en": "Low educational attainment significantly associates with MCI-to-dementia conversion in 2/10 studies assessing it; risks examined in 10/11 studies overall.",
+      "ru": "Низкое образование значимо связан с переходом MCI в деменцию в 2/10 оценивших работ; риски изучены в 10/11 работах.",
+      "predicate": "risk_factor_association",
+      "roles": {
+        "exposure": "Low educational attainment",
+        "outcome": "MCI-to-dementia conversion",
+        "population": "Included LMIC cohorts"
+      },
+      "attrs": {
+        "significant_studies": {
+          "value": 2,
+          "unit": "studies"
+        },
+        "assessed_studies": {
+          "value": 10,
+          "unit": "studies"
+        },
+        "risk_investigation": {
+          "value": "10/11",
+          "unit": "studies"
+        }
+      },
+      "conditions": [
+        "Systematic review of 11 population/community observational cohorts in LMICs; country income classified at study time"
+      ],
+      "modality": "observational significant associations; not causal estimates"
+    },
+    {
+      "key": "risk_57",
+      "units": [
+        65
+      ],
+      "en": "Anxiety and depression significantly associates with MCI-to-dementia conversion in 2/5 studies assessing it; risks examined in 10/11 studies overall.",
+      "ru": "Тревога и депрессия значимо связан с переходом MCI в деменцию в 2/5 оценивших работ; риски изучены в 10/11 работах.",
+      "predicate": "risk_factor_association",
+      "roles": {
+        "exposure": "Anxiety and depression",
+        "outcome": "MCI-to-dementia conversion",
+        "population": "Included LMIC cohorts"
+      },
+      "attrs": {
+        "significant_studies": {
+          "value": 2,
+          "unit": "studies"
+        },
+        "assessed_studies": {
+          "value": 5,
+          "unit": "studies"
+        },
+        "risk_investigation": {
+          "value": "10/11",
+          "unit": "studies"
+        }
+      },
+      "conditions": [
+        "Systematic review of 11 population/community observational cohorts in LMICs; country income classified at study time"
+      ],
+      "modality": "observational significant associations; not causal estimates"
+    },
+    {
+      "key": "risk_58",
+      "units": [
+        65
+      ],
+      "en": "History of stroke significantly associates with MCI-to-dementia conversion in 1/4 studies assessing it; risks examined in 10/11 studies overall.",
+      "ru": "Инсульт в анамнезе значимо связан с переходом MCI в деменцию в 1/4 оценивших работ; риски изучены в 10/11 работах.",
+      "predicate": "risk_factor_association",
+      "roles": {
+        "exposure": "History of stroke",
+        "outcome": "MCI-to-dementia conversion",
+        "population": "Included LMIC cohorts"
+      },
+      "attrs": {
+        "significant_studies": {
+          "value": 1,
+          "unit": "studies"
+        },
+        "assessed_studies": {
+          "value": 4,
+          "unit": "studies"
+        },
+        "risk_investigation": {
+          "value": "10/11",
+          "unit": "studies"
+        }
+      },
+      "conditions": [
+        "Systematic review of 11 population/community observational cohorts in LMICs; country income classified at study time"
+      ],
+      "modality": "observational significant associations; not causal estimates"
+    },
+    {
+      "key": "risk_59",
+      "units": [
+        65
+      ],
+      "en": "Diabetes significantly associates with MCI-to-dementia conversion in 2/4 studies assessing it; risks examined in 10/11 studies overall.",
+      "ru": "Диабет значимо связан с переходом MCI в деменцию в 2/4 оценивших работ; риски изучены в 10/11 работах.",
+      "predicate": "risk_factor_association",
+      "roles": {
+        "exposure": "Diabetes",
+        "outcome": "MCI-to-dementia conversion",
+        "population": "Included LMIC cohorts"
+      },
+      "attrs": {
+        "significant_studies": {
+          "value": 2,
+          "unit": "studies"
+        },
+        "assessed_studies": {
+          "value": 4,
+          "unit": "studies"
+        },
+        "risk_investigation": {
+          "value": "10/11",
+          "unit": "studies"
+        }
+      },
+      "conditions": [
+        "Systematic review of 11 population/community observational cohorts in LMICs; country income classified at study time"
+      ],
+      "modality": "observational significant associations; not causal estimates"
+    },
+    {
+      "key": "risk_60",
+      "units": [
+        65
+      ],
+      "en": "APOE ε4 status significantly associates with MCI-to-dementia conversion in 2/4 studies assessing it; risks examined in 10/11 studies overall.",
+      "ru": "Статус APOE ε4 значимо связан с переходом MCI в деменцию в 2/4 оценивших работ; риски изучены в 10/11 работах.",
+      "predicate": "risk_factor_association",
+      "roles": {
+        "exposure": "APOE ε4 status",
+        "outcome": "MCI-to-dementia conversion",
+        "population": "Included LMIC cohorts"
+      },
+      "attrs": {
+        "significant_studies": {
+          "value": 2,
+          "unit": "studies"
+        },
+        "assessed_studies": {
+          "value": 4,
+          "unit": "studies"
+        },
+        "risk_investigation": {
+          "value": "10/11",
+          "unit": "studies"
+        }
+      },
+      "conditions": [
+        "Systematic review of 11 population/community observational cohorts in LMICs; country income classified at study time"
+      ],
+      "modality": "observational significant associations; not causal estimates"
+    },
+    {
+      "key": "bias_result",
+      "units": [
+        68
+      ],
+      "en": "Bias results report mean 7.3 stars out of 10 (range 5–8) while eight of 11 studies reach a stated maximum of eight; retain the differing scale statements.",
+      "ru": "Результаты смещения: средние 7,3 звезды из 10 (5–8), но восемь из 11 достигли заявленного максимума восьми; шкалы сохранены как сообщены.",
+      "predicate": "bias_assessment_results",
+      "roles": {
+        "population": "Included LMIC cohorts",
+        "method": "Newcastle–Ottawa Scale"
+      },
+      "attrs": {
+        "mean": {
+          "value": 7.3,
+          "unit": "stars"
+        },
+        "reported_denominator": {
+          "value": 10,
+          "unit": "stars"
+        },
+        "range": {
+          "value": "5–8",
+          "unit": "stars"
+        },
+        "maximum_scoring_studies": {
+          "value": 8,
+          "unit": "studies"
+        },
+        "stated_maximum": {
+          "value": 8,
+          "unit": "stars"
+        }
+      },
+      "conditions": [
+        "Systematic review of 11 population/community observational cohorts in LMICs; country income classified at study time"
+      ]
+    },
+    {
+      "key": "pooled",
+      "units": [
+        7,
+        25,
+        71,
+        72,
+        73,
+        76
+      ],
+      "en": "Six Petersen-type MCI→AD studies (four China, one Tanzania, one Brazil) yield 23.8% pooled AD conversion (95% CI 15.4–33.4%) over 3.0–5.8 years; China heterogeneity I²=96.54%, p<.0001.",
+      "ru": "Шесть Petersen-подобных MCI→AD работ (четыре Китай, по одной Танзания/Бразилия): объединённый переход в AD 23,8% (95% ДИ 15,4–33,4%) за 3,0–5,8 года; китайская неоднородность I²=96,54%, p<0,0001.",
+      "predicate": "pooled_conversion",
+      "roles": {
+        "condition": "Petersen-type mild cognitive impairment",
+        "outcome": "Alzheimer disease",
+        "population": "Six compatible LMIC cohorts"
+      },
+      "attrs": {
+        "studies": {
+          "value": 6,
+          "unit": "studies"
+        },
+        "China": {
+          "value": 4,
+          "unit": "studies"
+        },
+        "Tanzania": {
+          "value": 1,
+          "unit": "study"
+        },
+        "Brazil": {
+          "value": 1,
+          "unit": "study"
+        },
+        "conversion": {
+          "value": 23.8,
+          "unit": "percent"
+        },
+        "CI95": {
+          "value": "15.4–33.4",
+          "unit": "percent"
+        },
+        "followup": {
+          "value": "3.0–5.8",
+          "unit": "years"
+        },
+        "China_I2": {
+          "value": 96.54,
+          "unit": "percent"
+        },
+        "China_heterogeneity_p": "<.0001",
+        "sample_range": {
+          "value": "21–837",
+          "unit": "participants"
+        },
+        "age_thresholds": {
+          "value": ">55 to >70",
+          "unit": "years"
+        }
+      },
+      "time": "3.0–5.8 years follow-up",
+      "conditions": [
+        "Petersen-type MCI with AD endpoint; six-study meta-analysis"
+      ],
+      "modality": "pooled estimate, high heterogeneity"
+    },
+    {
+      "key": "interpretation",
+      "units": [
+        8,
+        25,
+        76,
+        82
+      ],
+      "en": "MCI is associated with high but variable dementia conversion in LMICs; approximately one in four Petersen-type cases develop AD over the studied 3.0–5.8 years. Demographic/health influences are possible and limited data prevent generalization to all LMICs.",
+      "ru": "MCI связан с высоким, но разным переходом в деменцию в LMIC; примерно четверть Petersen-подобных случаев переходит в AD за изученные 3,0–5,8 года. Возможны демографические/медицинские влияния, ограниченные данные не позволяют обобщить на все LMIC.",
+      "predicate": "interpret_conversion",
+      "roles": {
+        "condition": "Mild cognitive impairment",
+        "outcome": "Dementia",
+        "population": "Studied LMIC cohorts"
+      },
+      "type": "conclusion",
+      "modality": "associated; may be influenced; not universal individual prognosis",
+      "time": "Studied 3.0–5.8-year AD follow-up"
+    },
+    {
+      "key": "income_discussion",
+      "units": [
+        77
+      ],
+      "en": "Discussion labels Brazil upper-middle, Nigeria lower-middle and Tanzania low-income, while recruitment-time results classify two low-income studies. Resource/funding/diagnostic gaps are suggested explanations for sparse, China-dominated evidence.",
+      "ru": "Обсуждение относит Бразилию к верхнему среднему доходу, Нигерию к нижнему среднему, Танзанию к низкому, тогда как при наборе две работы низкого дохода; ресурсы, финансирование и диагностика предложены как причины дефицита данных с доминированием Китая.",
+      "predicate": "research_gap_interpretation",
+      "roles": {
+        "population": "LMIC research settings"
+      },
+      "attrs": {
+        "Brazil": "upper middle",
+        "Nigeria": "lower middle",
+        "Tanzania": "low",
+        "possible_causes": "limited funding and diagnostic infrastructure"
+      },
+      "time": "Discussion income labels versus recruitment-time classification",
+      "modality": "possible explanations"
+    },
+    {
+      "key": "risk_interpretation",
+      "units": [
+        79
+      ],
+      "en": "Discussion reports female conversion risk in only 2/10 studies versus 3/10 in Results; age/APOE ε4 are nonmodifiable, vascular/cardiometabolic and neuropsychiatric risks potentially modifiable. Sex/education evidence has methodological/reverse-causality limits.",
+      "ru": "Обсуждение сообщает женский риск в 2/10 работах против 3/10 результатов; возраст/APOE ε4 неизменяемы, сосудистые/кардиометаболические и нейропсихиатрические риски потенциально изменяемы. Данные пола/образования ограничены методологией и обратной причинностью.",
+      "predicate": "risk_interpretation",
+      "roles": {
+        "outcome": "MCI-to-dementia progression"
+      },
+      "attrs": {
+        "discussion_female_significance": {
+          "value": "2/10",
+          "unit": "studies"
+        },
+        "nonmodifiable": "age; APOE ε4",
+        "modifiable": "cardiometabolic disease; vascular risks; depression"
+      },
+      "modality": "interpretation; associations not causal",
+      "conditions": [
+        "Systematic review of 11 population/community observational cohorts in LMICs; country income classified at study time"
+      ]
+    },
+    {
+      "key": "feasibility",
+      "units": [
+        79
+      ],
+      "en": "A cited estimate suggests up to 40% of dementia cases preventable through 12 modifiable risks; cognitive training may reduce risk, but applicability to MCI and feasibility in LMICs need testing.",
+      "ru": "Цитируемая оценка: до 40% деменций потенциально предотвратимы через 12 изменяемых рисков; когнитивные тренировки могут снижать риск, но применимость при MCI и осуществимость в LMIC нуждаются в проверке.",
+      "predicate": "test_prevention_feasibility",
+      "roles": {
+        "action": "Lifestyle and cognitive risk-reduction strategies",
+        "population": "MCI cases in LMICs"
+      },
+      "kind": "action",
+      "status": "unresolved",
+      "attrs": {
+        "potential_preventable": {
+          "value": "up to 40",
+          "unit": "percent"
+        },
+        "modifiable_factors": {
+          "value": 12,
+          "unit": "factors"
+        }
+      },
+      "modality": "cited potential; further work required"
+    },
+    {
+      "key": "limits",
+      "units": [
+        26,
+        77,
+        80
+      ],
+      "en": "Generalization is limited by English-only searches, no gray literature, only one nationally representative cohort, variable diagnosis/follow-up/reporting, few countries, high heterogeneity and inability to stratify by age/duration. Findings require caution.",
+      "ru": "Обобщение ограничивают англоязычный поиск без серой литературы, лишь одна национальная выборка, разные диагнозы/сроки/меры, мало стран, высокая неоднородность и невозможность стратификации по возрасту/сроку; нужна осторожность.",
+      "predicate": "review_limitations",
+      "roles": {
+        "subject": "LMIC conversion review"
+      },
+      "type": "limitation",
+      "logic": "conjunction",
+      "claims": [
+        {
+          "attrs": {
+            "search": "English electronic search; no gray literature",
+            "possibly_missed_languages": "Spanish; Portuguese; French",
+            "representative_studies": {
+              "value": 1,
+              "unit": "study"
+            },
+            "unrepresented": "Eastern Europe; Middle East; Global South settings as described by authors",
+            "outcomes": "AD and VaD only among subtypes",
+            "heterogeneity": "definitions; operational criteria; testing; recruitment; sample age/sex; follow-up; annual versus cumulative reporting"
+          }
+        },
+        {
+          "predicate": "allows_stratified_meta_analysis",
+          "negated": true,
+          "roles": {
+            "strata": "Age and follow-up duration"
+          },
+          "attrs": {
+            "reason": "too few studies"
+          }
+        }
+      ],
+      "conditions": [
+        "Systematic review of 11 population/community observational cohorts in LMICs; country income classified at study time"
+      ],
+      "attrs": {
+        "DSM_IV_share": {
+          "value": 63.6,
+          "unit": "percent"
+        }
+      }
+    },
+    {
+      "key": "harmonization",
+      "units": [
+        8,
+        26,
+        77,
+        80,
+        81
+      ],
+      "en": "Invest in harmonized, population-representative longitudinal MCI/dementia research in LMICs, especially low-income settings; consider 10/66 and HCAP guidance to improve comparison and identify high-risk people for contextual risk-reduction plans.",
+      "ru": "Инвестировать в согласованные представительные продольные исследования MCI/деменции в LMIC, особенно низкого дохода; использовать рекомендации 10/66 и HCAP для сопоставимости и определения групп высокого риска с контекстной профилактикой.",
+      "predicate": "harmonize_research",
+      "roles": {
+        "action": "Population-representative longitudinal data and methodology harmonization",
+        "population": "LMIC research settings"
+      },
+      "kind": "action",
+      "status": "unresolved",
+      "modality": "urgent author recommendation; not implemented",
+      "attrs": {
+        "guidance": "10/66 Study protocol; Harmonized Cognitive Assessment Protocol (HCAP)",
+        "implementation": "research investment; screening funding; education; diagnostic and risk-management infrastructure"
+      }
+    }
+  ],
+  "transitions": [
+    {
+      "sources": [
+        "mci",
+        "burden"
+      ],
+      "target": "review",
+      "units": [
+        5,
+        15
+      ],
+      "reason": "The review rationale explicitly links the MCI prevention target with the LMIC dementia burden.",
+      "usage": "premise"
+    },
+    {
+      "sources": [
+        "protocol"
+      ],
+      "target": "search",
+      "units": [
+        18,
+        21
+      ],
+      "reason": "The registered PRISMA review implements the database search.",
+      "usage": "method"
+    },
+    {
+      "sources": [
+        "search",
+        "eligibility"
+      ],
+      "target": "screen",
+      "units": [
+        22,
+        29
+      ],
+      "reason": "Screening applies these eligibility requirements to the retrieved records.",
+      "usage": "method"
+    },
+    {
+      "sources": [
+        "screen"
+      ],
+      "target": "flow",
+      "units": [
+        30,
+        31,
+        46
+      ],
+      "reason": "The screening procedure yields the documented included-study flow.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "flow"
+      ],
+      "target": "extract",
+      "units": [
+        34,
+        46
+      ],
+      "reason": "Extraction is performed on the retained studies.",
+      "usage": "data"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "geography",
+      "units": [
+        49
+      ],
+      "reason": "Extracted country metadata determines the corpus geography.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "corpus_profile",
+      "units": [
+        49
+      ],
+      "reason": "Extracted sample and follow-up metadata supplies the corpus profile.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "diagnoses",
+      "units": [
+        52,
+        53
+      ],
+      "reason": "The extracted MCI criteria are summarized by study.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "dementia_diagnoses",
+      "units": [
+        59
+      ],
+      "reason": "Extracted endpoint definitions are summarized without merging their scopes.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "flow"
+      ],
+      "target": "bias_method",
+      "units": [
+        37
+      ],
+      "reason": "The independent risk-of-bias assessment is applied to the selected studies.",
+      "usage": "data"
+    },
+    {
+      "sources": [
+        "bias_method"
+      ],
+      "target": "bias_result",
+      "units": [
+        68
+      ],
+      "reason": "The quality assessment yields the reported star profile.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract",
+        "proportion_method"
+      ],
+      "target": "conversion_range",
+      "units": [
+        40,
+        62
+      ],
+      "reason": "The narrative synthesis reports the heterogeneous conversion range using extracted cohort results.",
+      "usage": "data"
+    },
+    {
+      "sources": [
+        "extract",
+        "proportion_method"
+      ],
+      "target": "subtype_range",
+      "units": [
+        40,
+        62
+      ],
+      "reason": "The same synthesis reports endpoint-specific conversion ranges.",
+      "usage": "data"
+    },
+    {
+      "sources": [
+        "diagnoses",
+        "conversion_range"
+      ],
+      "target": "breadth",
+      "units": [
+        62
+      ],
+      "reason": "The authors compare conversion across broader and narrower impairment definitions.",
+      "usage": "evidence"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "study_Huang",
+      "units": [
+        54,
+        55,
+        56
+      ],
+      "reason": "Table 1 records the extracted characteristics of this explicit cohort.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "study_Li",
+      "units": [
+        54,
+        55,
+        56
+      ],
+      "reason": "Table 1 records the extracted characteristics of this explicit cohort.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "study_Ding",
+      "units": [
+        54,
+        55,
+        56
+      ],
+      "reason": "Table 1 records the extracted characteristics of this explicit cohort.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "study_Yang",
+      "units": [
+        54,
+        55,
+        56
+      ],
+      "reason": "Table 1 records the extracted characteristics of this explicit cohort.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "study_Yu_Taiyuan",
+      "units": [
+        54,
+        55,
+        56
+      ],
+      "reason": "Table 1 records the extracted characteristics of this explicit cohort.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "study_Baiyewu",
+      "units": [
+        54,
+        55,
+        56
+      ],
+      "reason": "Table 1 records the extracted characteristics of this explicit cohort.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "study_Montano",
+      "units": [
+        54,
+        55,
+        56
+      ],
+      "reason": "Table 1 records the extracted characteristics of this explicit cohort.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "study_Paddick",
+      "units": [
+        54,
+        55,
+        56
+      ],
+      "reason": "Table 1 records the extracted characteristics of this explicit cohort.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "study_Yu_Sanatorium",
+      "units": [
+        54,
+        55,
+        56
+      ],
+      "reason": "Table 1 records the extracted characteristics of this explicit cohort.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "study_Wang",
+      "units": [
+        54,
+        55,
+        56
+      ],
+      "reason": "Table 1 records the extracted characteristics of this explicit cohort.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "study_Godhino",
+      "units": [
+        54,
+        55,
+        56
+      ],
+      "reason": "Table 1 records the extracted characteristics of this explicit cohort.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "study_Huang"
+      ],
+      "target": "conversion_32",
+      "units": [
+        54,
+        55,
+        56
+      ],
+      "reason": "The conversion value is reported for this specific cohort, diagnostic endpoint and follow-up.",
+      "usage": "data"
+    },
+    {
+      "sources": [
+        "study_Li"
+      ],
+      "target": "conversion_33",
+      "units": [
+        54,
+        55,
+        56
+      ],
+      "reason": "The conversion value is reported for this specific cohort, diagnostic endpoint and follow-up.",
+      "usage": "data"
+    },
+    {
+      "sources": [
+        "study_Ding"
+      ],
+      "target": "conversion_34",
+      "units": [
+        54,
+        55,
+        56
+      ],
+      "reason": "The conversion value is reported for this specific cohort, diagnostic endpoint and follow-up.",
+      "usage": "data"
+    },
+    {
+      "sources": [
+        "study_Yang"
+      ],
+      "target": "conversion_35",
+      "units": [
+        54,
+        55,
+        56
+      ],
+      "reason": "The conversion value is reported for this specific cohort, diagnostic endpoint and follow-up.",
+      "usage": "data"
+    },
+    {
+      "sources": [
+        "study_Yu_Taiyuan"
+      ],
+      "target": "conversion_36",
+      "units": [
+        54,
+        55,
+        56
+      ],
+      "reason": "The conversion value is reported for this specific cohort, diagnostic endpoint and follow-up.",
+      "usage": "data"
+    },
+    {
+      "sources": [
+        "study_Baiyewu"
+      ],
+      "target": "conversion_37",
+      "units": [
+        54,
+        55,
+        56
+      ],
+      "reason": "The conversion value is reported for this specific cohort, diagnostic endpoint and follow-up.",
+      "usage": "data"
+    },
+    {
+      "sources": [
+        "study_Montano"
+      ],
+      "target": "conversion_38",
+      "units": [
+        54,
+        55,
+        56
+      ],
+      "reason": "The conversion value is reported for this specific cohort, diagnostic endpoint and follow-up.",
+      "usage": "data"
+    },
+    {
+      "sources": [
+        "study_Paddick"
+      ],
+      "target": "conversion_39",
+      "units": [
+        54,
+        55,
+        56
+      ],
+      "reason": "The conversion value is reported for this specific cohort, diagnostic endpoint and follow-up.",
+      "usage": "data"
+    },
+    {
+      "sources": [
+        "study_Yu_Sanatorium"
+      ],
+      "target": "conversion_40",
+      "units": [
+        54,
+        55,
+        56
+      ],
+      "reason": "The conversion value is reported for this specific cohort, diagnostic endpoint and follow-up.",
+      "usage": "data"
+    },
+    {
+      "sources": [
+        "study_Yu_Sanatorium"
+      ],
+      "target": "conversion_41",
+      "units": [
+        54,
+        55,
+        56
+      ],
+      "reason": "The conversion value is reported for this specific cohort, diagnostic endpoint and follow-up.",
+      "usage": "data"
+    },
+    {
+      "sources": [
+        "study_Wang"
+      ],
+      "target": "conversion_42",
+      "units": [
+        54,
+        55,
+        56
+      ],
+      "reason": "The conversion value is reported for this specific cohort, diagnostic endpoint and follow-up.",
+      "usage": "data"
+    },
+    {
+      "sources": [
+        "study_Godhino"
+      ],
+      "target": "conversion_43",
+      "units": [
+        54,
+        55,
+        56
+      ],
+      "reason": "The conversion value is reported for this specific cohort, diagnostic endpoint and follow-up.",
+      "usage": "data"
+    },
+    {
+      "sources": [
+        "study_Ding"
+      ],
+      "target": "ding_44",
+      "units": [
+        54,
+        55,
+        56
+      ],
+      "reason": "The Shanghai cohort reports this subtype-specific person-time conversion rate.",
+      "usage": "data"
+    },
+    {
+      "sources": [
+        "study_Ding"
+      ],
+      "target": "ding_45",
+      "units": [
+        54,
+        55,
+        56
+      ],
+      "reason": "The Shanghai cohort reports this subtype-specific person-time conversion rate.",
+      "usage": "data"
+    },
+    {
+      "sources": [
+        "study_Ding"
+      ],
+      "target": "ding_46",
+      "units": [
+        54,
+        55,
+        56
+      ],
+      "reason": "The Shanghai cohort reports this subtype-specific person-time conversion rate.",
+      "usage": "data"
+    },
+    {
+      "sources": [
+        "study_Ding"
+      ],
+      "target": "ding_47",
+      "units": [
+        54,
+        55,
+        56
+      ],
+      "reason": "The Shanghai cohort reports this subtype-specific person-time conversion rate.",
+      "usage": "data"
+    },
+    {
+      "sources": [
+        "study_Ding"
+      ],
+      "target": "ding_48",
+      "units": [
+        54,
+        55,
+        56
+      ],
+      "reason": "The Shanghai cohort reports this subtype-specific person-time conversion rate.",
+      "usage": "data"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "risk_52",
+      "units": [
+        65
+      ],
+      "reason": "The risk synthesis counts significant and assessed studies for the stated factor.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "risk_53",
+      "units": [
+        65
+      ],
+      "reason": "The risk synthesis counts significant and assessed studies for the stated factor.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "risk_54",
+      "units": [
+        65
+      ],
+      "reason": "The risk synthesis counts significant and assessed studies for the stated factor.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "risk_55",
+      "units": [
+        65
+      ],
+      "reason": "The risk synthesis counts significant and assessed studies for the stated factor.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "risk_56",
+      "units": [
+        65
+      ],
+      "reason": "The risk synthesis counts significant and assessed studies for the stated factor.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "risk_57",
+      "units": [
+        65
+      ],
+      "reason": "The risk synthesis counts significant and assessed studies for the stated factor.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "risk_58",
+      "units": [
+        65
+      ],
+      "reason": "The risk synthesis counts significant and assessed studies for the stated factor.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "risk_59",
+      "units": [
+        65
+      ],
+      "reason": "The risk synthesis counts significant and assessed studies for the stated factor.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "extract"
+      ],
+      "target": "risk_60",
+      "units": [
+        65
+      ],
+      "reason": "The risk synthesis counts significant and assessed studies for the stated factor.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "petersen",
+        "diagnoses",
+        "dementia_diagnoses"
+      ],
+      "target": "meta_method",
+      "units": [
+        41
+      ],
+      "reason": "Shared Petersen-type definitions and AD endpoints restrict eligible pooling.",
+      "usage": "condition"
+    },
+    {
+      "sources": [
+        "meta_method",
+        "geography",
+        "corpus_profile"
+      ],
+      "target": "pooled",
+      "units": [
+        71,
+        72,
+        73
+      ],
+      "reason": "The specified compatible-study meta-analysis yields the pooled AD proportion and heterogeneity.",
+      "usage": "result"
+    },
+    {
+      "sources": [
+        "conversion_range",
+        "pooled"
+      ],
+      "target": "interpretation",
+      "units": [
+        76,
+        82
+      ],
+      "reason": "The authors interpret the narrative range together with the pooled AD estimate.",
+      "usage": "evidence"
+    },
+    {
+      "sources": [
+        "geography"
+      ],
+      "target": "income_discussion",
+      "units": [
+        77
+      ],
+      "reason": "The discussion develops explanations of the geographic evidence gaps.",
+      "usage": "evidence"
+    },
+    {
+      "sources": [
+        "risk_52",
+        "risk_53",
+        "risk_54",
+        "risk_55",
+        "risk_56",
+        "risk_57",
+        "risk_58",
+        "risk_59",
+        "risk_60"
+      ],
+      "target": "risk_interpretation",
+      "units": [
+        79
+      ],
+      "reason": "The discussion distinguishes modifiable risks and methodological limitations of the risk synthesis.",
+      "usage": "evidence"
+    },
+    {
+      "sources": [
+        "risk_interpretation",
+        "modifiable"
+      ],
+      "target": "feasibility",
+      "units": [
+        79
+      ],
+      "reason": "The risk interpretation and prior preventive potential motivate an unresolved feasibility question.",
+      "usage": "premise"
+    },
+    {
+      "sources": [
+        "pooled",
+        "diagnoses",
+        "corpus_profile",
+        "bias_result"
+      ],
+      "target": "limits",
+      "units": [
+        80
+      ],
+      "reason": "The discussion identifies synthesis limitations from heterogeneity, sample coverage and study methods.",
+      "usage": "evidence"
+    },
+    {
+      "sources": [
+        "interpretation",
+        "income_discussion",
+        "limits"
+      ],
+      "target": "harmonization",
+      "units": [
+        80,
+        81
+      ],
+      "reason": "High risk with sparse and heterogeneous data motivates representative harmonized research.",
+      "usage": "premise"
+    }
+  ],
+  "excluded_units": {
+    "U1": "Section heading/number or bibliographic title retained as document structure.",
+    "U2": "Publication metadata, keywords, author/funding/conflict/data-availability information retained in source, outside scientific graph.",
+    "U3": "Publication metadata, keywords, author/funding/conflict/data-availability information retained in source, outside scientific graph.",
+    "U4": "Section heading/number or bibliographic title retained as document structure.",
+    "U9": "Publication metadata, keywords, author/funding/conflict/data-availability information retained in source, outside scientific graph.",
+    "U10": "Section heading/number or bibliographic title retained as document structure.",
+    "U11": "Section heading/number or bibliographic title retained as document structure.",
+    "U16": "Section heading/number or bibliographic title retained as document structure.",
+    "U17": "Section heading/number or bibliographic title retained as document structure.",
+    "U19": "Section heading/number or bibliographic title retained as document structure.",
+    "U20": "Section heading/number or bibliographic title retained as document structure.",
+    "U23": "Section heading/number or bibliographic title retained as document structure.",
+    "U27": "Section heading/number or bibliographic title retained as document structure.",
+    "U28": "Section heading/number or bibliographic title retained as document structure.",
+    "U32": "Section heading/number or bibliographic title retained as document structure.",
+    "U33": "Section heading/number or bibliographic title retained as document structure.",
+    "U35": "Section heading/number or bibliographic title retained as document structure.",
+    "U36": "Section heading/number or bibliographic title retained as document structure.",
+    "U38": "Section heading/number or bibliographic title retained as document structure.",
+    "U39": "Section heading/number or bibliographic title retained as document structure.",
+    "U42": "Section heading/number or bibliographic title retained as document structure.",
+    "U43": "Section heading/number or bibliographic title retained as document structure.",
+    "U44": "Section heading/number or bibliographic title retained as document structure.",
+    "U45": "Section heading/number or bibliographic title retained as document structure.",
+    "U47": "Section heading/number or bibliographic title retained as document structure.",
+    "U48": "Section heading/number or bibliographic title retained as document structure.",
+    "U50": "Section heading/number or bibliographic title retained as document structure.",
+    "U51": "Section heading/number or bibliographic title retained as document structure.",
+    "U57": "Section heading/number or bibliographic title retained as document structure.",
+    "U58": "Section heading/number or bibliographic title retained as document structure.",
+    "U60": "Section heading/number or bibliographic title retained as document structure.",
+    "U61": "Section heading/number or bibliographic title retained as document structure.",
+    "U63": "Section heading/number or bibliographic title retained as document structure.",
+    "U64": "Section heading/number or bibliographic title retained as document structure.",
+    "U66": "Section heading/number or bibliographic title retained as document structure.",
+    "U67": "Section heading/number or bibliographic title retained as document structure.",
+    "U69": "Section heading/number or bibliographic title retained as document structure.",
+    "U70": "Section heading/number or bibliographic title retained as document structure.",
+    "U74": "Section heading/number or bibliographic title retained as document structure.",
+    "U75": "Section heading/number or bibliographic title retained as document structure.",
+    "U83": "Section heading/number or bibliographic title retained as document structure.",
+    "U84": "Publication metadata, keywords, author/funding/conflict/data-availability information retained in source, outside scientific graph.",
+    "U85": "Section heading/number or bibliographic title retained as document structure.",
+    "U86": "Publication metadata, keywords, author/funding/conflict/data-availability information retained in source, outside scientific graph.",
+    "U87": "Section heading/number or bibliographic title retained as document structure.",
+    "U88": "Supplementary-file pointer without full supplementary values in the supplied text; no values inferred.",
+    "U89": "Supplementary-file pointer without full supplementary values in the supplied text; no values inferred.",
+    "U90": "Section heading/number or bibliographic title retained as document structure.",
+    "U91": "Publication metadata, keywords, author/funding/conflict/data-availability information retained in source, outside scientific graph.",
+    "U92": "Publication metadata, keywords, author/funding/conflict/data-availability information retained in source, outside scientific graph.",
+    "U93": "Publication metadata, keywords, author/funding/conflict/data-availability information retained in source, outside scientific graph.",
+    "U94": "Section heading/number or bibliographic title retained as document structure.",
+    "U95": "Publication metadata, keywords, author/funding/conflict/data-availability information retained in source, outside scientific graph."
+  },
+  "concept_aliases": {
+    "Mild cognitive impairment": [
+      "MCI"
+    ],
+    "Amnestic mild cognitive impairment": [
+      "aMCI"
+    ],
+    "Alzheimer disease": [
+      "AD"
+    ],
+    "Vascular dementia": [
+      "VaD"
+    ],
+    "Cognitive impairment no dementia": [
+      "CIND"
+    ]
+  },
+  "report_ru": "# Карта PMC8918697 по правилам версии 3\n\nТекст, таблица всех 11 когорт, подписи рисунков и обсуждение прочитаны непосредственно. Данные предыдущей карты не использованы. Результаты отдельных когорт, подтипов, факторов риска и объединённый AD-исход отделены. Все 95 фрагментов представлены знаниями либо явной причиной исключения.\n\nНе согласовывались исходные расхождения: 6,0–44,8% в прозе при человеко-временных показателях Ding в таблице; 44,8% против 298/638 у Li; 15,7% против 35/209 у Yu; «за год» при указанном многолетнем наблюдении; SD наблюдения 1,1 в характеристиках против 1,2 в синтезе; звёзды Newcastle–Ottawa (максимум 8, распределение 3+2+2, средние «из 10»); женский риск в 3/10 результатов против 2/10 обсуждения; категории дохода в момент набора и в обсуждении.\n\n6,0–44,8% сохранены как утверждение обзора с ограничениями, а не как однородная годовая вероятность. Значения дополнительных таблиц и рисунка лесного графика, отсутствующие в полном текстовом источнике, не придуманы. Необходимость согласования методов и проверки осуществимости профилактики представлена как нерешённая задача. Русские подписи подготовлены Codex."
+}

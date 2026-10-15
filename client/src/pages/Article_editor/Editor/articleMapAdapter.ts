@@ -41,9 +41,21 @@ export function adaptStructuralArticleMap(result: SavedArticleMap, t: TFunction)
     return project(result, t('articleEditor.map.deterministic', { version: result.graph.schema_version }));
 }
 
+export function adaptDevelopmentArticleMap(result: SavedArticleMap, t: TFunction): ArticleMapGraph {
+    const knowledge = new Map(result.graph.knowledge?.map(item => [item.knowledge_id, item]));
+    for (const node of result.graph.nodes) {
+        if (!node.knowledge_id || !knowledge.has(node.knowledge_id) || !['state', 'action'].includes(node.block_type)) {
+            throw new Error(t('articleEditor.map.unsupportedSchema', { version: 6 }));
+        }
+    }
+    return project(result, t('articleEditor.map.knowledge', { depth: result.graph.analysis?.depth }),
+        kind => t(`articleEditor.map.kinds.${kind}`));
+}
+
 export function adaptSavedArticleMap(result: SavedArticleMap, t: TFunction): ArticleMapGraph {
     if (result.pipeline_id === 'structural_rows') return adaptStructuralArticleMap(result, t);
     if (result.graph.schema_version === 4) return adaptReifiedArticleMap(result, t);
     if (result.graph.schema_version === 5) return adaptKnowledgeArticleMap(result, t);
+    if (result.graph.schema_version === 6) return adaptDevelopmentArticleMap(result, t);
     throw new Error(t('articleEditor.map.unsupportedSchema', { version: result.graph.schema_version }));
 }

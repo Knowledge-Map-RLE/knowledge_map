@@ -1,0 +1,261 @@
+{
+  "occurrences": [],
+  "transitions": [
+    {
+      "id": "T1",
+      "sources": [
+        "B1"
+      ],
+      "target": "B2",
+      "usage": "method",
+      "reason": "The cohort design supplies the population in which the stated longitudinal aim is investigated.",
+      "unit_ids": [
+        "U16",
+        "U19"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T2",
+      "sources": [
+        "B2"
+      ],
+      "target": "B3",
+      "usage": "data",
+      "reason": "The follow-up sample is drawn from the recruited baseline cohort.",
+      "unit_ids": [
+        "U19"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T3",
+      "sources": [
+        "B2"
+      ],
+      "target": "B4",
+      "usage": "method",
+      "reason": "The neuropsychological assessment was administered to the cohort participants.",
+      "unit_ids": [
+        "U19",
+        "U23"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T4",
+      "sources": [
+        "B4"
+      ],
+      "target": "B5",
+      "usage": "data",
+      "reason": "The domain and global scores are constructed from the test battery.",
+      "unit_ids": [
+        "U23",
+        "U24"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T5",
+      "sources": [
+        "B6"
+      ],
+      "target": "B10",
+      "usage": "definition",
+      "reason": "The diagnostic criteria define the MCI status counted at follow-up.",
+      "unit_ids": [
+        "U26",
+        "U38"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T6",
+      "sources": [
+        "B3",
+        "B6"
+      ],
+      "target": "B10",
+      "usage": "data",
+      "reason": "The incident diagnostic counts require both follow-up classification and the stated diagnostic definition.",
+      "unit_ids": [
+        "U19",
+        "U26",
+        "U38"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T7",
+      "sources": [
+        "B5",
+        "B8"
+      ],
+      "target": "B9",
+      "usage": "result",
+      "reason": "The reported domain changes use standardized scores and the specified longitudinal comparison.",
+      "unit_ids": [
+        "U24",
+        "U32",
+        "U38",
+        "U39"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T8",
+      "sources": [
+        "B8"
+      ],
+      "target": "B12",
+      "usage": "result",
+      "reason": "Age associations are reported from the planned adjusted models.",
+      "unit_ids": [
+        "U32",
+        "U42",
+        "U43"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T9",
+      "sources": [
+        "B7",
+        "B8"
+      ],
+      "target": "B13",
+      "usage": "result",
+      "reason": "The smell test is a measured baseline factor evaluated against longitudinal outcomes.",
+      "unit_ids": [
+        "U28",
+        "U32",
+        "U42",
+        "U43"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T10",
+      "sources": [
+        "B8"
+      ],
+      "target": "B11",
+      "usage": "result",
+      "reason": "The article distinguishes sex comparisons in continuous change from the incident-diagnosis model.",
+      "unit_ids": [
+        "U32",
+        "U38"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T11",
+      "sources": [
+        "B8",
+        "B7"
+      ],
+      "target": "B14",
+      "usage": "result",
+      "reason": "Marital status was among the measured baseline factors evaluated against outcomes.",
+      "unit_ids": [
+        "U28",
+        "U32",
+        "U45",
+        "U51"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T12",
+      "sources": [
+        "B8",
+        "B7"
+      ],
+      "target": "B15",
+      "usage": "result",
+      "reason": "Kidney disease and antidepressant use were measured baseline factors in the outcome analyses.",
+      "unit_ids": [
+        "U28",
+        "U32",
+        "U45"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T13",
+      "sources": [
+        "B8",
+        "B7"
+      ],
+      "target": "B16",
+      "usage": "result",
+      "reason": "The age and sex interaction models support the reported subgroup-specific associations.",
+      "unit_ids": [
+        "U28",
+        "U32",
+        "U42",
+        "U45",
+        "U47"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T14",
+      "sources": [
+        "B8",
+        "B13",
+        "B11"
+      ],
+      "target": "B17",
+      "usage": "result",
+      "reason": "The PAR estimates summarize selected model associations for the incident diagnostic outcome.",
+      "unit_ids": [
+        "U33",
+        "U49",
+        "U51"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T15",
+      "sources": [
+        "B3",
+        "B19"
+      ],
+      "target": "B21",
+      "usage": "evidence",
+      "reason": "The observed loss to follow-up and its differential characteristics support the authors' attrition limitation.",
+      "unit_ids": [
+        "U19",
+        "U53",
+        "U68"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T16",
+      "sources": [
+        "B12",
+        "B13",
+        "B11",
+        "B14",
+        "B15",
+        "B16",
+        "B17",
+        "B21"
+      ],
+      "target": "B22",
+      "usage": "premise",
+      "reason": "The conclusion synthesizes the reported outcome-specific associations and their limitations.",
+      "unit_ids": [
+        "U57",
+        "U59",
+        "U66",
+        "U68",
+        "U70"
+      ],
+      "conditions": []
+    }
+  ]
+}

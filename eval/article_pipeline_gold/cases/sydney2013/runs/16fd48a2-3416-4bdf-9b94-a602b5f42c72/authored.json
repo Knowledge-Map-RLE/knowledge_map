@@ -1,0 +1,1186 @@
+{
+  "complete_source_reviewed": false,
+  "complete_semantic_coverage": false,
+  "table_cells_exhaustively_formalized": false,
+  "source_limitations": [
+    "This is a manually authored selected-proposition map; selected methods, results, null findings, subgroup claims, and limitations are represented, but the full article has not been exhaustively reviewed claim by claim.",
+    "The four article tables are included in the source snapshot; the linked supplementary Table S1 is not part of the JATS full-text XML snapshot.",
+    "Figure 1 is represented by its caption and nearby narrative, not by pixel-level reconstruction of its graphic."
+  ],
+  "knowledge": [
+    {
+      "key": "AIM",
+      "units": [
+        16
+      ],
+      "predicate": "study aim",
+      "roles": {
+        "study": "Sydney Memory and Ageing Study analysis",
+        "objective": "identify baseline factors longitudinally associated with late-life cognitive decline",
+        "modifiers": "age and sex"
+      },
+      "en": "The study aimed to identify baseline factors longitudinally associated with late-life cognitive decline and examine variation by age and sex.",
+      "ru": "Цель исследования — выявить исходные факторы, связанные с последующим когнитивным снижением, и проверить различия связей по возрасту и полу.",
+      "type": "goal",
+      "modality": "study aim; not a completed result"
+    },
+    {
+      "key": "COHORT",
+      "units": [
+        19
+      ],
+      "predicate": "cohort recruitment",
+      "roles": {
+        "cohort": "Sydney Memory and Ageing Study",
+        "participants": "community-dwelling adults aged 70 to 90",
+        "baseline cognitive status": "without dementia"
+      },
+      "en": "The longitudinal community-based cohort included 1,037 adults aged 70–90 without dementia at baseline.",
+      "ru": "В продольную популяционную когорту вошли 1 037 жителей сообщества 70–90 лет без деменции на исходном обследовании.",
+      "type": "method",
+      "attrs": {
+        "baseline cohort size": {
+          "value": 1037,
+          "unit": "participants"
+        },
+        "minimum age": {
+          "value": 70,
+          "unit": "years"
+        },
+        "maximum age": {
+          "value": 90,
+          "unit": "years"
+        }
+      }
+    },
+    {
+      "key": "FOLLOWUP",
+      "units": [
+        19
+      ],
+      "predicate": "follow-up completion",
+      "roles": {
+        "cohort": "Sydney Memory and Ageing Study",
+        "participants reassessed": "baseline participants"
+      },
+      "en": "Of 1,037 baseline participants, 889 completed reassessment at approximately two years; mean follow-up was 23 months and 12 days. Another 43 had died and 105 declined follow-up.",
+      "ru": "Из 1 037 участников исходного обследования повторно оценили 889 человек примерно через два года; среднее наблюдение составило 23 месяца и 12 дней. Ещё 43 человека умерли, а 105 отказались от повторного участия.",
+      "type": "observation",
+      "attrs": {
+        "reassessed": {
+          "value": 889,
+          "unit": "participants"
+        },
+        "follow-up months": {
+          "value": 23,
+          "unit": "months"
+        },
+        "follow-up additional days": {
+          "value": 12,
+          "unit": "days"
+        },
+        "died before follow-up": {
+          "value": 43,
+          "unit": "participants"
+        },
+        "declined follow-up": {
+          "value": 105,
+          "unit": "participants"
+        }
+      }
+    },
+    {
+      "key": "TEST_BATTERY",
+      "units": [
+        23
+      ],
+      "predicate": "cognitive assessment",
+      "roles": {
+        "assessors": "trained psychology graduates",
+        "participants": "Sydney cohort members",
+        "domains": "attention and processing speed; memory; language; executive function"
+      },
+      "en": "Trained psychology graduates administered neuropsychological tests covering attention/processing speed, memory, language, and executive function.",
+      "ru": "Подготовленные специалисты проводили нейропсихологические тесты внимания и скорости обработки, памяти, речи и исполнительных функций.",
+      "type": "method",
+      "kind": "action",
+      "status": "performed"
+    },
+    {
+      "key": "SCORE_CONSTRUCTION",
+      "units": [
+        24
+      ],
+      "predicate": "cognitive score construction",
+      "roles": {
+        "raw scores": "individual neuropsychological tests",
+        "reference subgroup": "504 baseline cognitively normal participants fluent in spoken English before age 10",
+        "domain scores": "averages of component-test z-scores"
+      },
+      "en": "Raw scores were standardized against a baseline cognitively normal, early-English-speaking subgroup (n=504); domain scores averaged component-test z-scores, and global cognition averaged the domain scores.",
+      "ru": "Исходные оценки стандартизировали по 504 участникам, которые исходно имели нормальную когницию и свободно говорили по-английски до 10 лет; баллы доменов усредняли из z-оценок тестов, а глобальную когницию — из доменов.",
+      "type": "method",
+      "attrs": {
+        "reference subgroup size": {
+          "value": 504,
+          "unit": "participants"
+        }
+      }
+    },
+    {
+      "key": "MCI_CRITERIA",
+      "units": [
+        26
+      ],
+      "predicate": "MCI diagnostic definition",
+      "roles": {
+        "condition": "mild cognitive impairment",
+        "required complaint": "participant or informant report of cognitive decline",
+        "objective impairment": "at least one test score at least 1.5 SD below norms",
+        "daily functioning": "no or minimal cognitive-related IADL impairment"
+      },
+      "en": "MCI required a cognitive complaint, objective impairment on at least one test (≥1.5 SD below norms where adjusted norms were available), no DSM-IV dementia, and no or minimal cognitive-related daily-function impairment.",
+      "ru": "Для диагноза MCI требовались жалоба на когнитивное снижение, объективное нарушение хотя бы по одному тесту (не менее 1,5 SD ниже нормативов с поправкой, где она была доступна), отсутствие деменции по DSM-IV и отсутствие либо минимальное нарушение повседневной деятельности из-за когнитивных проблем.",
+      "type": "definition",
+      "attrs": {
+        "minimum impaired tests": {
+          "value": 1,
+          "unit": "tests"
+        },
+        "impairment threshold": {
+          "value": 1.5,
+          "unit": "SD below norms"
+        },
+        "Bayer ADL average threshold": {
+          "value": 3.0,
+          "unit": "points; below threshold"
+        }
+      },
+      "conditions": [
+        "Bayer ADL score was adjusted for physical impairment."
+      ]
+    },
+    {
+      "key": "RISK_MEASUREMENTS",
+      "units": [
+        28
+      ],
+      "predicate": "baseline risk-factor measurement",
+      "roles": {
+        "researchers": "Sydney study team",
+        "measurements": "questionnaire, examination, blood assays, and APOE genotyping",
+        "blood collection": "after overnight fasting"
+      },
+      "en": "The study measured candidate sociodemographic, health, lifestyle, smell, and biochemical factors using interviews, questionnaires, examinations, fasting blood assays, and APOE genotyping.",
+      "ru": "Кандидатные социально-демографические, медицинские, поведенческие, обонятельные и биохимические факторы измеряли опросами, анкетами, осмотрами, анализами крови натощак и генотипированием APOE.",
+      "type": "method",
+      "kind": "action",
+      "status": "performed",
+      "conditions": [
+        "The described blood assays included cholesterol, homocysteine, and creatinine; this source did not report plasma IL-6 measurement."
+      ]
+    },
+    {
+      "key": "ANALYSIS_PLAN",
+      "units": [
+        32
+      ],
+      "predicate": "longitudinal association analysis",
+      "roles": {
+        "continuous cognitive change": "follow-up minus baseline z-score",
+        "main model": "general linear model adjusted for age and sex",
+        "incident MCI or dementia": "logistic regression",
+        "effect modification": "age and sex interaction terms"
+      },
+      "en": "Longitudinal cognitive change was analyzed with age- and sex-adjusted general linear models; incident MCI/dementia used logistic regression, and models tested age and sex interactions.",
+      "ru": "Продольное изменение когнитивных показателей анализировали обобщёнными линейными моделями с поправкой на возраст и пол; для новых случаев MCI/деменции применяли логистическую регрессию и проверяли взаимодействия с возрастом и полом.",
+      "type": "method"
+    },
+    {
+      "key": "DOMAIN_CHANGES",
+      "units": [
+        38,
+        39
+      ],
+      "predicate": "mean cognitive-domain change",
+      "roles": {
+        "study": "Sydney Memory and Ageing Study",
+        "change interval": "follow-up z-score minus baseline z-score"
+      },
+      "logic": "partition",
+      "en": "Across the assessed domains, mean cognitive z-scores declined during follow-up; the magnitude differed by domain.",
+      "ru": "За время наблюдения средние когнитивные z-оценки снизились во всех измеренных доменах; величина изменения различалась между доменами.",
+      "type": "result",
+      "time": "Approximately two years",
+      "claims": [
+        {
+          "units": [
+            39
+          ],
+          "roles": {
+            "domain": "attention and processing speed",
+            "participants": "n=838"
+          },
+          "attrs": {
+            "mean change": {
+              "value": -0.2,
+              "unit": "z-score"
+            },
+            "correlation of change with age": {
+              "value": -0.1,
+              "unit": "Pearson r"
+            },
+            "age correlation p": {
+              "value": 0.004,
+              "unit": "p-value"
+            }
+          }
+        },
+        {
+          "units": [
+            39
+          ],
+          "roles": {
+            "domain": "executive function",
+            "participants": "n=769"
+          },
+          "attrs": {
+            "mean change": {
+              "value": -0.27,
+              "unit": "z-score"
+            },
+            "correlation of change with age": {
+              "value": -0.142,
+              "unit": "Pearson r"
+            },
+            "age correlation p": {
+              "value": "<0.001",
+              "unit": "p-value"
+            }
+          }
+        },
+        {
+          "units": [
+            39
+          ],
+          "roles": {
+            "domain": "memory",
+            "participants": "n=847"
+          },
+          "attrs": {
+            "mean change": {
+              "value": -0.16,
+              "unit": "z-score"
+            },
+            "correlation of change with age": {
+              "value": -0.155,
+              "unit": "Pearson r"
+            },
+            "age correlation p": {
+              "value": "<0.001",
+              "unit": "p-value"
+            }
+          }
+        },
+        {
+          "units": [
+            39
+          ],
+          "roles": {
+            "domain": "global cognition",
+            "participants": "n=865"
+          },
+          "attrs": {
+            "mean change": {
+              "value": -0.27,
+              "unit": "z-score"
+            },
+            "correlation of change with age": {
+              "value": -0.149,
+              "unit": "Pearson r"
+            },
+            "age correlation p": {
+              "value": "<0.001",
+              "unit": "p-value"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "key": "INCIDENT_STATUS",
+      "units": [
+        38
+      ],
+      "predicate": "incident cognitive-status classification",
+      "roles": {
+        "participants classified at both waves": "Sydney cohort",
+        "incident diagnoses": "MCI and dementia"
+      },
+      "en": "Among 665 participants classifiable at both waves, 77 developed MCI and 16 developed dementia by follow-up.",
+      "ru": "Среди 665 участников, когнитивный статус которых удалось определить на обеих волнах, к повторному обследованию у 77 выявили MCI, у 16 — деменцию.",
+      "type": "result",
+      "time": "Follow-up after approximately two years",
+      "attrs": {
+        "participants classified at both waves": {
+          "value": 665,
+          "unit": "participants"
+        },
+        "incident MCI": {
+          "value": 77,
+          "unit": "participants"
+        },
+        "incident dementia": {
+          "value": 16,
+          "unit": "participants"
+        }
+      }
+    },
+    {
+      "key": "SEX_OUTCOME_CONTRAST",
+      "units": [
+        38
+      ],
+      "predicate": "sex association by outcome type",
+      "roles": {
+        "study": "Sydney Memory and Ageing Study",
+        "continuous cognitive change": "domain z-score change",
+        "diagnostic outcome": "incident MCI or dementia"
+      },
+      "logic": "contrast",
+      "en": "Sex was not associated with the overall magnitude of continuous cognitive decline, but incident MCI/dementia was more frequent among men than women in the classifiable sample.",
+      "ru": "Общий масштаб непрерывного когнитивного снижения не различался по полу, но среди участников с классифицированным статусом новые случаи MCI/деменции чаще встречались у мужчин.",
+      "type": "comparison",
+      "claims": [
+        {
+          "units": [
+            38
+          ],
+          "predicate": "sex_difference_in_continuous_decline",
+          "negated": true,
+          "modality": "reported non-significant difference",
+          "roles": {
+            "outcome": "continuous domain-score decline",
+            "comparison": "men versus women"
+          }
+        },
+        {
+          "units": [
+            38
+          ],
+          "predicate": "male_higher_incident_diagnosis_frequency",
+          "roles": {
+            "outcome": "incident MCI or dementia",
+            "comparison": "men versus women"
+          },
+          "attrs": {
+            "male cases": {
+              "value": 54,
+              "unit": "participants of 296"
+            },
+            "female cases": {
+              "value": 39,
+              "unit": "participants of 369"
+            },
+            "male incidence percent": {
+              "value": 18.2,
+              "unit": "percent"
+            },
+            "female incidence percent": {
+              "value": 10.6,
+              "unit": "percent"
+            },
+            "p-value": {
+              "value": 0.005,
+              "unit": "p-value"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "key": "AGE_DOMAIN_EFFECT",
+      "units": [
+        42,
+        43
+      ],
+      "predicate": "age-associated cognitive change",
+      "roles": {
+        "exposure": "older age",
+        "population": "Sydney cohort",
+        "follow-up": "approximately two years"
+      },
+      "logic": "partition",
+      "en": "Older age was associated with greater decline in memory, attention/processing speed, and global cognition; the article also reports an age association for executive change in the full-sample change table.",
+      "ru": "Более старший возраст был связан с большим снижением памяти, внимания/скорости обработки и глобальной когниции; таблица изменений также показывает возрастную связь для исполнительной функции.",
+      "type": "observation",
+      "modality": "observational association; not a causal effect",
+      "claims": [
+        {
+          "units": [
+            43
+          ],
+          "roles": {
+            "outcome": "attention and processing speed change"
+          },
+          "attrs": {
+            "model coefficient B": -0.024,
+            "standard error": 0.007,
+            "p-value": 0.002
+          }
+        },
+        {
+          "units": [
+            43
+          ],
+          "roles": {
+            "outcome": "memory change"
+          },
+          "attrs": {
+            "model coefficient B": -0.024,
+            "standard error": 0.006,
+            "p-value": "<0.001"
+          }
+        },
+        {
+          "units": [
+            43
+          ],
+          "roles": {
+            "outcome": "global cognition change"
+          },
+          "attrs": {
+            "model coefficient B": -0.019,
+            "standard error": 0.006,
+            "p-value": 0.001
+          }
+        }
+      ]
+    },
+    {
+      "key": "OLFACTION_EFFECT",
+      "units": [
+        42,
+        43,
+        57
+      ],
+      "predicate": "smell ability and cognitive outcome association",
+      "roles": {
+        "exposure": "Brief Smell Identification Test score",
+        "population": "Sydney cohort"
+      },
+      "logic": "partition",
+      "en": "Poorer smelling ability was associated with incident MCI/dementia and greater decline in executive function, memory, and global cognition.",
+      "ru": "Худшее распознавание запахов было связано с возникновением MCI/деменции и большим снижением исполнительной функции, памяти и глобальной когниции.",
+      "type": "observation",
+      "modality": "observational association; higher BSIT score indicates better smell identification",
+      "time": "Approximately two-year follow-up",
+      "claims": [
+        {
+          "units": [
+            43
+          ],
+          "roles": {
+            "outcome": "executive-function change"
+          },
+          "attrs": {
+            "BSIT coefficient B": 0.113,
+            "p-value": "<0.001"
+          }
+        },
+        {
+          "units": [
+            43
+          ],
+          "roles": {
+            "outcome": "memory change"
+          },
+          "attrs": {
+            "BSIT coefficient B": 0.027,
+            "p-value": 0.04
+          }
+        },
+        {
+          "units": [
+            43
+          ],
+          "roles": {
+            "outcome": "global-cognition change"
+          },
+          "attrs": {
+            "BSIT coefficient B": 0.057,
+            "p-value": "<0.001"
+          }
+        },
+        {
+          "units": [
+            43
+          ],
+          "roles": {
+            "outcome": "incident MCI or dementia"
+          },
+          "attrs": {
+            "BSIT coefficient B": -0.14,
+            "p-value": 0.005
+          }
+        }
+      ]
+    },
+    {
+      "key": "MARRIAGE_ASSOCIATION",
+      "units": [
+        45,
+        51
+      ],
+      "predicate": "marital status and cognitive outcome association",
+      "roles": {
+        "exposure": "being married",
+        "population": "Sydney cohort"
+      },
+      "logic": "partition",
+      "en": "Being married was associated with less executive-function decline and lower incidence of MCI/dementia.",
+      "ru": "Брак был связан с меньшим снижением исполнительной функции и меньшей частотой новых случаев MCI/деменции.",
+      "type": "observation",
+      "modality": "observational association; described as protective by the authors",
+      "claims": [
+        {
+          "units": [
+            45
+          ],
+          "roles": {
+            "outcome": "executive-function decline",
+            "direction": "less decline when married"
+          }
+        },
+        {
+          "units": [
+            45,
+            51
+          ],
+          "roles": {
+            "outcome": "incident MCI or dementia"
+          },
+          "attrs": {
+            "odds ratio": 0.59,
+            "confidence interval": "0.35–0.97",
+            "PAR percent": -24.6
+          }
+        }
+      ]
+    },
+    {
+      "key": "OTHER_PROTECTIVE_ASSOCIATIONS",
+      "units": [
+        45
+      ],
+      "predicate": "protective-factor association by endpoint",
+      "roles": {
+        "population": "Sydney cohort",
+        "exposures": "kidney disease and antidepressant use"
+      },
+      "logic": "partition",
+      "en": "Kidney disease and antidepressant use were associated with less memory decline; several other apparent protective associations were specific to sex or age subgroups.",
+      "ru": "Заболевания почек и приём антидепрессантов были связаны с меньшим снижением памяти; другие защитные ассоциации относились к отдельным подгруппам по полу или возрасту.",
+      "type": "observation",
+      "modality": "observational associations; not causal effects",
+      "claims": [
+        {
+          "units": [
+            45
+          ],
+          "roles": {
+            "exposure": "kidney disease",
+            "outcome": "memory decline",
+            "direction": "less decline"
+          }
+        },
+        {
+          "units": [
+            45
+          ],
+          "roles": {
+            "exposure": "antidepressant use",
+            "outcome": "memory decline",
+            "direction": "less decline"
+          }
+        }
+      ]
+    },
+    {
+      "key": "SUBGROUP_ASSOCIATIONS",
+      "units": [
+        42,
+        45,
+        47
+      ],
+      "predicate": "age- and sex-modified association",
+      "roles": {
+        "population": "Sydney cohort",
+        "modifiers": "age and sex"
+      },
+      "logic": "partition",
+      "en": "Associations varied across subgroups: examples included greater incident MCI/dementia among more active men, poorer-smell risk mainly among women, and age-related associations that differed by clinical history.",
+      "ru": "Связи различались между подгруппами: например, у более активных мужчин чаще возникали MCI/деменция, риск при худшем обонянии был выражен преимущественно у женщин, а возрастные связи различались по медицинскому анамнезу.",
+      "type": "observation",
+      "modality": "observational subgroup findings",
+      "claims": [
+        {
+          "units": [
+            42
+          ],
+          "roles": {
+            "exposure": "greater physical activity",
+            "modifier": "men",
+            "outcome": "incident MCI or dementia"
+          }
+        },
+        {
+          "units": [
+            42
+          ],
+          "roles": {
+            "exposure": "poorer smelling ability",
+            "modifier": "women",
+            "outcome": "incident MCI or dementia"
+          }
+        },
+        {
+          "units": [
+            42
+          ],
+          "roles": {
+            "exposure": "older age",
+            "modifier": "history of stroke",
+            "outcome": "global-cognition decline"
+          }
+        },
+        {
+          "units": [
+            42
+          ],
+          "roles": {
+            "exposure": "older age",
+            "modifier": "migraine",
+            "outcome": "attention/processing-speed decline"
+          }
+        },
+        {
+          "units": [
+            42
+          ],
+          "roles": {
+            "exposure": "older age",
+            "modifier": "coronary artery disease",
+            "outcome": "memory decline"
+          }
+        },
+        {
+          "units": [
+            45
+          ],
+          "roles": {
+            "exposure": "diabetes or low eGFR",
+            "modifier": "men",
+            "outcome": "incident MCI or dementia",
+            "direction": "lower odds"
+          }
+        }
+      ]
+    },
+    {
+      "key": "PAR_RESULTS",
+      "units": [
+        49,
+        51
+      ],
+      "predicate": "population attributable risk estimate",
+      "roles": {
+        "population": "Sydney study participants with incident MCI or dementia",
+        "model": "adjusted for sex, marital status, BSIT score, and age"
+      },
+      "logic": "partition",
+      "en": "The authors reported population-attributable-risk estimates for incident MCI/dementia of 31.3% for male sex, 18.3% for poorer smell identification, and −24.6% for being married.",
+      "ru": "Для возникновения MCI/деменции авторы сообщили оценки популяционного атрибутивного риска 31,3% для мужского пола, 18,3% для худшего распознавания запахов и −24,6% для брака.",
+      "type": "result",
+      "modality": "model-derived PAR; not an intervention effect",
+      "claims": [
+        {
+          "units": [
+            51
+          ],
+          "roles": {
+            "exposure": "male sex",
+            "outcome": "incident MCI or dementia"
+          },
+          "attrs": {
+            "PAR": {
+              "value": 31.3,
+              "unit": "percent"
+            },
+            "odds ratio": 2.17,
+            "confidence interval": "1.32–3.56"
+          }
+        },
+        {
+          "units": [
+            51
+          ],
+          "roles": {
+            "exposure": "BSIT score <9",
+            "outcome": "incident MCI or dementia"
+          },
+          "attrs": {
+            "PAR": {
+              "value": 18.3,
+              "unit": "percent"
+            },
+            "odds ratio": 1.86,
+            "confidence interval": "1.15–3.01"
+          }
+        },
+        {
+          "units": [
+            51
+          ],
+          "roles": {
+            "exposure": "married",
+            "outcome": "incident MCI or dementia"
+          },
+          "attrs": {
+            "PAR": {
+              "value": -24.6,
+              "unit": "percent"
+            },
+            "odds ratio": 0.59,
+            "confidence interval": "0.35–0.97"
+          }
+        }
+      ]
+    },
+    {
+      "key": "APOE_NULL",
+      "units": [
+        61
+      ],
+      "predicate": "APOE epsilon-4 association not detected",
+      "roles": {
+        "exposure": "APOE ε4",
+        "population": "non-demented Sydney cohort",
+        "outcomes": "incident MCI/dementia and composite memory change"
+      },
+      "en": "The study detected no association of APOE ε4 with incident MCI/dementia or composite memory decline in this sample; more than 80% of incident diagnostic cases were MCI.",
+      "ru": "В этой выборке не выявили связи APOE ε4 с новыми случаями MCI/деменции или изменением составного показателя памяти; более 80% новых диагностических случаев составлял MCI.",
+      "type": "result",
+      "negated": true,
+      "modality": "no association detected in this analysis; not proof of a universal null effect",
+      "time": "Single follow-up after approximately two years",
+      "conditions": [
+        "The authors note that the outcome composition and shorter follow-up may help explain the null result."
+      ]
+    },
+    {
+      "key": "ATTRITION_DIAGNOSTIC",
+      "units": [
+        19,
+        53
+      ],
+      "predicate": "follow-up attrition pattern",
+      "roles": {
+        "population": "Sydney cohort",
+        "missingness": "not fully random"
+      },
+      "logic": "conjunction",
+      "en": "Loss to follow-up could bias associations: men lost to follow-up reported less physical activity and poorer health than men retained, and low eGFR was numerically more common among those lost.",
+      "ru": "Выбывание могло смещать оценки: мужчины, потерянные для наблюдения, сообщали о меньшей физической активности и худшем здоровье, чем оставшиеся; низкая eGFR численно чаще встречалась среди выбывших.",
+      "type": "limitation",
+      "modality": "authors' attrition analysis; the eGFR comparison was a non-significant tendency",
+      "claims": [
+        {
+          "units": [
+            19
+          ],
+          "roles": {
+            "population": "baseline cohort"
+          },
+          "attrs": {
+            "died before follow-up": {
+              "value": 43,
+              "unit": "participants"
+            },
+            "declined follow-up": {
+              "value": 105,
+              "unit": "participants"
+            }
+          }
+        },
+        {
+          "units": [
+            53
+          ],
+          "roles": {
+            "comparison": "men lost versus men retained"
+          },
+          "attrs": {
+            "physical activity mean lost": 1.37,
+            "physical activity mean retained": 1.77,
+            "p-value": 0.016
+          }
+        },
+        {
+          "units": [
+            53
+          ],
+          "roles": {
+            "comparison": "men lost versus men retained"
+          },
+          "attrs": {
+            "low-health proportion lost": 28.1,
+            "low-health proportion retained": 16.7,
+            "p-value": 0.038
+          }
+        },
+        {
+          "units": [
+            53
+          ],
+          "roles": {
+            "comparison": "lost versus retained"
+          },
+          "attrs": {
+            "low eGFR proportion lost": 45.1,
+            "low eGFR proportion retained": 35.6,
+            "p-value": 0.065
+          }
+        }
+      ]
+    },
+    {
+      "key": "DOMAIN_SPECIFICITY",
+      "units": [
+        64,
+        68
+      ],
+      "predicate": "domain-specificity and cross-study comparability limitation",
+      "roles": {
+        "reported association": "factor-cognitive outcome association",
+        "domain assignment": "varies across studies and test batteries"
+      },
+      "en": "The authors caution that risk-factor associations differ across cognitive domains and that inconsistent assignment of tests to domains limits cross-study comparability.",
+      "ru": "Авторы отмечают, что связи факторов различаются между когнитивными доменами, а непоследовательное распределение тестов по доменам ограничивает сопоставимость исследований.",
+      "type": "limitation",
+      "modality": "authors' interpretation"
+    },
+    {
+      "key": "STUDY_LIMITATIONS",
+      "units": [
+        68
+      ],
+      "predicate": "study limitations",
+      "roles": {
+        "study": "Sydney Memory and Ageing Study analysis",
+        "limitations": "non-random attrition, self-report, single two-year follow-up, limited interaction tests, and uncertain generalizability"
+      },
+      "en": "Interpretation is limited by non-random attrition, self-reported measures, one follow-up at two years, possible diagnostic instability and regression to the mean, untested interactions beyond age and sex, and uncertain generalizability.",
+      "ru": "Интерпретацию ограничивают неслучайное выбывание, самоотчёты, одна повторная волна через два года, возможная нестабильность диагноза и регрессия к среднему, непроверенные взаимодействия помимо возраста и пола и неопределённая обобщаемость.",
+      "type": "limitation",
+      "conditions": [
+        "The authors caution that null and unexpected findings should be interpreted carefully."
+      ]
+    },
+    {
+      "key": "CONCLUSION",
+      "units": [
+        70
+      ],
+      "predicate": "author conclusion",
+      "roles": {
+        "study conclusion": "associations with late-life cognitive decline vary by age, sex, and outcome measure",
+        "possible implication": "tailor interventions to demographic groups"
+      },
+      "en": "The authors conclude that associations with late-life cognitive decline vary by age, sex, and outcome; they propose tailored interventions as a possibility requiring future testing.",
+      "ru": "Авторы заключают, что связи с поздним когнитивным снижением различаются по возрасту, полу и исходу; возможность адаптированных вмешательств требует будущей проверки.",
+      "type": "conclusion",
+      "grounding": "source_argument",
+      "modality": "author conclusion; intervention benefit remains to be tested"
+    }
+  ],
+  "transitions": [
+    {
+      "sources": [
+        "AIM"
+      ],
+      "target": "COHORT",
+      "usage": "method",
+      "reason": "The cohort design supplies the population in which the stated longitudinal aim is investigated.",
+      "units": [
+        16,
+        19
+      ]
+    },
+    {
+      "sources": [
+        "COHORT"
+      ],
+      "target": "FOLLOWUP",
+      "usage": "data",
+      "reason": "The follow-up sample is drawn from the recruited baseline cohort.",
+      "units": [
+        19
+      ]
+    },
+    {
+      "sources": [
+        "COHORT"
+      ],
+      "target": "TEST_BATTERY",
+      "usage": "method",
+      "reason": "The neuropsychological assessment was administered to the cohort participants.",
+      "units": [
+        19,
+        23
+      ]
+    },
+    {
+      "sources": [
+        "TEST_BATTERY"
+      ],
+      "target": "SCORE_CONSTRUCTION",
+      "usage": "data",
+      "reason": "The domain and global scores are constructed from the test battery.",
+      "units": [
+        23,
+        24
+      ]
+    },
+    {
+      "sources": [
+        "MCI_CRITERIA"
+      ],
+      "target": "INCIDENT_STATUS",
+      "usage": "definition",
+      "reason": "The diagnostic criteria define the MCI status counted at follow-up.",
+      "units": [
+        26,
+        38
+      ]
+    },
+    {
+      "sources": [
+        "FOLLOWUP",
+        "MCI_CRITERIA"
+      ],
+      "target": "INCIDENT_STATUS",
+      "usage": "data",
+      "reason": "The incident diagnostic counts require both follow-up classification and the stated diagnostic definition.",
+      "units": [
+        19,
+        26,
+        38
+      ]
+    },
+    {
+      "sources": [
+        "SCORE_CONSTRUCTION",
+        "ANALYSIS_PLAN"
+      ],
+      "target": "DOMAIN_CHANGES",
+      "usage": "result",
+      "reason": "The reported domain changes use standardized scores and the specified longitudinal comparison.",
+      "units": [
+        24,
+        32,
+        38,
+        39
+      ]
+    },
+    {
+      "sources": [
+        "ANALYSIS_PLAN"
+      ],
+      "target": "AGE_DOMAIN_EFFECT",
+      "usage": "result",
+      "reason": "Age associations are reported from the planned adjusted models.",
+      "units": [
+        32,
+        42,
+        43
+      ]
+    },
+    {
+      "sources": [
+        "RISK_MEASUREMENTS",
+        "ANALYSIS_PLAN"
+      ],
+      "target": "OLFACTION_EFFECT",
+      "usage": "result",
+      "reason": "The smell test is a measured baseline factor evaluated against longitudinal outcomes.",
+      "units": [
+        28,
+        32,
+        42,
+        43
+      ]
+    },
+    {
+      "sources": [
+        "ANALYSIS_PLAN"
+      ],
+      "target": "SEX_OUTCOME_CONTRAST",
+      "usage": "result",
+      "reason": "The article distinguishes sex comparisons in continuous change from the incident-diagnosis model.",
+      "units": [
+        32,
+        38
+      ]
+    },
+    {
+      "sources": [
+        "ANALYSIS_PLAN",
+        "RISK_MEASUREMENTS"
+      ],
+      "target": "MARRIAGE_ASSOCIATION",
+      "usage": "result",
+      "reason": "Marital status was among the measured baseline factors evaluated against outcomes.",
+      "units": [
+        28,
+        32,
+        45,
+        51
+      ]
+    },
+    {
+      "sources": [
+        "ANALYSIS_PLAN",
+        "RISK_MEASUREMENTS"
+      ],
+      "target": "OTHER_PROTECTIVE_ASSOCIATIONS",
+      "usage": "result",
+      "reason": "Kidney disease and antidepressant use were measured baseline factors in the outcome analyses.",
+      "units": [
+        28,
+        32,
+        45
+      ]
+    },
+    {
+      "sources": [
+        "ANALYSIS_PLAN",
+        "RISK_MEASUREMENTS"
+      ],
+      "target": "SUBGROUP_ASSOCIATIONS",
+      "usage": "result",
+      "reason": "The age and sex interaction models support the reported subgroup-specific associations.",
+      "units": [
+        28,
+        32,
+        42,
+        45,
+        47
+      ]
+    },
+    {
+      "sources": [
+        "ANALYSIS_PLAN",
+        "OLFACTION_EFFECT",
+        "SEX_OUTCOME_CONTRAST"
+      ],
+      "target": "PAR_RESULTS",
+      "usage": "result",
+      "reason": "The PAR estimates summarize selected model associations for the incident diagnostic outcome.",
+      "units": [
+        33,
+        49,
+        51
+      ]
+    },
+    {
+      "sources": [
+        "FOLLOWUP",
+        "ATTRITION_DIAGNOSTIC"
+      ],
+      "target": "STUDY_LIMITATIONS",
+      "usage": "evidence",
+      "reason": "The observed loss to follow-up and its differential characteristics support the authors' attrition limitation.",
+      "units": [
+        19,
+        53,
+        68
+      ]
+    },
+    {
+      "sources": [
+        "AGE_DOMAIN_EFFECT",
+        "OLFACTION_EFFECT",
+        "SEX_OUTCOME_CONTRAST",
+        "MARRIAGE_ASSOCIATION",
+        "OTHER_PROTECTIVE_ASSOCIATIONS",
+        "SUBGROUP_ASSOCIATIONS",
+        "PAR_RESULTS",
+        "STUDY_LIMITATIONS"
+      ],
+      "target": "CONCLUSION",
+      "usage": "premise",
+      "reason": "The conclusion synthesizes the reported outcome-specific associations and their limitations.",
+      "units": [
+        57,
+        59,
+        66,
+        68,
+        70
+      ]
+    }
+  ],
+  "excluded_units": {
+    "U1": "Структурный заголовок документа или раздела; он задаёт контекст, но не отдельное утверждение.",
+    "U2": "Библиографические или лицензионные метаданные, не научное утверждение.",
+    "U3": "Библиографические или лицензионные метаданные, не научное утверждение.",
+    "U4": "Библиографические или лицензионные метаданные, не научное утверждение.",
+    "U5": "Структурный заголовок документа или раздела; он задаёт контекст, но не отдельное утверждение.",
+    "U6": "Структурный заголовок документа или раздела; он задаёт контекст, но не отдельное утверждение.",
+    "U7": "Фрагмент сохранён в полном исходном тексте, но не включён в эту выборочную карту центральных положений.",
+    "U8": "Структурный заголовок документа или раздела; он задаёт контекст, но не отдельное утверждение.",
+    "U9": "Фрагмент сохранён в полном исходном тексте, но не включён в эту выборочную карту центральных положений.",
+    "U10": "Структурный заголовок документа или раздела; он задаёт контекст, но не отдельное утверждение.",
+    "U11": "Фрагмент сохранён в полном исходном тексте, но не включён в эту выборочную карту центральных положений.",
+    "U12": "Структурный заголовок документа или раздела; он задаёт контекст, но не отдельное утверждение.",
+    "U13": "Фрагмент сохранён в полном исходном тексте, но не включён в эту выборочную карту центральных положений.",
+    "U14": "Структурный заголовок документа или раздела; он задаёт контекст, но не отдельное утверждение.",
+    "U15": "Фрагмент сохранён в полном исходном тексте, но не включён в эту выборочную карту центральных положений.",
+    "U17": "Структурный заголовок документа или раздела; он задаёт контекст, но не отдельное утверждение.",
+    "U18": "Структурный заголовок документа или раздела; он задаёт контекст, но не отдельное утверждение.",
+    "U20": "Структурный заголовок документа или раздела; он задаёт контекст, но не отдельное утверждение.",
+    "U21": "Фрагмент сохранён в полном исходном тексте, но не включён в эту выборочную карту центральных положений.",
+    "U22": "Структурный заголовок документа или раздела; он задаёт контекст, но не отдельное утверждение.",
+    "U25": "Структурный заголовок документа или раздела; он задаёт контекст, но не отдельное утверждение.",
+    "U27": "Структурный заголовок документа или раздела; он задаёт контекст, но не отдельное утверждение.",
+    "U29": "Описательные базовые характеристики сохранены в исходной таблице; отдельные значения не являются продольными результатами.",
+    "U30": "Фрагмент сохранён в полном исходном тексте, но не включён в эту выборочную карту центральных положений.",
+    "U31": "Структурный заголовок документа или раздела; он задаёт контекст, но не отдельное утверждение.",
+    "U33": "Фрагмент сохранён в полном исходном тексте, но не включён в эту выборочную карту центральных положений.",
+    "U34": "Структурный заголовок документа или раздела; он задаёт контекст, но не отдельное утверждение.",
+    "U35": "Структурный заголовок документа или раздела; он задаёт контекст, но не отдельное утверждение.",
+    "U36": "Описательные базовые характеристики сохранены в исходной таблице; отдельные значения не являются продольными результатами.",
+    "U37": "Структурный заголовок документа или раздела; он задаёт контекст, но не отдельное утверждение.",
+    "U40": "Структурный заголовок документа или раздела; он задаёт контекст, но не отдельное утверждение.",
+    "U41": "Структурный заголовок документа или раздела; он задаёт контекст, но не отдельное утверждение.",
+    "U44": "Структурный заголовок документа или раздела; он задаёт контекст, но не отдельное утверждение.",
+    "U46": "Структурный заголовок документа или раздела; он задаёт контекст, но не отдельное утверждение.",
+    "U48": "Структурный заголовок документа или раздела; он задаёт контекст, но не отдельное утверждение.",
+    "U50": "Фрагмент сохранён в полном исходном тексте, но не включён в эту выборочную карту центральных положений.",
+    "U52": "Структурный заголовок документа или раздела; он задаёт контекст, но не отдельное утверждение.",
+    "U54": "Структурный заголовок документа или раздела; он задаёт контекст, но не отдельное утверждение.",
+    "U55": "Фрагмент сохранён в полном исходном тексте, но не включён в эту выборочную карту центральных положений.",
+    "U56": "Структурный заголовок документа или раздела; он задаёт контекст, но не отдельное утверждение.",
+    "U58": "Структурный заголовок документа или раздела; он задаёт контекст, но не отдельное утверждение.",
+    "U59": "Фрагмент сохранён в полном исходном тексте, но не включён в эту выборочную карту центральных положений.",
+    "U60": "Структурный заголовок документа или раздела; он задаёт контекст, но не отдельное утверждение.",
+    "U62": "Фрагмент сохранён в полном исходном тексте, но не включён в эту выборочную карту центральных положений.",
+    "U63": "Структурный заголовок документа или раздела; он задаёт контекст, но не отдельное утверждение.",
+    "U65": "Структурный заголовок документа или раздела; он задаёт контекст, но не отдельное утверждение.",
+    "U66": "Фрагмент сохранён в полном исходном тексте, но не включён в эту выборочную карту центральных положений.",
+    "U67": "Структурный заголовок документа или раздела; он задаёт контекст, но не отдельное утверждение.",
+    "U69": "Структурный заголовок документа или раздела; он задаёт контекст, но не отдельное утверждение.",
+    "U71": "Структурный заголовок документа или раздела; он задаёт контекст, но не отдельное утверждение."
+  },
+  "report_ru": ""
+}

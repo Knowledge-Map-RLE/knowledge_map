@@ -1,0 +1,591 @@
+{
+  "version": "codex-citation-controls-1",
+  "author": "Codex",
+  "expert_validated": false,
+  "needs_expert_review": true,
+  "annotation_status": "Requires expert review; fixed independently before comparator execution",
+  "references": [
+    {
+      "article_id": "pilot-pmc10000452-pmc10000452-f7df96ff746be4a6",
+      "pipeline_id": "text_reified",
+      "run_id": "ef432af7-79ae-4632-bfc5-d7adc899cb24"
+    },
+    {
+      "article_id": "pilot-pmc10000452-pmc5436834-10b9d676a760e5df",
+      "pipeline_id": "text_reified",
+      "run_id": "23d54ea7-9685-4742-8f54-0884dc7054c2"
+    },
+    {
+      "article_id": "pilot-pmc10000452-pmc6416157-502eaa3572eaf017",
+      "pipeline_id": "text_reified",
+      "run_id": "2b001740-a3fe-474c-86df-34ea0faf8ce6"
+    },
+    {
+      "article_id": "pilot-pmc10000452-pmc7789349-73aceacf48b80ce6",
+      "pipeline_id": "text_reified",
+      "run_id": "72135bc7-c18c-4aba-8a3b-87ad4c1f716a"
+    },
+    {
+      "article_id": "pilot-pmc10000452-pmc8775386-953d8a7973426b47",
+      "pipeline_id": "text_reified",
+      "run_id": "cb4dced6-1c5e-4d8f-8fc8-00a6a1c2d59e"
+    },
+    {
+      "article_id": "pilot-pmc10000452-pmc8918697-8c000fc820edb9c7",
+      "pipeline_id": "text_reified",
+      "run_id": "1188519e-c2e7-4f19-a288-d99923cce7cb"
+    }
+  ],
+  "pairs": [
+    {
+      "id": "citation-3",
+      "kind": "citation",
+      "left_knowledge_ids": [
+        "K3"
+      ],
+      "right_article_id": "pilot-pmc10000452-pmc7789349-73aceacf48b80ce6",
+      "right_run_id": "72135bc7-c18c-4aba-8a3b-87ad4c1f716a",
+      "right_knowledge_ids": [
+        "K1"
+      ],
+      "left_fragment": {
+        "article_id": "pilot-pmc10000452-pmc10000452-f7df96ff746be4a6",
+        "run_id": "ef432af7-79ae-4632-bfc5-d7adc899cb24",
+        "source_sha256": "f7df96ff746be4a60a6930ff2c5c25435725d0591dfe1f492259624b2d7c0bc8",
+        "unit_id": "U8",
+        "offset_encoding": "unicode_code_points",
+        "start": 2816,
+        "end": 3056,
+        "text": "Persons who display domain-specific (i.e., not global) cognitive impairment, which is not considered serious mental disorder and does not interfere with daily functioning, are likely to be diagnosed with mild cognitive impairment (MCI) [3]."
+      },
+      "right_fragments": [
+        {
+          "article_id": "pilot-pmc10000452-pmc7789349-73aceacf48b80ce6",
+          "run_id": "72135bc7-c18c-4aba-8a3b-87ad4c1f716a",
+          "source_sha256": "73aceacf48b80ce687091ad566213d687d981782580ef6128d6e21eca100f859",
+          "unit_id": "U14",
+          "offset_encoding": "unicode_code_points",
+          "start": 3159,
+          "end": 3841,
+          "text": "Early intervention measures are considered to be the most cost-effective for managing dementia due to a lack of an effective treatment regimen [5]. Mild cognitive impairment (MCI) has been conceptualised as an intermediate phase between normal cognitive ageing and overt dementia [6]. MCI is a neurological disorder in older adults characterised by slight but noticeable deficits in memory and/or other thinking skills with minimal impacts on daily living functioning [7]. Some researchers argue that MCI represents an early stage of dementia [8], with a tendency of progressing into clinically diagnosed dementia at an annual rate around 30% [9] and a lifetime rate of 60–90% [10]."
+        }
+      ],
+      "expected_relations": [
+        "partial"
+      ],
+      "rationale_ru": "Общее понятие MCI подтверждено, но «не мешает функционированию» цели и «минимальное влияние» источника не строго тождественны; протокольные пороги цели из других фрагментов не приписываются ссылке.",
+      "citation_number": 3,
+      "xml": {
+        "number": 3,
+        "rid": "B3-healthcare-11-00703",
+        "xml_paragraph": "As life expectancy increases, cognitive impairment becomes an inextricable facet of aging. Worldwide, it is estimated that over 55 million people live with dementia, a number that is about to rise to 139 million people by 2050, while a substantial percentage of dementia patients has yet to receive a formal diagnosis [1]. In contrast, normal cognitive aging comprises predictable age-related cognitive changes, as indicated by age and education-adjusted domain-specific scores that fall within 1.5 standard deviations from the population mean [2]. Persons who display domain-specific (i.e., not global) cognitive impairment, which is not considered serious mental disorder and does not interfere with daily functioning, are likely to be diagnosed with mild cognitive impairment (MCI) [3]. Individuals with MCI are considered at high risk of progression to dementia [4], with conversion rates ranging from 6 to 44.8%, according to a recent meta-analysis [5]. MCI incidence rates increase from 22.5% for ages 75–79 to 60.1% for individuals beyond 85 years old [6]. In Greece specifically, MCI prevalence ranges from 13.11% [7] to 32.4% (Cretan Aging Cohort) [8].",
+        "xref_xml": "<xref rid=\"B3-healthcare-11-00703\" ref-type=\"bibr\">3</xref>]. Individuals with MCI are considered at high risk of progression to dementia ["
+      }
+    },
+    {
+      "id": "citation-5",
+      "kind": "citation",
+      "left_knowledge_ids": [
+        "K4"
+      ],
+      "right_article_id": "pilot-pmc10000452-pmc8918697-8c000fc820edb9c7",
+      "right_run_id": "1188519e-c2e7-4f19-a288-d99923cce7cb",
+      "right_knowledge_ids": [
+        "K50"
+      ],
+      "left_fragment": {
+        "article_id": "pilot-pmc10000452-pmc10000452-f7df96ff746be4a6",
+        "run_id": "ef432af7-79ae-4632-bfc5-d7adc899cb24",
+        "source_sha256": "f7df96ff746be4a60a6930ff2c5c25435725d0591dfe1f492259624b2d7c0bc8",
+        "unit_id": "U8",
+        "offset_encoding": "unicode_code_points",
+        "start": 3057,
+        "end": 3225,
+        "text": "Individuals with MCI are considered at high risk of progression to dementia [4], with conversion rates ranging from 6 to 44.8%, according to a recent meta-analysis [5]."
+      },
+      "right_fragments": [
+        {
+          "article_id": "pilot-pmc10000452-pmc8918697-8c000fc820edb9c7",
+          "run_id": "1188519e-c2e7-4f19-a288-d99923cce7cb",
+          "source_sha256": "8c000fc820edb9c7dd89ad948bc2c2563009c256a19c20c7f6b7ab787c373fee",
+          "unit_id": "U7",
+          "offset_encoding": "unicode_code_points",
+          "start": 921,
+          "end": 1758,
+          "text": "Ten thousand six hundred forty‐seven articles were screened; n = 11 retained. Of the 11 studies, most were conducted in China (n = 7 studies), with only two studies from countries classified as low income. A qualitative analysis of n = 11 studies showed that similar to high‐income countries the conversion rate to dementia from MCI was variable (range 6.0%–44.8%; average follow‐up 3.7 years [standard deviation = 1.2]). A meta‐analysis of studies using Petersen criteria (n = 6 studies), found a pooled conversion rate to Alzheimer's disease (AD) of 23.8% (95% confidence interval = 15.4%–33.4%); approximately one in four people with MCI were at risk of AD in LMICs (over 3.0–5.8 years follow‐up). Risk factors for conversion from MCI to dementia included demographic (e.g., age) and health (e.g., cardio‐metabolic disease) variables."
+        },
+        {
+          "article_id": "pilot-pmc10000452-pmc8918697-8c000fc820edb9c7",
+          "run_id": "1188519e-c2e7-4f19-a288-d99923cce7cb",
+          "source_sha256": "8c000fc820edb9c7dd89ad948bc2c2563009c256a19c20c7f6b7ab787c373fee",
+          "unit_id": "U62",
+          "offset_encoding": "unicode_code_points",
+          "start": 28091,
+          "end": 28965,
+          "text": "Rates of conversion from MCI to dementia ranged from 6.0%\n39\n to 44.8%\n35\n for all‐cause dementia (n = 11 studies) over an average follow‐up of 3.7 years (SD 1.2 years); 6.0%\n35\n, \n39\n to 46.7%\n25\n for AD (n = 8 studies) over an average follow‐up of 4.0 years (SD 1.1 years), and 8.7%\n45\n to 14.9%\n36\n for VaD (n = 2 studies) over an average follow‐up of 3.5 years (SD 0.7 years). Rates of conversion to all‐cause dementia were generally higher for those definitions that captured broader impairment; for example, range of conversion for all‐MCI (n = 8 studies),\n35\n, \n36\n, \n37\n, \n38\n, \n40\n, \n41\n, \n42\n, \n45\n CIND (n = 1 study),\n44\n and CDR (n = 1 study)\n43\n (range 16.8% to 44.8% over 2.0–5.8 years follow‐up) compared to more restricted definitions of single domain MCI; for example, aMCI range 6.0% to 6.9% over an average of 3.5 years follow‐up (n = 2 studies).\n39\n, \n41"
+        },
+        {
+          "article_id": "pilot-pmc10000452-pmc8918697-8c000fc820edb9c7",
+          "run_id": "1188519e-c2e7-4f19-a288-d99923cce7cb",
+          "source_sha256": "8c000fc820edb9c7dd89ad948bc2c2563009c256a19c20c7f6b7ab787c373fee",
+          "unit_id": "U76",
+          "offset_encoding": "unicode_code_points",
+          "start": 31431,
+          "end": 32187,
+          "text": "In this systematic review and meta‐analysis, we found that very few studies on risk of MCI conversion to dementia have been undertaken in LMIC settings. This contrasts to the significant research investment into MCI (and more specially dementia) in HICs. Across the 11 studies, conversion to all‐cause dementia (including all dementia, AD, and VaD) was high and varied, ranging from 6.0% to 44.8% over an average follow‐up of 3,7 years. Similar variability in risk of conversion to dementia has been reported in studies from HICs.\n5\n, \n6\n, \n7\n For studies using Petersen criteria (n = 6), the pooled conversion rate to AD was 23.8% over 3.0 to 5.8 years. This suggesting that approximately one in four people with MCI are at risk of developing AD in LMICs."
+        }
+      ],
+      "expected_relations": [
+        "partial"
+      ],
+      "rationale_ru": "Диапазон 6–44,8% совпадает с прозой обзора; срок 3,7 года, неоднородные определения и смешанные меры в таблице не указаны в целевой цитате. Это подтверждение цитирования диапазона с неполным контекстом, а не единая годовая вероятность.",
+      "citation_number": 5,
+      "xml": {
+        "number": 5,
+        "rid": "B5-healthcare-11-00703",
+        "xml_paragraph": "As life expectancy increases, cognitive impairment becomes an inextricable facet of aging. Worldwide, it is estimated that over 55 million people live with dementia, a number that is about to rise to 139 million people by 2050, while a substantial percentage of dementia patients has yet to receive a formal diagnosis [1]. In contrast, normal cognitive aging comprises predictable age-related cognitive changes, as indicated by age and education-adjusted domain-specific scores that fall within 1.5 standard deviations from the population mean [2]. Persons who display domain-specific (i.e., not global) cognitive impairment, which is not considered serious mental disorder and does not interfere with daily functioning, are likely to be diagnosed with mild cognitive impairment (MCI) [3]. Individuals with MCI are considered at high risk of progression to dementia [4], with conversion rates ranging from 6 to 44.8%, according to a recent meta-analysis [5]. MCI incidence rates increase from 22.5% for ages 75–79 to 60.1% for individuals beyond 85 years old [6]. In Greece specifically, MCI prevalence ranges from 13.11% [7] to 32.4% (Cretan Aging Cohort) [8].",
+        "xref_xml": "<xref rid=\"B5-healthcare-11-00703\" ref-type=\"bibr\">5</xref>]. MCI incidence rates increase from 22.5% for ages 75–79 to 60.1% for individuals beyond 85 years old ["
+      }
+    },
+    {
+      "id": "citation-6",
+      "kind": "citation",
+      "left_knowledge_ids": [
+        "K5"
+      ],
+      "right_article_id": "pilot-pmc10000452-pmc6416157-502eaa3572eaf017",
+      "right_run_id": "2b001740-a3fe-474c-86df-34ea0faf8ce6",
+      "right_knowledge_ids": [
+        "K19",
+        "K21"
+      ],
+      "left_fragment": {
+        "article_id": "pilot-pmc10000452-pmc10000452-f7df96ff746be4a6",
+        "run_id": "ef432af7-79ae-4632-bfc5-d7adc899cb24",
+        "source_sha256": "f7df96ff746be4a60a6930ff2c5c25435725d0591dfe1f492259624b2d7c0bc8",
+        "unit_id": "U8",
+        "offset_encoding": "unicode_code_points",
+        "start": 3226,
+        "end": 3330,
+        "text": "MCI incidence rates increase from 22.5% for ages 75–79 to 60.1% for individuals beyond 85 years old [6]."
+      },
+      "right_fragments": [
+        {
+          "article_id": "pilot-pmc10000452-pmc6416157-502eaa3572eaf017",
+          "run_id": "2b001740-a3fe-474c-86df-34ea0faf8ce6",
+          "source_sha256": "502eaa3572eaf01749010d6b4f40590ede4abef1dcc926d505da7aeecd644e4a",
+          "unit_id": "U39",
+          "offset_encoding": "unicode_code_points",
+          "start": 16050,
+          "end": 23552,
+          "text": "<table>\n  <thead>\n    <tr>\n      <th rowspan=\"1\" colspan=\"1\"></th>\n      <th rowspan=\"1\" colspan=\"1\"></th>\n      <th rowspan=\"1\" colspan=\"1\">65–69 years</th>\n      <th rowspan=\"1\" colspan=\"1\">70–74 years</th>\n      <th rowspan=\"1\" colspan=\"1\">75–79 years</th>\n      <th rowspan=\"1\" colspan=\"1\">80–84 years</th>\n      <th rowspan=\"1\" colspan=\"1\">85+ years†</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <td rowspan=\"7\" colspan=\"1\">MCI</td>\n      <td rowspan=\"1\" colspan=\"1\">Number of studies</td>\n      <td rowspan=\"1\" colspan=\"1\">0</td>\n      <td rowspan=\"1\" colspan=\"1\">2 [6], [35]</td>\n      <td rowspan=\"1\" colspan=\"1\">4 [6], [12], [32], [35]</td>\n      <td rowspan=\"1\" colspan=\"1\">4 [6], [12], [32], [35]</td>\n      <td rowspan=\"1\" colspan=\"1\">4 [6], [12], [32], [35]</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Minimum IR estimate (95% CI)</td>\n      <td rowspan=\"1\" colspan=\"1\">—</td>\n      <td rowspan=\"1\" colspan=\"1\">12.4 (11.6, 13.2)</td>\n      <td rowspan=\"1\" colspan=\"1\">5.3 (1.7, 12.4)</td>\n      <td rowspan=\"1\" colspan=\"1\">9.5 (8.9, 10.1)</td>\n      <td rowspan=\"1\" colspan=\"1\">8.8 (1.8, 25.6)</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Maximum IR estimate (95% CI)</td>\n      <td rowspan=\"1\" colspan=\"1\">—</td>\n      <td rowspan=\"1\" colspan=\"1\">35.9 (20.4, 51.4)</td>\n      <td rowspan=\"1\" colspan=\"1\">50.3 (38.3, 66.0)</td>\n      <td rowspan=\"1\" colspan=\"1\">86.3 (63.6, 109.0)</td>\n      <td rowspan=\"1\" colspan=\"1\">157.6 (117.7, 211.1)</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Median IR‡</td>\n      <td rowspan=\"1\" colspan=\"1\">—</td>\n      <td rowspan=\"1\" colspan=\"1\">24.2</td>\n      <td rowspan=\"1\" colspan=\"1\">26.3</td>\n      <td rowspan=\"1\" colspan=\"1\">49.8</td>\n      <td rowspan=\"1\" colspan=\"1\">73.7</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">IQR‡</td>\n      <td rowspan=\"1\" colspan=\"1\">—</td>\n      <td rowspan=\"1\" colspan=\"1\">—</td>\n      <td rowspan=\"1\" colspan=\"1\">7.1–46.3</td>\n      <td rowspan=\"1\" colspan=\"1\">13.4–85.2</td>\n      <td rowspan=\"1\" colspan=\"1\">11.5–140.1</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Meta-analysis estimate (95% CI)§</td>\n      <td rowspan=\"1\" colspan=\"1\">—</td>\n      <td rowspan=\"1\" colspan=\"1\">—</td>\n      <td rowspan=\"1\" colspan=\"1\">22.5 (5.1, 51.4)</td>\n      <td rowspan=\"1\" colspan=\"1\">40.9 (7.7, 97.5)</td>\n      <td rowspan=\"1\" colspan=\"1\">60.1 (6.7, 159.0)</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">I2 measure of heterogeneity, %¶</td>\n      <td rowspan=\"1\" colspan=\"1\">—</td>\n      <td rowspan=\"1\" colspan=\"1\">—</td>\n      <td rowspan=\"1\" colspan=\"1\">96.4</td>\n      <td rowspan=\"1\" colspan=\"1\">97.7</td>\n      <td rowspan=\"1\" colspan=\"1\">98.3</td>\n    </tr>\n    <tr>\n      <td rowspan=\"7\" colspan=\"1\">aMCI</td>\n      <td rowspan=\"1\" colspan=\"1\">Number of studies</td>\n      <td rowspan=\"1\" colspan=\"1\">1 [36]</td>\n      <td rowspan=\"1\" colspan=\"1\">3 [6], [34], [36]</td>\n      <td rowspan=\"1\" colspan=\"1\">5 [6], [12], [33], [34], [36]</td>\n      <td rowspan=\"1\" colspan=\"1\">4 [6], [12], [33], [34]</td>\n      <td rowspan=\"1\" colspan=\"1\">4 [6], [12], [33], [34]</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Minimum IR estimate (95% CI)</td>\n      <td rowspan=\"1\" colspan=\"1\">11 (5, 17)</td>\n      <td rowspan=\"1\" colspan=\"1\">21.0 (16.0, 27.0)</td>\n      <td rowspan=\"1\" colspan=\"1\">5.4 (2.3, 12.8)</td>\n      <td rowspan=\"1\" colspan=\"1\">11.2 (6.6, 18.9)</td>\n      <td rowspan=\"1\" colspan=\"1\">20.2 (13.1, 31.1)</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Maximum IR estimate (95% CI)</td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\">26.0 (13.7, 49.4)</td>\n      <td rowspan=\"1\" colspan=\"1\">26.3 (14.1, 38.4)</td>\n      <td rowspan=\"1\" colspan=\"1\">51.7 (34.6, 68.9)</td>\n      <td rowspan=\"1\" colspan=\"1\">74.2 (45.8, 102.5)</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Median IR‡</td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\">24.1</td>\n      <td rowspan=\"1\" colspan=\"1\">19.8</td>\n      <td rowspan=\"1\" colspan=\"1\">37.3</td>\n      <td rowspan=\"1\" colspan=\"1\">59.1</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">IQR‡</td>\n      <td rowspan=\"1\" colspan=\"1\">—</td>\n      <td rowspan=\"1\" colspan=\"1\">22.6–25.1</td>\n      <td rowspan=\"1\" colspan=\"1\">15.5–22.0</td>\n      <td rowspan=\"1\" colspan=\"1\">28.2–43.4</td>\n      <td rowspan=\"1\" colspan=\"1\">46.3–65.9</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Meta-analysis estimate (95% CI)§</td>\n      <td rowspan=\"1\" colspan=\"1\">—</td>\n      <td rowspan=\"1\" colspan=\"1\">22.4 (18.2, 27.1)</td>\n      <td rowspan=\"1\" colspan=\"1\">18.7 (13.4, 24.9)</td>\n      <td rowspan=\"1\" colspan=\"1\">32.7 (16.8, 53.7)</td>\n      <td rowspan=\"1\" colspan=\"1\">50.5 (26.6, 81.3)</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">I2 measure of heterogeneity, %¶</td>\n      <td rowspan=\"1\" colspan=\"1\">—</td>\n      <td rowspan=\"1\" colspan=\"1\">0</td>\n      <td rowspan=\"1\" colspan=\"1\">58.7</td>\n      <td rowspan=\"1\" colspan=\"1\">89.5</td>\n      <td rowspan=\"1\" colspan=\"1\">88.0</td>\n    </tr>\n    <tr>\n      <td rowspan=\"7\" colspan=\"1\">naMCI</td>\n      <td rowspan=\"1\" colspan=\"1\">Number of studies</td>\n      <td rowspan=\"1\" colspan=\"1\">1 [36]</td>\n      <td rowspan=\"1\" colspan=\"1\">3 [6], [34], [36]</td>\n      <td rowspan=\"1\" colspan=\"1\">4 [6], [12], [34], [36]</td>\n      <td rowspan=\"1\" colspan=\"1\">3 [6], [12], [34]</td>\n      <td rowspan=\"1\" colspan=\"1\">3 [6], [12], [34]</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Minimum IR estimate (95% CI)</td>\n      <td rowspan=\"1\" colspan=\"1\">17 (10, 24)</td>\n      <td rowspan=\"1\" colspan=\"1\">7.7 (0.7, 14.8)</td>\n      <td rowspan=\"1\" colspan=\"1\">9.5 (2.3, 16.6)</td>\n      <td rowspan=\"1\" colspan=\"1\">21.1 (10.2, 32.1)</td>\n      <td rowspan=\"1\" colspan=\"1\">32.0 (12.9, 51.2)</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Maximum IR estimate (95% CI)</td>\n      <td rowspan=\"1\" colspan=\"1\"></td>\n      <td rowspan=\"1\" colspan=\"1\">46.1 (29.1, 73.2)</td>\n      <td rowspan=\"1\" colspan=\"1\">37.8 (20.9, 68.5)</td>\n      <td rowspan=\"1\" colspan=\"1\">50.9 (34.1, 75.9)</td>\n      <td rowspan=\"1\" colspan=\"1\">94.6 (64.9, 137.9)</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Median IR‡</td>\n      <td rowspan=\"1\" colspan=\"1\">17</td>\n      <td rowspan=\"1\" colspan=\"1\">26.0</td>\n      <td rowspan=\"1\" colspan=\"1\">34.4</td>\n      <td rowspan=\"1\" colspan=\"1\">28.6</td>\n      <td rowspan=\"1\" colspan=\"1\">49.7</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">IQR‡</td>\n      <td rowspan=\"1\" colspan=\"1\">—</td>\n      <td rowspan=\"1\" colspan=\"1\">16.9–36.1</td>\n      <td rowspan=\"1\" colspan=\"1\">27.9–35.6</td>\n      <td rowspan=\"1\" colspan=\"1\">24.9–39.8</td>\n      <td rowspan=\"1\" colspan=\"1\">40.9–72.2</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">Meta-analysis estimate (95% CI)§</td>\n      <td rowspan=\"1\" colspan=\"1\">—</td>\n      <td rowspan=\"1\" colspan=\"1\">23.3 (7.9, 46.3)</td>\n      <td rowspan=\"1\" colspan=\"1\">27.6 (15.1, 43.6)</td>\n      <td rowspan=\"1\" colspan=\"1\">31.1 (18.1, 47.3)</td>\n      <td rowspan=\"1\" colspan=\"1\">54.3 (26.9, 90.4)</td>\n    </tr>\n    <tr>\n      <td rowspan=\"1\" colspan=\"1\">I2 measure of heterogeneity, %¶</td>\n      <td rowspan=\"1\" colspan=\"1\">—</td>\n      <td rowspan=\"1\" colspan=\"1\">93.2</td>\n      <td rowspan=\"1\" colspan=\"1\">89.8</td>\n      <td rowspan=\"1\" colspan=\"1\">79.7</td>\n      <td rowspan=\"1\" colspan=\"1\">87.8</td>\n    </tr>\n  </tbody>\n</table>"
+        },
+        {
+          "article_id": "pilot-pmc10000452-pmc6416157-502eaa3572eaf017",
+          "run_id": "2b001740-a3fe-474c-86df-34ea0faf8ce6",
+          "source_sha256": "502eaa3572eaf01749010d6b4f40590ede4abef1dcc926d505da7aeecd644e4a",
+          "unit_id": "U41",
+          "offset_encoding": "unicode_code_points",
+          "start": 23711,
+          "end": 23943,
+          "text": "∗Studies included met eligibility criteria for qualitative review (see Supplementary Table A.2) and also (A) required subjective cognitive or memory concerns in the MCI definition and (B) reported estimates in 5-year age categories."
+        },
+        {
+          "article_id": "pilot-pmc10000452-pmc6416157-502eaa3572eaf017",
+          "run_id": "2b001740-a3fe-474c-86df-34ea0faf8ce6",
+          "source_sha256": "502eaa3572eaf01749010d6b4f40590ede4abef1dcc926d505da7aeecd644e4a",
+          "unit_id": "U45",
+          "offset_encoding": "unicode_code_points",
+          "start": 24531,
+          "end": 24804,
+          "text": "¶I2 is the percentage of the variability due to heterogeneity rather than sampling error: 0% to 40%: might not be important, 30% to 60%: may represent moderate heterogeneity; 50% to 90%: may represent substantial heterogeneity, 75% to 100%: considerable heterogeneity [15]."
+        },
+        {
+          "article_id": "pilot-pmc10000452-pmc6416157-502eaa3572eaf017",
+          "run_id": "2b001740-a3fe-474c-86df-34ea0faf8ce6",
+          "source_sha256": "502eaa3572eaf01749010d6b4f40590ede4abef1dcc926d505da7aeecd644e4a",
+          "unit_id": "U48",
+          "offset_encoding": "unicode_code_points",
+          "start": 24840,
+          "end": 26185,
+          "text": "Incidence estimates within each 5-year age category varied substantially from study to study, as indicated by the range (minimum, maximum) and IQRs in Table 1. When we examined patterns in the incidence rate estimates, we observed that study-specific estimates generally increased with age, as expected. The meta-analysis summary estimates for the random-effects models in each 5-year age category are provided in Table 1. Meta-analysis estimates (95% CI) of MCI incidence per 1000 person-years were 22.5 (5.1–51.4) for 75–79 years, 40.9 (7.7–97.5) for 80–84 years, and 60.1 (6.7–159.0) for 85+ years. Substantial heterogeneity was observed within almost all age strata, with the I2 ranging from 58.7% to 98.3%, although one stratum had an I2 of 0%. This statistical heterogeneity was also apparent in forest plots of the data (Supplementary Figs. A1–A3). The one exception was the aMCI incidence in the 70–74 year age category, where I2 = 0, and the summary median IR estimate was 24.1 per 1000 person-years. The findings from the descriptive analysis were consistent with the findings from the meta-analysis based on evaluation of point estimates and ranges for each analysis. Median and IQR from descriptive findings resided within the 95% CIs of the meta-analysis findings for each age band in each MCI category (MCI total, aMCI, and naMCI)."
+        }
+      ],
+      "expected_relations": [
+        "partial"
+      ],
+      "rationale_ru": "Числа 22,5 и 60,1 найдены, но источник сообщает на 1000 человеко-лет, цель — проценты; возрастная верхняя категория источника смешивает 85+, 85–89 и 85–94. Эквивалентность запрещена, утверждённая карта не исправляется.",
+      "citation_number": 6,
+      "required_difference_fields": [
+        "units"
+      ],
+      "xml": {
+        "number": 6,
+        "rid": "B6-healthcare-11-00703",
+        "xml_paragraph": "As life expectancy increases, cognitive impairment becomes an inextricable facet of aging. Worldwide, it is estimated that over 55 million people live with dementia, a number that is about to rise to 139 million people by 2050, while a substantial percentage of dementia patients has yet to receive a formal diagnosis [1]. In contrast, normal cognitive aging comprises predictable age-related cognitive changes, as indicated by age and education-adjusted domain-specific scores that fall within 1.5 standard deviations from the population mean [2]. Persons who display domain-specific (i.e., not global) cognitive impairment, which is not considered serious mental disorder and does not interfere with daily functioning, are likely to be diagnosed with mild cognitive impairment (MCI) [3]. Individuals with MCI are considered at high risk of progression to dementia [4], with conversion rates ranging from 6 to 44.8%, according to a recent meta-analysis [5]. MCI incidence rates increase from 22.5% for ages 75–79 to 60.1% for individuals beyond 85 years old [6]. In Greece specifically, MCI prevalence ranges from 13.11% [7] to 32.4% (Cretan Aging Cohort) [8].",
+        "xref_xml": "<xref rid=\"B6-healthcare-11-00703\" ref-type=\"bibr\">6</xref>]. In Greece specifically, MCI prevalence ranges from 13.11% ["
+      }
+    },
+    {
+      "id": "citation-17",
+      "kind": "citation",
+      "left_knowledge_ids": [
+        "K12"
+      ],
+      "right_article_id": "pilot-pmc10000452-pmc5436834-10b9d676a760e5df",
+      "right_run_id": "23d54ea7-9685-4742-8f54-0884dc7054c2",
+      "right_knowledge_ids": [
+        "K18"
+      ],
+      "left_fragment": {
+        "article_id": "pilot-pmc10000452-pmc10000452-f7df96ff746be4a6",
+        "run_id": "ef432af7-79ae-4632-bfc5-d7adc899cb24",
+        "source_sha256": "f7df96ff746be4a60a6930ff2c5c25435725d0591dfe1f492259624b2d7c0bc8",
+        "unit_id": "U10",
+        "offset_encoding": "unicode_code_points",
+        "start": 5374,
+        "end": 5503,
+        "text": "Elevated cerebrospinal fluid and plasma levels of Tumor Necrosis Factor-alpha (TNFa) and Interleukin-6 (IL-6) in AD patients [17]"
+      },
+      "right_fragments": [
+        {
+          "article_id": "pilot-pmc10000452-pmc5436834-10b9d676a760e5df",
+          "run_id": "23d54ea7-9685-4742-8f54-0884dc7054c2",
+          "source_sha256": "10b9d676a760e5dff9c20a7858f3f795e0fa60adf931a02b82a3b02089df905a",
+          "unit_id": "U15",
+          "offset_encoding": "unicode_code_points",
+          "start": 5947,
+          "end": 6991,
+          "text": "The role of TNF-α in the pathophysiology of AD has been examined both in clinical and animal studies. One of the earliest evidence suggesting the involvement of TNF-α in AD pathophysiology was its presence around the Aβ plaque in postmortem human AD brains.25 Following studies in human AD brains showed that TNFR1 signaling is required for Aβ-induced neuronal death, and although TNFR1 protein levels are significantly greater in AD brains compared with nondemented brains, TNFR2 protein levels are lower.26 Furthermore, an increase in the binding affinity of TNF-α to TNFR1, but a decrease in binding affinity to TNFR2, was observed.26 Genetic association studies showed that chromosome 12p region encoding for the TNFR1 gene and the chromosome 1p region encoding for the TNFR2 gene are associated with late-onset AD.27 The role of TNF-α in AD pathology was further suggested by studies in which significant elevation of TNF-α levels in the cerebrospinal fluid (CSF)28 and serum29,30 of patients with AD correlated with disease progression.30"
+        }
+      ],
+      "expected_relations": [
+        "partial"
+      ],
+      "rationale_ru": "Источник подтверждает TNF в CSF и сыворотке при AD. Не подтверждает IL-6 и не позволяет автоматически заменить сыворотку плазмой. Продолжение про прогноз/когницию относится к ссылкам 18/19, не к 17.",
+      "citation_number": 17,
+      "xml": {
+        "number": 17,
+        "rid": "B17-healthcare-11-00703",
+        "xml_paragraph": "Other biomarkers (including genetic factors, pro-inflammatory cytokines and stress hormones) contribute to disease progression and differentiate between clinical categories (MCI, dementia). The APOE ε4 allele is an established risk factor for dementia, incident MCI, and rate of conversion from MCI to dementia [15]. Dysregulation of inflammatory response (a condition also known as “inflamm-aging”) seems to play a critical role in the pathogenesis of neurodegenerative diseases, although the underlying mechanisms are not clearly understood [16]. Elevated cerebrospinal fluid and plasma levels of Tumor Necrosis Factor-alpha (TNFa) and Interleukin-6 (IL-6) in AD patients [17] predict further cognitive decline [18] and have been linked to worse cognitive performance in both MCI and AD patients [19]. Impaired regulation of pro-inflammatory cytokine secretion has been found in sleep-related disorders and acute sleep deprivation [20,21]. Moreover, increased IL-6 plasma levels predict poor sleep quality [22] and relate to excessive daytime sleepiness in the cognitively intact elderly [23]. Elevated cerebrospinal fluid and plasma cortisol levels have been detected in both MCI and dementia patients, whereas increased cortisol may exert deleterious effects on memory recall via biphasic activation of specific receptors in the hippocampus, leading to downregulation of Long-Term Potentiation [24]. Additionally, overexpression of cortisol receptors in prefrontal areas may be associated with executive deficits emerging from irregular activity patterns in the prefrontal cortex [25]. The two processes may be interrelated, as impaired executive function mediates the relationship between basal cortisol levels and impaired memory recall [26].",
+        "xref_xml": "<xref rid=\"B17-healthcare-11-00703\" ref-type=\"bibr\">17</xref>] predict further cognitive decline ["
+      }
+    },
+    {
+      "id": "citation-41-blood",
+      "kind": "citation",
+      "left_knowledge_ids": [
+        "K35",
+        "K36"
+      ],
+      "right_article_id": "pilot-pmc10000452-pmc8775386-953d8a7973426b47",
+      "right_run_id": "cb4dced6-1c5e-4d8f-8fc8-00a6a1c2d59e",
+      "right_knowledge_ids": [
+        "K14"
+      ],
+      "left_fragment": {
+        "article_id": "pilot-pmc10000452-pmc10000452-f7df96ff746be4a6",
+        "run_id": "ef432af7-79ae-4632-bfc5-d7adc899cb24",
+        "source_sha256": "f7df96ff746be4a60a6930ff2c5c25435725d0591dfe1f492259624b2d7c0bc8",
+        "unit_id": "U28",
+        "offset_encoding": "unicode_code_points",
+        "start": 16496,
+        "end": 17223,
+        "text": "Single morning blood samples were collected (between 10:00 am and 12:00 pm) to assess inflammatory markers (IL-6, TNFa and C-Reactive Protein, n = 119) and plasma cortisol levels (available for116 participants). Blood samples were transferred to EDTA-containing tubes, refrigerated, centrifuged for plasma isolation and kept in deep freeze (−80 °C). Plasma TNFa and IL-6 were measured using the ELISA technique (Human TNF-alpha Quantikine HS ELISA and Human IL-6 Quantikine HS ELISA kits, R&D Systems Europe, Abington, UK). Plasma cortisol levels were measured using the ELISA technique (Cusabio Technology LLC, Texas, USA). The same procedure was followed at Phase II, rendering results comparable between the two phases [41]."
+      },
+      "right_fragments": [
+        {
+          "article_id": "pilot-pmc10000452-pmc8775386-953d8a7973426b47",
+          "run_id": "cb4dced6-1c5e-4d8f-8fc8-00a6a1c2d59e",
+          "source_sha256": "953d8a7973426b4790a3925cf72fdcee63c0bb3c3a4aa99c3097d7ad70f27c3a",
+          "unit_id": "U27",
+          "offset_encoding": "unicode_code_points",
+          "start": 12732,
+          "end": 13557,
+          "text": "Blood samples were collected from each participant between 10:00 am and 12:00 pm, transferred to EDTA-containing tubes (three per participant) and refrigerated until centrifugation (within 3 h) for plasma isolation. Afterwards, the plasma samples were kept in deep freeze (−80 °C). Plasma TFN-α and IL-6 were measured by ELISA technique (Human TNF-alpha Quantikine HS ELISA and Human IL-6 Quantikine HS ELISA kits respectively, R&D Systems Europe, Abington, UK). For the TNF-α measurement, the inter-assay coefficient of variation was 12.74%, the intra-assay coefficient of variation was 19.04, and the lower detection limit was 0.209 pg/mL. For the IL-6 determination, the inter-assay coefficients of variation were 13.09%, the intra-assay coefficients of variation were 11.04, and the lower detection limit was 0.133 pg/mL."
+        }
+      ],
+      "expected_relations": [
+        "partial"
+      ],
+      "rationale_ru": "Совпадают время крови, EDTA, охлаждение/центрифугирование, −80°C и Quantikine TNF/IL-6. Цель — последующая фаза с CRP/кортизолом, источник — иной состав фазы II; не эквивалентность выполненных действий.",
+      "citation_number": 41,
+      "xml": {
+        "number": 41,
+        "rid": "B41-healthcare-11-00703",
+        "xml_paragraph": "Single morning blood samples were collected (between 10:00 am and 12:00 pm) to assess inflammatory markers (IL-6, TNFa and C-Reactive Protein, n = 119) and plasma cortisol levels (available for116 participants). Blood samples were transferred to EDTA-containing tubes, refrigerated, centrifuged for plasma isolation and kept in deep freeze (−80 °C). Plasma TNFa and IL-6 were measured using the ELISA technique (Human TNF-alpha Quantikine HS ELISA and Human IL-6 Quantikine HS ELISA kits, R&D Systems Europe, Abington, UK). Plasma cortisol levels were measured using the ELISA technique (Cusabio Technology LLC, Texas, USA). The same procedure was followed at Phase II, rendering results comparable between the two phases [41].",
+        "xref_xml": "<xref rid=\"B41-healthcare-11-00703\" ref-type=\"bibr\">41</xref>]."
+      }
+    },
+    {
+      "id": "citation-41-sleep",
+      "kind": "citation",
+      "left_knowledge_ids": [
+        "K46"
+      ],
+      "right_article_id": "pilot-pmc10000452-pmc8775386-953d8a7973426b47",
+      "right_run_id": "cb4dced6-1c5e-4d8f-8fc8-00a6a1c2d59e",
+      "right_knowledge_ids": [
+        "K18"
+      ],
+      "left_fragment": {
+        "article_id": "pilot-pmc10000452-pmc10000452-f7df96ff746be4a6",
+        "run_id": "ef432af7-79ae-4632-bfc5-d7adc899cb24",
+        "source_sha256": "f7df96ff746be4a60a6930ff2c5c25435725d0591dfe1f492259624b2d7c0bc8",
+        "unit_id": "U41",
+        "offset_encoding": "unicode_code_points",
+        "start": 21175,
+        "end": 21777,
+        "text": "- -Sleep problems: we used a shortened version of the Penn State Sleep Questionnaire comprising 12 items (answered on a 4-point Likert scale ranging from 0 = absence of symptoms to 3 = serious symptomatology) in order to assess presence and severity of self-reported sleep complaints, sleep duration and napping throughout the day (apnea, snoring, excessive movements during sleep, difficulty falling/staying asleep, early awakening, overall quality of sleep and, lastly, average night sleep duration and time required for falling asleep, as well as napping frequency and duration, if applicable) [41]."
+      },
+      "right_fragments": [
+        {
+          "article_id": "pilot-pmc10000452-pmc8775386-953d8a7973426b47",
+          "run_id": "cb4dced6-1c5e-4d8f-8fc8-00a6a1c2d59e",
+          "source_sha256": "953d8a7973426b4790a3925cf72fdcee63c0bb3c3a4aa99c3097d7ad70f27c3a",
+          "unit_id": "U31",
+          "offset_encoding": "unicode_code_points",
+          "start": 15236,
+          "end": 16752,
+          "text": "Subjective Sleep: Subjective sleep and presence of any sleep disorder were evaluated using 20 sleep-related questions from a standardized questionnaire, used in the Penn State Cohort and described in detail elsewhere [40]. In the current analysis, subjective sleep variables examined were non-refreshing sleep, excessive daytime sleepiness (EDS), sleep apnea symptoms and insomnia symptoms qualified in terms of severity on a scale of 0–4 (0 = none, 1 = mild, 2 = moderate, 3 = severe). Non-refreshing sleep was evaluated by a positive response (“often” or “always”) to the following question “Do you feel groggy and un-refreshed after you wake up in the morning”. Excessive Daytime Sleepiness (EDS) was evaluated by a positive response (“often” or “always”) to one or both of the questions: “Do you feel groggy or sleepy most of the day but manage to stay awake”, and/or “Do you have irresistible sleep attacks”. The presence of symptoms consistent with sleep apnea was indicated by a positive response on one or both of the following questions: “Do you know/Have you been told that you stop breathing or breath irregularly during sleep, occasionally, often or always?” and “Do you know/Have you been told that you snore during sleep to a moderate/severe degree?”. Finally, the presence of “insomnia symptoms” was established on a “yes” answer to the questions: “Do you have difficulty falling asleep”, “Do you have difficulty staying asleep” or “Do you wake up in the morning earlier than desired” often or always."
+        }
+      ],
+      "expected_relations": [
+        "partial"
+      ],
+      "rationale_ru": "Общая семья Penn State, но 12 вопросов в цели против 20 в источнике; у источника 0–4 в заявлении и перечисление 0–3. Ни одно расхождение не исправлено.",
+      "citation_number": 41,
+      "required_difference_fields": [
+        "attributes"
+      ],
+      "xml": {
+        "number": 41,
+        "rid": "B41-healthcare-11-00703",
+        "xml_paragraph": "Sleep problems: we used a shortened version of the Penn State Sleep Questionnaire comprising 12 items (answered on a 4-point Likert scale ranging from 0 = absence of symptoms to 3 = serious symptomatology) in order to assess presence and severity of self-reported sleep complaints, sleep duration and napping throughout the day (apnea, snoring, excessive movements during sleep, difficulty falling/staying asleep, early awakening, overall quality of sleep and, lastly, average night sleep duration and time required for falling asleep, as well as napping frequency and duration, if applicable) [41].",
+        "xref_xml": "<xref rid=\"B41-healthcare-11-00703\" ref-type=\"bibr\">41</xref>]."
+      }
+    },
+    {
+      "id": "citation-41-walking",
+      "kind": "citation",
+      "left_knowledge_ids": [
+        "K47"
+      ],
+      "right_article_id": "pilot-pmc10000452-pmc8775386-953d8a7973426b47",
+      "right_run_id": "cb4dced6-1c5e-4d8f-8fc8-00a6a1c2d59e",
+      "right_knowledge_ids": [
+        "K21"
+      ],
+      "left_fragment": {
+        "article_id": "pilot-pmc10000452-pmc10000452-f7df96ff746be4a6",
+        "run_id": "ef432af7-79ae-4632-bfc5-d7adc899cb24",
+        "source_sha256": "f7df96ff746be4a60a6930ff2c5c25435725d0591dfe1f492259624b2d7c0bc8",
+        "unit_id": "U42",
+        "offset_encoding": "unicode_code_points",
+        "start": 21779,
+        "end": 22378,
+        "text": "- -Lifestyle habits: we recorded current smoking and drinking habits (number of cigarettes if a current smoker, smoking cessation and year of quitting, as well as frequency of alcohol consumption on a daily basis). We also estimated level of physical activity during the previous week (including frequency of participation in particular activities such as gardening, housework, handiwork, shopping), as well as based on participants’ responses to the question “How many days did you walk for more than 10 min in a row in a brisk manner during the last week?”, as previously described in detail [41]."
+      },
+      "right_fragments": [
+        {
+          "article_id": "pilot-pmc10000452-pmc8775386-953d8a7973426b47",
+          "run_id": "cb4dced6-1c5e-4d8f-8fc8-00a6a1c2d59e",
+          "source_sha256": "953d8a7973426b4790a3925cf72fdcee63c0bb3c3a4aa99c3097d7ad70f27c3a",
+          "unit_id": "U35",
+          "offset_encoding": "unicode_code_points",
+          "start": 19553,
+          "end": 20126,
+          "text": "Regular physical activity was based on participant responses to a single question “How many days did you walk for more than 10 min in a row in a brisk manner during the last week”. Since we aimed to evaluate the role of mild physical activity, lack of physical activity was defined if participants had less than three days of 10 min of brisk walking in a row during the last week, given that adults engaging in less than 30 min of activity per week are considered as significantly inactive [44]. Lack of activity was coded with a value of 1 and presence of activity with 0."
+        }
+      ],
+      "expected_relations": [
+        "partial"
+      ],
+      "rationale_ru": "Совпадает вопрос о непрерывной быстрой ходьбе >10 минут за прошлую неделю. Источник дополнительно задаёт порог <3 дней и обратную кодировку; группы и фазы разные.",
+      "citation_number": 41,
+      "xml": {
+        "number": 41,
+        "rid": "B41-healthcare-11-00703",
+        "xml_paragraph": "Lifestyle habits: we recorded current smoking and drinking habits (number of cigarettes if a current smoker, smoking cessation and year of quitting, as well as frequency of alcohol consumption on a daily basis). We also estimated level of physical activity during the previous week (including frequency of participation in particular activities such as gardening, housework, handiwork, shopping), as well as based on participants’ responses to the question “How many days did you walk for more than 10 min in a row in a brisk manner during the last week?”, as previously described in detail [41].",
+        "xref_xml": "<xref rid=\"B41-healthcare-11-00703\" ref-type=\"bibr\">41</xref>]."
+      }
+    },
+    {
+      "id": "hard-prevalence-incidence",
+      "kind": "hard",
+      "left_knowledge_ids": [
+        "K5"
+      ],
+      "right_article_id": "pilot-pmc10000452-pmc7789349-73aceacf48b80ce6",
+      "right_run_id": "72135bc7-c18c-4aba-8a3b-87ad4c1f716a",
+      "right_knowledge_ids": [
+        "K84"
+      ],
+      "left_fragment": {
+        "article_id": "pilot-pmc10000452-pmc10000452-f7df96ff746be4a6",
+        "run_id": "ef432af7-79ae-4632-bfc5-d7adc899cb24",
+        "source_sha256": "f7df96ff746be4a60a6930ff2c5c25435725d0591dfe1f492259624b2d7c0bc8",
+        "unit_id": "U8",
+        "offset_encoding": "unicode_code_points",
+        "start": 2267,
+        "end": 3428,
+        "text": "As life expectancy increases, cognitive impairment becomes an inextricable facet of aging. Worldwide, it is estimated that over 55 million people live with dementia, a number that is about to rise to 139 million people by 2050, while a substantial percentage of dementia patients has yet to receive a formal diagnosis [1]. In contrast, normal cognitive aging comprises predictable age-related cognitive changes, as indicated by age and education-adjusted domain-specific scores that fall within 1.5 standard deviations from the population mean [2]. Persons who display domain-specific (i.e., not global) cognitive impairment, which is not considered serious mental disorder and does not interfere with daily functioning, are likely to be diagnosed with mild cognitive impairment (MCI) [3]. Individuals with MCI are considered at high risk of progression to dementia [4], with conversion rates ranging from 6 to 44.8%, according to a recent meta-analysis [5]. MCI incidence rates increase from 22.5% for ages 75–79 to 60.1% for individuals beyond 85 years old [6]. In Greece specifically, MCI prevalence ranges from 13.11% [7] to 32.4% (Cretan Aging Cohort) [8]."
+      },
+      "right_fragments": [
+        {
+          "article_id": "pilot-pmc10000452-pmc7789349-73aceacf48b80ce6",
+          "run_id": "72135bc7-c18c-4aba-8a3b-87ad4c1f716a",
+          "source_sha256": "73aceacf48b80ce687091ad566213d687d981782580ef6128d6e21eca100f859",
+          "unit_id": "U5",
+          "offset_encoding": "unicode_code_points",
+          "start": 230,
+          "end": 549,
+          "text": "Mild cognitive impairment (MCI) is an intermediate phase between normal cognitive ageing and overt dementia, with amnesic MCI (aMCI) being the dominant subtype. This study aims to synthesise the prevalence results of MCI and aMCI in community-dwelling populations in China through a meta-analysis and systematic review."
+        },
+        {
+          "article_id": "pilot-pmc10000452-pmc7789349-73aceacf48b80ce6",
+          "run_id": "72135bc7-c18c-4aba-8a3b-87ad4c1f716a",
+          "source_sha256": "73aceacf48b80ce687091ad566213d687d981782580ef6128d6e21eca100f859",
+          "unit_id": "U38",
+          "offset_encoding": "unicode_code_points",
+          "start": 36531,
+          "end": 36554,
+          "text": "Note: * aMCI prevalence"
+        }
+      ],
+      "expected_relations": [
+        "topical",
+        "partial",
+        "template"
+      ],
+      "rationale_ru": "Сходные MCI и проценты, но китайская распространённость не является заболеваемостью по возрасту в цитируемом обзоре."
+    },
+    {
+      "id": "hard-sleep-period",
+      "kind": "hard",
+      "left_knowledge_ids": [
+        "K30"
+      ],
+      "right_article_id": "pilot-pmc10000452-pmc8775386-953d8a7973426b47",
+      "right_run_id": "cb4dced6-1c5e-4d8f-8fc8-00a6a1c2d59e",
+      "right_knowledge_ids": [
+        "K19"
+      ],
+      "left_fragment": {
+        "article_id": "pilot-pmc10000452-pmc10000452-f7df96ff746be4a6",
+        "run_id": "ef432af7-79ae-4632-bfc5-d7adc899cb24",
+        "source_sha256": "f7df96ff746be4a60a6930ff2c5c25435725d0591dfe1f492259624b2d7c0bc8",
+        "unit_id": "U19",
+        "offset_encoding": "unicode_code_points",
+        "start": 13251,
+        "end": 13731,
+        "text": "<figure>\n  <figcaption><strong>Figure 1</strong> Flow diagram of Phases I, II &amp; III of the Cretan Aging Cohort study. Phases I &amp; II were conducted within approximately six months in 2013, whereas Phase III assessments were conducted between 2020–2022. Participant diagnostic status during Phase II is also shown. Abbreviations; MMSE: Mini Mental State Examination, MCI: mild cognitive impairment, CNI: cognitively non-impaired, PSG: polysomnography.</figcaption>\n</figure>"
+      },
+      "right_fragments": [
+        {
+          "article_id": "pilot-pmc10000452-pmc8775386-953d8a7973426b47",
+          "run_id": "cb4dced6-1c5e-4d8f-8fc8-00a6a1c2d59e",
+          "source_sha256": "953d8a7973426b4790a3925cf72fdcee63c0bb3c3a4aa99c3097d7ad70f27c3a",
+          "unit_id": "U32",
+          "offset_encoding": "unicode_code_points",
+          "start": 16754,
+          "end": 19321,
+          "text": "Objective Sleep: Objective measurement of sleep in a free-living environment was documented for three consecutive 24-h periods during weekdays using an actigraph (Actigraph, GT3XP model, Pensacola, FL, USA) placed on the non-dominant arm of the participant. The actigraphic data were examined together with sleep diaries in which the actigraph was removed and “bedtime”/“out of bedtime” times were reported daily. Night was defined based on the questions “What time did you go to bed” and “What time did you get out of bed” answered by the participant in the sleep diary. Naps, defined as daytime sleep for more than 20 min, were based on the actigraphy and the sleep diary provided by the participant [41,42]. Actigraphy data including among other night sleep efficiency (SE), night sleep onset latency (SOL), night total sleep time (TST), night time in bed (TMB), night wake time after sleep onset (WASO), number of awakenings during the night, night average duration of awakenings, 24-h (nighttime and daytime) sleep time (24-hTST), and 24-h (nighttime and daytime) time in bed (24-h TMB) were analyzed using the ActLife 6 software (Actlife v6.9.5 LLC, Pensacola, FL, USA). Periods without actigraphic activity which, based on the sleep diaries, were not identified as sleep were considered as artifacts and were removed from the analysis. Sleep parameters were averaged over three consecutive 24-h. Participants with actigraphy recorded over fewer than three days or average night TST ≤ 3 h were excluded from the analysis. The start time of the 24-h period was set at 11:00 am on the day that the actigraph was applied on the participant’s hand by our staff. Objective sleep parameters were analyzed as continuous variables in all group comparisons. From the objectively recorded sleep time data, we regrouped the entire study sample into two ordinal groups. Initially, the total group was divided in quartiles. Our previous findings based on the same cohort have shown that long but not short sleep duration is associated with cognitive impairment both among CNI and MCI participants. Based on that, we divided the sample to the top 25% of persons above the median percent sleep time (long sleep duration group), and the 75% of persons in the bottom half (normal sleep duration group). We then rounded the cut-off points to meaningful numbers and thus created the following two sleep duration groups: the long sleep duration group consisted of those who slept ≥7.5 h (coded as 1), and the normal sleep duration group of those who slept <7.5 h (coded as 0) [43]."
+        }
+      ],
+      "expected_relations": [
+        "partial",
+        "topical"
+      ],
+      "rationale_ru": "Семидневная запись фазы III и трёхдневная фазы II: одна технология при разных периодах/выборках."
+    },
+    {
+      "id": "hard-biomarker-outcome",
+      "kind": "hard",
+      "left_knowledge_ids": [
+        "K12"
+      ],
+      "right_article_id": "pilot-pmc10000452-pmc8775386-953d8a7973426b47",
+      "right_run_id": "cb4dced6-1c5e-4d8f-8fc8-00a6a1c2d59e",
+      "right_knowledge_ids": [
+        "K132"
+      ],
+      "left_fragment": {
+        "article_id": "pilot-pmc10000452-pmc10000452-f7df96ff746be4a6",
+        "run_id": "ef432af7-79ae-4632-bfc5-d7adc899cb24",
+        "source_sha256": "f7df96ff746be4a60a6930ff2c5c25435725d0591dfe1f492259624b2d7c0bc8",
+        "unit_id": "U10",
+        "offset_encoding": "unicode_code_points",
+        "start": 4825,
+        "end": 6573,
+        "text": "Other biomarkers (including genetic factors, pro-inflammatory cytokines and stress hormones) contribute to disease progression and differentiate between clinical categories (MCI, dementia). The APOE ε4 allele is an established risk factor for dementia, incident MCI, and rate of conversion from MCI to dementia [15]. Dysregulation of inflammatory response (a condition also known as “inflamm-aging”) seems to play a critical role in the pathogenesis of neurodegenerative diseases, although the underlying mechanisms are not clearly understood [16]. Elevated cerebrospinal fluid and plasma levels of Tumor Necrosis Factor-alpha (TNFa) and Interleukin-6 (IL-6) in AD patients [17] predict further cognitive decline [18] and have been linked to worse cognitive performance in both MCI and AD patients [19]. Impaired regulation of pro-inflammatory cytokine secretion has been found in sleep-related disorders and acute sleep deprivation [20,21]. Moreover, increased IL-6 plasma levels predict poor sleep quality [22] and relate to excessive daytime sleepiness in the cognitively intact elderly [23]. Elevated cerebrospinal fluid and plasma cortisol levels have been detected in both MCI and dementia patients, whereas increased cortisol may exert deleterious effects on memory recall via biphasic activation of specific receptors in the hippocampus, leading to downregulation of Long-Term Potentiation [24]. Additionally, overexpression of cortisol receptors in prefrontal areas may be associated with executive deficits emerging from irregular activity patterns in the prefrontal cortex [25]. The two processes may be interrelated, as impaired executive function mediates the relationship between basal cortisol levels and impaired memory recall [26]."
+      },
+      "right_fragments": [
+        {
+          "article_id": "pilot-pmc10000452-pmc8775386-953d8a7973426b47",
+          "run_id": "cb4dced6-1c5e-4d8f-8fc8-00a6a1c2d59e",
+          "source_sha256": "953d8a7973426b4790a3925cf72fdcee63c0bb3c3a4aa99c3097d7ad70f27c3a",
+          "unit_id": "U63",
+          "offset_encoding": "unicode_code_points",
+          "start": 53281,
+          "end": 54431,
+          "text": "The following variables of interest were entered in the model accounting for IL-6 levels in the total sample: physical activity and consumption of vegetables jointly accounted for 24.2% of variance beyond that explained by step 1 confounders (age, gender, ΒΜΙ, MCI diagnosis; change in R2 = 0.246, p < 0.001). As shown in Table 6, higher levels of IL-6 were significantly associated with lack of physical activity (p = 0.001) and less frequent consumption of vegetables (p = 0.001). In the analyses stratified by MCI diagnosis, consumption of vegetables remained significant in both groups (p < 0.009), while lack of physical activity failed to reach significance (p = 0.06). Post-hoc power estimation indicated that the present sample size ensured adequate power (80%) to reveal a statistically significant independent contribution of physical activity to IL-6 levels (at p < 0.05), modest power (56–63%) to reveal statistically significant contribution of vegetable and meat consumption to TNF-a levels, and much lower power (26–36%) regarding the contribution of long nighttime TST and vegetable consumption to TNF-a and IL-6 levels, respectively."
+        },
+        {
+          "article_id": "pilot-pmc10000452-pmc8775386-953d8a7973426b47",
+          "run_id": "cb4dced6-1c5e-4d8f-8fc8-00a6a1c2d59e",
+          "source_sha256": "953d8a7973426b4790a3925cf72fdcee63c0bb3c3a4aa99c3097d7ad70f27c3a",
+          "unit_id": "U66",
+          "offset_encoding": "unicode_code_points",
+          "start": 55494,
+          "end": 55914,
+          "text": "Variables were included in the final models if they correlated with IL-6 at p < 0.1. Confounders: age, gender, ΒΜΙ, Mild Cognitive Impairment diagnosis. Change in R2 = 0.242, p < 0.001. Unstandardized regression coefficients are reported throughout, in bold if significant at Bonferroni-adjusted p < 0.025. 1 CNI: B = −0.739, p = 0.06; MCI: B = −0.315, p = 0.09, 2 CNI: B = −0.303, p = 0.008; MCI: B = −0.222, p = 0.009."
+        }
+      ],
+      "expected_relations": [
+        "topical"
+      ],
+      "rationale_ru": "IL-6 присутствует в обоих фрагментах, но источник моделирует уровень маркера по образу жизни, а не когнитивный спад."
+    },
+    {
+      "id": "hard-risk-versus-action",
+      "kind": "hard",
+      "left_knowledge_ids": [
+        "K20"
+      ],
+      "right_article_id": "pilot-pmc10000452-pmc8918697-8c000fc820edb9c7",
+      "right_run_id": "1188519e-c2e7-4f19-a288-d99923cce7cb",
+      "right_knowledge_ids": [
+        "K67"
+      ],
+      "left_fragment": {
+        "article_id": "pilot-pmc10000452-pmc10000452-f7df96ff746be4a6",
+        "run_id": "ef432af7-79ae-4632-bfc5-d7adc899cb24",
+        "source_sha256": "f7df96ff746be4a60a6930ff2c5c25435725d0591dfe1f492259624b2d7c0bc8",
+        "unit_id": "U66",
+        "offset_encoding": "unicode_code_points",
+        "start": 44307,
+        "end": 45132,
+        "text": "The current study aimed to identify modifiable risk factors for cognitive deterioration by embracing a comprehensive, multidisciplinary approach, utilizing user-friendly techniques. This is important given the high progression rates from MCI to dementia, the urgent need for timely interventions, as well as the complex interplay between risk factors for cognitive decline. Strengths of this study include the longitudinal design, the relatively large number of MCI patients recruited, the particular socio-economic and cultural characteristics of the current sample, the long follow-up interval and methodological advantages (presence of a control group), which we expect to result in scientifically valid and clinically useful findings in terms of modifiable factors predisposing to cognitive progression among the elderly."
+      },
+      "right_fragments": [
+        {
+          "article_id": "pilot-pmc10000452-pmc8918697-8c000fc820edb9c7",
+          "run_id": "1188519e-c2e7-4f19-a288-d99923cce7cb",
+          "source_sha256": "8c000fc820edb9c7dd89ad948bc2c2563009c256a19c20c7f6b7ab787c373fee",
+          "unit_id": "U79",
+          "offset_encoding": "unicode_code_points",
+          "start": 34530,
+          "end": 36215,
+          "text": "Similar to findings from HICs, non‐modifiable risk factors for progression to dementia from MCI included age\n62\n, \n63\n, \n64\n, \n65\n and APOE ε4 allele status.\n51\n, \n66\n, \n67\n Regarding sex, while being female has been found to be associated with increased risk of prevalent MCI,\n4\n and has been associated with higher risk of progression to dementia in HICs,\n68\n only 2 studies\n38\n, \n44\n out of 10 that investigated sex effects found that being female was a risk factor for conversion from MCI to dementia. Research evidence, predominantly from HICs, suggests a putative link between sex and/or educational attainment and cognition.\n69\n, \n70\n, \n71\n, \n72\n However, methodological weaknesses and potential of reverse causality within these studies adds limitations to their interpretation and warrants longitudinal studies with longer follow‐up.\n71\n Furthermore, key modifiable risk factors were also similar to those reported in HIC settings, including poor cardiometabolic health, the presence of vascular risk factors, and poor neuro‐psychiatric health such as the presence of depression.\n23\n, \n62\n, \n73\n Targeting these factors could be an early strategy for not only preventing MCI, but also reducing the burden of dementia. Research evidence suggests that up to 40% of dementia cases may be preventable through targeting 12 modifiable risk factors,\n74\n many of which can be influenced by diet and lifestyle practices.\n75\n, \n76\n Emerging evidence also indicates that non‐pharmacological interventions such as cognitive training may reduce dementia risk.\n77\n Further work is required to identify if these strategies are plausible for those with MCI, and feasible within LMIC settings."
+        }
+      ],
+      "expected_relations": [
+        "topical",
+        "template",
+        "insufficient"
+      ],
+      "rationale_ru": "Планы профилактики не выполненные действия и не доказанные лечебные эффекты; контекст исследования различается."
+    }
+  ]
+}

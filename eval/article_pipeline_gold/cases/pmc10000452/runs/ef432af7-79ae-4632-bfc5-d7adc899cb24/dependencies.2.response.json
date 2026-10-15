@@ -1,0 +1,611 @@
+{
+  "occurrences": [],
+  "transitions": [
+    {
+      "id": "T16",
+      "sources": [
+        "B30"
+      ],
+      "target": "B41",
+      "usage": "development",
+      "reason": "The stated home assessment is directly refined into this performed measurement procedure; the arrow does not denote a relation between bare instruments.",
+      "unit_ids": [
+        "U35",
+        "U36"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T17",
+      "sources": [
+        "B30"
+      ],
+      "target": "B43",
+      "usage": "development",
+      "reason": "The stated home assessment is directly refined into this performed measurement procedure; the arrow does not denote a relation between bare instruments.",
+      "unit_ids": [
+        "U38"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T18",
+      "sources": [
+        "B30"
+      ],
+      "target": "B44",
+      "usage": "development",
+      "reason": "The stated home assessment is directly refined into this performed measurement procedure; the arrow does not denote a relation between bare instruments.",
+      "unit_ids": [
+        "U39"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T19",
+      "sources": [
+        "B30"
+      ],
+      "target": "B45",
+      "usage": "development",
+      "reason": "The stated home assessment is directly refined into this performed measurement procedure; the arrow does not denote a relation between bare instruments.",
+      "unit_ids": [
+        "U40"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T20",
+      "sources": [
+        "B30"
+      ],
+      "target": "B46",
+      "usage": "development",
+      "reason": "The stated home assessment is directly refined into this performed measurement procedure; the arrow does not denote a relation between bare instruments.",
+      "unit_ids": [
+        "U41"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T21",
+      "sources": [
+        "B30"
+      ],
+      "target": "B47",
+      "usage": "development",
+      "reason": "The stated home assessment is directly refined into this performed measurement procedure; the arrow does not denote a relation between bare instruments.",
+      "unit_ids": [
+        "U42"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T22",
+      "sources": [
+        "B30"
+      ],
+      "target": "B48",
+      "usage": "development",
+      "reason": "The stated home assessment is directly refined into this performed measurement procedure; the arrow does not denote a relation between bare instruments.",
+      "unit_ids": [
+        "U43"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T23",
+      "sources": [
+        "B30"
+      ],
+      "target": "B49",
+      "usage": "development",
+      "reason": "The stated home assessment is directly refined into this performed measurement procedure; the arrow does not denote a relation between bare instruments.",
+      "unit_ids": [
+        "U45"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T24",
+      "sources": [
+        "B30"
+      ],
+      "target": "B50",
+      "usage": "development",
+      "reason": "The stated home assessment is directly refined into this performed measurement procedure; the arrow does not denote a relation between bare instruments.",
+      "unit_ids": [
+        "U45"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T31",
+      "sources": [
+        "B38",
+        "B39",
+        "B49",
+        "B3"
+      ],
+      "target": "B51",
+      "usage": "data",
+      "reason": "The consensus explicitly integrates domain performance, daily functioning and neuropsychiatric symptoms and applies the MCI diagnostic requirement as joint inputs.",
+      "unit_ids": [
+        "U46"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T32",
+      "sources": [
+        "B51"
+      ],
+      "target": "B52",
+      "usage": "development",
+      "reason": "The described consensus diagnostic procedure is directly refined by the differential criteria for dementia subtypes.",
+      "unit_ids": [
+        "U46"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T33",
+      "sources": [
+        "B49",
+        "B41"
+      ],
+      "target": "B42",
+      "usage": "data",
+      "reason": "Clinical psychiatric assessment uses symptom scales and medical/prescription history together; a symptom score alone is not a diagnosis.",
+      "unit_ids": [
+        "U45"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T34",
+      "sources": [
+        "B53"
+      ],
+      "target": "B54",
+      "usage": "condition",
+      "reason": "The authors explicitly choose non-parametric comparisons in view of significant departures from normality.",
+      "unit_ids": [
+        "U48"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T35",
+      "sources": [
+        "B29"
+      ],
+      "target": "B55",
+      "usage": "data",
+      "reason": "The reported power is explicitly a property of the final sample size, not of an invented predictive model.",
+      "unit_ids": [
+        "U48"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T36",
+      "sources": [
+        "B29",
+        "B54"
+      ],
+      "target": "B56",
+      "usage": "data",
+      "reason": "Retention comparisons use the followed-up subgroup versus the full eligible pool and the stated group-comparison methods.",
+      "unit_ids": [
+        "U50"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T37",
+      "sources": [
+        "B29",
+        "B54"
+      ],
+      "target": "B57",
+      "usage": "data",
+      "reason": "Comparability of retained and full pools is assessed using the identified samples and reported comparison methods.",
+      "unit_ids": [
+        "U50"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T38",
+      "sources": [
+        "B29"
+      ],
+      "target": "B58",
+      "usage": "development",
+      "reason": "The descriptive profile directly refines the final analyzed cohort with residence, occupation, education and baseline age characteristics.",
+      "unit_ids": [
+        "U50",
+        "U60"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T39",
+      "sources": [
+        "B54"
+      ],
+      "target": "B59",
+      "usage": "result",
+      "reason": "This table comparison is a reported output of the stated statistical analysis. The edge represents analysis-to-result, not temporal text order.",
+      "unit_ids": [
+        "U51",
+        "U52",
+        "U53",
+        "U5"
+      ],
+      "conditions": [
+        "Group labels refer to Phase II diagnosis; retain both measurement phases"
+      ]
+    },
+    {
+      "id": "T40",
+      "sources": [
+        "B54",
+        "B43"
+      ],
+      "target": "B60",
+      "usage": "result",
+      "reason": "This table comparison is a reported output of the stated statistical analysis using the corresponding measured information as a joint input.",
+      "unit_ids": [
+        "U51",
+        "U52",
+        "U53"
+      ],
+      "conditions": [
+        "Group labels refer to Phase II diagnosis; retain both measurement phases"
+      ]
+    },
+    {
+      "id": "T41",
+      "sources": [
+        "B54"
+      ],
+      "target": "B61",
+      "usage": "result",
+      "reason": "This table comparison is a reported output of the stated statistical analysis. The edge represents analysis-to-result, not temporal text order.",
+      "unit_ids": [
+        "U51",
+        "U52",
+        "U53"
+      ],
+      "conditions": [
+        "Group labels refer to Phase II diagnosis; retain both measurement phases"
+      ]
+    },
+    {
+      "id": "T42",
+      "sources": [
+        "B54",
+        "B41"
+      ],
+      "target": "B62",
+      "usage": "result",
+      "reason": "This table comparison is a reported output of the stated statistical analysis using the corresponding measured information as a joint input.",
+      "unit_ids": [
+        "U51",
+        "U52",
+        "U53"
+      ],
+      "conditions": [
+        "Group labels refer to Phase II diagnosis; retain both measurement phases"
+      ]
+    },
+    {
+      "id": "T43",
+      "sources": [
+        "B54",
+        "B47"
+      ],
+      "target": "B63",
+      "usage": "result",
+      "reason": "This table comparison is a reported output of the stated statistical analysis using the corresponding measured information as a joint input.",
+      "unit_ids": [
+        "U51",
+        "U52",
+        "U53"
+      ],
+      "conditions": [
+        "Group labels refer to Phase II diagnosis; retain both measurement phases"
+      ]
+    },
+    {
+      "id": "T44",
+      "sources": [
+        "B54",
+        "B47"
+      ],
+      "target": "B64",
+      "usage": "result",
+      "reason": "This table comparison is a reported output of the stated statistical analysis using the corresponding measured information as a joint input.",
+      "unit_ids": [
+        "U51",
+        "U52",
+        "U53"
+      ],
+      "conditions": [
+        "Group labels refer to Phase II diagnosis; retain both measurement phases"
+      ]
+    },
+    {
+      "id": "T45",
+      "sources": [
+        "B54"
+      ],
+      "target": "B65",
+      "usage": "result",
+      "reason": "This table comparison is a reported output of the stated statistical analysis. The edge represents analysis-to-result, not temporal text order.",
+      "unit_ids": [
+        "U51",
+        "U52",
+        "U53"
+      ],
+      "conditions": [
+        "Group labels refer to Phase II diagnosis; retain both measurement phases"
+      ]
+    },
+    {
+      "id": "T46",
+      "sources": [
+        "B54"
+      ],
+      "target": "B66",
+      "usage": "result",
+      "reason": "This table comparison is a reported output of the stated statistical analysis. The edge represents analysis-to-result, not temporal text order.",
+      "unit_ids": [
+        "U51",
+        "U52",
+        "U53"
+      ],
+      "conditions": [
+        "Group labels refer to Phase II diagnosis; retain both measurement phases"
+      ]
+    },
+    {
+      "id": "T47",
+      "sources": [
+        "B54"
+      ],
+      "target": "B67",
+      "usage": "result",
+      "reason": "This table comparison is a reported output of the stated statistical analysis. The edge represents analysis-to-result, not temporal text order.",
+      "unit_ids": [
+        "U51",
+        "U52",
+        "U53"
+      ],
+      "conditions": [
+        "Group labels refer to Phase II diagnosis; retain both measurement phases"
+      ]
+    },
+    {
+      "id": "T48",
+      "sources": [
+        "B54"
+      ],
+      "target": "B68",
+      "usage": "result",
+      "reason": "This table comparison is a reported output of the stated statistical analysis. The edge represents analysis-to-result, not temporal text order.",
+      "unit_ids": [
+        "U51",
+        "U52",
+        "U53"
+      ],
+      "conditions": [
+        "Group labels refer to Phase II diagnosis; retain both measurement phases"
+      ]
+    },
+    {
+      "id": "T49",
+      "sources": [
+        "B54"
+      ],
+      "target": "B69",
+      "usage": "result",
+      "reason": "This table comparison is a reported output of the stated statistical analysis. The edge represents analysis-to-result, not temporal text order.",
+      "unit_ids": [
+        "U51",
+        "U52",
+        "U53"
+      ],
+      "conditions": [
+        "Group labels refer to Phase II diagnosis; retain both measurement phases"
+      ]
+    },
+    {
+      "id": "T50",
+      "sources": [
+        "B54"
+      ],
+      "target": "B70",
+      "usage": "result",
+      "reason": "This table comparison is a reported output of the stated statistical analysis. The edge represents analysis-to-result, not temporal text order.",
+      "unit_ids": [
+        "U51",
+        "U52",
+        "U53"
+      ],
+      "conditions": [
+        "Group labels refer to Phase II diagnosis; retain both measurement phases"
+      ]
+    },
+    {
+      "id": "T51",
+      "sources": [
+        "B54",
+        "B49"
+      ],
+      "target": "B71",
+      "usage": "result",
+      "reason": "This table comparison is a reported output of the stated statistical analysis using the corresponding measured information as a joint input.",
+      "unit_ids": [
+        "U55",
+        "U56",
+        "U57"
+      ],
+      "conditions": [
+        "Group labels refer to Phase II diagnosis; retain both measurement phases"
+      ]
+    },
+    {
+      "id": "T52",
+      "sources": [
+        "B54",
+        "B49"
+      ],
+      "target": "B72",
+      "usage": "result",
+      "reason": "This table comparison is a reported output of the stated statistical analysis using the corresponding measured information as a joint input.",
+      "unit_ids": [
+        "U55",
+        "U56",
+        "U57"
+      ],
+      "conditions": [
+        "Group labels refer to Phase II diagnosis; retain both measurement phases"
+      ]
+    },
+    {
+      "id": "T53",
+      "sources": [
+        "B54",
+        "B42"
+      ],
+      "target": "B73",
+      "usage": "result",
+      "reason": "This table comparison is a reported output of the stated statistical analysis using the corresponding measured information as a joint input.",
+      "unit_ids": [
+        "U55",
+        "U56",
+        "U57"
+      ],
+      "conditions": [
+        "Group labels refer to Phase II diagnosis; retain both measurement phases"
+      ]
+    },
+    {
+      "id": "T54",
+      "sources": [
+        "B54",
+        "B42"
+      ],
+      "target": "B74",
+      "usage": "result",
+      "reason": "This table comparison is a reported output of the stated statistical analysis using the corresponding measured information as a joint input.",
+      "unit_ids": [
+        "U55",
+        "U56",
+        "U57"
+      ],
+      "conditions": [
+        "Group labels refer to Phase II diagnosis; retain both measurement phases"
+      ]
+    },
+    {
+      "id": "T55",
+      "sources": [
+        "B54",
+        "B41"
+      ],
+      "target": "B75",
+      "usage": "result",
+      "reason": "This table comparison is a reported output of the stated statistical analysis using the corresponding measured information as a joint input.",
+      "unit_ids": [
+        "U55",
+        "U56",
+        "U57"
+      ],
+      "conditions": [
+        "Group labels refer to Phase II diagnosis; retain both measurement phases"
+      ]
+    },
+    {
+      "id": "T56",
+      "sources": [
+        "B54",
+        "B42"
+      ],
+      "target": "B76",
+      "usage": "result",
+      "reason": "This table comparison is a reported output of the stated statistical analysis using the corresponding measured information as a joint input.",
+      "unit_ids": [
+        "U55",
+        "U56",
+        "U57"
+      ],
+      "conditions": [
+        "Group labels refer to Phase II diagnosis; retain both measurement phases"
+      ]
+    },
+    {
+      "id": "T57",
+      "sources": [
+        "B54",
+        "B50"
+      ],
+      "target": "B77",
+      "usage": "result",
+      "reason": "This table comparison is a reported output of the stated statistical analysis using the corresponding measured information as a joint input.",
+      "unit_ids": [
+        "U55",
+        "U56",
+        "U57"
+      ],
+      "conditions": [
+        "Group labels refer to Phase II diagnosis; retain both measurement phases"
+      ]
+    },
+    {
+      "id": "T58",
+      "sources": [
+        "B59",
+        "B69"
+      ],
+      "target": "B78",
+      "usage": "evidence",
+      "reason": "The author summarizes the two reported exceptions to baseline group comparability: age and APOE ε4 frequency.",
+      "unit_ids": [
+        "U54"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T59",
+      "sources": [
+        "B76",
+        "B77"
+      ],
+      "target": "B79",
+      "usage": "evidence",
+      "reason": "The prose comparison explicitly refers to persistent depression and stressful-event frequencies; its broad comparability claim is preserved with the table discrepancy.",
+      "unit_ids": [
+        "U54"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T60",
+      "sources": [
+        "B71",
+        "B74"
+      ],
+      "target": "B80",
+      "usage": "evidence",
+      "reason": "The author contrasts increased symptom scores with non-significant changes in clinical anxiety diagnoses.",
+      "unit_ids": [
+        "U58"
+      ],
+      "conditions": []
+    }
+  ]
+}

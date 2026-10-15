@@ -59,6 +59,10 @@ tests/
 *.md
 !application/text_to_map.en.md
 !application/text_to_map_dependencies.en.md
+!application/text_to_map.v3.en.md
+!application/text_to_map_dependencies.v15.en.md
+!application/text_to_map.v4.en.md
+!application/text_to_map_dependencies.v16.en.md
 docs/
 
 # Git

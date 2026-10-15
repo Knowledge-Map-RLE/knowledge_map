@@ -1,0 +1,76 @@
+{
+  "pmc_id": "SYDNEY2013",
+  "article_id": "PMC3683032",
+  "run_id": "36ed099c-f3aa-5778-892b-eb2691e5698f",
+  "source_sha256": "1ffe26d344236d4343b8a8b1d3268a40628af9007dbc95117c1722e9b1c2f5c9",
+  "prompt_binding": {
+    "prompt": {
+      "id": "KM.TEXT_TO_MAP",
+      "version": "4",
+      "sha256": "ce39b5220b16d5ee0bfd34d1812daceba00c9a344a10e35df7e8e4b565ed5c43"
+    },
+    "dependency_prompt": {
+      "id": "KM.TEXT_TO_MAP.DEPENDENCIES",
+      "version": "16",
+      "sha256": "68a1ca664669324802405fc27f0d33d0bde181a1aad65a76b5d640ea4ef494eb"
+    }
+  },
+  "generation": {
+    "kind": "codex_manual",
+    "author": "Codex",
+    "external_llm_calls": 0,
+    "local_llm_calls": 0,
+    "translation_llm_calls": 0,
+    "embedding_calls": 0,
+    "token_usage": null,
+    "token_usage_note": "Codex session usage is unavailable; no provider usage is fabricated."
+  },
+  "dependency_groups": [
+    {
+      "targets": [
+        "K1",
+        "K2",
+        "K3",
+        "K4",
+        "K5",
+        "K6",
+        "K7",
+        "K8",
+        "K9",
+        "K10",
+        "K11",
+        "K12",
+        "K13",
+        "K14",
+        "K15",
+        "K16",
+        "K17",
+        "K18",
+        "K19",
+        "K20",
+        "K21",
+        "K22"
+      ],
+      "request": "dependencies.1.request.json",
+      "response": "dependencies.1.response.json"
+    }
+  ],
+  "files": {
+    "article.md": "1ffe26d344236d4343b8a8b1d3268a40628af9007dbc95117c1722e9b1c2f5c9",
+    "article.xml": "836175929b61f654408de08d9696e5c2e2c1c6bc59e6275d14936174232f89cb",
+    "authored.json": "94b67de761d4c56d978b9591583622652bfe831aeaffdb795282f78b8f7b28a5",
+    "coverage.json": "83424589045629cc837e5b83f96a1b055634146e387fdd4c1dfc1c68943e18cb",
+    "dependencies.1.request.json": "3e54e46c517740afdfeb29a581edb8e33d33514806e702190ad644245927ef3b",
+    "dependencies.1.response.json": "659b45ac200f259a7405446b81bf5c0c38de946fe137d4d4522730cf57893f91",
+    "extraction.request.json": "3200c7a19026ce64033828634d0ec2855e7908e43a7c509b8b6f510f15c7338f",
+    "extraction.response.json": "eec865623f54bf638a7a49064d93cb5996a0098854b4bd3d67dd69e5f56d5d6f",
+    "map.html": "060ca1828e97e75dfbd48d1d2e6002ae4823ad2338e20e0f94a86c072ff29417",
+    "map.json": "624a542ce0d41155fb707fd537d68465b11577ec20ad5b98bb6d80a9dca83c97",
+    "prompt.dependencies.en.md": "68a1ca664669324802405fc27f0d33d0bde181a1aad65a76b5d640ea4ef494eb",
+    "prompt.extraction.en.md": "ce39b5220b16d5ee0bfd34d1812daceba00c9a344a10e35df7e8e4b565ed5c43",
+    "report.ru.md": "0f67055f3980d791f033c0224e78589486939bf506631dec0bf7bc3e933a8716",
+    "source.json": "bc501235ed763387c64129ce685f5eaed732fb0ae538a94acfe9a69e6a2621e8",
+    "translation.ru.json": "ab7d714677ad197668f260136bea73f997797d0ab297f104982cfb5f9b31fb61",
+    "validation.json": "01c24da826bd201cdefb7a51094eb22a0ae9811cdbcd2f64960f92840a9be727"
+  }
+}

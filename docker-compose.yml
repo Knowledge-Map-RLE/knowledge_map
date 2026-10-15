@@ -1,23 +1,26 @@
 services:
   neo4j:
-    image: neo4j:5.15.0
+    image: neo4j:2026.09.0
     container_name: knowledge_map_neo4j
+    cpus: 2.0
+    mem_limit: 5g
+    stop_grace_period: 30m
     ports:
       - "7575:7474"   # HTTP для Neo4j Browser (7474 reserved by Windows/Hyper-V)
       - "7687:7687"   # Bolt
     environment:
       NEO4J_AUTH: neo4j/password
       NEO4J_ACCEPT_LICENSE_AGREEMENT: "yes"
-      NEO4J_server_memory_heap_initial__size: "3G"
-      NEO4J_server_memory_heap_max__size: "3G"
-      NEO4J_server_memory_pagecache_size: "3G"
+      NEO4J_server_memory_heap_initial__size: "2G"
+      NEO4J_server_memory_heap_max__size: "2G"
+      NEO4J_server_memory_pagecache_size: "2G"
       NEO4J_db_memory_transaction_total_max: "1G"
       NEO4J_db_transaction_timeout: "300s"
       NEO4J_server_jvm_additional: "-XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UseStringDeduplication"
-      NEO4J_PLUGINS: '["apoc", "n10s"]'
-      NEO4J_dbms_memory_transaction_total_max: "2G"
-      NEO4J_dbms_security_procedures_unrestricted: "apoc.*,gds.*,n10s.*"
-      NEO4J_dbms_security_procedures_allowlist: "apoc.*,gds.*,n10s.*"
+      # n10s не устанавливается: опубликованный релиз несовместим с Neo4j 2026.x.
+      NEO4J_PLUGINS: '["apoc"]'
+      NEO4J_dbms_security_procedures_unrestricted: "apoc.*,gds.*"
+      NEO4J_dbms_security_procedures_allowlist: "apoc.*,gds.*"
       NEO4J_server_directories_import: "/var/lib/neo4j/import"
       NEO4J_dbms_security_allow__csv__import__from__file__urls: "true"
       NEO4J_server_http_enabled: "true"
@@ -42,7 +45,7 @@ services:
       interval: 30s
       timeout: 10s
       retries: 5
-      start_period: 120s
+      start_period: 300s
     restart: unless-stopped
 
   auth:
@@ -335,7 +338,7 @@ services:
       start_period: 15s
 
   s3:
-    image: minio/minio:RELEASE.2024-01-01T16-36-33Z
+    image: quay.io/minio/aistor/minio:RELEASE.2026-09-19T17-05-25Z
     container_name: knowledge_map_s3
     restart: unless-stopped
     ports:
@@ -344,9 +347,10 @@ services:
     environment:
       MINIO_ROOT_USER: minio
       MINIO_ROOT_PASSWORD: minio123456
-    command: server /s3_data --console-address ":9001"
+    command: minio server /s3_data --console-address ":9001" --license /minio.license
     volumes:
       - ./data/s3_data:/s3_data
+      - ./minio.license:/minio.license:ro
     networks:
       - knowledge_map_network
     healthcheck:

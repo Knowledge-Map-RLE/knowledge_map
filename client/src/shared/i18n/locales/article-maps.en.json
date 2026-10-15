@@ -5,10 +5,17 @@
   "version": "Map version",
   "noVersions": "No saved maps",
   "language": "Map language",
+  "navigation": { "controls": "Map navigation", "overview": "Whole map", "block": "Go to block" },
   "noFullText": "Text conversion requires the saved full article text.",
   "reified": "Map from text: concepts and assertions; connections are semantic inputs.",
   "knowledge": "Independent knowledge map: definitions, facts, methods and results; depth: {{depth}} layers.",
   "unsupportedSchema": "Unsupported map schema: {{version}}",
+  "details": {
+    "title": "Knowledge and source", "close": "Close details",
+    "semantics": "Hidden semantics", "source": "Source fragments",
+    "premises": "Joint immediate premises: {{count}}",
+    "unreviewed": "Provenance is technically validated; scientific meaning requires expert review."
+  },
   "pipeline": {
     "text_reified": "From text · concepts and assertions",
     "text_knowledge": "From text · independent knowledge",

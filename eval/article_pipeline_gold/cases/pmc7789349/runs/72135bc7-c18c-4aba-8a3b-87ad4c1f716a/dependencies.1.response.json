@@ -1,0 +1,411 @@
+{
+  "occurrences": [],
+  "transitions": [
+    {
+      "id": "T1",
+      "sources": [
+        "B12"
+      ],
+      "target": "B17",
+      "usage": "result",
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "unit_ids": [
+        "U37"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T2",
+      "sources": [
+        "B12"
+      ],
+      "target": "B18",
+      "usage": "result",
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "unit_ids": [
+        "U37"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T3",
+      "sources": [
+        "B12"
+      ],
+      "target": "B19",
+      "usage": "result",
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "unit_ids": [
+        "U37"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T4",
+      "sources": [
+        "B12"
+      ],
+      "target": "B20",
+      "usage": "result",
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "unit_ids": [
+        "U37"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T5",
+      "sources": [
+        "B12"
+      ],
+      "target": "B21",
+      "usage": "result",
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "unit_ids": [
+        "U37"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T6",
+      "sources": [
+        "B12"
+      ],
+      "target": "B22",
+      "usage": "result",
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "unit_ids": [
+        "U37"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T7",
+      "sources": [
+        "B12"
+      ],
+      "target": "B23",
+      "usage": "result",
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "unit_ids": [
+        "U37"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T8",
+      "sources": [
+        "B12"
+      ],
+      "target": "B24",
+      "usage": "result",
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "unit_ids": [
+        "U37"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T9",
+      "sources": [
+        "B12"
+      ],
+      "target": "B25",
+      "usage": "result",
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "unit_ids": [
+        "U37"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T10",
+      "sources": [
+        "B12"
+      ],
+      "target": "B26",
+      "usage": "result",
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "unit_ids": [
+        "U37"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T11",
+      "sources": [
+        "B12"
+      ],
+      "target": "B27",
+      "usage": "result",
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "unit_ids": [
+        "U37"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T12",
+      "sources": [
+        "B12"
+      ],
+      "target": "B28",
+      "usage": "result",
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "unit_ids": [
+        "U37"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T13",
+      "sources": [
+        "B12"
+      ],
+      "target": "B29",
+      "usage": "result",
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "unit_ids": [
+        "U37"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T14",
+      "sources": [
+        "B12"
+      ],
+      "target": "B30",
+      "usage": "result",
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "unit_ids": [
+        "U37"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T15",
+      "sources": [
+        "B12"
+      ],
+      "target": "B31",
+      "usage": "result",
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "unit_ids": [
+        "U37"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T16",
+      "sources": [
+        "B12"
+      ],
+      "target": "B32",
+      "usage": "result",
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "unit_ids": [
+        "U37"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T17",
+      "sources": [
+        "B12"
+      ],
+      "target": "B33",
+      "usage": "result",
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "unit_ids": [
+        "U37"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T18",
+      "sources": [
+        "B12"
+      ],
+      "target": "B34",
+      "usage": "result",
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "unit_ids": [
+        "U37"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T19",
+      "sources": [
+        "B12"
+      ],
+      "target": "B35",
+      "usage": "result",
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "unit_ids": [
+        "U37"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T20",
+      "sources": [
+        "B12"
+      ],
+      "target": "B36",
+      "usage": "result",
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "unit_ids": [
+        "U37"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T21",
+      "sources": [
+        "B12"
+      ],
+      "target": "B37",
+      "usage": "result",
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "unit_ids": [
+        "U37"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T22",
+      "sources": [
+        "B12"
+      ],
+      "target": "B38",
+      "usage": "result",
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "unit_ids": [
+        "U37"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T23",
+      "sources": [
+        "B12"
+      ],
+      "target": "B39",
+      "usage": "result",
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "unit_ids": [
+        "U37"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T24",
+      "sources": [
+        "B12"
+      ],
+      "target": "B40",
+      "usage": "result",
+      "reason": "The completed extraction provides this cohort-specific prevalence, diagnostic and demographic record.",
+      "unit_ids": [
+        "U37"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T66",
+      "sources": [
+        "B5"
+      ],
+      "target": "B6",
+      "usage": "prerequisite",
+      "reason": "The source's sampling and diagnostic limitations motivate the completed community prevalence synthesis.",
+      "unit_ids": [
+        "U17"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T67",
+      "sources": [
+        "B7"
+      ],
+      "target": "B8",
+      "usage": "method",
+      "reason": "The registered review protocol organizes the reported comprehensive search.",
+      "unit_ids": [
+        "U21"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T68",
+      "sources": [
+        "B8",
+        "B9",
+        "B11"
+      ],
+      "target": "B10",
+      "usage": "method",
+      "reason": "Retrieved publications, population criteria and the bias tool are jointly used in screening and quality selection.",
+      "unit_ids": [
+        "U24"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T69",
+      "sources": [
+        "B10"
+      ],
+      "target": "B15",
+      "usage": "result",
+      "reason": "The completed selection yields the41-study corpus and its reported characteristics.",
+      "unit_ids": [
+        "U35"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T70",
+      "sources": [
+        "B10"
+      ],
+      "target": "B12",
+      "usage": "prerequisite",
+      "reason": "The selected study corpus is the input to parameter extraction.",
+      "unit_ids": [
+        "U27"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T71",
+      "sources": [
+        "B12",
+        "B13"
+      ],
+      "target": "B14",
+      "usage": "method",
+      "reason": "Extracted prevalence/stratification data and the stated robustness procedures are used for synthesis.",
+      "unit_ids": [
+        "U31"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T72",
+      "sources": [
+        "B12"
+      ],
+      "target": "B16",
+      "usage": "result",
+      "reason": "The extracted diagnostic information yields the description of instruments and confirmation criteria.",
+      "unit_ids": [
+        "U35"
+      ],
+      "conditions": []
+    }
+  ]
+}

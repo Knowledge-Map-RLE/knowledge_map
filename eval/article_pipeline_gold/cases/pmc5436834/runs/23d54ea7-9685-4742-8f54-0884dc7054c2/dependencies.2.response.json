@@ -1,0 +1,100 @@
+{
+  "occurrences": [],
+  "transitions": [
+    {
+      "id": "T13",
+      "sources": [
+        "B36"
+      ],
+      "target": "B47",
+      "usage": "prerequisite",
+      "reason": "The engineered fusion is the necessary immediate input to its reported tests and pharmacokinetic characterization.",
+      "unit_ids": [
+        "U24"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T17",
+      "sources": [
+        "B47"
+      ],
+      "target": "B42",
+      "usage": "result",
+      "reason": "Completed model tests supply the reported stroke/Parkinson protection; ongoing AD investigation is retained separately in the contrast frame.",
+      "unit_ids": [
+        "U24"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T18",
+      "sources": [
+        "B35"
+      ],
+      "target": "B43",
+      "usage": "method",
+      "reason": "The receptor-mediated Trojan-horse design is applied to engineer the human-insulin-receptor fusion.",
+      "unit_ids": [
+        "U27"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T19",
+      "sources": [
+        "B43"
+      ],
+      "target": "B48",
+      "usage": "prerequisite",
+      "reason": "The engineered primate-cross-reactive construct is the immediate prerequisite of its reported primate evaluation.",
+      "unit_ids": [
+        "U27"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T20",
+      "sources": [
+        "B48"
+      ],
+      "target": "B44",
+      "usage": "result",
+      "reason": "The primate dosing and uptake measurement yield the reported quantitative comparison.",
+      "unit_ids": [
+        "U27"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T21",
+      "sources": [
+        "B48"
+      ],
+      "target": "B45",
+      "usage": "result",
+      "reason": "The chronic high-dose primate evaluation yields the limited primate safety observation.",
+      "unit_ids": [
+        "U27"
+      ],
+      "conditions": []
+    },
+    {
+      "id": "T22",
+      "sources": [
+        "B23",
+        "B32",
+        "B33",
+        "B31",
+        "B39"
+      ],
+      "target": "B46",
+      "usage": "premise",
+      "reason": "The source's conclusion jointly weighs multifactorial TNF involvement, delivery barriers, unconfirmed clinical efficacy and the noninvasive transport strategy.",
+      "unit_ids": [
+        "U29"
+      ],
+      "conditions": []
+    }
+  ]
+}

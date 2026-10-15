@@ -78,6 +78,8 @@ def fit_aliases(graphs: Iterable[dict]) -> dict[str, str]:
     parent = {}
     records = []
     for graph in graphs:
+        require(graph.get("schema_version") == 5,
+                "Prediction alias analysis requires schema 5; schema 6 must be reviewed before corpus use")
         used = {role["concept_id"] for node in graph["nodes"] for role in node["semantic"]["roles"]
                 if role["concept_id"] is not None}
         records.extend(concept for concept in graph["concepts"] if concept["id"] in used)
@@ -190,6 +192,11 @@ def _template(premises: tuple[Occurrence, ...], head: Occurrence, edges, graph_m
                  "body_edges": internal, "mode": "graph" if graph_mode else "semantic"}
         variants.append((json.dumps(value, sort_keys=True), body, conclusion, internal, ordered))
     return min(variants, key=lambda v: v[0]) if variants else None
+
+
+def abstract_rule(premises, head, edges, graph_mode):
+    """Общее атомарное обобщение; адаптер схемы выбирает допустимые предпосылки."""
+    return _template(premises, head, edges, graph_mode)
 
 
 @dataclass

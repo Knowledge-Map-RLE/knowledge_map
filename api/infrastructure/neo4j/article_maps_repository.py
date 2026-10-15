@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import copy
 import logging
 from datetime import datetime, timedelta, timezone
 
@@ -43,6 +44,10 @@ class Neo4jArticleMapsRepository:
         with self.driver.session() as session:
             session.run("""CREATE CONSTRAINT article_map_slot IF NOT EXISTS
               FOR (m:ArticleMap) REQUIRE (m.article_id,m.pipeline_id) IS UNIQUE""").consume()
+            session.run("""CREATE CONSTRAINT article_map_run IF NOT EXISTS FOR (r:ArticleMapRun)
+              REQUIRE (r.article_id,r.pipeline_id,r.run_id) IS UNIQUE""").consume()
+            session.run("""CREATE CONSTRAINT article_map_translation IF NOT EXISTS FOR (t:ArticleMapTranslation)
+              REQUIRE (t.article_id,t.pipeline_id,t.run_id,t.locale) IS UNIQUE""").consume()
 
     def migrate_legacy_snapshots(self, article_id=None):
         """Переносит старые snapshots один раз, не удаляя исходные данные."""
@@ -98,28 +103,89 @@ class Neo4jArticleMapsRepository:
           SET m.payload=$payload,m.updated_at=$now,m.run_id=$run""", article=result["article_id"],
           payload=json.dumps(result, ensure_ascii=False), now=result["updated_at"], run=result["run_id"]).consume()
 
-    def get(self, article_id, pipeline_id, user_uid):
+    @staticmethod
+    def _archive(tx, result):
+        content = copy.deepcopy(result)
+        translations = content.pop("translations", {})
+        checksum = fingerprint(content)
+        row = tx.run("""MERGE (r:ArticleMapRun {article_id:$article,pipeline_id:$pipeline,run_id:$run})
+          ON CREATE SET r.payload=$payload,r.payload_sha256=$hash,r.updated_at=$now
+          WITH r MATCH (d:Document {uid:$article}) MERGE (d)-[:HAS_ARTICLE_MAP_RUN]->(r)
+          RETURN r.payload_sha256 AS hash""", article=result["article_id"], pipeline=result["pipeline_id"],
+          run=result["run_id"], payload=json.dumps(content, ensure_ascii=False, allow_nan=False),
+          hash=checksum, now=result["updated_at"]).single()
+        if row is None or row["hash"] != checksum:
+            raise ArticleMapConflict("Immutable map run content differs")
+        for locale, translation in translations.items():
+            Neo4jArticleMapsRepository._store_translation(tx, result["article_id"], result["pipeline_id"],
+                                                         result["run_id"], locale, translation)
+
+    @staticmethod
+    def _store_translation(tx, article_id, pipeline_id, run_id, locale, translation):
+        require(translation.get("run_id") == run_id, "Translation belongs to another map run")
+        checksum = fingerprint(translation)
+        row = tx.run("""MERGE (t:ArticleMapTranslation {article_id:$article,pipeline_id:$pipeline,run_id:$run,locale:$locale})
+          ON CREATE SET t.payload=$payload,t.payload_sha256=$hash
+          RETURN t.payload_sha256 AS hash""", article=article_id, pipeline=pipeline_id, run=run_id, locale=locale,
+          payload=json.dumps(translation, ensure_ascii=False, allow_nan=False), hash=checksum).single()
+        if row is None or row["hash"] != checksum:
+            raise ArticleMapConflict("Translation for this map run already differs")
+
+    def _ensure_article_history(self, article_id, user_uid):
+        """Адресный перенос двух слотов статьи; коллекция Document не сканируется."""
+        with self.driver.session() as session:
+            def migrate(tx):
+                self._access(tx, article_id, user_uid)
+                rows = list(tx.run("""MATCH (:Document {uid:$article})-[:HAS_ARTICLE_MAP]->(m:ArticleMap)
+                  WHERE m.payload IS NOT NULL RETURN m.payload AS payload""", article=article_id))
+                for row in rows:
+                    self._archive(tx, json.loads(row["payload"]))
+            session.execute_write(migrate)
+
+    @staticmethod
+    def _attach_translations(tx, result):
+        if result is not None:
+            result.setdefault("translations", {})
+            for row in tx.run("""MATCH (t:ArticleMapTranslation {article_id:$article,pipeline_id:$pipeline,run_id:$run})
+              RETURN t.locale AS locale,t.payload AS payload""", article=result["article_id"],
+              pipeline=result["pipeline_id"], run=result["run_id"]):
+                result.setdefault("translations", {})[row["locale"]] = json.loads(row["payload"])
+        return result
+
+    def get(self, article_id, pipeline_id, user_uid, run_id=None):
         require(pipeline_id in PIPELINES, "Unknown map pipeline")
+        self._ensure_article_history(article_id, user_uid)
         with self.driver.session() as session:
             def read(tx):
                 self._access(tx, article_id, user_uid)
-                row = tx.run("""MATCH (:Document {uid:$article})-[:HAS_ARTICLE_MAP]->
-                  (m:ArticleMap {article_id:$article,pipeline_id:$pipeline}) RETURN m.payload AS payload""",
-                  article=article_id, pipeline=pipeline_id).single()
-                return json.loads(row["payload"]) if row and row["payload"] else None
+                if run_id is not None:
+                    row = tx.run("""MATCH (:Document {uid:$article})-[:HAS_ARTICLE_MAP_RUN]->
+                      (r:ArticleMapRun {article_id:$article,pipeline_id:$pipeline,run_id:$run})
+                      RETURN r.payload AS payload""", article=article_id, pipeline=pipeline_id, run=run_id).single()
+                else:
+                    row = tx.run("""MATCH (:Document {uid:$article})-[:HAS_ARTICLE_MAP]->
+                      (m:ArticleMap {article_id:$article,pipeline_id:$pipeline}) RETURN m.payload AS payload""",
+                      article=article_id, pipeline=pipeline_id).single()
+                result = json.loads(row["payload"]) if row and row["payload"] else None
+                return self._attach_translations(tx, result)
             return session.execute_read(read)
 
     def list_maps(self, article_id, user_uid):
+        self._ensure_article_history(article_id, user_uid)
         with self.driver.session() as session:
             def read(tx):
                 self._access(tx, article_id, user_uid)
                 results = []
-                for row in tx.run("""MATCH (:Document {uid:$article})-[:HAS_ARTICLE_MAP]->(m:ArticleMap)
-                  WHERE m.payload IS NOT NULL RETURN m.payload AS payload ORDER BY m.pipeline_id""", article=article_id):
-                    result = json.loads(row["payload"])
+                for row in tx.run("""MATCH (:Document {uid:$article})-[:HAS_ARTICLE_MAP_RUN]->(r:ArticleMapRun)
+                  OPTIONAL MATCH (m:ArticleMap {article_id:$article,pipeline_id:r.pipeline_id})
+                  RETURN r.payload AS payload,m.run_id = r.run_id AS current
+                  ORDER BY r.updated_at DESC,r.run_id""", article=article_id):
+                    result = self._attach_translations(tx, json.loads(row["payload"]))
                     results.append({key: result[key] for key in (
                         "pipeline_id", "run_id", "updated_at", "input_fingerprint", "graph_schema_version", "builder_version")}
-                        | {"translated_locales": list(result.get("translations", {}))})
+                        | {"translated_locales": list(result.get("translations", {})), "is_current": bool(row["current"]),
+                           "prompt": result.get("prompt"), "dependency_prompt": result.get("dependency_prompt"),
+                           "generation": result.get("generation", {"kind": "legacy"})})
                 return results
             return session.execute_read(read)
 
@@ -180,7 +246,10 @@ class Neo4jArticleMapsRepository:
         require(result["pipeline_id"] in PIPELINES, "Unknown map pipeline")
         with self.driver.session() as session:
             def save(tx):
-                self._locked(tx, result["article_id"], result["pipeline_id"], user_uid, token)
+                previous = self._locked(tx, result["article_id"], result["pipeline_id"], user_uid, token)
+                if previous["payload"]:
+                    self._archive(tx, json.loads(previous["payload"]))
+                self._archive(tx, result)
                 tx.run("""MATCH (m:ArticleMap {article_id:$article,pipeline_id:$pipeline})
                   SET m.payload=$payload,m.updated_at=$now,m.run_id=$run""",
                   article=result["article_id"], pipeline=result["pipeline_id"],
@@ -189,14 +258,13 @@ class Neo4jArticleMapsRepository:
             session.execute_write(save)
 
     def save_translation(self, article_id, pipeline_id, user_uid, run_id, translation, token):
+        self._ensure_article_history(article_id, user_uid)
         with self.driver.session() as session:
             def save(tx):
-                row = self._locked(tx, article_id, pipeline_id, user_uid, token)
-                if row["run_id"] != run_id:
-                    raise ArticleMapConflict("Map changed during translation")
-                result = json.loads(row["payload"])
-                result.setdefault("translations", {})["ru"] = translation
-                tx.run("""MATCH (m:ArticleMap {article_id:$article,pipeline_id:$pipeline}) SET m.payload=$payload""",
-                       article=article_id, pipeline=pipeline_id,
-                       payload=json.dumps(result, ensure_ascii=False, allow_nan=False)).consume()
+                self._locked(tx, article_id, pipeline_id, user_uid, token)
+                exists = tx.run("""MATCH (r:ArticleMapRun {article_id:$article,pipeline_id:$pipeline,run_id:$run})
+                  RETURN r.run_id AS run""", article=article_id, pipeline=pipeline_id, run=run_id).single()
+                if exists is None:
+                    raise ArticleMapConflict("Selected map run no longer exists")
+                self._store_translation(tx, article_id, pipeline_id, run_id, "ru", translation)
             session.execute_write(save)
