@@ -91,7 +91,7 @@ class DatasetExporter:
         for key_attr, label in [
             ("user_md_s3_key", "user-edited"),
             ("formatted_md_s3_key", "AI-formatted"),
-            ("docling_raw_md_s3_key", "raw"),
+            ("raw_markdown_s3_key", "raw"),
         ]:
             key = getattr(document, key_attr, None)
             if key and await self.s3_client.object_exists(bucket, key):

@@ -82,7 +82,7 @@ async def main() -> None:
             "MATCH (d:Document) WHERE d.pmc_id IN $ids "
             "RETURN d.pmc_id AS pmc_id, d.uid AS uid, d.title AS title, "
             "d.user_md_s3_key AS user_key, d.formatted_md_s3_key AS formatted_key, "
-            "d.docling_raw_md_s3_key AS raw_key, d.doi AS doi",
+            "d.raw_markdown_s3_key AS raw_key, d.doi AS doi",
             ids=case_ids,
             database_="neo4j",
         ).records

@@ -206,7 +206,7 @@ const Document_downloader_ui = React.memo(forwardRef<DocumentListHandle, Documen
             const resp = await ingestPubMedArticle(result.pmid, result.pmcid, result.source);
             if (resp.success && resp.doc_id) {
                 if (resp.processing_status === 'pdf_to_markdown') {
-                    // Асинхронная обработка (Docling) — добавляем временный элемент
+                    // Асинхронная обработка PDF — добавляем временный элемент
                     const tempDoc: PDFDocument = {
                         uid: resp.doc_id,
                         original_filename: result.pmcid || `PMID${result.pmid}` || resp.doc_id,

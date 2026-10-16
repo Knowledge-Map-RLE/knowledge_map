@@ -43,7 +43,7 @@ def main() -> None:
             "d.source AS source, d.processing_status AS status, d.created_by_uid AS owner, "
             "d.current_source_hash AS source_hash, d.active_pipeline_version AS active_version, "
             "d.has_full_text AS full, d.user_md_s3_key AS userkey, "
-            "d.formatted_md_s3_key AS fmt, d.docling_raw_md_s3_key AS raw, "
+            "d.formatted_md_s3_key AS fmt, d.raw_markdown_s3_key AS raw, "
             "blocks, count(s) AS statements ORDER BY d.pmc_id",
             ids=PMCID_LIST,
             database_="neo4j",

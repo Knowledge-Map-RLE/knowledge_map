@@ -112,7 +112,7 @@ class PDFToMarkdownGRPCClient:
             request = pdf_to_md_pb2.ConvertPDFRequest(
                 pdf_content=pdf_content,
                 doc_id=doc_id,
-                model_id=model_id  # Не передаем model_id, чтобы использовалась модель по умолчанию
+                model_id=model_id or "default"
             )
             
             # Проверяем размер сериализованного запроса
@@ -141,7 +141,7 @@ class PDFToMarkdownGRPCClient:
                 "images": dict(response.images),
                 "metadata_json": response.metadata_json or "",
                 "message": response.message,
-                "docling_raw_s3_key": response.docling_raw_s3_key or None,
+                "raw_markdown_s3_key": response.raw_markdown_s3_key or None,
                 "formatted_s3_key": response.formatted_s3_key or None
             }
             
@@ -213,7 +213,7 @@ class PDFToMarkdownGRPCClient:
             request = pdf_to_md_pb2.ConvertPDFRequest(
                 pdf_content=pdf_content,
                 doc_id=doc_id,
-                model_id=model_id  # Не передаем model_id, чтобы использовалась модель по умолчанию
+                model_id=model_id or "default"
             )
             
             # Выполняем gRPC вызов с отслеживанием прогресса
@@ -226,7 +226,7 @@ class PDFToMarkdownGRPCClient:
                 "images": dict(response.images),
                 "metadata_json": response.metadata_json or "",
                 "message": response.message,
-                "docling_raw_s3_key": response.docling_raw_s3_key or None,
+                "raw_markdown_s3_key": response.raw_markdown_s3_key or None,
                 "formatted_s3_key": response.formatted_s3_key or None
             }
             

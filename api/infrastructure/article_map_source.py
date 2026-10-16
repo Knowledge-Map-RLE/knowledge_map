@@ -16,7 +16,7 @@ class StoredArticleMapSource:
             with self.repository.driver.session() as session:
                 return session.run("""MATCH (d:Document {uid:$id,created_by_uid:$user})
                   RETURN d.user_md_s3_key AS user_key,d.formatted_md_s3_key AS formatted_key,
-                         d.docling_raw_md_s3_key AS raw_key,d.s3_bucket AS bucket""", id=article_id, user=user_uid).single()
+                         d.raw_markdown_s3_key AS raw_key,d.s3_bucket AS bucket""", id=article_id, user=user_uid).single()
         row = await asyncio.to_thread(read_metadata)
         if row is None:
             raise ArticleMapAccessDenied("Article access denied")

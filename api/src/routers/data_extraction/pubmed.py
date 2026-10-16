@@ -82,8 +82,8 @@ async def ingest_pubmed_article(
     """Загрузка статьи из PubMed/PMC в систему.
 
     Логика в зависимости от источника и OA статуса:
-    - PMC OA: скачивает tar.gz → конвертирует NLM XML → Markdown (без Docling)
-    - PubMed OA с PDF: скачивает PDF → Docling pipeline
+    - PMC OA: скачивает tar.gz → конвертирует NLM XML → Markdown (без PDF OCR)
+    - PubMed OA с PDF: скачивает PDF → PDF OCR pipeline
     - Не-OA: сохраняет абстракт + метаданные в Markdown
 
     Статья идентифицируется по PMID или PMCID.

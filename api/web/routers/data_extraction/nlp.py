@@ -170,8 +170,8 @@ async def _run_multilevel_analysis(
             md_key = document.user_md_s3_key
         elif document.formatted_md_s3_key:
             md_key = document.formatted_md_s3_key
-        elif document.docling_raw_md_s3_key:
-            md_key = document.docling_raw_md_s3_key
+        elif document.raw_markdown_s3_key:
+            md_key = document.raw_markdown_s3_key
         else:
             md_key = f"documents/{doc_id}/{doc_id}.md"
 

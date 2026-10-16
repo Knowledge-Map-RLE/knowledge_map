@@ -5,7 +5,8 @@ import type {
     PubMedIngestResponse,
     PubMedSearchResponse,
 } from '../../entities/document';
-import { fetchJson, withBase } from './http';
+import { authHeaders, fetchJson, withBase } from './http';
+import { invalidateToken } from '../token';
 
 export interface ExtractionUploadResponse {
     success: boolean;
@@ -43,6 +44,7 @@ export async function uploadPdfForExtraction(file: File, onProgress?: (progress:
   if (onProgress) {
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
+      const headers = new Headers(authHeaders());
 
       xhr.upload.addEventListener('progress', (event) => {
         if (event.lengthComputable) {
@@ -60,6 +62,12 @@ export async function uploadPdfForExtraction(file: File, onProgress?: (progress:
             reject(new Error('Failed to parse response'));
           }
         } else {
+          if (xhr.status === 401) {
+            const authorization = headers.get('Authorization');
+            if (authorization?.startsWith('Bearer ')) {
+              invalidateToken(authorization.slice('Bearer '.length));
+            }
+          }
           reject(new Error(`HTTP ${xhr.status}: ${xhr.statusText}`));
         }
       });
@@ -69,11 +77,14 @@ export async function uploadPdfForExtraction(file: File, onProgress?: (progress:
       });
 
       xhr.open('POST', withBase('/api/data_extraction/data_extraction'));
+      headers.forEach((value, name) => xhr.setRequestHeader(name, value));
       xhr.send(form);
     });
   } else {
-    const res = await fetch(withBase('/api/data_extraction/data_extraction'), { method: 'POST', body: form });
-    return (await res.json()) as ExtractionUploadResponse;
+    return fetchJson<ExtractionUploadResponse>(
+      '/api/data_extraction/data_extraction',
+      { method: 'POST', body: form },
+    );
   }
 }
 
@@ -96,6 +107,12 @@ export async function getDocumentAssets(docId: string): Promise<DocumentAssets> 
 
 export async function getDocumentProgress(docId: string): Promise<DocumentProgress> {
   return fetchJson(`/api/data_extraction/documents/${encodeURIComponent(docId)}/progress`);
+}
+
+export async function reprocessDocument(docId: string): Promise<ExtractionUploadResponse> {
+  return fetchJson(`/api/data_extraction/documents/${encodeURIComponent(docId)}/reprocess`, {
+    method: 'POST',
+  });
 }
 
 export async function saveMarkdown(docId: string, markdown: string, annotate = false): Promise<SaveMarkdownResponse> {

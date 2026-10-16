@@ -55,9 +55,9 @@ class TestAPIRoutes:
         """Test status endpoint"""
         mock_conversion_service_class.return_value = mock_conversion_service
         mock_conversion_service.model_service.get_available_models.return_value = {
-            "marker": Mock()
+            "default": Mock()
         }
-        mock_conversion_service.model_service.get_default_model.return_value = "marker"
+        mock_conversion_service.model_service.get_default_model.return_value = "default"
         
         response = client.get("/api/v1/status")
         
@@ -65,7 +65,7 @@ class TestAPIRoutes:
         data = response.json()
         assert data["status"] == "running"
         assert data["models_count"] == 1
-        assert data["default_model"] == "marker"
+        assert data["default_model"] == "default"
     
     @patch('src.api.dependencies.ConversionService')
     def test_convert_pdf_success(self, mock_conversion_service_class, client, mock_conversion_service, sample_pdf_content, sample_conversion_result):
@@ -75,7 +75,7 @@ class TestAPIRoutes:
         
         # Create mock file
         files = {"file": ("test.pdf", sample_pdf_content, "application/pdf")}
-        data = {"doc_id": "test_doc", "model_id": "marker"}
+        data = {"doc_id": "test_doc", "model_id": "default"}
         
         response = client.post("/api/v1/convert", files=files, data=data)
         
@@ -138,9 +138,9 @@ class TestAPIRoutes:
         
         # Create a mock that mimics the dataclass ModelInfo structure
         mock_model_info = Mock()
-        mock_model_info.id = "marker"
-        mock_model_info.name = "Marker"
-        mock_model_info.description = "Test marker"
+        mock_model_info.id = "default"
+        mock_model_info.name = "PDF OCR"
+        mock_model_info.description = "Test default"
         mock_model_info.status = Mock()
         mock_model_info.status.value = "enabled"
         mock_model_info.is_default = True
@@ -148,11 +148,11 @@ class TestAPIRoutes:
         mock_model_info.capabilities = ["pdf_to_markdown", "ocr"]
         
         mock_models = {
-            "marker": mock_model_info
+            "default": mock_model_info
         }
         
         mock_conversion_service.model_service.get_available_models.return_value = mock_models
-        mock_conversion_service.model_service.get_default_model.return_value = "marker"
+        mock_conversion_service.model_service.get_default_model.return_value = "default"
         
         response = client.get("/api/v1/models")
         
@@ -160,7 +160,7 @@ class TestAPIRoutes:
         data = response.json()
         assert "models" in data
         assert "default_model" in data
-        assert data["default_model"] == "marker"
+        assert data["default_model"] == "default"
         assert len(data["models"]) == 1
     
     @patch('src.api.dependencies.ConversionService')
@@ -169,12 +169,12 @@ class TestAPIRoutes:
         mock_conversion_service_class.return_value = mock_conversion_service
         mock_conversion_service.model_service.set_default_model.return_value = True
         
-        response = client.post("/api/v1/models/marker/set-default")
+        response = client.post("/api/v1/models/default/set-default")
         
         assert response.status_code == 200
         data = response.json()
         assert data["success"] is True
-        assert "marker" in data["message"]
+        assert "default" in data["message"]
     
     @patch('src.api.dependencies.ConversionService')
     def test_set_default_model_failed(self, mock_conversion_service_class, client, mock_conversion_service):
@@ -193,7 +193,7 @@ class TestAPIRoutes:
         mock_conversion_service_class.return_value = mock_conversion_service
         mock_conversion_service.model_service.enable_model.return_value = True
         
-        response = client.post("/api/v1/models/marker/enable?enabled=true")
+        response = client.post("/api/v1/models/default/enable?enabled=true")
         
         assert response.status_code == 200
         data = response.json()
@@ -206,7 +206,7 @@ class TestAPIRoutes:
         mock_conversion_service_class.return_value = mock_conversion_service
         mock_conversion_service.model_service.disable_model.return_value = True
         
-        response = client.post("/api/v1/models/marker/enable?enabled=false")
+        response = client.post("/api/v1/models/default/enable?enabled=false")
         
         assert response.status_code == 200
         data = response.json()

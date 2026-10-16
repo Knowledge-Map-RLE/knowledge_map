@@ -86,6 +86,40 @@
     cursor: not-allowed;
 }
 
+.reprocessButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 30px;
+    padding: 0 12px;
+    border: 1px solid #2563eb;
+    border-radius: 6px;
+    background: #2563eb;
+    color: #fff;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.25;
+    white-space: nowrap;
+    transition: background-color 0.15s, border-color 0.15s, box-shadow 0.15s;
+}
+
+.reprocessButton:hover:not(:disabled) {
+    border-color: #1d4ed8;
+    background: #1d4ed8;
+}
+
+.reprocessButton:focus-visible {
+    outline: 2px solid #93c5fd;
+    outline-offset: 2px;
+}
+
+.reprocessButton:disabled {
+    border-color: #9ca3af;
+    background: #9ca3af;
+    cursor: not-allowed;
+}
+
 .chatContainer {
     flex: 1;
     min-height: 0;

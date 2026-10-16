@@ -1,4 +1,4 @@
-"""AI formatting service for converting Docling MD + raw text to formatted MD."""
+"""AI formatting service for converting OCR MD + raw text to formatted MD."""
 
 import asyncio
 import logging
@@ -17,7 +17,7 @@ class FormattingChunk:
     def __init__(
         self,
         raw_text: str,
-        docling_markdown: str,
+        structured_markdown: str,
         chunk_index: int,
         total_chunks: int,
     ):
@@ -26,12 +26,12 @@ class FormattingChunk:
 
         Args:
             raw_text: Raw text from PDF
-            docling_markdown: Corresponding Docling markdown
+            structured_markdown: Corresponding OCR markdown
             chunk_index: Index of this chunk (0-based)
             total_chunks: Total number of chunks
         """
         self.raw_text = raw_text
-        self.docling_markdown = docling_markdown
+        self.structured_markdown = structured_markdown
         self.chunk_index = chunk_index
         self.total_chunks = total_chunks
 
@@ -86,7 +86,7 @@ class AIFormattingService:
 
         Args:
             pdf_path: Path to the PDF file
-            raw_markdown: Raw markdown from Docling
+            raw_markdown: Raw markdown from OCR
             doc_id: Document ID for logging
 
         Returns:
@@ -107,7 +107,7 @@ class AIFormattingService:
 
             logger.info(f"Created {len(text_chunks)} text chunks for document {doc_id}")
 
-            # 2. Split Docling markdown into corresponding chunks
+            # 2. Split OCR markdown into corresponding chunks
             # For simplicity, we'll use the same chunking approach
             # In practice, you might want to align chunks based on page boundaries
             md_chunks = self._split_markdown_by_chunks(raw_markdown, text_chunks)
@@ -116,7 +116,7 @@ class AIFormattingService:
             formatting_chunks = [
                 FormattingChunk(
                     raw_text=text_chunks[i].text,
-                    docling_markdown=md_chunks[i],
+                    structured_markdown=md_chunks[i],
                     chunk_index=i,
                     total_chunks=len(text_chunks),
                 )
@@ -253,7 +253,7 @@ class AIFormattingService:
             None,
             self.ai_client.format_markdown_chunk,
             chunk.raw_text,
-            chunk.docling_markdown,
+            chunk.structured_markdown,
             self.model_id,
             self.max_generation_tokens,
             self.temperature,

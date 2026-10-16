@@ -31,16 +31,17 @@ class ModelService:
     def _initialize_models(self) -> None:
         """Initialize available models"""
         try:
-            # Initialize OpenDataLoader model (единственная модель)
-            try:
-                from .models.opendataloader_model import OpenDataLoaderModel
-                odl_model = OpenDataLoaderModel()
-                self._models["opendataloader"] = odl_model
-                self._default_model_id = "opendataloader"
-                logger.info("OpenDataLoader model initialized as default")
-            except ImportError as e:
-                logger.error(f"OpenDataLoader model not available: {e}")
-                raise
+            if settings.environment.lower() == "production" and not settings.indra_license_reviewed:
+                raise RuntimeError(
+                    "Для production необходимо подтвердить проверку лицензии весов Indra "
+                    "через INDRA_LICENSE_REVIEWED=true"
+                )
+
+            from .models.indra_model import IndraModel
+
+            self._models["default"] = IndraModel()
+            self._default_model_id = "default"
+            logger.info("Нейтральная модель PDF OCR зарегистрирована как default")
 
             logger.info(f"Initialized {len(self._models)} models: {list(self._models.keys())}")
             logger.info(f"Default model: {self._default_model_id}")

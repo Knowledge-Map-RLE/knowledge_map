@@ -18,7 +18,7 @@ def test_default_settings():
     assert settings.max_file_size_mb == 100
     assert settings.max_concurrent_conversions == 5
     assert settings.conversion_timeout_seconds == 1800
-    assert settings.default_model == "marker"
+    assert settings.default_model == "default"
     assert settings.log_level == "INFO"
     assert settings.enable_rate_limiting is True
 

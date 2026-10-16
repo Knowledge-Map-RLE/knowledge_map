@@ -8,7 +8,8 @@
 - 🔧 **Модульная архитектура** - Четкое разделение ответственности между слоями
 - 🛡️ **Безопасность** - Валидация входных данных, rate limiting, безопасная работа с файлами
 - 📊 **Мониторинг** - Детальное логирование и отслеживание прогресса
-- 🔄 **Множественные модели** - Поддержка различных моделей конвертации (Marker, HURIDOCS)
+- 🔄 **Единый OCR-конвейер** - Indra обрабатывает все страницы в режиме OCR, включая формулы
+- 📄 **Сохранение структуры** - LaTeX-формулы, HTML-таблицы и рисунки с подписями остаются в Markdown
 - 🌐 **Двойной API** - REST API (FastAPI) и gRPC для максимальной совместимости
 - 🧪 **Тестирование** - Полное покрытие тестами с поддержкой unit и integration тестов
 
@@ -65,15 +66,18 @@ docker run -p 8002:8002 -p 50053:50053 pdf-to-md-service
 
 ### REST API
 
-#### Запуск сервера
+#### Запуск серверов на фиксированных портах
 
-```bash
-# Запуск FastAPI сервера
-poetry run python -m src.app
-
-# Или через uvicorn
-poetry run uvicorn src.app:app --host 0.0.0.0 --port 8002 --reload
+```powershell
+# PowerShell запускает REST на 8002 и gRPC на 50053.
+# Повторный запуск сначала останавливает оставшийся экземпляр pdf_to_md.
+.\start.ps1
 ```
+
+Нажмите `Ctrl+C` в окне `start.ps1` для штатной остановки обоих серверов. Если окно
+было закрыто принудительно, выполните `.\stop.ps1`: скрипт очистит сохранённые PID
+и оставшиеся Python-процессы на портах `8002` и `50053`. Для предварительной проверки
+можно выполнить `.\stop.ps1 -WhatIf`.
 
 #### API Endpoints
 
@@ -92,7 +96,7 @@ poetry run uvicorn src.app:app --host 0.0.0.0 --port 8002 --reload
 curl -X POST "http://localhost:8002/api/v1/convert" \
   -H "Content-Type: multipart/form-data" \
   -F "file=@document.pdf" \
-  -F "model_id=marker"
+  -F "model_id=default"
 
 # Получение списка моделей
 curl "http://localhost:8002/api/v1/models"
@@ -110,7 +114,7 @@ poetry run python -m src.grpc_app
 
 ```python
 import grpc
-from src.grpc_services import pdf_to_md_pb2_grpc, pdf_to_md_pb2
+from src import pdf_to_md_pb2, pdf_to_md_pb2_grpc
 
 # Подключение к серверу
 channel = grpc.insecure_channel('localhost:50053')
@@ -124,7 +128,7 @@ with open('document.pdf', 'rb') as f:
 request = pdf_to_md_pb2.ConvertPDFRequest(
     pdf_content=pdf_content,
     doc_id="test_doc",
-    model_id="marker"
+    model_id="default"
 )
 
 # Выполнение конвертации
@@ -148,6 +152,12 @@ DEBUG=false
 API_HOST=0.0.0.0
 API_PORT=8002
 GRPC_PORT=50053
+DEFAULT_MODEL=default
+HF_HOME=../tmp/indra_models
+INDRA_THREADS=1
+INDRA_DPI=200
+# В production установить true только после проверки лицензии весов.
+INDRA_LICENSE_REVIEWED=false
 
 # Обработка файлов
 MAX_FILE_SIZE_MB=100
@@ -217,19 +227,15 @@ poetry run pre-commit install
 poetry run pre-commit run --all-files
 ```
 
-## Модели конвертации
+## Модель преобразования
 
-### Marker
-
-- **Описание**: Продвинутая модель для конвертации PDF с поддержкой OCR и анализа макета
-- **Возможности**: Извлечение текста, таблиц, изображений, анализ структуры
-- **Использование**: `model_id=marker`
-
-### HURIDOCS
-
-- **Описание**: Модель для анализа структуры PDF документов
-- **Возможности**: Анализ макета, извлечение структурированного контента
-- **Использование**: `model_id=huridocs`
+- **Внешний ID**: `default`
+- **Внутренний движок**: Indra OCR (`engine=indra-ocr`)
+- **Режим**: `mode=ocr` для всех страниц и `math=True`
+- **Формулы**: LaTeX
+- **Таблицы**: HTML, без преобразования в Markdown-сетки
+- **Рисунки**: извлечение из PDF, загрузка в S3 и вставка `<figure>` с `<figcaption>`
+- **Лицензия**: код Indra — Apache 2.0, веса — изменённая OpenRAIL-M. Владелец модели указывает ограничения по выручке/финансированию свыше $20 млн и использованию в конкурирующих с ним продуктах; лицензия также содержит условия распространения и атрибуции. Перед production-развёртыванием требуется отдельная юридическая проверка [текста лицензии весов](https://huggingface.co/datalab-to/indra-ocr/blob/main/LICENSE). Сервис откажется запускаться в production без `INDRA_LICENSE_REVIEWED=true`.
 
 ## Мониторинг и логирование
 
@@ -267,18 +273,13 @@ poetry run pre-commit run --all-files
 
 ### Частые проблемы
 
-1. **Marker не найден**
-   ```bash
-   pip install marker-pdf
-   ```
-
-2. **Недостаточно памяти**
+1. **Недостаточно памяти**
    - Уменьшите `MAX_CONCURRENT_CONVERSIONS`
    - Увеличьте `CONVERSION_TIMEOUT_SECONDS`
 
-3. **Медленная конвертация**
+2. **Медленная конвертация**
    - Проверьте размер PDF файла
-   - Используйте более мощную модель
+   - Проверьте `INDRA_THREADS` и `INDRA_DPI` с учётом доступных ресурсов
    - Увеличьте таймаут
 
 ### Логи отладки
@@ -288,8 +289,8 @@ poetry run pre-commit run --all-files
 export DEBUG=true
 export LOG_LEVEL=DEBUG
 
-# Запуск с подробными логами
-poetry run python -m src.app
+# Запуск REST и gRPC с подробными логами на фиксированных портах
+.\start.ps1
 ```
 
 ## Лицензия

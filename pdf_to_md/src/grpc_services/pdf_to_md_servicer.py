@@ -56,7 +56,7 @@ class PDFToMarkdownServicer:
             result = await self.conversion_service.convert_pdf(
                 pdf_content=request.pdf_content,
                 doc_id=request.doc_id or None,
-                model_id=request.model_id or None
+                model_id=request.model_id or "default"
             )
             
             if not result.success:
@@ -190,7 +190,7 @@ class PDFToMarkdownServicer:
             result = await self.conversion_service.convert_pdf(
                 pdf_content=request.pdf_content,
                 doc_id=request.doc_id or None,
-                model_id=request.model_id or None,
+                model_id=request.model_id or "default",
                 on_progress=on_progress
             )
             

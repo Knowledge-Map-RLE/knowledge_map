@@ -38,12 +38,16 @@ class Settings(BaseSettings):
     conversion_timeout_seconds: int = Field(default=1800, env="CONVERSION_TIMEOUT_SECONDS")
     
     # Storage settings
-    temp_dir: Path = Field(default=Path("/tmp/pdf_to_md"), env="TEMP_DIR")
+    temp_dir: Path = Field(default=Path("tmp/pdf_to_md"), env="TEMP_DIR")
     output_dir: Path = Field(default=Path("./markdown_output"), env="OUTPUT_DIR")
     
     # Model settings
-    default_model: str = Field(default="opendataloader", env="DEFAULT_MODEL")
-    model_cache_dir: Path = Field(default=Path("./model_cache"), env="MODEL_CACHE_DIR")
+    default_model: str = Field(default="default", env="DEFAULT_MODEL")
+    # Корень кэша Hugging Face с OCR- и math-весами Indra.
+    model_cache_dir: Path = Field(default=Path("../tmp/indra_models"), env="HF_HOME")
+    indra_threads: int = Field(default=1, ge=1, env="INDRA_THREADS")
+    indra_dpi: int = Field(default=200, ge=72, le=400, env="INDRA_DPI")
+    indra_license_reviewed: bool = Field(default=False, env="INDRA_LICENSE_REVIEWED")
     
     # Logging settings
     log_level: str = Field(default="INFO", env="LOG_LEVEL")

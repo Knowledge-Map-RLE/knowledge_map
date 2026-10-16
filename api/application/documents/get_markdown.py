@@ -68,7 +68,7 @@ async def get_markdown(
     Возвращает Markdown выбранной версии.
 
     Args:
-        version: 'active' — приоритетная версия; 'raw' — docling_raw;
+        version: 'active' — приоритетная версия; 'raw' — raw_markdown;
                  'formatted' — AI-форматированная; 'user' — пользовательская
 
     Raises:
@@ -81,7 +81,7 @@ async def get_markdown(
     bucket = doc.s3_bucket
 
     if version == "raw":
-        key = doc.docling_raw_md_s3_key
+        key = doc.raw_markdown_s3_key
     elif version == "formatted":
         key = doc.formatted_md_s3_key
     elif version == "user":

@@ -6,7 +6,7 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 
 from ..core.config import settings
 from ..core.logger import get_logger
-from ..services.conversion_service import ConversionService
+from ..services.indra_conversion_service import ConversionService
 
 logger = get_logger(__name__)
 

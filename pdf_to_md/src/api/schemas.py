@@ -7,7 +7,7 @@ from pydantic import BaseModel, Field, field_validator
 class ConvertRequest(BaseModel):
     """Request schema for PDF conversion"""
     doc_id: Optional[str] = Field(None, description="Document ID (auto-generated if not provided)")
-    model_id: Optional[str] = Field(None, description="Model ID to use for conversion")
+    model_id: str = Field("default", description="Нейтральный ID модели PDF")
     filename: Optional[str] = Field(None, description="Original filename")
     
     @field_validator('doc_id')

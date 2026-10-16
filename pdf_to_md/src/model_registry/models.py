@@ -12,8 +12,7 @@ class ModelStatus(str, Enum):
     DISABLED = "disabled"
 
 class ModelType(str, Enum):
-    DOCLING = "docling"
-    OPENDATALOADER = "opendataloader"
+    PDF_OCR = "pdf_ocr"
 
 class ModelInfo(BaseModel):
     model_id: str

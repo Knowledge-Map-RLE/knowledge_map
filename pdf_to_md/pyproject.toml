@@ -26,7 +26,7 @@ protobuf = "5.29.6"
 # PDF processing
 pillow = "^10.1.0"
 pymupdf = "^1.23.0"
-opendataloader-pdf = "*"
+indra-ocr = "^0.3.2"
 
 # Utilities
 click = "^8.1.7"

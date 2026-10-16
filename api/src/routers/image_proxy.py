@@ -43,6 +43,10 @@ async def get_s3_image(object_key: str):
             content_type = "image/gif"
         elif object_key_lower.endswith('.bmp'):
             content_type = "image/bmp"
+        elif object_key_lower.endswith('.webp'):
+            content_type = "image/webp"
+        elif object_key_lower.endswith(('.tif', '.tiff')):
+            content_type = "image/tiff"
 
         return Response(content=image_data, media_type=content_type)
 

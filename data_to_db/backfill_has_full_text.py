@@ -6,7 +6,7 @@ s = d.session()
 
 t0 = time.monotonic()
 r = s.run(
-    "MATCH (d:Document) WHERE d.docling_raw_md_s3_key IS NOT NULL "
+    "MATCH (d:Document) WHERE d.raw_markdown_s3_key IS NOT NULL "
     "SET d.has_full_text = true "
     "RETURN count(d) AS updated"
 )

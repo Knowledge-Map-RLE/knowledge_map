@@ -187,7 +187,7 @@ class ArticleEditorService:
                     "message": "Редактирование доступно только для аннотированных документов. Перейдите в data_extraction редактор для приведения текста в каноничный вид."}
         results, _ = db.cypher_query(
             "MATCH (d:Document {uid: $uid}) RETURN "
-            "d.user_md_s3_key, d.formatted_md_s3_key, d.docling_raw_md_s3_key",
+            "d.user_md_s3_key, d.formatted_md_s3_key, d.raw_markdown_s3_key",
             {"uid": doc_id},
         )
         if not results:
@@ -643,15 +643,15 @@ class ArticleEditorService:
         """Возвращает текст статьи для прикрепления к запросу модели.
 
         Приоритет:
-        1. Сохранённая текстовая версия (user/formatted/docling markdown в S3).
+        1. Сохранённая текстовая версия (user/formatted/raw markdown в S3).
         2. Загрузка полного текста по DOI через PubMed/PMC (PubMedService).
-        3. Распознавание PDF из S3 через Docling (pdf_to_md).
+        3. Распознавание PDF из S3 через PDF OCR (pdf_to_md).
 
         Полученный текст при необходимости сохраняется в S3 (с разделом
         References) с ссылкой в БД. В ответе раздел References удаляется.
 
         Returns:
-            {"success", "text", "source"} где source ∈ {"stored", "doi", "docling", "none"}.
+            {"success", "text", "source"} где source ∈ {"stored", "doi", "pdf_ocr", "none"}.
         """
         doc = Document.nodes.get_or_none(uid=doc_id)
         if not doc:
@@ -680,7 +680,7 @@ class ArticleEditorService:
             return {
                 "success": True,
                 "text": strip_references(converted),
-                "source": "docling",
+                "source": "pdf_ocr",
             }
 
         return {"success": True, "text": "", "source": "none"}
@@ -689,7 +689,7 @@ class ArticleEditorService:
         """Читает текст статьи из S3 по сохранённым markdown-ключам."""
         results, _ = db.cypher_query(
             "MATCH (d:Document {uid: $uid}) RETURN "
-            "d.user_md_s3_key, d.formatted_md_s3_key, d.docling_raw_md_s3_key",
+            "d.user_md_s3_key, d.formatted_md_s3_key, d.raw_markdown_s3_key",
             {"uid": doc_id},
         )
         if not results:
@@ -738,7 +738,7 @@ class ArticleEditorService:
         """Загружает полный текст по DOI через PubMed/PMC и сохраняет в S3.
 
         Использует существующий PubMedService.ingest_article (обрабатывает OA
-        tar.gz/XML, efetch и PDF→Docling), копирует полученный markdown в S3
+        tar.gz/XML, efetch и PDF→PDF OCR), копирует полученный markdown в S3
         текущей статьи и удаляет временный документ.
         """
         try:
@@ -777,7 +777,7 @@ class ArticleEditorService:
         return None
 
     async def _try_convert_pdf(self, doc_id: str) -> str | None:
-        """Распознаёт PDF статьи из S3 через Docling (pdf_to_md) и сохраняет в S3."""
+        """Распознаёт PDF статьи из S3 через PDF OCR (pdf_to_md) и сохраняет в S3."""
         try:
             from services.pdf_to_md_grpc_client import get_pdf_to_md_grpc_client
 
@@ -794,16 +794,16 @@ class ArticleEditorService:
             if result.get("success") and markdown:
                 await self._store_user_text(doc_id, markdown)
                 logger.info(
-                    "[agent-text] PDF через Docling конвертирован для %s (%d символов)",
+                    "[agent-text] PDF через PDF OCR конвертирован для %s (%d символов)",
                     doc_id,
                     len(markdown),
                 )
                 return markdown
             logger.warning(
-                "[agent-text] Docling конвертация для %s не удалась: %s",
+                "[agent-text] PDF OCR конвертация для %s не удалась: %s",
                 doc_id,
                 result.get("message"),
             )
         except Exception as exc:
-            logger.warning("[agent-text] Ошибка Docling конвертации %s: %s", doc_id, exc)
+            logger.warning("[agent-text] Ошибка PDF OCR конвертации %s: %s", doc_id, exc)
         return None

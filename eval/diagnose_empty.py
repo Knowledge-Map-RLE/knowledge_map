@@ -36,7 +36,7 @@ for pmcid in EMPTY_PMCIDS:
     # Check PDFDocument
     res2, _ = db.cypher_query(
         """MATCH (d:PDFDocument {uid: $uid})
-           RETURN d.processing_status, d.s3_key, d.docling_raw_md_s3_key,
+           RETURN d.processing_status, d.s3_key, d.raw_markdown_s3_key,
                   d.formatted_md_s3_key, d.user_md_s3_key, d.title""",
         {"uid": doc_id}
     )
@@ -111,7 +111,7 @@ res5, _ = db.cypher_query("""
     RETURN
         count(CASE WHEN d.user_md_s3_key IS NOT NULL THEN 1 END) AS has_user_key,
         count(CASE WHEN d.formatted_md_s3_key IS NOT NULL THEN 1 END) AS has_fmt_key,
-        count(CASE WHEN d.docling_raw_md_s3_key IS NOT NULL THEN 1 END) AS has_raw_key,
+        count(CASE WHEN d.raw_markdown_s3_key IS NOT NULL THEN 1 END) AS has_raw_key,
         count(CASE WHEN d.s3_key IS NOT NULL THEN 1 END) AS has_s3_key,
         count(*) AS total
 """)
@@ -120,5 +120,5 @@ if res5:
     print(f"  total zero-action docs: {tot}")
     print(f"  user_md_s3_key present: {hu}")
     print(f"  formatted_md present:   {hf}")
-    print(f"  docling_raw present:    {hr}")
+    print(f"  raw_markdown present:    {hr}")
     print(f"  s3_key present:         {hs}")

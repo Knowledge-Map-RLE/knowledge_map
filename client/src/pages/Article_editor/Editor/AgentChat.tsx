@@ -186,7 +186,7 @@ const AgentChat: React.FC<AgentChatProps> = ({ articleUuid, blocks, statements, 
         const result = await getAgentArticleText(articleUuid);
         if (!result.success) throw new Error('Не удалось получить текст статьи');
         if (result.text) return result.text;
-        if (result.source === 'stored' || result.source === 'doi' || result.source === 'docling') {
+        if (result.source === 'stored' || result.source === 'doi' || result.source === 'pdf_ocr') {
             return result.text || '';
         }
         if (blocks && statements) {

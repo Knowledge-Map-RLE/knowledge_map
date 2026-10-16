@@ -63,7 +63,7 @@ class ConversionResult:
     processing_time: Optional[float] = None
     s3_images: Optional[List[Dict[str, Any]]] = None
     extraction_method: Optional[str] = None
-    docling_raw_s3_key: Optional[str] = None  # S3 key for raw Docling markdown
+    raw_markdown_s3_key: Optional[str] = None  # S3 ключ исходного Markdown
     formatted_s3_key: Optional[str] = None  # S3 key for AI-formatted markdown
 
     def __post_init__(self):
@@ -87,8 +87,8 @@ class ConversionResult:
             result["s3_images"] = self.s3_images
         if self.extraction_method is not None:
             result["extraction_method"] = self.extraction_method
-        if self.docling_raw_s3_key is not None:
-            result["docling_raw_s3_key"] = self.docling_raw_s3_key
+        if self.raw_markdown_s3_key is not None:
+            result["raw_markdown_s3_key"] = self.raw_markdown_s3_key
         if self.formatted_s3_key is not None:
             result["formatted_s3_key"] = self.formatted_s3_key
 

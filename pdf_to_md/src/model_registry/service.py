@@ -30,71 +30,30 @@ class ModelRegistryService:
         self._initialize_models()
     
     def _initialize_models(self) -> None:
-        """Initialize available models"""
-        try:
-            # Initialize OpenDataLoader model (default)
-            try:
-                import opendataloader_pdf  # noqa: F401 — verify package present
+        """Регистрирует единственную OCR-модель без движок-зависимого ID."""
+        if settings.environment.lower() == "production" and not settings.indra_license_reviewed:
+            raise RuntimeError(
+                "Для production необходимо проверить лицензию весов Indra "
+                "и установить INDRA_LICENSE_REVIEWED=true"
+            )
 
-                class SimpleOpenDataLoaderModel:
-                    def __init__(self):
-                        self.name = "OpenDataLoader (Hybrid)"
-                        self.version = "2.0.2"
+        from ..services.models.indra_model import IndraModel
 
-                    async def convert_pdf(self, pdf_path, output_format="markdown"):
-                        import asyncio
-                        import functools
-                        import tempfile
-                        from pathlib import Path as _Path
-                        import opendataloader_pdf as _odl
-
-                        output_dir = _Path(tempfile.mkdtemp(prefix="odl_out_"))
-                        loop = asyncio.get_event_loop()
-                        await loop.run_in_executor(
-                            None,
-                            functools.partial(
-                                _odl.convert,
-                                input_path=str(pdf_path),
-                                output_dir=str(output_dir),
-                                format="markdown",
-                                hybrid="docling-fast",
-                                hybrid_fallback=True,
-                            ),
-                        )
-                        stem = _Path(pdf_path).stem
-                        md_path = output_dir / f"{stem}.md"
-                        return md_path.read_text(encoding="utf-8") if md_path.exists() else ""
-
-                odl_model = SimpleOpenDataLoaderModel()
-                self._models["opendataloader"] = odl_model
-
-                model_info = ModelInfo(
-                    model_id="opendataloader",
-                    name="OpenDataLoader (Hybrid)",
-                    model_type=ModelType.OPENDATALOADER,
-                    status=ModelStatus.AVAILABLE,
-                    version="2.0.2",
-                    description="OpenDataLoader hybrid mode (docling-fast). Точность 0.90, таблицы 0.93.",
-                    is_default=True,
-                    is_enabled=True,
-                    config={"hybrid": "docling-fast", "hybrid_fallback": True},
-                )
-                self._model_info["opendataloader"] = model_info
-                self._default_model_id = "opendataloader"
-                logger.info("OpenDataLoader model initialized as default")
-            except Exception as e:
-                logger.warning(f"OpenDataLoader model not available: {e}")
-            
-            if not self._models:
-                logger.error("No models available!")
-                raise RuntimeError("No conversion models available")
-            
-            logger.info(f"Initialized {len(self._models)} models: {list(self._models.keys())}")
-            
-        except Exception as e:
-            logger.error(f"Failed to initialize models: {e}")
-            raise
-    
+        model = IndraModel()
+        self._models["default"] = model
+        self._default_model_id = "default"
+        self._model_info["default"] = ModelInfo(
+            model_id="default",
+            name="PDF OCR",
+            model_type=ModelType.PDF_OCR,
+            status=ModelStatus.AVAILABLE,
+            version=model.version,
+            description="Преобразование PDF в Markdown с формулами и структурой документа",
+            is_default=True,
+            is_enabled=True,
+            config={"mode": "ocr", "math": True},
+        )
+        logger.info("Реестр PDF OCR инициализирован: model_id=default")
     def get_model(self, model_id: str):
         """Get model instance by ID"""
         if model_id not in self._models:

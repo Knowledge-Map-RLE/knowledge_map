@@ -74,7 +74,7 @@ async def get_agent_article_text(doc_id: str, doi: str = "", user: dict = Depend
 
     Returns:
         {"success", "text", "source"}: text без раздела References (в S3 References
-        сохраняется полностью). source ∈ {"stored", "doi", "docling", "none"} —
+        сохраняется полностью). source ∈ {"stored", "doi", "pdf_ocr", "none"} —
         если "none", клиент использует конвертацию триплетов в текст.
     """
     result = await service.get_agent_article_text(doc_id, doi=doi.strip() or None)

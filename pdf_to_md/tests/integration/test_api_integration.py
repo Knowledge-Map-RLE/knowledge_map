@@ -52,9 +52,9 @@ class TestAPIIntegration:
             
             # 2. Get service status
             mock_conversion_service.model_service.get_available_models.return_value = {
-                "marker": Mock()
+                "default": Mock()
             }
-            mock_conversion_service.model_service.get_default_model.return_value = "marker"
+            mock_conversion_service.model_service.get_default_model.return_value = "default"
             
             status_response = client.get("/api/v1/status")
             assert status_response.status_code == 200
@@ -65,10 +65,10 @@ class TestAPIIntegration:
             # 3. Get available models
             from src.core.types import ModelInfo, ModelStatus
             mock_models = {
-                "marker": ModelInfo(
-                    id="marker",
-                    name="Marker",
-                    description="Test marker",
+                "default": ModelInfo(
+                    id="default",
+                    name="PDF OCR",
+                    description="Test default",
                     status=ModelStatus.ENABLED,
                     is_default=True,
                     version="0.2.0",
@@ -81,12 +81,12 @@ class TestAPIIntegration:
             assert models_response.status_code == 200
             models_data = models_response.json()
             assert len(models_data["models"]) == 1
-            assert models_data["default_model"] == "marker"
+            assert models_data["default_model"] == "default"
             
             # 4. Convert PDF
             pdf_content = real_pdf_file.read_bytes()
             files = {"file": ("test.pdf", pdf_content, "application/pdf")}
-            data = {"doc_id": "api_test_doc", "model_id": "marker"}
+            data = {"doc_id": "api_test_doc", "model_id": "default"}
             
             convert_response = client.post("/api/v1/convert", files=files, data=data)
             assert convert_response.status_code == 200
@@ -186,21 +186,21 @@ class TestAPIIntegration:
             # Test setting default model
             mock_conversion_service.model_service.set_default_model.return_value = True
             
-            response = client.post("/api/v1/models/marker/set-default")
+            response = client.post("/api/v1/models/default/set-default")
             assert response.status_code == 200
             assert response.json()["success"] is True
             
             # Test enabling model
             mock_conversion_service.model_service.enable_model.return_value = True
             
-            response = client.post("/api/v1/models/marker/enable")
+            response = client.post("/api/v1/models/default/enable")
             assert response.status_code == 200
             assert response.json()["success"] is True
             
             # Test disabling model (should fail for default model)
             mock_conversion_service.model_service.disable_model.return_value = False
             
-            response = client.post("/api/v1/models/marker/enable?enabled=false")
+            response = client.post("/api/v1/models/default/enable?enabled=false")
             assert response.status_code == 400  # Should fail because it's the default model
             
         finally:
@@ -370,7 +370,7 @@ class TestAPIIntegration:
         
         # Setup mock methods
         mock_conversion_service.model_service.get_available_models.return_value = {}
-        mock_conversion_service.model_service.get_default_model.return_value = "marker"
+        mock_conversion_service.model_service.get_default_model.return_value = "default"
         mock_conversion_service.get_active_conversions.return_value = {}
         
         try:

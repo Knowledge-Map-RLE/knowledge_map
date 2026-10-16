@@ -1,16 +1,18 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import Header from '../../widgets/Header';
 import MarkdownEditor from '../../widgets/MarkdownEditor';
 import { AnnotationWorkspace } from './Annotation';
 import { useAuth } from '../../entities/auth';
+import { getDocumentProgress, reprocessDocument } from '../../services/api';
 
 import Document_downloader_ui from './Document_downloader_ui';
 import type { DocumentListHandle } from './Document_downloader_ui';
 import { useDocumentState } from './hooks/useDocumentState';
 import { ChatPanel } from '../Social_network/components/ChatPanel';
 import type { ChatTarget } from '../Social_network/model';
-import type { DataExtractionTab } from './model';
+import type { DataExtractionTab, PDFDocument } from './model';
 import styles from './Data_extraction.module.css';
 
 declare global {
@@ -21,13 +23,19 @@ declare global {
 
 const DataExtractionUI: React.FC = () => {
     const { t, i18n } = useTranslation();
+    const { docId: routeDocId } = useParams<{ docId?: string }>();
+    const navigate = useNavigate();
+    const location = useLocation();
+    const previousRouteDocId = useRef<string | undefined>(routeDocId);
     const [activeTab, setActiveTab] = useState<DataExtractionTab>('pdf');
     const [chatTarget, setChatTarget] = useState<ChatTarget | null>(null);
     const [isNlpProcessing, setIsNlpProcessing] = useState(false);
+    const [isReprocessing, setIsReprocessing] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const noopRef = useRef<() => void>(() => {});
     const documentListRef = useRef<DocumentListHandle>(null);
     const { isAuthenticated, user } = useAuth();
+    const selectedDocumentIdRef = useRef<string | undefined>(undefined);
 
     const {
         selectedDocument,
@@ -40,6 +48,38 @@ const DataExtractionUI: React.FC = () => {
         handleManualSave,
         updateDocumentStatus,
     } = useDocumentState(setIsNlpProcessing);
+    selectedDocumentIdRef.current = selectedDocument?.uid;
+
+    const handleSelectDocument = useCallback((document: PDFDocument | null) => {
+        void selectDocument(document);
+
+        const nextPath = document && !document.uid.startsWith('upload_')
+            ? `/data_extraction/${encodeURIComponent(document.uid)}`
+            : '/data_extraction';
+        if (location.pathname !== nextPath) navigate(nextPath);
+    }, [location.pathname, navigate, selectDocument]);
+
+    useEffect(() => {
+        if (!routeDocId) {
+            if (previousRouteDocId.current && selectedDocument?.uid === previousRouteDocId.current) {
+                void selectDocument(null);
+            }
+            previousRouteDocId.current = undefined;
+            return;
+        }
+        previousRouteDocId.current = routeDocId;
+        if (selectedDocument?.uid === routeDocId) return;
+
+        const linkedDocument: PDFDocument = {
+            uid: routeDocId,
+            original_filename: routeDocId,
+            md5_hash: routeDocId,
+            upload_date: new Date().toISOString(),
+            processing_status: 'ready_for_annotation',
+            is_processed: false,
+        };
+        void selectDocument(linkedDocument);
+    }, [routeDocId, selectedDocument?.uid, selectDocument]);
 
     const openDocumentChat = useCallback(() => {
         if (!selectedDocument) return;
@@ -68,6 +108,72 @@ const DataExtractionUI: React.FC = () => {
         await documentListRef.current?.reloadDocuments();
     };
 
+    const handleReprocessDocument = useCallback(async () => {
+        if (!selectedDocument || !isAuthenticated) return;
+
+        const document = selectedDocument;
+        const docId = document.uid;
+        setError(null);
+        setIsReprocessing(true);
+        updateDocumentStatus(docId, 'pdf_to_markdown');
+
+        try {
+            await reprocessDocument(docId);
+            const deadline = Date.now() + 60 * 60 * 1000;
+            let processingObserved = true;
+
+            while (Date.now() < deadline) {
+                await new Promise((resolve) => window.setTimeout(resolve, 2000));
+                const progress = await getDocumentProgress(docId);
+
+                if (progress.processing_status === 'error' || progress.phase === 'error') {
+                    throw new Error(progress.message || t('dataExtraction.errors.reprocess'));
+                }
+
+                if (
+                    progress.processing_status === 'pdf_to_markdown'
+                    || progress.percent > 0
+                    || Boolean(progress.phase)
+                ) {
+                    processingObserved = true;
+                }
+
+                if (
+                    processingObserved
+                    && ['ready_for_annotation', 'annotated'].includes(progress.processing_status)
+                ) {
+                    if (selectedDocumentIdRef.current === docId) {
+                        await selectDocument({
+                            ...document,
+                            processing_status: progress.processing_status,
+                        });
+                        await documentListRef.current?.reloadDocuments();
+                    }
+                    return;
+                }
+            }
+
+            throw new Error(t('dataExtraction.errors.reprocessTimeout'));
+        } catch (reprocessError) {
+            if (selectedDocumentIdRef.current === docId) {
+                updateDocumentStatus(docId, document.processing_status);
+            }
+            setError(
+                reprocessError instanceof Error
+                    ? reprocessError.message
+                    : t('dataExtraction.errors.reprocess'),
+            );
+        } finally {
+            setIsReprocessing(false);
+        }
+    }, [
+        isAuthenticated,
+        selectedDocument,
+        selectDocument,
+        t,
+        updateDocumentStatus,
+    ]);
+
     return (
         <main className={styles.dex}>
             <Header showSearch={true} className={styles.headerRow} />
@@ -77,7 +183,7 @@ const DataExtractionUI: React.FC = () => {
                     <Document_downloader_ui
                         ref={documentListRef}
                         selectedDocument={selectedDocument}
-                        onSelectDocument={selectDocument}
+                        onSelectDocument={handleSelectDocument}
                         onDocumentsChange={noopRef.current}
                         error={error}
                         setError={setError}
@@ -125,6 +231,19 @@ const DataExtractionUI: React.FC = () => {
                                 {saveStatus === 'saved' && <><span>✓</span><span>{t('dataExtraction.status.saved', { time: lastSavedAt ? new Date(lastSavedAt).toLocaleTimeString(i18n.resolvedLanguage === 'ru' ? 'ru-RU' : 'en-US') : '' })}</span></>}
                                 {saveStatus === 'error' && <><span>✗</span><span>{t('dataExtraction.status.saveError')}</span></>}
                             </div>
+                        )}
+                        {selectedDocument && isAuthenticated && (
+                            <button
+                                className={styles.reprocessButton}
+                                type="button"
+                                onClick={() => void handleReprocessDocument()}
+                                disabled={isReprocessing}
+                                title={t('dataExtraction.actions.reprocessTitle')}
+                            >
+                                {isReprocessing
+                                    ? t('dataExtraction.actions.reprocessing')
+                                    : t('dataExtraction.actions.reprocess')}
+                            </button>
                         )}
                     </div>
 

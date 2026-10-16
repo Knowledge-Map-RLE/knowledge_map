@@ -53,7 +53,7 @@ res3, _ = db.cypher_query("""
     RETURN
         count(CASE WHEN d.user_md_s3_key IS NOT NULL THEN 1 END) AS has_user,
         count(CASE WHEN d.formatted_md_s3_key IS NOT NULL THEN 1 END) AS has_fmt,
-        count(CASE WHEN d.docling_raw_md_s3_key IS NOT NULL THEN 1 END) AS has_raw,
+        count(CASE WHEN d.raw_markdown_s3_key IS NOT NULL THEN 1 END) AS has_raw,
         count(CASE WHEN d.s3_key IS NOT NULL THEN 1 END) AS has_s3,
         count(*) AS tot
 """)
@@ -61,7 +61,7 @@ hu, hf, hr, hs, tot = res3[0]
 out.append(f"\nS3 keys for zero-action docs (total={tot}):")
 out.append(f"  user_md:     {hu}")
 out.append(f"  formatted:   {hf}")
-out.append(f"  docling_raw: {hr}")
+out.append(f"  raw_markdown: {hr}")
 out.append(f"  s3_key:      {hs}")
 
 # 4. Sample one zero-action doc to see its markdown key and title
@@ -72,7 +72,7 @@ res4, _ = db.cypher_query("""
     OPTIONAL MATCH (a:Action {doc_id: p.doc_id})
     WITH p.pmcid AS pmcid, d, count(a) AS actions
     WHERE actions = 0
-    RETURN pmcid, d.processing_status, d.s3_key, d.docling_raw_md_s3_key,
+    RETURN pmcid, d.processing_status, d.s3_key, d.raw_markdown_s3_key,
            d.formatted_md_s3_key, d.user_md_s3_key, d.title
     LIMIT 5
 """)

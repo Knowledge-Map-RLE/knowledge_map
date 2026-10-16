@@ -1,93 +1,175 @@
-Set-Location $PSScriptRoot
+﻿$ErrorActionPreference = 'Stop'
 
-# Observability (local dev): OTLP → Alloy localhost:4317
-$env:OTEL_EXPORTER_OTLP_ENDPOINT = "http://127.0.0.1:4317"
-$env:OTEL_SERVICE_NAME = "pdf_to_md"
-$env:OTEL_SERVICE_VERSION = "0.1.0"
-$env:OTEL_METRIC_EXPORT_INTERVAL = "30000"
-$env:LOG_FORMAT = "logfmt"
+# Консоль, включая русские сообщения, работает в UTF-8.
+$utf8Encoding = New-Object System.Text.UTF8Encoding($false)
+[Console]::InputEncoding = $utf8Encoding
+[Console]::OutputEncoding = $utf8Encoding
+$OutputEncoding = $utf8Encoding
+try { chcp.com 65001 | Out-Null } catch { }
 
-# ── Kill any zombie process on port 5002 ──────────────────────────
-$oldPid = (netstat -ano | Select-String ":5002\s").ForEach({ 
-    $m = $_ | Select-String "LISTENING\s+(\d+)$"; if ($m) { $m.Matches.Groups[1].Value } 
-}) | Select-Object -First 1
-if ($oldPid) {
-    Write-Host "Killing existing process on port 5002 (PID $oldPid)..."
-    taskkill /F /PID $oldPid 2>$null
-    Start-Sleep -Seconds 1
+$serviceRoot = $PSScriptRoot
+$repositoryRoot = Split-Path -Parent $serviceRoot
+$stateDirectory = Join-Path $repositoryRoot 'tmp\pdf_to_md'
+$statePath = Join-Path $stateDirectory 'service-state.json'
+$temporaryStatePath = Join-Path $stateDirectory 'service-state.tmp.json'
+$stopScript = Join-Path $serviceRoot 'stop.ps1'
+$serviceMutex = [System.Threading.Mutex]::new($false, 'KnowledgeMapPdfToMdService-50053')
+$mutexOwned = $false
+Set-Location $serviceRoot
+
+# Локальная разработка использует те же фиксированные порты, что и production.
+$env:OTEL_EXPORTER_OTLP_ENDPOINT = 'http://127.0.0.1:4317'
+$env:OTEL_SERVICE_NAME = 'pdf_to_md'
+$env:OTEL_SERVICE_VERSION = '0.1.0'
+$env:OTEL_METRIC_EXPORT_INTERVAL = '30000'
+$env:LOG_FORMAT = 'logfmt'
+$env:HF_HOME = [System.IO.Path]::GetFullPath((Join-Path $serviceRoot '..\tmp\indra_models'))
+Remove-Item Env:INDRA_OCR_MODEL_DIR -ErrorAction SilentlyContinue
+
+$grpcProcess = $null
+$restProcess = $null
+$cleanupRequired = $false
+$serviceState = [ordered]@{ grpc = $null; rest = $null }
+
+function Save-ServiceState {
+    New-Item -ItemType Directory -Force -Path $stateDirectory | Out-Null
+    $json = $serviceState | ConvertTo-Json -Depth 4
+    [System.IO.File]::WriteAllText($temporaryStatePath, $json, $utf8Encoding)
+    Move-Item -LiteralPath $temporaryStatePath -Destination $statePath -Force
 }
 
-# ── Start OpenDataLoader hybrid backend ──────────────────────────
-Write-Host "Starting OpenDataLoader hybrid backend on port 5002..."
-Start-Process -NoNewWindow -FilePath "poetry" `
-    -ArgumentList "run", "python", "hybrid_wrapper.py", "--port", "5002"
+function Register-ServiceProcess {
+    param(
+        [Parameter(Mandatory = $true)][string]$Name,
+        [Parameter(Mandatory = $true)][System.Diagnostics.Process]$Process
+    )
 
-# Wait until hybrid backend HTTP /health returns {"status":"ok"} (up to 180 seconds)
-Write-Host "Waiting for hybrid backend to be ready on port 5002 (this may take ~60s on first run)..."
-$maxWait = 180
-$waited = 0
-$ready = $false
-do {
-    Start-Sleep -Seconds 3
-    $waited += 3
+    $Process.Refresh()
+    $serviceState[$Name] = @{
+        pid = [int]$Process.Id
+        startedUtc = $Process.StartTime.ToUniversalTime().ToString('o')
+    }
+    Save-ServiceState
+}
+
+function Get-ListeningProcessIds {
+    param([Parameter(Mandatory = $true)][int]$Port)
+
+    $ids = @()
     try {
-        $resp = Invoke-WebRequest -Uri "http://127.0.0.1:5002/health" -UseBasicParsing -TimeoutSec 2 -ErrorAction SilentlyContinue
-        if ($resp.StatusCode -eq 200 -and $resp.Content -match '"status"\s*:\s*"ok"') {
-            $ready = $true
+        $ids += @(Get-NetTCPConnection -State Listen -LocalPort $Port -ErrorAction Stop |
+            ForEach-Object { [int]$_.OwningProcess })
+    }
+    catch {
+        # netstat остаётся доступным на Windows, если модуль NetTCPIP недоступен.
+    }
+
+    if ($ids.Count -eq 0) {
+        foreach ($line in (& netstat.exe -ano -p tcp 2>$null)) {
+            if ($line -match '^\s*TCP\s+\S+:(?<port>\d+)\s+\S+\s+LISTENING\s+(?<pid>\d+)\s*$' -and
+                [int]$Matches.port -eq $Port) {
+                $ids += [int]$Matches.pid
+            }
         }
-    } catch {
-        $ready = $false
     }
-    if (-not $ready -and ($waited % 15 -eq 0)) {
-        Write-Host "  Still waiting... ${waited}s elapsed"
-    }
-} while (-not $ready -and $waited -lt $maxWait)
 
-if ($ready) {
-    Write-Host "Hybrid backend ready after ${waited}s."
-} else {
-    Write-Host "Warning: hybrid backend did not respond in ${maxWait}s, continuing anyway."
+    return @($ids | Sort-Object -Unique)
 }
 
-# ── Verify hybrid backend is still alive ─────────────────────────
-# Double-check: if it died right after startup (EADDRINUSE), restart once
-if (-not $ready) {
-    $stillAlive = $false
+function Wait-ForListener {
+    param(
+        [Parameter(Mandatory = $true)][int]$Port,
+        [Parameter(Mandatory = $true)][System.Diagnostics.Process]$Process,
+        [Parameter(Mandatory = $true)][int]$TimeoutSeconds
+    )
+
+    $deadline = [DateTime]::UtcNow.AddSeconds($TimeoutSeconds)
+    do {
+        $Process.Refresh()
+        if ($Process.HasExited) {
+            throw "Процесс сервиса завершился до открытия порта $Port (код $($Process.ExitCode))"
+        }
+        if ((Get-ListeningProcessIds -Port $Port).Count -gt 0) {
+            return
+        }
+        Start-Sleep -Milliseconds 250
+    } while ([DateTime]::UtcNow -lt $deadline)
+
+    throw "Сервис не начал слушать фиксированный порт $Port за $TimeoutSeconds секунд"
+}
+
+try {
     try {
-        $resp = Invoke-WebRequest -Uri "http://127.0.0.1:5002/health" -UseBasicParsing -TimeoutSec 2 -ErrorAction SilentlyContinue
-        $stillAlive = $resp.StatusCode -eq 200
-    } catch { }
-    if (-not $stillAlive) {
-        Write-Host "Hybrid backend is dead. Retrying once..."
-        $oldPid2 = (netstat -ano | Select-String ":5002\s").ForEach({ 
-            $m = $_ | Select-String "LISTENING\s+(\d+)$"; if ($m) { $m.Matches.Groups[1].Value } 
-        }) | Select-Object -First 1
-        if ($oldPid2) { taskkill /F /PID $oldPid2 2>$null; Start-Sleep -Seconds 1 }
-        Start-Process -NoNewWindow -FilePath "poetry" `
-            -ArgumentList "run", "python", "hybrid_wrapper.py", "--port", "5002"
+        $mutexOwned = $serviceMutex.WaitOne(0)
+    }
+    catch [System.Threading.AbandonedMutexException] {
+        # Предыдущая оболочка аварийно завершилась; текущий запуск забирает её блокировку.
+        $mutexOwned = $true
+    }
+    if (-not $mutexOwned) {
+        throw 'pdf_to_md уже запущен или запускается. Остановите его через .\stop.ps1 перед повторным запуском.'
+    }
 
-        $retryWaited = 0
-        $retryReady = $false
-        do {
-            Start-Sleep -Seconds 3
-            $retryWaited += 3
-            try {
-                $resp = Invoke-WebRequest -Uri "http://127.0.0.1:5002/health" -UseBasicParsing -TimeoutSec 2 -ErrorAction SilentlyContinue
-                if ($resp.StatusCode -eq 200 -and $resp.Content -match '"status"\s*:\s*"ok"') { $retryReady = $true }
-            } catch { }
-            if (-not $retryReady -and ($retryWaited % 30 -eq 0)) { Write-Host "  Retry still waiting... ${retryWaited}s elapsed" }
-        } while (-not $retryReady -and $retryWaited -lt 60)
+    Write-Host 'Проверяю и очищаю оставшиеся процессы pdf_to_md на портах 50053 и 8002.'
+    # Убираем экземпляры, оставшиеся от прежнего запуска, включая дочерний Python-процесс Poetry.
+    & $stopScript -Quiet
 
-        if ($retryReady) { Write-Host "Hybrid backend ready after retry (${retryWaited}s)." }
-        else { Write-Host "Warning: hybrid backend failed to start after retry." }
+    # Предзагружаем OCR- и math-веса в локальный кэш до запуска серверов.
+    New-Item -ItemType Directory -Force -Path $env:HF_HOME | Out-Null
+    poetry run python -c "import os, indra_ocr; indra_ocr.load(threads=int(os.getenv('INDRA_THREADS', '1')), dpi=int(os.getenv('INDRA_DPI', '200')), mode='ocr', math=True); print('Веса Indra OCR и math готовы')"
+    if ($LASTEXITCODE -ne 0) {
+        throw 'Не удалось подготовить веса Indra OCR; сервисы не запущены'
+    }
+
+    # Путь берётся из текущего Poetry-окружения: PID принадлежит Python-серверу,
+    # а не промежуточному poetry.exe, поэтому его можно корректно завершить.
+    $pythonExecutable = (& poetry env info --executable | Select-Object -Last 1).Trim()
+    if ($LASTEXITCODE -ne 0 -or -not (Test-Path -LiteralPath $pythonExecutable -PathType Leaf)) {
+        throw 'Не удалось определить Python-интерпретатор Poetry-окружения'
+    }
+
+    $grpcProcess = Start-Process `
+        -FilePath $pythonExecutable `
+        -ArgumentList @('-m', 'src.grpc_server') `
+        -WorkingDirectory $serviceRoot `
+        -NoNewWindow `
+        -PassThru
+    $cleanupRequired = $true
+    Register-ServiceProcess -Name 'grpc' -Process $grpcProcess
+    Wait-ForListener -Port 50053 -Process $grpcProcess -TimeoutSeconds 30
+    Write-Host 'gRPC сервис готов: порт 50053'
+
+    $restProcess = Start-Process `
+        -FilePath $pythonExecutable `
+        -ArgumentList @('-m', 'uvicorn', 'src.app:app', '--host', '0.0.0.0', '--port', '8002', '--reload') `
+        -WorkingDirectory $serviceRoot `
+        -NoNewWindow `
+        -PassThru
+    Register-ServiceProcess -Name 'rest' -Process $restProcess
+    Wait-ForListener -Port 8002 -Process $restProcess -TimeoutSeconds 30
+    Write-Host 'REST сервис готов: порт 8002. Для штатной остановки нажмите Ctrl+C или выполните .\stop.ps1.'
+
+    while ($true) {
+        Start-Sleep -Seconds 1
+        if (-not (Test-Path -LiteralPath $statePath -PathType Leaf)) {
+            Write-Host 'Остановка pdf_to_md запрошена через stop.ps1.'
+            break
+        }
+        foreach ($process in @($grpcProcess, $restProcess)) {
+            $process.Refresh()
+            if ($process.HasExited) {
+                throw "Процесс сервиса PID $($process.Id) неожиданно завершился (код $($process.ExitCode))"
+            }
+        }
     }
 }
-
-# Start gRPC server as independent process (not tied to REST lifecycle)
-Write-Host "Starting gRPC server on port 50053..."
-Start-Process -NoNewWindow -FilePath "poetry" `
-    -ArgumentList "run", "python", "-m", "src.grpc_server"
-
-# Start REST server with reload (gRPC runs independently)
-Write-Host "Starting REST server on port 8002..."
-poetry run python -m uvicorn src.app:app --host 0.0.0.0 --port 8002 --reload
+finally {
+    if ($cleanupRequired) {
+        # stop.ps1 завершает серверы и их дочерние процессы по PID и портам.
+        & $stopScript -Quiet
+    }
+    if ($mutexOwned) {
+        $serviceMutex.ReleaseMutex()
+    }
+    $serviceMutex.Dispose()
+}

@@ -38,7 +38,11 @@ spec:
             - name: OUTPUT_DIR
               value: "./markdown_output"
             - name: DEFAULT_MODEL
-              value: "opendataloader"
+              value: "default"
+            - name: INDRA_THREADS
+              value: "1"
+            - name: INDRA_DPI
+              value: "200"
             - name: ENABLE_RATE_LIMITING
               value: "true"
             - name: RATE_LIMIT_REQUESTS
@@ -79,12 +83,7 @@ spec:
           volumeMounts:
             - name: temp-storage
               mountPath: /tmp/pdf_to_md
-            - name: model-cache
-              mountPath: /app/model_cache
       volumes:
         - name: temp-storage
           emptyDir:
             sizeLimit: 10Gi
-        - name: model-cache
-          emptyDir:
-            sizeLimit: 5Gi

@@ -626,8 +626,8 @@ class PubMedService:
         1. Получить метаданные через efetch
         2. Попробовать конвертировать PMID → PMCID
         3. Проверить OA статус
-        4. PMC OA: скачать tar.gz → XML → Markdown (без Docling)
-        5. PubMed OA с PDF: скачать PDF → Docling pipeline
+        4. PMC OA: скачать tar.gz → XML → Markdown (без PDF OCR)
+        5. PubMed OA с PDF: скачать PDF → PDF OCR pipeline
         6. Не-OA: создать Markdown из абстракта + метаданных
 
         Returns:
@@ -681,7 +681,7 @@ class PubMedService:
                     md_key = (
                         existing.user_md_s3_key or
                         existing.formatted_md_s3_key or
-                        existing.docling_raw_md_s3_key or
+                        existing.raw_markdown_s3_key or
                         f"{prefix}{doc_id}.md"
                     )
                     pdf_key = f"{prefix}{doc_id}.pdf"
@@ -716,7 +716,7 @@ class PubMedService:
                 # 5. Определяем стратегию получения контента
                 #
                 # Приоритет:
-                # A. Есть PMCID + OA API вернул ссылки → tar.gz (полный XML) или PDF → Docling
+                # A. Есть PMCID + OA API вернул ссылки → tar.gz (полный XML) или PDF → PDF OCR
                 # B. Есть PMCID + нет OA ссылок → пробуем efetch?db=pmc (полный текст через API)
                 # C. Нет PMCID или efetch вернул пусто → metadata-only (абстракт)
 
@@ -733,8 +733,8 @@ class PubMedService:
                             client, oa_links["tgz"], doc_id, meta, background_tasks
                         )
                     else:
-                        logger.info(f"[pubmed] Сценарий A: PMC OA PDF → Docling")
-                        result = await self._ingest_pdf_via_docling(
+                        logger.info(f"[pubmed] Сценарий A: PMC OA PDF → PDF OCR")
+                        result = await self._ingest_pdf_via_ocr(
                             client, oa_links["pdf"], doc_id, meta, background_tasks
                         )
                 elif pmcid:
@@ -862,7 +862,7 @@ class PubMedService:
             content_type = _mimetypes.guess_type(img_name)[0] or "image/jpeg"
             ok = await self.s3_client.upload_bytes(img_data, bucket, s3_key, content_type=content_type)
             if ok:
-                # Формируем URL через API image proxy (такой же как у Docling-изображений)
+                # Формируем URL через API image proxy (такой же как у PDF OCR-изображений)
                 img_url = f"{base_url}/api/data_extraction/documents/{doc_id}/images/{img_name}"
                 image_urls[img_name] = img_url
                 # Также регистрируем по имени без расширения — не перезаписываем если уже есть
@@ -889,7 +889,7 @@ class PubMedService:
             is_oa=True,
         )
 
-    async def _ingest_pdf_via_docling(
+    async def _ingest_pdf_via_ocr(
         self,
         client: httpx.AsyncClient,
         pdf_url: str,
@@ -897,7 +897,7 @@ class PubMedService:
         meta: Dict[str, Any],
         background_tasks=None,
     ) -> Dict[str, Any]:
-        """Скачивает PDF и отправляет на конвертацию через Docling"""
+        """Скачивает PDF и отправляет на конвертацию через PDF OCR"""
         logger.info(f"[pubmed] Скачивание PDF: {pdf_url}")
         try:
             resp = await client.get(pdf_url, timeout=120)
@@ -905,13 +905,23 @@ class PubMedService:
             pdf_bytes = resp.content
         except Exception as e:
             logger.error(f"[pubmed] Ошибка скачивания PDF: {e}")
-            return await self._ingest_metadata_only(doc_id, meta)
+            document = Document.nodes.get_or_none(uid=doc_id)
+            if document:
+                document.processing_status = "error"
+                document.error_message = str(e)
+                document.save()
+            return {
+                "success": False,
+                "doc_id": doc_id,
+                "message": f"Не удалось скачать PDF для OCR: {e}",
+                "processing_status": "error",
+            }
 
         if background_tasks:
-            # Запускаем Docling асинхронно
+            # Запускаем PDF OCR асинхронно
             from services.pdf_to_md_grpc_client import get_pdf_to_md_grpc_client_instance
             background_tasks.add_task(
-                self._run_docling_pipeline, pdf_bytes, doc_id, meta
+                self._run_pdf_ocr_pipeline, pdf_bytes, doc_id, meta
             )
             # Сначала сохраняем запись в Neo4j со статусом processing
             await self._save_document(
@@ -930,7 +940,7 @@ class PubMedService:
             }
         else:
             # Синхронная конвертация (для тестов)
-            await self._run_docling_pipeline(pdf_bytes, doc_id, meta)
+            await self._run_pdf_ocr_pipeline(pdf_bytes, doc_id, meta)
             return {
                 "success": True,
                 "doc_id": doc_id,
@@ -938,13 +948,13 @@ class PubMedService:
                 "processing_status": "ready_for_annotation",
             }
 
-    async def _run_docling_pipeline(self, pdf_bytes: bytes, doc_id: str, meta: Dict[str, Any]):
-        """Фоновая задача: конвертация PDF через Docling gRPC"""
+    async def _run_pdf_ocr_pipeline(self, pdf_bytes: bytes, doc_id: str, meta: Dict[str, Any]):
+        """Фоновая задача: конвертация PDF через PDF OCR gRPC"""
         from services.pdf_to_md_grpc_client import get_pdf_to_md_grpc_client_instance
         from services.data_extraction_service import extract_title_from_markdown
         import mimetypes
 
-        logger.info(f"[pubmed] Запуск Docling для doc_id={doc_id}")
+        logger.info(f"[pubmed] Запуск PDF OCR для doc_id={doc_id}")
         try:
             grpc_client = get_pdf_to_md_grpc_client_instance()
             result = await grpc_client.convert_pdf(
@@ -954,11 +964,11 @@ class PubMedService:
             )
 
             if not result["success"]:
-                raise RuntimeError(result.get("message", "Docling error"))
+                raise RuntimeError(result.get("message", "PDF OCR error"))
 
             markdown = result.get("markdown_content", "")
             images = result.get("images", {})
-            docling_raw_key = result.get("docling_raw_s3_key")
+            raw_markdown_key = result.get("raw_markdown_s3_key")
             formatted_key = result.get("formatted_s3_key")
 
             bucket = self.bucket
@@ -978,8 +988,8 @@ class PubMedService:
                     extracted_title = extract_title_from_markdown(markdown)
                     if extracted_title:
                         doc.title = extracted_title
-                if docling_raw_key:
-                    doc.docling_raw_md_s3_key = docling_raw_key
+                if raw_markdown_key:
+                    doc.raw_markdown_s3_key = raw_markdown_key
                     doc.has_full_text = True
                 if formatted_key:
                     doc.formatted_md_s3_key = formatted_key
@@ -988,14 +998,15 @@ class PubMedService:
                 doc.is_processed = True
                 doc.save()
 
-            logger.info(f"[pubmed] Docling pipeline завершен для doc_id={doc_id}")
+            logger.info(f"[pubmed] PDF OCR pipeline завершен для doc_id={doc_id}")
         except Exception as e:
-            logger.error(f"[pubmed] Ошибка Docling pipeline для {doc_id}: {e}")
+            logger.error(f"[pubmed] Ошибка PDF OCR pipeline для {doc_id}: {e}")
             doc = Document.nodes.get_or_none(uid=doc_id)
             if doc:
                 doc.processing_status = "error"
                 doc.error_message = str(e)
                 doc.save()
+            raise
 
     async def _ingest_metadata_only(self, doc_id: str, meta: Dict[str, Any]) -> Dict[str, Any]:
         """Сохраняет только метаданные и абстракт (для не-OA статей)"""
@@ -1081,7 +1092,7 @@ class PubMedService:
             existing = Document.nodes.get_or_none(uid=doc_id)
             if existing:
                 if markdown and md_key:
-                    existing.docling_raw_md_s3_key = md_key
+                    existing.raw_markdown_s3_key = md_key
                     existing.has_full_text = True
                 existing.processing_status = processing_status
                 existing.is_processed = processing_status == "annotated"
@@ -1110,7 +1121,7 @@ class PubMedService:
                     is_open_access=is_oa,
                     is_processed=processing_status == "annotated",
                     processing_status=processing_status,
-                    docling_raw_md_s3_key=md_key,
+                    raw_markdown_s3_key=md_key,
                     has_full_text=bool(md_key),
                 )
                 doc.save()

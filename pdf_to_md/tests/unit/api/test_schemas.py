@@ -18,12 +18,12 @@ class TestAPISchemas:
         """Test valid convert request"""
         request = ConvertRequest(
             doc_id="test_doc_123",
-            model_id="marker",
+            model_id="default",
             filename="test.pdf"
         )
         
         assert request.doc_id == "test_doc_123"
-        assert request.model_id == "marker"
+        assert request.model_id == "default"
         assert request.filename == "test.pdf"
     
     def test_convert_request_optional_fields(self):
@@ -31,7 +31,7 @@ class TestAPISchemas:
         request = ConvertRequest()
         
         assert request.doc_id is None
-        assert request.model_id is None
+        assert request.model_id == "default"
         assert request.filename is None
     
     def test_convert_request_invalid_doc_id(self):
@@ -145,8 +145,8 @@ class TestAPISchemas:
     def test_model_info(self):
         """Test model info"""
         model_info = ModelInfo(
-            id="marker",
-            name="Marker",
+            id="default",
+            name="PDF OCR",
             description="Advanced PDF to Markdown converter",
             status="enabled",
             is_default=False,
@@ -154,8 +154,8 @@ class TestAPISchemas:
             capabilities=["pdf_to_markdown", "ocr", "table_extraction"]
         )
         
-        assert model_info.id == "marker"
-        assert model_info.name == "Marker"
+        assert model_info.id == "default"
+        assert model_info.name == "PDF OCR"
         assert model_info.description == "Advanced PDF to Markdown converter"
         assert model_info.status == "enabled"
         assert model_info.is_default is False
@@ -179,10 +179,10 @@ class TestAPISchemas:
     def test_models_response(self):
         """Test models response"""
         models = {
-            "marker": ModelInfo(
-                id="marker",
-                name="Marker",
-                description="Test marker",
+            "default": ModelInfo(
+                id="default",
+                name="PDF OCR",
+                description="Test default",
                 status="enabled",
                 is_default=True
             )
@@ -190,27 +190,27 @@ class TestAPISchemas:
         
         response = ModelsResponse(
             models=models,
-            default_model="marker"
+            default_model="default"
         )
         
         assert len(response.models) == 1
-        assert "marker" in response.models
-        assert response.default_model == "marker"
-        assert response.models["marker"].is_default is True
+        assert "default" in response.models
+        assert response.default_model == "default"
+        assert response.models["default"].is_default is True
     
     def test_set_default_model_request(self):
         """Test set default model request"""
-        request = SetDefaultModelRequest(model_id="marker")
-        assert request.model_id == "marker"
+        request = SetDefaultModelRequest(model_id="default")
+        assert request.model_id == "default"
     
     def test_enable_model_request(self):
         """Test enable model request"""
-        request = EnableModelRequest(model_id="marker", enabled=True)
-        assert request.model_id == "marker"
+        request = EnableModelRequest(model_id="default", enabled=True)
+        assert request.model_id == "default"
         assert request.enabled is True
         
-        request = EnableModelRequest(model_id="marker", enabled=False)
-        assert request.model_id == "marker"
+        request = EnableModelRequest(model_id="default", enabled=False)
+        assert request.model_id == "default"
         assert request.enabled is False
     
     def test_status_response(self):
@@ -220,7 +220,7 @@ class TestAPISchemas:
             service="pdf-to-md-service",
             version="0.1.0",
             models_count=1,
-            default_model="marker",
+            default_model="default",
             active_conversions=1
         )
         
@@ -228,7 +228,7 @@ class TestAPISchemas:
         assert response.service == "pdf-to-md-service"
         assert response.version == "0.1.0"
         assert response.models_count == 1
-        assert response.default_model == "marker"
+        assert response.default_model == "default"
         assert response.active_conversions == 1
     
     def test_status_response_defaults(self):

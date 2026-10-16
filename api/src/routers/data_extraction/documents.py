@@ -136,7 +136,7 @@ async def get_document_markdown(doc_id: str, version: str = "active"):
         doc_id: ID документа
         version: Версия markdown файла
             - "active" (default): возвращает user версию если есть, иначе formatted, иначе raw
-            - "raw": возвращает raw Docling markdown
+            - "raw": возвращает raw PDF OCR markdown
             - "formatted": возвращает AI-форматированный markdown
             - "user": возвращает пользовательскую версию
     """
@@ -201,6 +201,12 @@ async def get_document_progress(doc_id: str):
         "phase": progress.get("phase", ""),
         "message": progress.get("message", ""),
     }
+
+
+@router.post("/documents/{doc_id}/reprocess")
+async def reprocess_document(doc_id: str):
+    """Повторно конвертирует уже сохранённый исходный PDF."""
+    return await data_extraction_service.reprocess_document(doc_id)
 
 
 @router.get("/documents/{doc_id}/data-availability", response_model=DataAvailabilityStatus)

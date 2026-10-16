@@ -33,7 +33,7 @@ class AIModelClient:
     def format_markdown_chunk(
         self,
         raw_text: str,
-        docling_markdown: str,
+        structured_markdown: str,
         model_id: str = "openai_gpt6_luna",
         max_tokens: int = 4096,
         temperature: float = 0.3,
@@ -44,7 +44,7 @@ class AIModelClient:
 
         Args:
             raw_text: Raw text extracted from PDF (preserves original flow)
-            docling_markdown: Structured markdown from Docling
+            structured_markdown: Structured markdown from OCR
             model_id: AI model to use
             max_tokens: Maximum tokens to generate
             temperature: Sampling temperature
@@ -60,7 +60,7 @@ class AIModelClient:
                 "output_tokens": int
             }
         """
-        prompt = self._build_formatting_prompt(raw_text, docling_markdown)
+        prompt = self._build_formatting_prompt(raw_text, structured_markdown)
         payload = {
             "model": model_id,
             "messages": [{"role": "user", "content": prompt}],
@@ -121,34 +121,35 @@ class AIModelClient:
                 "output_tokens": 0,
             }
 
-    def _build_formatting_prompt(self, raw_text: str, docling_markdown: str) -> str:
+    def _build_formatting_prompt(self, raw_text: str, structured_markdown: str) -> str:
         """
         Build the formatting prompt for AI.
 
         Args:
             raw_text: Raw text from PDF
-            docling_markdown: Structured markdown from Docling
+            structured_markdown: Structured markdown from OCR
 
         Returns:
             Formatted prompt string
         """
-        prompt = f"""You are a scientific document formatter. Your task is to create a canonical, well-formatted Markdown document by combining raw text from PDF and structured markdown from Docling parser.
+        prompt = f"""You are a scientific document formatter. Your task is to create a canonical, well-formatted Markdown document by combining raw text from PDF and structured markdown from OCR parser.
 
 INPUTS:
 1. Raw text extracted from PDF (preserves original text flow)
-2. Structured markdown from Docling (has layout information)
+2. Structured markdown from OCR (has layout information)
 
 REQUIREMENTS:
-1. Preserve the EXACT text flow and paragraph order from raw PDF text
-2. Use Docling markdown for structure hints (headings, tables, images)
+1. Preserve the exact text flow and paragraph order from the source
+2. Use structured OCR Markdown for headings, tables, figures, and reading order
 3. Create clean YAML frontmatter with: title, authors, date, keywords, abstract
 4. Maintain proper heading hierarchy (# ## ### ####)
 5. Fix broken paragraphs and hyphenation artifacts
-6. Convert tables to HTML with <caption> tags
-7. Convert images to HTML <figure> with <figcaption> tags
+6. Preserve HTML tables and their captions as HTML; do not flatten or rebuild their cells
+7. Preserve existing <figure>, <img src>, and <figcaption> markup and image URLs
 8. Format citations as numbered references [1]
-9. Preserve LaTeX math in $ or $$ delimiters
-10. Ensure proper markdown syntax throughout
+9. Preserve all LaTeX formulas in $ or $$ delimiters exactly
+10. Do not invent, translate, or omit document content
+11. Ensure proper markdown syntax throughout
 
 OUTPUT: Only the formatted Markdown, no explanations.
 
@@ -157,8 +158,8 @@ RAW PDF TEXT:
 {raw_text}
 
 ---
-DOCLING MARKDOWN:
-{docling_markdown}
+STRUCTURED MARKDOWN:
+{structured_markdown}
 
 ---
 FORMATTED MARKDOWN:

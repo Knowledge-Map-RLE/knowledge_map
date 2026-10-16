@@ -75,7 +75,7 @@ def _orm_to_domain(orm_doc: OrmDocument) -> Document:
         publication_date=orm_doc.publication_date,
         journal=orm_doc.journal,
         doi=orm_doc.doi,
-        docling_raw_md_s3_key=orm_doc.docling_raw_md_s3_key,
+        raw_markdown_s3_key=orm_doc.raw_markdown_s3_key,
         formatted_md_s3_key=orm_doc.formatted_md_s3_key,
         user_md_s3_key=orm_doc.user_md_s3_key,
         source=orm_doc.source or "upload",
@@ -112,7 +112,7 @@ def _domain_to_orm(doc: Document, orm_doc: Optional[OrmDocument] = None) -> OrmD
     orm_doc.publication_date = doc.publication_date
     orm_doc.journal = doc.journal
     orm_doc.doi = doc.doi
-    orm_doc.docling_raw_md_s3_key = doc.docling_raw_md_s3_key
+    orm_doc.raw_markdown_s3_key = doc.raw_markdown_s3_key
     orm_doc.formatted_md_s3_key = doc.formatted_md_s3_key
     orm_doc.user_md_s3_key = doc.user_md_s3_key
     orm_doc.source = doc.source
@@ -136,7 +136,7 @@ def _row_to_domain(
     Порядок полей (0-based):
     0=uid, 1=original_filename, 2=title, 3=processing_status, 4=is_processed,
     5=source, 6=s3_key, 7=s3_bucket, 8=file_size, 9=upload_date,
-    10=docling_raw_md_s3_key, 11=user_md_s3_key,
+    10=raw_markdown_s3_key, 11=user_md_s3_key,
     12=pubmed_id, 13=pmc_id, 14=is_open_access, 15=error_message, 16=md5_hash,
     17=is_gold_standard, 18=gold_standard_source_pmc_id
     """
@@ -160,7 +160,7 @@ def _row_to_domain(
         s3_bucket=_val(row[7]) or "knowledge-map-data",
         file_size=_val(row[8]),
         upload_date=_to_datetime(_val(row[9])),
-        docling_raw_md_s3_key=_val(row[10]),
+        raw_markdown_s3_key=_val(row[10]),
         user_md_s3_key=_val(row[11]),
         pubmed_id=_val(row[12]),
         pmc_id=_val(row[13]),
@@ -245,7 +245,7 @@ class DocumentRepository:
                d.s3_bucket as s3_bucket,
                d.file_size as file_size,
                d.upload_date as upload_date,
-               d.docling_raw_md_s3_key as docling_raw_md_s3_key,
+               d.raw_markdown_s3_key as raw_markdown_s3_key,
                d.user_md_s3_key as user_md_s3_key,
                d.pubmed_id as pubmed_id,
                d.pmc_id as pmc_id,
@@ -537,7 +537,7 @@ class DocumentRepository:
         d.s3_bucket as s3_bucket,
         d.file_size as file_size,
         d.upload_date as upload_date,
-        d.docling_raw_md_s3_key as docling_raw_md_s3_key,
+        d.raw_markdown_s3_key as raw_markdown_s3_key,
         d.user_md_s3_key as user_md_s3_key,
         d.pubmed_id as pubmed_id,
         d.pmc_id as pmc_id,

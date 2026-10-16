@@ -1,13 +1,13 @@
 #!/bin/sh
-set -e
+set -eu
 
-# Запуск gRPC сервера в фоне
-/app/.venv/bin/python src/grpc_server.py &
+/app/.venv/bin/python -m src.grpc_server &
 GRPC_PID=$!
 
-# Запуск REST сервера на переднем плане
-# Railway устанавливает $PORT автоматически
-/app/.venv/bin/python -m uvicorn src.app:app --host 0.0.0.0 --port "${PORT:-8002}"
+cleanup() {
+    kill "$GRPC_PID" 2>/dev/null || true
+    wait "$GRPC_PID" 2>/dev/null || true
+}
+trap cleanup EXIT INT TERM
 
-# Остановить gRPC при завершении REST
-kill "$GRPC_PID" 2>/dev/null || true
+/app/.venv/bin/python -m uvicorn src.app:app --host 0.0.0.0 --port 8002

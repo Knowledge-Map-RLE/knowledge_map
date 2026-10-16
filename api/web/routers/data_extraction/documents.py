@@ -67,6 +67,18 @@ async def data_extraction_upload(
     return result
 
 
+@router.post("/documents/{doc_id}/reprocess")
+async def reprocess_document_route(
+    doc_id: str,
+    _user: dict = Depends(get_current_user),
+):
+    """Повторно запускает преобразование сохранённого в S3 исходного PDF."""
+    from services.data_extraction_service import DataExtractionService  # TRANSITIONAL
+
+    svc = DataExtractionService()
+    return await svc.reprocess_document(doc_id)
+
+
 @router.get("/documents/{doc_id}/assets", response_model=DocumentAssetsResponse)
 async def get_document_assets_route(
     doc_id: str,

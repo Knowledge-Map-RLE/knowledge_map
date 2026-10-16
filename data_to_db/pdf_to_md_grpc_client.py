@@ -1,4 +1,4 @@
-"""gRPC клиент для pdf_to_md сервиса (Docling конвертация PDF в Markdown)."""
+"""gRPC клиент для pdf_to_md сервиса (PDF OCR конвертация PDF в Markdown)."""
 import logging
 import os
 from typing import Optional
@@ -37,7 +37,7 @@ class PDFToMdClient:
             self.stub = None
 
     def convert_pdf(self, pdf_bytes: bytes, doc_id: str = None) -> Optional[dict]:
-        """Конвертирует PDF в Markdown через Docling.
+        """Конвертирует PDF в Markdown через PDF OCR.
         
         Args:
             pdf_bytes: Содержимое PDF файла
@@ -45,7 +45,7 @@ class PDFToMdClient:
             
         Returns:
             dict с ключами: success, doc_id, markdown_content, message, 
-                           docling_raw_s3_key, formatted_s3_key
+                           raw_markdown_s3_key, formatted_s3_key
         """
         if self.stub is None:
             logger.warning("[pdf_to_md_client] gRPC недоступен")
@@ -57,6 +57,7 @@ class PDFToMdClient:
             request = pdf_to_md_pb2.ConvertPDFRequest(
                 pdf_content=pdf_bytes,
                 doc_id=doc_id or "",
+                model_id="default",
             )
             
             response = self.stub.ConvertPDF(request)
@@ -66,7 +67,7 @@ class PDFToMdClient:
                 "doc_id": response.doc_id,
                 "markdown_content": response.markdown_content,
                 "message": response.message,
-                "docling_raw_s3_key": response.docling_raw_s3_key if response.docling_raw_s3_key else None,
+                "raw_markdown_s3_key": response.raw_markdown_s3_key if response.raw_markdown_s3_key else None,
                 "formatted_s3_key": response.formatted_s3_key if response.formatted_s3_key else None,
             }
             

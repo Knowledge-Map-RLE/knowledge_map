@@ -124,7 +124,7 @@ export async function getArticleText(docId: string): Promise<ArticleTextResponse
 export interface AgentArticleTextResult {
     success: boolean;
     text: string;
-    source: 'stored' | 'doi' | 'docling' | 'none';
+    source: 'stored' | 'doi' | 'pdf_ocr' | 'none';
 }
 
 export async function getAgentArticleText(docId: string, doi?: string): Promise<AgentArticleTextResult> {

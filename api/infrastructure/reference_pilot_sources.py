@@ -290,7 +290,7 @@ class EuropePmcSourceProvider:
                 tx.run("""MERGE (d:Document {uid:$id}) ON CREATE SET
                   d.created_by_uid=$owner,d.title=$title,d.original_filename=$filename,
                   d.md5_hash=$md5,d.s3_bucket=$bucket,d.s3_key=$key,d.file_size=$bytes,
-                  d.docling_raw_md_s3_key=$key,d.source='pmc',d.pmc_id=$pmc,d.doi=$doi,
+                  d.raw_markdown_s3_key=$key,d.source='pmc',d.pmc_id=$pmc,d.doi=$doi,
                   d.is_open_access=true,d.is_processed=true,d.processing_status='completed',
                   d.is_gold_standard=true,d.gold_standard_source_pmc_id=$pmc,
                   d.pilot_source_sha256=$sha,d.needs_expert_review=true,

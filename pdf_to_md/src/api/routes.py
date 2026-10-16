@@ -72,7 +72,7 @@ async def get_status(
 async def convert_pdf(
     file: UploadFile = File(..., description="PDF file to convert"),
     doc_id: str = Form(None, description="Document ID (optional)"),
-    model_id: str = Form(None, description="Model ID (optional)"),
+    model_id: str = Form("default", description="Нейтральный ID модели PDF"),
     use_coordinate_extraction: bool = Form(True, description="Use coordinate-based image extraction"),
     conversion_service = Depends(get_conversion_service),
     current_user = Depends(get_current_user)
@@ -112,7 +112,8 @@ async def convert_pdf(
             images={name: len(data) for name, data in result.images.items()},
             metadata=result.metadata,
             error_message=result.error_message,
-            processing_time=result.processing_time
+            processing_time=result.processing_time,
+            raw_markdown_s3_key=result.raw_markdown_s3_key,
         )
         
         if not result.success:

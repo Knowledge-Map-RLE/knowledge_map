@@ -1,4 +1,6 @@
 models/
+!pdf_to_md/src/services/models/
+!pdf_to_md/src/services/models/**
 personal_folder/
 logs/
 node_modules/

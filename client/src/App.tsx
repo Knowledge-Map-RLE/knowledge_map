@@ -65,6 +65,7 @@ function App() {
               <Route path="/rle_databases" element={<RLE_Databases/>} />
               <Route path="/introduction" element={<Introduction/>} />
               <Route path="/data_extraction" element={<Data_extraction />} />
+              <Route path="/data_extraction/:docId" element={<Data_extraction />} />
               <Route path="/science_articles" element={<><Science_articles /><Knowledge_map_ui /></>} />
               <Route path="/pattern_analysis" element={<><PatternAnalysis /><Knowledge_map_ui /></>} />
               <Route path="/pattern_editor" element={<><PatternEditor /></>} />

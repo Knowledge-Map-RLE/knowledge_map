@@ -145,7 +145,7 @@ class Document(StructuredNode):
     journal = StringProperty()
     doi = StringProperty()
 
-    docling_raw_md_s3_key = StringProperty()
+    raw_markdown_s3_key = StringProperty()
     formatted_md_s3_key = StringProperty()
     user_md_s3_key = StringProperty()
 

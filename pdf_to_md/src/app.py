@@ -11,7 +11,7 @@ from .api.s3_routes import router as s3_router
 from .api.middleware import LoggingMiddleware, SecurityMiddleware, RateLimitMiddleware
 from .core.config import settings
 from .core.logger import setup_logging, get_logger
-from .services.conversion_service import ConversionService
+from .services.indra_conversion_service import ConversionService
 from observability import init_telemetry, instrument_fastapi, instrument_grpc_client
 
 # Setup observability

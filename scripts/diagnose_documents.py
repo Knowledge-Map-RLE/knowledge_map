@@ -60,7 +60,7 @@ def main():
             RETURN
                 d.source AS source,
                 count(d) AS total,
-                count(d.docling_raw_md_s3_key) AS has_raw_key,
+                count(d.raw_markdown_s3_key) AS has_raw_key,
                 count(d.formatted_md_s3_key) AS has_fmt_key,
                 count(d.user_md_s3_key) AS has_user_key
             ORDER BY d.source
@@ -98,7 +98,7 @@ def main():
                     MATCH (d:Document)
                     WHERE d.source = $source
                     RETURN d.uid AS uid,
-                           d.docling_raw_md_s3_key AS raw_key,
+                           d.raw_markdown_s3_key AS raw_key,
                            d.formatted_md_s3_key AS fmt_key,
                            d.user_md_s3_key AS user_key
                     LIMIT 200
@@ -144,8 +144,8 @@ def main():
                     missing = s.run("""
                         MATCH (d:Document)
                         WHERE d.source = 'pubmed'
-                          AND d.docling_raw_md_s3_key IS NOT NULL
-                        RETURN d.uid AS uid, d.title AS title, d.docling_raw_md_s3_key AS key
+                          AND d.raw_markdown_s3_key IS NOT NULL
+                        RETURN d.uid AS uid, d.title AS title, d.raw_markdown_s3_key AS key
                         LIMIT 3
                     """).data()
                 if missing:

@@ -6,7 +6,7 @@ from typing import Dict, Any, Optional, List
 class ConvertRequest(BaseModel):
     """Запрос на конвертацию PDF"""
     pdf_content: bytes
-    model_id: Optional[str] = None
+    model_id: str = "default"
     doc_id: Optional[str] = None
     use_coordinate_extraction: bool = True
 
@@ -31,6 +31,7 @@ class ConvertResponse(BaseModel):
     message: str
     s3_images: Optional[List[S3ImageInfo]] = None
     extraction_method: Optional[str] = None
+    raw_markdown_s3_key: Optional[str] = None
 
 
 class ProgressUpdate(BaseModel):

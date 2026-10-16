@@ -1,6 +1,7 @@
 """API маршруты для работы с S3 изображениями"""
 
 import logging
+import mimetypes
 from fastapi import APIRouter, HTTPException, UploadFile, File, Path as PathParam, Query
 from typing import List
 
@@ -11,7 +12,7 @@ from ..schemas.api import (
     S3ImageInfo
 )
 from ..services.s3_service import s3_service
-from ..services.coordinate_extraction_service import coordinate_extraction_service
+from ..services.image_storage_service import image_storage_service
 
 logger = logging.getLogger(__name__)
 
@@ -41,7 +42,7 @@ async def check_s3_health():
 async def get_document_images(document_id: str = PathParam(..., description="ID документа")):
     """Получить все изображения документа из S3"""
     try:
-        result = await coordinate_extraction_service.get_document_images(document_id)
+        result = await image_storage_service.get_document_images(document_id)
         
         if result['success']:
             # Конвертируем в схему API
@@ -80,7 +81,7 @@ async def get_document_images(document_id: str = PathParam(..., description="ID 
 async def delete_document_images(document_id: str = PathParam(..., description="ID документа")):
     """Удалить все изображения документа из S3"""
     try:
-        result = await coordinate_extraction_service.delete_document_images(document_id)
+        result = await image_storage_service.delete_document_images(document_id)
         
         if result['success']:
             return {
@@ -218,7 +219,7 @@ async def get_image_proxy(
             
             return Response(
                 content=image_data,
-                media_type="image/png",
+                media_type=mimetypes.guess_type(object_key)[0] or "application/octet-stream",
                 headers={
                     "Cache-Control": "public, max-age=604800",  # Кэш на 7 дней
                     "Access-Control-Allow-Origin": "*",  # CORS

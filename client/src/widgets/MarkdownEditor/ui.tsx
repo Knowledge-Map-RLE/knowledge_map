@@ -19,8 +19,36 @@ interface MarkdownPreviewProps {
     value: string;
 }
 
+function resolvePreviewImageUrls(markdown: string): string {
+    const apiBaseUrl = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/+$/, '');
+    const html = marked.parse(markdown || '') as string;
+    const container = document.createElement('div');
+    container.innerHTML = html;
+
+    // Старые Markdown могут хранить как относительные, так и абсолютные localhost URL.
+    container.querySelectorAll<HTMLImageElement>('img[src]').forEach((image) => {
+        const source = image.getAttribute('src');
+        if (!source) return;
+
+        try {
+            const parsed = new URL(source, window.location.href);
+            if (!parsed.pathname.startsWith('/api/')) return;
+
+            const apiPath = `${parsed.pathname}${parsed.search}${parsed.hash}`;
+            image.setAttribute('src', apiBaseUrl ? `${apiBaseUrl}${apiPath}` : apiPath);
+        } catch {
+            // Некорректный URL оставляем как есть, чтобы не портить исходную разметку.
+        }
+    });
+
+    return container.innerHTML;
+}
+
 const MarkdownPreview: React.FC<MarkdownPreviewProps> = ({ value }) => {
-    const html = React.useMemo(() => marked.parse(value || '') as string, [value]);
+    const html = React.useMemo(
+        () => resolvePreviewImageUrls(value || ''),
+        [value],
+    );
     const containerRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {

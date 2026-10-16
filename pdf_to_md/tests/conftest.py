@@ -152,7 +152,7 @@ def sample_metadata():
         "throughput": 0.4,
         "file_size_mb": 2.1,
         "images_count": 3,
-        "model_used": "marker",
+        "model_used": "default",
         "conversion_date": "2024-01-15T10:30:00Z"
     }
 

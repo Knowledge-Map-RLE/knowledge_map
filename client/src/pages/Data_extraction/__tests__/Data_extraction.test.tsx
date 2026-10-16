@@ -60,6 +60,8 @@ class MockXHR {
 
     open() {}
 
+    setRequestHeader() {}
+
     send() {
         queueMicrotask(() => {
             (this.handlers['error'] || []).forEach((handler) => handler(new Event('error')));

@@ -37,7 +37,7 @@ class Document:
     doi: Optional[str] = None
 
     # S3-ключи версий Markdown
-    docling_raw_md_s3_key: Optional[str] = None
+    raw_markdown_s3_key: Optional[str] = None
     formatted_md_s3_key: Optional[str] = None
     user_md_s3_key: Optional[str] = None
 
@@ -66,13 +66,13 @@ class Document:
         Логика приоритетов:
         1. user_md_s3_key  — если пользователь сохранял свою версию
         2. formatted_md_s3_key — AI-форматированная версия
-        3. docling_raw_md_s3_key — исходная (fallback)
+        3. raw_markdown_s3_key — исходная распознанная версия
         """
         if self.user_md_s3_key:
             return self.user_md_s3_key
         if self.formatted_md_s3_key:
             return self.formatted_md_s3_key
-        return self.docling_raw_md_s3_key
+        return self.raw_markdown_s3_key
 
     def get_s3_url(self) -> str:
         return f"s3://{self.s3_bucket}/{self.s3_key}"
@@ -89,7 +89,7 @@ class Document:
     def has_full_text(self) -> bool:
         """Есть ли полный текст статьи (не только abstract)."""
         return bool(
-            self.docling_raw_md_s3_key
+            self.raw_markdown_s3_key
             or self.formatted_md_s3_key
             or self.user_md_s3_key
         )

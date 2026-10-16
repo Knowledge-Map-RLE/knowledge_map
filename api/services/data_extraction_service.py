@@ -207,7 +207,7 @@ class DataExtractionService:
                             content_type=mimetypes.guess_type(img.name)[0] or "image/jpeg"
                         )
 
-                docling_raw_s3_key = result.get("docling_raw_s3_key")
+                raw_markdown_s3_key = result.get("raw_markdown_s3_key")
                 formatted_s3_key = result.get("formatted_s3_key")
 
                 try:
@@ -221,9 +221,9 @@ class DataExtractionService:
                             processing_status='ready_for_annotation',
                             is_processed=True,
                             title=extracted_title,
-                            docling_raw_md_s3_key=docling_raw_s3_key,
+                            raw_markdown_s3_key=raw_markdown_s3_key,
                             formatted_md_s3_key=formatted_s3_key,
-                            has_full_text=bool(docling_raw_s3_key or formatted_s3_key),
+                            has_full_text=bool(raw_markdown_s3_key or formatted_s3_key),
                         ).save()
                         logger.info(f"[pdf_to_md] Документ {doc_id} сохранён в Neo4j")
                     else:
@@ -231,8 +231,8 @@ class DataExtractionService:
                         existing_doc.is_processed = True
                         if extracted_title and not existing_doc.title:
                             existing_doc.title = extracted_title
-                        if docling_raw_s3_key:
-                            existing_doc.docling_raw_md_s3_key = docling_raw_s3_key
+                        if raw_markdown_s3_key:
+                            existing_doc.raw_markdown_s3_key = raw_markdown_s3_key
                             existing_doc.has_full_text = True
                             if existing_doc.user_md_s3_key:
                                 existing_doc.user_md_s3_key = None
@@ -424,7 +424,7 @@ class DataExtractionService:
 
         if pdf_exists:
             md_key_old = f"{prefix}{doc_id}.md"
-            md_key_raw = f"{prefix}{doc_id}_docling_raw.md"
+            md_key_raw = f"{prefix}{doc_id}_raw.md"
             md_exists = (
                 await self.s3_client.object_exists(bucket, md_key_old) or
                 await self.s3_client.object_exists(bucket, md_key_raw)
@@ -469,6 +469,58 @@ class DataExtractionService:
             message="Файл принят, конвертация запущена",
             files={"pdf": pdf_key}
         )
+
+    async def reprocess_document(self, doc_id: str) -> Dict[str, Any]:
+        """Повторно запускает конвертацию по PDF, уже сохранённому в S3."""
+        document = Document.nodes.get_or_none(uid=doc_id)
+        if document is None:
+            raise HTTPException(status_code=404, detail="Документ не найден")
+
+        active_task = _background_tasks.get(doc_id)
+        if active_task is not None and not active_task.done():
+            raise HTTPException(
+                status_code=409,
+                detail="Конвертация этого документа уже выполняется",
+            )
+
+        bucket = settings.S3_BUCKET_NAME
+        pdf_key = f"documents/{doc_id}/{doc_id}.pdf"
+        if not await self.s3_client.object_exists(bucket, pdf_key):
+            raise HTTPException(status_code=404, detail="Исходный PDF не найден в S3")
+
+        pdf_bytes = await self.s3_client.download_bytes(bucket, pdf_key)
+        if not pdf_bytes:
+            raise HTTPException(
+                status_code=500,
+                detail="Не удалось прочитать исходный PDF из S3",
+            )
+
+        logger.info(
+            "[reprocess] Повторная конвертация документа: doc_id=%s, pdf_size=%s байт",
+            doc_id,
+            len(pdf_bytes),
+        )
+        previous_status = document.processing_status
+        previous_is_processed = document.is_processed
+        document.processing_status = "pdf_to_markdown"
+        document.is_processed = False
+        document.save()
+        try:
+            await self._start_conversion_task(
+                doc_id,
+                pdf_bytes,
+                document.original_filename or f"{doc_id}.pdf",
+            )
+        except Exception:
+            document.processing_status = previous_status
+            document.is_processed = previous_is_processed
+            document.save()
+            raise
+        return {
+            "success": True,
+            "doc_id": doc_id,
+            "message": "Повторная конвертация запущена",
+        }
 
     async def export_annotations(self, doc_id: str) -> StreamingResponse:
         """Экспорт аннотаций"""
@@ -526,8 +578,8 @@ class DataExtractionService:
                 md_key = document.user_md_s3_key
             elif document.formatted_md_s3_key:
                 md_key = document.formatted_md_s3_key
-            elif document.docling_raw_md_s3_key:
-                md_key = document.docling_raw_md_s3_key
+            elif document.raw_markdown_s3_key:
+                md_key = document.raw_markdown_s3_key
 
         # Fallback к старому формату
         if not md_key:
@@ -582,7 +634,7 @@ class DataExtractionService:
             doc_id: ID документа
             version: Версия markdown файла:
                 - "active": возвращает user версию если есть, иначе formatted, иначе raw
-                - "raw": возвращает raw Docling markdown
+                - "raw": возвращает raw PDF OCR markdown
                 - "formatted": возвращает AI-форматированный markdown
                 - "user": возвращает пользовательскую версию
 
@@ -610,8 +662,8 @@ class DataExtractionService:
                     md_key = document.user_md_s3_key
                 elif document.formatted_md_s3_key:
                     md_key = document.formatted_md_s3_key
-                elif document.docling_raw_md_s3_key:
-                    md_key = document.docling_raw_md_s3_key
+                elif document.raw_markdown_s3_key:
+                    md_key = document.raw_markdown_s3_key
                 else:
                     # Fallback к старому формату
                     md_key = f"{prefix}{doc_id}.md"
@@ -619,11 +671,11 @@ class DataExtractionService:
                 # Нет записи в Neo4j - используем старый формат
                 md_key = f"{prefix}{doc_id}.md"
         elif version == "raw":
-            if document and document.docling_raw_md_s3_key:
-                md_key = document.docling_raw_md_s3_key
+            if document and document.raw_markdown_s3_key:
+                md_key = document.raw_markdown_s3_key
             else:
                 # Fallback к ожидаемому имени файла
-                md_key = f"markdown/{doc_id}_docling_raw.md"
+                md_key = f"markdown/{doc_id}_raw.md"
         elif version == "formatted":
             if document and document.formatted_md_s3_key:
                 md_key = document.formatted_md_s3_key
@@ -842,8 +894,8 @@ class DataExtractionService:
                 markdown_exists = await self.s3_client.object_exists(bucket, document.user_md_s3_key)
             elif document.formatted_md_s3_key:
                 markdown_exists = await self.s3_client.object_exists(bucket, document.formatted_md_s3_key)
-            elif document.docling_raw_md_s3_key:
-                markdown_exists = await self.s3_client.object_exists(bucket, document.docling_raw_md_s3_key)
+            elif document.raw_markdown_s3_key:
+                markdown_exists = await self.s3_client.object_exists(bucket, document.raw_markdown_s3_key)
 
         if not markdown_exists:
             # Fallback к старому формату
